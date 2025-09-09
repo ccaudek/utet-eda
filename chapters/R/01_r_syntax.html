@@ -1,0 +1,2421 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.34">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>7&nbsp; Un approccio moderno all’analisi dei dati – Analisi esplorativa dei dati (EDA) in psicologia</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../chapters/R/02_utility_functions.html" rel="next">
+<link href="../../chapters/R/introduction_r_lang.html" rel="prev">
+<link href="../../style/gauss.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-0a72236910a44089af39cd28873f322e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-9908c7b05874059c2106d454ac00f1d0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nessun risultato",
+    "search-matching-documents-text": "documenti trovati",
+    "search-copy-link-title": "Copiare il link nella ricerca",
+    "search-hide-matches-text": "Nascondere i risultati aggiuntivi",
+    "search-more-match-text": "ci sono altri risultati in questo documento",
+    "search-more-matches-text": "ulteriori risultati in questo documento",
+    "search-clear-button-title": "Pulire",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancellare",
+    "search-submit-button-title": "Inviare",
+    "search-label": "Ricerca"
+  }
+}</script><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-QT5S3P9D31"></script><script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
+</script><style>html{ scroll-behavior: smooth; }</style>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+  svg: { scale: 1, mtextInheritFont: true, fontCache: 'none', minScale: 1 },
+  options: { renderActions: { addMenu: [0, '', ''] } },
+  loader: { load: ['input/tex','output/svg'] }
+};
+</script><script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+  svg: { scale: 1, mtextInheritFont: true, fontCache: 'none', minScale: 1 },
+  options: { renderActions: { addMenu: [0, '', ''] } },
+  loader: { load: ['input/tex','output/svg'] }
+};
+// Suggerimento CSS: vedi sezione 3 per gli spazi attorno a display math
+</script><script>
+window.MathJax = {
+  tex: {
+    packages: {'[+]': ['boldsymbol']},
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  },
+  svg: { fontCache: 'global' }
+};
+</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script><link rel="stylesheet" href="../../style/_typography-extras.css">
+<link rel="stylesheet" href="../../style/_code-extras.css">
+<link rel="stylesheet" href="../../style/_math-extras.css">
+<link rel="stylesheet" href="../../style/styles.css">
+</head>
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/R/introduction_r_lang.html">R</a></li><li class="breadcrumb-item"><a href="../../chapters/R/01_r_syntax.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Un approccio moderno all’analisi dei dati</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Ricerca" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">Analisi esplorativa dei dati (EDA) in psicologia</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/ccaudek/utet-eda/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Attiva/disattiva la modalità lettore">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Ricerca"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Percorso e obiettivi</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../prefazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Prefazione</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../chapters/key_notions/introduction_key_notions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Fondamenti</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/key_notions/01_data_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">La crisi di replicazione e la riforma metodologica in psicologia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/key_notions/02_key_notions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Concetti chiave</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/key_notions/03_design.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Campionamento, metodologia sperimentale e studi osservazionali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/key_notions/04_measurement.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">La misurazione in psicologia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/key_notions/05_cognitive_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Dalla descrizione alla spiegazione</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../chapters/R/introduction_r_lang.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/R/01_r_syntax.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Un approccio moderno all’analisi dei dati</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/R/02_utility_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Utility functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/R/03_r_programming.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Programmazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/R/04_r_packages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Pacchetti</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/R/05_dplyr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Usare <code>dplyr</code></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/R/06_quarto.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Quarto</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/R/07_environment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">L’ambiente di programmazione</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../chapters/eda/introduction_eda.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">EDA</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/01_project_structure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Il ciclo di vita di un progetto di analisi dei dati</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/02_data_cleaning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Flusso di lavoro per la pulizia dei dati</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/03_exploring_qualitative_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Esplorare i dati qualitativi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/04_exploring_numeric_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Esplorare i dati numerici</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/05_data_visualization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Principi della visualizzazione dei dati</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/06_loc_scale.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Indicatori di tendenza centrale e variabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/07_introduction_normal_distribution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Introduzione alla distribuzione normale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/08_correlation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Relazioni tra variabili</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/09_causality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Causalità dai dati osservazionali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/10_outlier.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Outlier</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">Epilogo</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/epiloque/epiloque.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Considerazioni Conclusive</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Sommario</h2>
+   
+  <ul class="collapse">
+<li><a href="#la-sintassi-di-r-come-garanzia-di-trasparenza" id="toc-la-sintassi-di-r-come-garanzia-di-trasparenza" class="nav-link active" data-scroll-target="#la-sintassi-di-r-come-garanzia-di-trasparenza"><span class="header-section-number">7.1</span> La Sintassi di R come garanzia di trasparenza</a></li>
+  <li><a href="#panoramica-sullinterfaccia-di-rstudio" id="toc-panoramica-sullinterfaccia-di-rstudio" class="nav-link" data-scroll-target="#panoramica-sullinterfaccia-di-rstudio"><span class="header-section-number">7.2</span> Panoramica sull’interfaccia di RStudio</a></li>
+  <li><a href="#creare-un-nuovo-progetto-in-rstudio" id="toc-creare-un-nuovo-progetto-in-rstudio" class="nav-link" data-scroll-target="#creare-un-nuovo-progetto-in-rstudio"><span class="header-section-number">7.3</span> Creare un nuovo progetto in RStudio</a></li>
+  <li><a href="#concetti-di-base-nella-programmazione-in-r" id="toc-concetti-di-base-nella-programmazione-in-r" class="nav-link" data-scroll-target="#concetti-di-base-nella-programmazione-in-r"><span class="header-section-number">7.4</span> Concetti di base nella programmazione in R</a></li>
+  <li><a href="#oggetti-in-r" id="toc-oggetti-in-r" class="nav-link" data-scroll-target="#oggetti-in-r"><span class="header-section-number">7.5</span> Oggetti in R</a></li>
+  <li><a href="#nomi-degli-oggetti" id="toc-nomi-degli-oggetti" class="nav-link" data-scroll-target="#nomi-degli-oggetti"><span class="header-section-number">7.6</span> Nomi degli oggetti</a></li>
+  <li><a href="#commenti" id="toc-commenti" class="nav-link" data-scroll-target="#commenti"><span class="header-section-number">7.7</span> Commenti</a></li>
+  <li><a href="#usare-r-come-calcolatore" id="toc-usare-r-come-calcolatore" class="nav-link" data-scroll-target="#usare-r-come-calcolatore"><span class="header-section-number">7.8</span> Usare R come calcolatore</a></li>
+  <li><a href="#ordine-di-precedenza-degli-operatori" id="toc-ordine-di-precedenza-degli-operatori" class="nav-link" data-scroll-target="#ordine-di-precedenza-degli-operatori"><span class="header-section-number">7.9</span> Ordine di precedenza degli operatori</a></li>
+  <li><a href="#funzioni" id="toc-funzioni" class="nav-link" data-scroll-target="#funzioni"><span class="header-section-number">7.10</span> Funzioni</a></li>
+  <li><a href="#lavorare-con-i-vettori-in-r" id="toc-lavorare-con-i-vettori-in-r" class="nav-link" data-scroll-target="#lavorare-con-i-vettori-in-r"><span class="header-section-number">7.11</span> Lavorare con i Vettori in R</a></li>
+  <li><a href="#operazioni-vettoriali-e-vettorizzazione-in-r" id="toc-operazioni-vettoriali-e-vettorizzazione-in-r" class="nav-link" data-scroll-target="#operazioni-vettoriali-e-vettorizzazione-in-r"><span class="header-section-number">7.12</span> Operazioni vettoriali e vettorizzazione in R</a></li>
+  <li><a href="#gestire-dati-mancanti-na" id="toc-gestire-dati-mancanti-na" class="nav-link" data-scroll-target="#gestire-dati-mancanti-na"><span class="header-section-number">7.13</span> Gestire dati mancanti (NA)</a></li>
+  <li><a href="#i-dati-in-r" id="toc-i-dati-in-r" class="nav-link" data-scroll-target="#i-dati-in-r"><span class="header-section-number">7.14</span> I dati in R</a></li>
+  <li><a href="#operazioni-di-base-in-r" id="toc-operazioni-di-base-in-r" class="nav-link" data-scroll-target="#operazioni-di-base-in-r"><span class="header-section-number">7.15</span> Operazioni di base in R</a></li>
+  <li><a href="#estrazione-di-sottoinsiemi-di-oggetti-in-r" id="toc-estrazione-di-sottoinsiemi-di-oggetti-in-r" class="nav-link" data-scroll-target="#estrazione-di-sottoinsiemi-di-oggetti-in-r"><span class="header-section-number">7.16</span> Estrazione di sottoinsiemi di oggetti in R</a></li>
+  </ul><div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/R/01_r_syntax.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/R/introduction_r_lang.html">R</a></li><li class="breadcrumb-item"><a href="../../chapters/R/01_r_syntax.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Un approccio moderno all’analisi dei dati</span></a></li></ol></nav><div class="quarto-title">
+<h1 class="title"><span id="sec-r" class="quarto-section-identifier"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Un approccio moderno all’analisi dei dati</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header><section id="introduzione" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="introduzione">Introduzione</h2>
+<p>Nell’analisi dei dati psicologici, R non è solo uno strumento statistico avanzato, ma un vero e proprio linguaggio per organizzare il pensiero scientifico. La sua sintassi trasforma procedure complesse in passaggi <em>chiari, verificabili e ripetibili</em>, rispondendo alla crisi della replicabilità che ha coinvolto la psicologia negli ultimi anni <span class="citation" data-cites="obels2020analysis">(<a href="#ref-obels2020analysis" role="doc-biblioref">Obels et al., 2020</a>)</span>. Imparare R significa quindi acquisire un metodo di lavoro rigoroso e trasparente.</p>
+<section id="panoramica-del-capitolo" class="level3 unnumbered unlisted"><h3 class="unnumbered unlisted anchored" data-anchor-id="panoramica-del-capitolo">Panoramica del capitolo</h3>
+<ul>
+<li>Installare R e RStudio.</li>
+<li>Creare e gestire progetti in RStudio.</li>
+<li>Manipolare oggetti e vettori in R.</li>
+<li>Utilizzare funzioni e lavorare con dati mancanti.</li>
+<li>Estrarre e gestire sottoinsiemi di dati.</li>
+<li>Apprezzare l’importanza di rendere riproducibile l’analisi dei dati, condividendone ogni passaggio.</li>
+</ul>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Prerequisiti
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Leggere attentamene l’<span class="quarto-unresolved-ref">?sec-apx-sums</span>.</li>
+<li>Leggere il capitolo <em>Getting Started with Data in R</em> di <a href="https://moderndive.com/v2/">Statistical Inference via Data Science: A ModernDive into R and the Tidyverse (Second Edition)</a>, capitoli 1.1-1.3.</li>
+<li>Consultare <a href="https://rafalab.dfci.harvard.edu/dsbook-part-1/">Introduction to Data Science: Data Wrangling and Visualization with R</a> <span class="citation" data-cites="irizarry2024introduction">(<a href="#ref-irizarry2024introduction" role="doc-biblioref">Irizarry, 2024</a>)</span>
+</li>
+<li>Consultare <a href="https://r4ds.hadley.nz/">R for Data Science (2e)</a> <span class="citation" data-cites="wickham2023r">(<a href="#ref-wickham2023r" role="doc-biblioref">Wickham et al., 2023</a>)</span>.</li>
+<li>Consultare <a href="https://bookdown.org/rdpeng/rprogdatascience/">R Programming for Data Science</a>, capitoli 3-4.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-caution no-icon callout-titled" title="Preparazione del Notebook">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Preparazione del Notebook
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"code"</span>, <span class="st">"_common.R"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/source.html">source</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Load packages</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">"pacman"</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"pacman"</span><span class="op">)</span></span>
+<span><span class="fu">pacman</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pacman/man/p_load.html">p_load</a></span><span class="op">(</span><span class="va">tidyr</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</section></section><section id="la-sintassi-di-r-come-garanzia-di-trasparenza" class="level2" data-number="7.1"><h2 data-number="7.1" class="anchored" data-anchor-id="la-sintassi-di-r-come-garanzia-di-trasparenza">
+<span class="header-section-number">7.1</span> La Sintassi di R come garanzia di trasparenza</h2>
+<p>A differenza dei software a menu grafici (come Excel o SPSS), dove le operazioni restano “nascoste” dietro click del mouse, R richiede di descrivere esplicitamente ogni passaggio. Prendiamo questo esempio base:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dati</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"esperimento1.csv"</span><span class="op">)</span></span>
+<span><span class="va">modello</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">risposta</span> <span class="op">~</span> <span class="va">trattamento</span>, data <span class="op">=</span> <span class="va">dati</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Questo semplice script realizza tre cose fondamentali:</p>
+<ol type="1">
+<li>
+<strong>Documentazione automatica:</strong> Ogni operazione resta tracciata nel codice.</li>
+<li>
+<strong>Verifica immediata:</strong> È possibile ispezionare ogni passaggio (Cosa contiene dati? Come è definito modello?).</li>
+<li>
+<strong>Modifiche controllate:</strong> Cambiare un parametro (es. il file di input) non richiede di rifare tutta l’analisi manualmente.</li>
+</ol>
+<section id="perché-r-favorisce-la-replicabilità" class="level3" data-number="7.1.1"><h3 data-number="7.1.1" class="anchored" data-anchor-id="perché-r-favorisce-la-replicabilità">
+<span class="header-section-number">7.1.1</span> Perché R favorisce la replicabilità</h3>
+<p>Tre caratteristiche di R facilitano direttamente la replicabilità:</p>
+<ol type="1">
+<li>
+<p><strong>Struttura basata su script</strong>: Scrivere codice in file <code>.R</code> o <code>.qmd</code> crea una traccia completa e ordinata dell’analisi, integrando:</p>
+<ul>
+<li>istruzioni eseguibili,</li>
+<li>annotazioni metodologiche,</li>
+<li>visualizzazione dei risultati.</li>
+</ul>
+</li>
+<li><p><strong>Gestione esplicita dei pacchetti</strong>:<br>
+Comandi come <code><a href="https://github.com/lme4/lme4/">library(lme4)</a></code> o <code>install.packages("brms")</code> rendono esplicite tutte le risorse usate, evitando il classico “Sul mio computer funzionava!”.</p></li>
+<li>
+<p><strong>Literate programming tramite R Markdown</strong>:<br>
+La combinazione di codice, testo narrativo e risultati dinamici <span class="citation" data-cites="knuth1984literate">(<a href="#ref-knuth1984literate" role="doc-biblioref">Knuth, 1984</a>)</span> in documenti Quarto (o R Markdown) consente di generare report che combinano:</p>
+<ul>
+<li>testo esplicativo,</li>
+<li>analisi eseguibile,</li>
+<li>risultati dinamici (grafici, tabelle).</li>
+</ul>
+</li>
+</ol></section><section id="buone-abitudini-da-adottare-subito" class="level3" data-number="7.1.2"><h3 data-number="7.1.2" class="anchored" data-anchor-id="buone-abitudini-da-adottare-subito">
+<span class="header-section-number">7.1.2</span> Buone abitudini da adottare subito</h3>
+<ol type="1">
+<li>
+<p><strong>Nomi descrittivi</strong><br>
+Utilizzare sempre nomi chiari per oggetti e dati:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Da evitare</span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"file1.csv"</span><span class="op">)</span>  </span>
+<span></span>
+<span><span class="co"># Preferibile</span></span>
+<span><span class="va">demographics_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"demographic_questionnaire.csv"</span><span class="op">)</span>  </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</li>
+<li><p><strong>Salvataggio progressivo delle modifiche (versionamento)</strong><br>
+R permette di salvare e tenere traccia delle modifiche ai file con sistemi come Git. Non è necessario impararlo subito, ma è utile sapere che strumenti come <a href="https://github.com/">GitHub</a> consentono facilmente di archiviare versioni successive del proprio lavoro, facilitando il recupero di versioni precedenti in caso di necessità.</p></li>
+<li>
+<p><strong>Checklist pre-invio</strong><br>
+Prima di condividere un’analisi, è buona norma verificare:</p>
+<ul>
+<li>eseguire lo script integralmente (Ctrl+Shift+Enter su RStudio);</li>
+<li>controllare che i percorsi dei file siano corretti (es.: “Il file <code>dati.csv</code> si trova nella cartella giusta?”);</li>
+<li>aggiornare tutti i pacchetti installati con <code>update.packages(ask = FALSE)</code>.</li>
+</ul>
+</li>
+</ol>
+<p>Queste pratiche rendono il codice più robusto, l’analisi più affidabile e i risultati più facilmente verificabili.</p>
+</section><section id="perché-queste-regole-contano-nella-ricerca-psicologica" class="level3" data-number="7.1.3"><h3 data-number="7.1.3" class="anchored" data-anchor-id="perché-queste-regole-contano-nella-ricerca-psicologica">
+<span class="header-section-number">7.1.3</span> Perché queste regole contano nella ricerca psicologica</h3>
+<p>L’apprendimento di R va oltre l’acquisizione di competenze tecniche. Ogni scelta sintattica riflette un principio scientifico:</p>
+<table class="caption-top table">
+<thead><tr class="header">
+<th>Elemento del codice</th>
+<th>Principio metodologico</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><code>set.seed(123)</code></td>
+<td>Controllo delle fonti di casualità</td>
+</tr>
+<tr class="even">
+<td><code><a href="https://dplyr.tidyverse.org/reference/filter.html">dplyr::filter()</a></code></td>
+<td>Tracciabilità delle esclusioni</td>
+</tr>
+<tr class="odd">
+<td><code>APA_style()</code></td>
+<td>Standardizzazione della reportistica</td>
+</tr>
+</tbody>
+</table>
+<p>In un contesto dove il 50% degli studi psicologici mostra difficoltà di replicazione <span class="citation" data-cites="open2015estimating">(<a href="#ref-open2015estimating" role="doc-biblioref">Collaboration, 2015</a>)</span>, R offre un framework per costruire ricerche solide fin dalla fase di progettazione.</p>
+</section><section id="prossimi-passi" class="level3" data-number="7.1.4"><h3 data-number="7.1.4" class="anchored" data-anchor-id="prossimi-passi">
+<span class="header-section-number">7.1.4</span> Prossimi passi</h3>
+<ol type="1">
+<li><p><strong>Scarica e installa R.</strong><br>
+Vai al sito ufficiale di CRAN (https://cran.r-project.org/), scegli la versione per il tuo sistema operativo (Windows, Mac o Linux) e segui le istruzioni di installazione.</p></li>
+<li><p><strong>Scarica e installa RStudio.</strong><br>
+Dopo aver installato R, scarica RStudio dal sito ufficiale (https://posit.co/download/rstudio-desktop/). Scegli la versione gratuita “RStudio Desktop” e segui le istruzioni per il tuo sistema operativo.</p></li>
+</ol>
+<p>Una spiegazione dettagliata del processo di installazione di R e RStudio è disponibile in <span class="citation" data-cites="okoye2024introduction">Okoye &amp; Hosseini (<a href="#ref-okoye2024introduction" role="doc-biblioref">2024</a>)</span>.</p>
+</section></section><section id="panoramica-sullinterfaccia-di-rstudio" class="level2" data-number="7.2"><h2 data-number="7.2" class="anchored" data-anchor-id="panoramica-sullinterfaccia-di-rstudio">
+<span class="header-section-number">7.2</span> Panoramica sull’interfaccia di RStudio</h2>
+<p>RStudio rende l’uso di R più intuitivo grazie alla sua interfaccia divisa in quattro pannelli principali:</p>
+<ul>
+<li>
+<strong>Pannello degli script</strong>: Qui puoi scrivere e modificare i tuoi script, cioè sequenze di comandi salvabili per analisi ripetibili e organizzate.</li>
+<li>
+<strong>Console</strong>: Esegue i comandi scritti direttamente o lanciati dagli script, mostrando risultati, messaggi e errori.</li>
+<li>
+<strong>Pannello dell’ambiente</strong>: Mostra i dataset, le variabili e gli oggetti caricati nella sessione di lavoro, permettendoti di gestire facilmente i dati.</li>
+<li>
+<strong>Pannello grafici/aiuto/file</strong>: Visualizza grafici, fornisce accesso alla documentazione di R e consente di navigare tra file e cartelle sul tuo sistema.</li>
+</ul></section><section id="creare-un-nuovo-progetto-in-rstudio" class="level2" data-number="7.3"><h2 data-number="7.3" class="anchored" data-anchor-id="creare-un-nuovo-progetto-in-rstudio">
+<span class="header-section-number">7.3</span> Creare un nuovo progetto in RStudio</h2>
+<p><strong>Avviare un nuovo progetto</strong><br>
+Dal menu di RStudio, seleziona <em>File &gt; New Project…</em> per creare un nuovo progetto. I progetti in RStudio sono uno strumento efficace per organizzare il lavoro relativo a una specifica analisi o domanda di ricerca. All’interno di un progetto puoi raccogliere script, file di dati e output, mantenendo tutto ben strutturato.</p>
+<p><strong>Scegliere la posizione del progetto</strong><br>
+Puoi creare una nuova directory dedicata al progetto oppure associare il progetto a una directory esistente. Organizzare i progetti in cartelle dedicate aiuta a mantenere i file in ordine e a utilizzare percorsi relativi, rendendo il tuo lavoro più facile da condividere con collaboratori e più portabile tra diversi sistemi.</p>
+<p>Questa organizzazione è particolarmente utile per evitare confusione e assicurarsi che tutti i file necessari siano facilmente accessibili e collegati al progetto corretto.</p>
+</section><section id="concetti-di-base-nella-programmazione-in-r" class="level2" data-number="7.4"><h2 data-number="7.4" class="anchored" data-anchor-id="concetti-di-base-nella-programmazione-in-r">
+<span class="header-section-number">7.4</span> Concetti di base nella programmazione in R</h2>
+<p>Iniziare a usare R, soprattutto per chi si avvicina per la prima volta a questo linguaggio nel contesto della psicologia, significa comprendere i concetti fondamentali che ne costituiscono la base. Questo capitolo introduce i principi essenziali della programmazione in R, tra cui:</p>
+<ul>
+<li>La comprensione della <em>sintassi di R</em>.</li>
+<li>La familiarizzazione con i principali <em>tipi di dati</em> e <em>strutture</em>.</li>
+<li>L’acquisizione delle <em>operazioni di base</em>.</li>
+</ul>
+<p>Questi concetti sono fondamentali per manipolare efficacemente i dati e condurre analisi statistiche, rappresentando il punto di partenza per sfruttare al meglio le potenzialità di R.</p>
+</section><section id="oggetti-in-r" class="level2" data-number="7.5"><h2 data-number="7.5" class="anchored" data-anchor-id="oggetti-in-r">
+<span class="header-section-number">7.5</span> Oggetti in R</h2>
+<p>In R, tutto è un <em>oggetto</em>: dai numeri e stringhe di testo più semplici fino a strutture più complesse come vettori, data frame, funzioni, modelli statistici o persino grafici. Un oggetto in R è semplicemente un contenitore che memorizza un valore o una serie di valori, permettendoti di manipolarli e riutilizzarli nel codice.</p>
+<section id="creare-oggetti" class="level3" data-number="7.5.1"><h3 data-number="7.5.1" class="anchored" data-anchor-id="creare-oggetti">
+<span class="header-section-number">7.5.1</span> Creare oggetti</h3>
+<p>Per creare un oggetto, è necessario assegnargli un nome e un valore utilizzando l’operatore di assegnazione <code>&lt;-</code> (consigliato) o <code>=</code> (meno utilizzato):</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_obj</span> <span class="op">&lt;-</span> <span class="fl">48</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In questo esempio, abbiamo creato un oggetto chiamato <code>my_obj</code> e gli abbiamo assegnato il valore 48. Ora questo numero è memorizzato con quel nome e può essere richiamato facilmente.</p>
+<p>Per visualizzare il valore di un oggetto, basta scriverne il nome e premere <em>Invio</em>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_obj</span></span>
+<span><span class="co">#&gt; [1] 48</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="dove-vengono-salvati-gli-oggetti" class="level4" data-number="7.5.1.1"><h4 data-number="7.5.1.1" class="anchored" data-anchor-id="dove-vengono-salvati-gli-oggetti">
+<span class="header-section-number">7.5.1.1</span> Dove vengono salvati gli oggetti?</h4>
+<p>Gli oggetti creati vengono memorizzati nell’<em>ambiente di lavoro</em> (workspace) e restano disponibili finché non vengono rimossi o finché la sessione di R non viene chiusa. Se stai usando RStudio, puoi vedere tutti gli oggetti attualmente presenti nella scheda <em>Environment</em>, dove vengono mostrati con dettagli come tipo, lunghezza e valore.</p>
+</section><section id="perché-gli-oggetti-sono-importanti" class="level4" data-number="7.5.1.2"><h4 data-number="7.5.1.2" class="anchored" data-anchor-id="perché-gli-oggetti-sono-importanti">
+<span class="header-section-number">7.5.1.2</span> Perché gli oggetti sono importanti?</h4>
+<p>Lavorare con oggetti in R permette di:</p>
+<ul>
+<li>
+<strong>Riutilizzare dati e risultati</strong> senza doverli digitare nuovamente.<br>
+</li>
+<li>
+<strong>Organizzare il codice in modo chiaro e leggibile</strong>, rendendo le analisi più strutturate.<br>
+</li>
+<li>
+<strong>Manipolare facilmente i dati</strong>, combinando, trasformando e analizzando gli oggetti in base alle esigenze.</li>
+</ul></section><section id="stringhe" class="level4" data-number="7.5.1.3"><h4 data-number="7.5.1.3" class="anchored" data-anchor-id="stringhe">
+<span class="header-section-number">7.5.1.3</span> Stringhe</h4>
+<p>È possibile assegnare a un oggetto anche una stringa di testo, racchiudendola tra virgolette:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_obj2</span> <span class="op">&lt;-</span> <span class="st">"R è fantastico"</span></span>
+<span><span class="va">my_obj2</span></span>
+<span><span class="co">#&gt; [1] "R è fantastico"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Se dimentichi le virgolette, R mostrerà un errore.</p>
+</section><section id="modificare-oggetti" class="level4" data-number="7.5.1.4"><h4 data-number="7.5.1.4" class="anchored" data-anchor-id="modificare-oggetti">
+<span class="header-section-number">7.5.1.4</span> Modificare oggetti</h4>
+<p>Per modificare il valore di un oggetto esistente, basta riassegnarlo:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_obj2</span> <span class="op">&lt;-</span> <span class="fl">1024</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Ora il tipo di <code>my_obj2</code> è cambiato da carattere a numerico. È anche possibile usare oggetti per crearne di nuovi:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_obj3</span> <span class="op">&lt;-</span> <span class="va">my_obj</span> <span class="op">+</span> <span class="va">my_obj2</span></span>
+<span><span class="va">my_obj3</span></span>
+<span><span class="co">#&gt; [1] 1072</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="manipolare-oggetti" class="level4" data-number="7.5.1.5"><h4 data-number="7.5.1.5" class="anchored" data-anchor-id="manipolare-oggetti">
+<span class="header-section-number">7.5.1.5</span> Manipolare oggetti</h4>
+<p>Se provi a sommare oggetti di tipo diverso, R restituirà un errore:</p>
+<pre><code>char_obj &lt;- "ciao"
+char_obj2 &lt;- "mondo"
+char_obj3 &lt;- char_obj + char_obj2
+#&gt; Error in char_obj + char_obj2 : non-numeric argument to binary operator</code></pre>
+<p>Quando incontri errori come questo, chiedi a AI la spiegazione del messaggio, per esempio: “non-numeric argument to binary operator error + r”. Un errore comune è anche:</p>
+<pre><code>my_obj &lt;- 48
+my_obj4 &lt;- my_obj + no_obj
+#&gt; Error: object 'no_obj' not found</code></pre>
+<p>R segnala che <code>no_obj</code> non è stato definito e, di conseguenza, l’oggetto <code>my_obj4</code> non è stato creato.</p>
+</section></section></section><section id="nomi-degli-oggetti" class="level2" data-number="7.6"><h2 data-number="7.6" class="anchored" data-anchor-id="nomi-degli-oggetti">
+<span class="header-section-number">7.6</span> Nomi degli oggetti</h2>
+<p>Attribuire nomi agli oggetti potrebbe sembrare un dettaglio secondario, ma è fondamentale scegliere nomi <em>brevi</em> e <em>informativi</em>. Un buon nome migliora la leggibilità del codice e ne facilita la manutenzione. È importante adottare uno <a href="https://style.tidyverse.org">stile</a> coerente, come uno dei seguenti:</p>
+<ul>
+<li>
+<strong>Snake case</strong>: <code>output_summary</code><br>
+</li>
+<li>
+<strong>Dot case</strong>: <code>output.summary</code><br>
+</li>
+<li>
+<strong>Camel case</strong>: <code>outputSummary</code>
+</li>
+</ul>
+<p>In questo corso useremo lo stile più diffuso, <em>Snake Case</em>, che separa le parole con il carattere di sottolineatura <code>_</code>.</p>
+<p>Ci sono alcune regole fondamentali da rispettare nella scelta dei nomi:</p>
+<ol type="1">
+<li>Non possono iniziare con un numero (ad esempio, <code>2my_variable</code> non è valido).<br>
+</li>
+<li>Non possono contenere caratteri speciali come <code>&amp;</code>, <code>^</code>, <code>/</code>, ecc.<br>
+</li>
+<li>Evita di usare parole riservate (ad esempio, <code>TRUE</code>, <code>NA</code>) o nomi di funzioni esistenti (ad esempio, <code>data</code>).</li>
+</ol>
+<p>Esempio di cosa <em>non fare</em>:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span><span class="st">"mydatafile"</span>, header <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># `data` è già una funzione!</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section><section id="commenti" class="level2" data-number="7.7"><h2 data-number="7.7" class="anchored" data-anchor-id="commenti">
+<span class="header-section-number">7.7</span> Commenti</h2>
+<p>I commenti sono uno strumento essenziale per rendere il codice più chiaro e comprensibile, sia per te stesso sia per altri. Nel linguaggio R, i commenti iniziano con il simbolo <code>#</code>, e tutto ciò che lo segue sulla stessa riga viene <em>ignorato dall’interprete</em> durante l’esecuzione.</p>
+<section id="perché-commentare" class="level3" data-number="7.7.1"><h3 data-number="7.7.1" class="anchored" data-anchor-id="perché-commentare">
+<span class="header-section-number">7.7.1</span> Perché commentare?</h3>
+<p>I commenti servono a spiegare <em>perché</em> il codice è scritto in un certo modo, non solo <em>come</em> funziona (questo è evidente leggendo il codice). Una buona pratica consiste nel commentare le decisioni o i passaggi che non risultano immediatamente evidenti.</p>
+<p>Ad esempio, invece di scrivere un commento ridondante come:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Assegno 42 alla variabile x</span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fl">42</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>è più utile fornire un contesto:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Valore iniziale scelto per semplificare i calcoli successivi</span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fl">42</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="vantaggi" class="level3" data-number="7.7.2"><h3 data-number="7.7.2" class="anchored" data-anchor-id="vantaggi">
+<span class="header-section-number">7.7.2</span> Vantaggi</h3>
+<p>Commentare in modo appropriato aiuta a:</p>
+<ul>
+<li>
+<em>Ridurre il tempo</em> necessario per comprendere o modificare il codice, anche mesi o anni dopo averlo scritto.<br>
+</li>
+<li>Facilitare la collaborazione con altri, rendendo il codice leggibile e accessibile.<br>
+</li>
+<li>Migliorare la <em>manutenibilità</em> e il riutilizzo del codice.</li>
+</ul>
+<p>Un codice ben commentato non è solo più facile da leggere, ma anche più professionale e robusto nel lungo termine.</p>
+</section></section><section id="usare-r-come-calcolatore" class="level2" data-number="7.8"><h2 data-number="7.8" class="anchored" data-anchor-id="usare-r-come-calcolatore">
+<span class="header-section-number">7.8</span> Usare R come calcolatore</h2>
+<p>R può essere utilizzato come un semplice calcolatore digitando direttamente nella console numeri e operatori aritmetici per eseguire operazioni come somma, sottrazione, moltiplicazione e divisione (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>). Questo lo rende uno strumento immediato e versatile per calcoli di base e avanzati.</p>
+<div id="exm-swls-1item" class="theorem example">
+<p><span class="theorem-title"><strong>Esempio 7.1</strong></span> La <em>Satisfaction With Life Scale</em> (SWLS) contiene 5 item, ciascuno valutato con una scala Likert a 7 punti, dove:</p>
+<p>1 = “completamente in disaccordo” e 7 = “completamente d’accordo”.</p>
+<p>Gli item sono:</p>
+<ol type="1">
+<li>Per la maggior parte, la mia vita si avvicina al mio ideale.<br>
+</li>
+<li>Le mie condizioni di vita sono eccellenti.<br>
+</li>
+<li>Sono soddisfatto della mia vita.<br>
+</li>
+<li>Fino ad ora, ho ottenuto le cose importanti che voglio nella vita.<br>
+</li>
+<li>Se potessi vivere la mia vita di nuovo, non cambierei quasi nulla.</li>
+</ol>
+<p>Supponiamo che un individuo risponda nel seguente modo:</p>
+<ul>
+<li>Item 1: 5<br>
+</li>
+<li>Item 2: 3<br>
+</li>
+<li>Item 3: 4<br>
+</li>
+<li>Item 4: 2<br>
+</li>
+<li>Item 5: 2</li>
+</ul>
+<p>Il punteggio totale sulla SWLS si calcola sommando i punteggi di ciascun item:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sogg1</span> <span class="op">&lt;-</span> <span class="fl">5</span> <span class="op">+</span> <span class="fl">3</span> <span class="op">+</span> <span class="fl">4</span> <span class="op">+</span> <span class="fl">2</span> <span class="op">+</span> <span class="fl">2</span> </span>
+<span><span class="va">sogg1</span></span>
+<span><span class="co">#&gt; [1] 16</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Esempio 7.2</strong></span> Il <em>Body Mass Index (BMI)</em> si calcola dividendo il peso, in chilogrammi, per il quadrato dell’altezza, in metri.<br>
+La formula è:</p>
+<p><span class="math display">\[
+\text{BMI} = \frac{\text{Peso (kg)}}{\text{Altezza (m)}^2} .
+\]</span></p>
+<p>Supponiamo che un individuo pesi <em>79000 grammi</em> (79 kg) e sia alto <em>176 cm</em>. Il calcolo in R sarà:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bmi</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fl">79000</span> <span class="op">/</span> <span class="fl">1000</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="fl">176</span> <span class="op">/</span> <span class="fl">100</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span></span>
+<span><span class="va">bmi</span></span>
+<span><span class="co">#&gt; [1] 25.5</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<p><strong>Nota.</strong> L’uso di parentesi è fondamentale per garantire che le operazioni vengano eseguite nell’ordine corretto. In R, come in matematica, le operazioni racchiuse tra parentesi hanno la precedenza rispetto ad altre operazioni. Ad esempio, nel calcolo del BMI, abbiamo usato le parentesi per calcolare prima la conversione dei valori nell’unità di misura appropriata.</p>
+</section><section id="ordine-di-precedenza-degli-operatori" class="level2" data-number="7.9"><h2 data-number="7.9" class="anchored" data-anchor-id="ordine-di-precedenza-degli-operatori">
+<span class="header-section-number">7.9</span> Ordine di precedenza degli operatori</h2>
+<p>Le operazioni algebriche vengono eseguite in una particolare sequenza in R, nota come <em>ordine di precedenza degli operatori</em>. Questo ordine determina quali operazioni vengono eseguite per prime quando un’espressione include più operatori. In assenza di parentesi, l’ordine di precedenza è il seguente (dal più alto al più basso):</p>
+<ol type="1">
+<li>
+<p><strong>Parentesi</strong>: Le operazioni racchiuse tra parentesi <code>()</code> vengono eseguite per prime. Questo permette di sovrascrivere l’ordine naturale delle operazioni.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fl">2</span> <span class="op">+</span> <span class="fl">3</span><span class="op">)</span> <span class="op">*</span> <span class="fl">4</span>  <span class="co"># Risultato: 20</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</li>
+<li>
+<p><strong>Esponenziazione</strong>: L’operatore <code>^</code> viene eseguito dopo le parentesi.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fl">2</span><span class="op">^</span><span class="fl">3</span>  <span class="co"># Risultato: 8</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</li>
+<li>
+<p><strong>Segni unari</strong>: Il segno meno <code>-</code> o più <code>+</code> applicato a un singolo valore.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">3</span> <span class="op">+</span> <span class="fl">5</span>  <span class="co"># Risultato: 2</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</li>
+<li>
+<p><strong>Moltiplicazione, divisione e modulo</strong>: Gli operatori <code>*</code>, <code>/</code>, <code>%/%</code> (divisione intera) e <code>%%</code> (resto) hanno la stessa precedenza e vengono eseguiti da sinistra a destra.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fl">10</span> <span class="op">/</span> <span class="fl">2</span> <span class="op">*</span> <span class="fl">3</span>  <span class="co"># Risultato: 15</span></span>
+<span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fl">10</span> <span class="op"><a href="https://rdrr.io/r/base/Arithmetic.html">%%</a></span> <span class="fl">3</span>     <span class="co"># Risultato: 1</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</li>
+<li>
+<p><strong>Addizione e sottrazione</strong>: Gli operatori <code>+</code> e <code>-</code> vengono eseguiti dopo quelli di moltiplicazione/divisione.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fl">5</span> <span class="op">+</span> <span class="fl">3</span> <span class="op">-</span> <span class="fl">2</span>  <span class="co"># Risultato: 6</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</li>
+<li>
+<p><strong>Operatori di assegnazione</strong>: Gli operatori <code>&lt;-</code>, <code>-&gt;</code>, <code>=</code>, che assegnano valori a variabili, vengono valutati per ultimi.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fl">2</span> <span class="op">+</span> <span class="fl">3</span> <span class="op">*</span> <span class="fl">4</span>  <span class="co"># Risultato: 14</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</li>
+</ol>
+<p><strong>Note importanti:</strong></p>
+<ul>
+<li>
+<em>Associazione a sinistra</em>: La maggior parte degli operatori in R viene valutata da sinistra a destra (ad esempio, <code>+</code>, <code>*</code>, <code>/</code>).</li>
+<li>
+<em>Uso delle parentesi</em>: Quando l’ordine di precedenza non è immediatamente chiaro o si vuole assicurare un ordine specifico, è sempre buona pratica usare le parentesi.</li>
+</ul>
+<p>Capire l’ordine di precedenza è fondamentale per evitare errori logici e garantire che il codice funzioni come previsto.</p>
+</section><section id="funzioni" class="level2" data-number="7.10"><h2 data-number="7.10" class="anchored" data-anchor-id="funzioni">
+<span class="header-section-number">7.10</span> Funzioni</h2>
+<p>Fino ad ora abbiamo creato oggetti semplici assegnando loro direttamente un valore. Con l’aumento dell’esperienza in R, potresti voler creare oggetti più complessi. Per aiutarti, R offre numerose funzioni già disponibili nella sua installazione di base, e altre possono essere aggiunte installando pacchetti. Una funzione è un insieme di istruzioni che eseguono un compito specifico. Inoltre, è possibile creare funzioni personalizzate.</p>
+<section id="la-funzione-c-per-creare-vettori" class="level3" data-number="7.10.1"><h3 data-number="7.10.1" class="anchored" data-anchor-id="la-funzione-c-per-creare-vettori">
+<span class="header-section-number">7.10.1</span> La funzione <code>c()</code> per creare vettori</h3>
+<p>La prima funzione utile da imparare è <code><a href="https://rdrr.io/r/base/c.html">c()</a></code>, che serve a concatenare valori in un <em>vettore</em>. Ad esempio:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">1</span>, <span class="fl">6</span>, <span class="fl">4</span>, <span class="fl">3</span>, <span class="fl">3</span>, <span class="fl">7</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Questo codice crea un oggetto chiamato <code>my_vec</code> che contiene una sequenza di numeri. Alcuni concetti fondamentali sulle funzioni in R:</p>
+<ol type="1">
+<li>
+<em>Nome e parentesi</em>: Le funzioni in R sono sempre seguite da parentesi tonde <code>()</code>.</li>
+<li>
+<em>Argomenti</em>: Gli elementi passati alla funzione (tra le parentesi) ne personalizzano il comportamento e sono separati da virgole.</li>
+</ol>
+<p>Per vedere il contenuto del vettore:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_vec</span></span>
+<span><span class="co">#&gt; [1] 2 3 1 6 4 3 3 7</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="funzioni-per-analizzare-vettori" class="level3" data-number="7.10.2"><h3 data-number="7.10.2" class="anchored" data-anchor-id="funzioni-per-analizzare-vettori">
+<span class="header-section-number">7.10.2</span> Funzioni per analizzare vettori</h3>
+<p>Puoi utilizzare altre funzioni per calcolare statistiche sul vettore:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">my_vec</span><span class="op">)</span>    <span class="co"># Media</span></span>
+<span><span class="co">#&gt; [1] 3.62</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">var</a></span><span class="op">(</span><span class="va">my_vec</span><span class="op">)</span>     <span class="co"># Varianza</span></span>
+<span><span class="co">#&gt; [1] 3.98</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">my_vec</span><span class="op">)</span>      <span class="co"># Deviazione standard</span></span>
+<span><span class="co">#&gt; [1] 2</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">my_vec</span><span class="op">)</span>  <span class="co"># Numero di elementi</span></span>
+<span><span class="co">#&gt; [1] 8</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Puoi anche salvare i risultati in nuovi oggetti per riutilizzarli:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">vec_mean</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">my_vec</span><span class="op">)</span></span>
+<span><span class="va">vec_mean</span></span>
+<span><span class="co">#&gt; [1] 3.62</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled" title="Concetto Chiave">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Concetto Chiave
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>La varianza e la deviazione standard sono misure statistiche descrittive che sintetizzano in un unico valore numerico la variabilità di un insieme di dati. Questi indici, che verranno approfonditi nel <a href="../eda/06_loc_scale.html" class="quarto-xref"><span>Capitolo 19</span></a>, forniscono informazioni su quanto i valori di un dataset siano simili o diversi tra loro.</p>
+<p>In particolare:</p>
+<ul>
+<li>la varianza e la deviazione standard sono pari a 0 quando tutti i valori nel dataset sono identici, indicando assenza di variabilità;</li>
+<li>assumono valori più elevati all’aumentare delle differenze tra i dati, segnalando una maggiore dispersione.</li>
+</ul>
+<p>Per i nostri scopi attuali, è sufficiente comprendere che queste misure descrivono il grado di diversità o omogeneità dei dati.</p>
+</div>
+</div>
+</div>
+</section><section id="creare-sequenze-regolari" class="level3" data-number="7.10.3"><h3 data-number="7.10.3" class="anchored" data-anchor-id="creare-sequenze-regolari">
+<span class="header-section-number">7.10.3</span> Creare sequenze regolari</h3>
+<p>Per creare sequenze di numeri in passi regolari, puoi usare i seguenti comandi.</p>
+<p><em>Simbolo <code>:</code></em> per sequenze semplici:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_seq</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span></span>
+<span><span class="va">my_seq</span></span>
+<span><span class="co">#&gt;  [1]  1  2  3  4  5  6  7  8  9 10</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><em>Funzione <code><a href="https://rdrr.io/r/base/seq.html">seq()</a></code></em> per maggiore controllo:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_seq2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">1</span>, to <span class="op">=</span> <span class="fl">5</span>, by <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
+<span><span class="va">my_seq2</span></span>
+<span><span class="co">#&gt; [1] 1.0 1.5 2.0 2.5 3.0 3.5 4.0 4.5 5.0</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="ripetere-valori" class="level3" data-number="7.10.4"><h3 data-number="7.10.4" class="anchored" data-anchor-id="ripetere-valori">
+<span class="header-section-number">7.10.4</span> Ripetere valori</h3>
+<p>Puoi ripetere valori o sequenze con la funzione <code><a href="https://rdrr.io/r/base/rep.html">rep()</a></code>.</p>
+<p>Ripetere un valore:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_seq3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">2</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
+<span><span class="va">my_seq3</span></span>
+<span><span class="co">#&gt;  [1] 2 2 2 2 2 2 2 2 2 2</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Ripetere una sequenza:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_seq5</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, times <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Ripetere ogni elemento di una sequenza:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_seq6</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, each <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="va">my_seq6</span></span>
+<span><span class="co">#&gt;  [1] 1 1 1 2 2 2 3 3 3 4 4 4 5 5 5</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="annidare-funzioni" class="level3" data-number="7.10.5"><h3 data-number="7.10.5" class="anchored" data-anchor-id="annidare-funzioni">
+<span class="header-section-number">7.10.5</span> Annidare funzioni</h3>
+<p>È possibile combinare funzioni per creare comandi più complessi, come nell’esempio:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_seq7</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">1</span>, <span class="fl">10</span>, <span class="fl">7</span><span class="op">)</span>, each <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="va">my_seq7</span></span>
+<span><span class="co">#&gt;  [1]  3  3  3  1  1  1 10 10 10  7  7  7</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Per maggiore leggibilità, puoi separare i passaggi:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">in_vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">1</span>, <span class="fl">10</span>, <span class="fl">7</span><span class="op">)</span></span>
+<span><span class="va">my_seq7</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="va">in_vec</span>, each <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="va">my_seq7</span></span>
+<span><span class="co">#&gt;  [1]  3  3  3  1  1  1 10 10 10  7  7  7</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Questa pratica facilita la comprensione del codice e lo rende più chiaro.</p>
+</section></section><section id="lavorare-con-i-vettori-in-r" class="level2" data-number="7.11"><h2 data-number="7.11" class="anchored" data-anchor-id="lavorare-con-i-vettori-in-r">
+<span class="header-section-number">7.11</span> Lavorare con i Vettori in R</h2>
+<p>In R, i vettori sono uno degli elementi fondamentali per manipolare, riassumere e ordinare i dati. Qui trovi una panoramica su come estrarre, sostituire, ordinare, lavorare con dati mancanti e sfruttare la vettorizzazione dei vettori.</p>
+<section id="estrarre-elementi-da-un-vettore" class="level3" data-number="7.11.1"><h3 data-number="7.11.1" class="anchored" data-anchor-id="estrarre-elementi-da-un-vettore">
+<span class="header-section-number">7.11.1</span> Estrarre elementi da un vettore</h3>
+<p>Puoi estrarre uno o più elementi da un vettore usando le parentesi quadre <code>[ ]</code>.</p>
+<p><em>Per posizione</em>: Specifica la posizione degli elementi.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">1</span>, <span class="fl">6</span>, <span class="fl">4</span>, <span class="fl">3</span>, <span class="fl">3</span>, <span class="fl">7</span><span class="op">)</span></span>
+<span><span class="va">my_vec</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span>  <span class="co"># Terzo elemento</span></span>
+<span><span class="co">#&gt; [1] 1</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_vec</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">6</span><span class="op">)</span><span class="op">]</span>  <span class="co"># Elementi 1°, 5° e 6°</span></span>
+<span><span class="co">#&gt; [1] 2 4 3</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_vec</span><span class="op">[</span><span class="fl">3</span><span class="op">:</span><span class="fl">8</span><span class="op">]</span>  <span class="co"># Da 3° a 8°</span></span>
+<span><span class="co">#&gt; [1] 1 6 4 3 3 7</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><em>Con condizioni logiche</em>: Usa espressioni logiche per selezionare elementi.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_vec</span><span class="op">[</span><span class="va">my_vec</span> <span class="op">&gt;</span> <span class="fl">4</span><span class="op">]</span>  <span class="co"># Elementi &gt; 4</span></span>
+<span><span class="co">#&gt; [1] 6 7</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_vec</span><span class="op">[</span><span class="va">my_vec</span> <span class="op">&lt;=</span> <span class="fl">4</span><span class="op">]</span>  <span class="co"># Elementi ≤ 4</span></span>
+<span><span class="co">#&gt; [1] 2 3 1 4 3 3</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_vec</span><span class="op">[</span><span class="va">my_vec</span> <span class="op">!=</span> <span class="fl">4</span><span class="op">]</span>  <span class="co"># Elementi diversi da 4</span></span>
+<span><span class="co">#&gt; [1] 2 3 1 6 3 3 7</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><em>Operatori logici</em>: Combina condizioni con <code>&amp;</code> (AND) e <code>|</code> (OR).</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_vec</span><span class="op">[</span><span class="va">my_vec</span> <span class="op">&gt;</span> <span class="fl">2</span> <span class="op">&amp;</span> <span class="va">my_vec</span> <span class="op">&lt;</span> <span class="fl">6</span><span class="op">]</span>  <span class="co"># Tra 2 e 6</span></span>
+<span><span class="co">#&gt; [1] 3 4 3 3</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="sostituire-elementi-in-un-vettore" class="level3" data-number="7.11.2"><h3 data-number="7.11.2" class="anchored" data-anchor-id="sostituire-elementi-in-un-vettore">
+<span class="header-section-number">7.11.2</span> Sostituire elementi in un vettore</h3>
+<p>Puoi modificare i valori di un vettore usando <code>[ ]</code> e l’operatore <code>&lt;-</code>.</p>
+<p><em>Un singolo elemento</em>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_vec</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">500</span>  <span class="co"># Cambia il 4° elemento</span></span>
+<span><span class="va">my_vec</span></span>
+<span><span class="co">#&gt; [1]   2   3   1 500   4   3   3   7</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><em>Più elementi</em>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_vec</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">7</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">100</span>  <span class="co"># Cambia il 6° e 7° elemento</span></span>
+<span><span class="va">my_vec</span></span>
+<span><span class="co">#&gt; [1]   2   3   1 500   4 100 100   7</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><em>Con condizioni logiche</em>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_vec</span><span class="op">[</span><span class="va">my_vec</span> <span class="op">&lt;=</span> <span class="fl">4</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">1000</span>  <span class="co"># Cambia valori ≤ 4</span></span>
+<span><span class="va">my_vec</span></span>
+<span><span class="co">#&gt; [1] 1000 1000 1000  500 1000  100  100    7</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="ordinare-un-vettore" class="level3" data-number="7.11.3"><h3 data-number="7.11.3" class="anchored" data-anchor-id="ordinare-un-vettore">
+<span class="header-section-number">7.11.3</span> Ordinare un vettore</h3>
+<p><em>Dal più piccolo al più grande</em>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">vec_sort</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html">sort</a></span><span class="op">(</span><span class="va">my_vec</span><span class="op">)</span></span>
+<span><span class="va">vec_sort</span></span>
+<span><span class="co">#&gt; [1]    7  100  100  500 1000 1000 1000 1000</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><em>Dal più grande al più piccolo</em>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">vec_sort2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html">sort</a></span><span class="op">(</span><span class="va">my_vec</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">vec_sort2</span></span>
+<span><span class="co">#&gt; [1] 1000 1000 1000 1000  500  100  100    7</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><em>Ordinare un vettore in base a un altro</em>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">height</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">180</span>, <span class="fl">155</span>, <span class="fl">160</span>, <span class="fl">167</span>, <span class="fl">181</span><span class="op">)</span></span>
+<span><span class="va">p.names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Joanna"</span>, <span class="st">"Charlotte"</span>, <span class="st">"Helen"</span>, <span class="st">"Karen"</span>, <span class="st">"Amy"</span><span class="op">)</span></span>
+<span><span class="va">height_ord</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="va">height</span><span class="op">)</span></span>
+<span><span class="va">names_ord</span> <span class="op">&lt;-</span> <span class="va">p.names</span><span class="op">[</span><span class="va">height_ord</span><span class="op">]</span></span>
+<span><span class="va">names_ord</span></span>
+<span><span class="co">#&gt; [1] "Charlotte" "Helen"     "Karen"     "Joanna"    "Amy"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section></section><section id="operazioni-vettoriali-e-vettorizzazione-in-r" class="level2" data-number="7.12"><h2 data-number="7.12" class="anchored" data-anchor-id="operazioni-vettoriali-e-vettorizzazione-in-r">
+<span class="header-section-number">7.12</span> Operazioni vettoriali e vettorizzazione in R</h2>
+<p>La vettorializzazione è una delle caratteristiche più potenti di R, che consente di applicare operazioni o funzioni direttamente a tutti gli elementi di un vettore in modo simultaneo, senza dover ricorrere a cicli espliciti. Questo approccio rende il codice più conciso, leggibile ed efficiente, sfruttando al meglio le capacità intrinseche del linguaggio.</p>
+<section id="operazioni-aritmetiche-su-vettori" class="level3" data-number="7.12.1"><h3 data-number="7.12.1" class="anchored" data-anchor-id="operazioni-aritmetiche-su-vettori">
+<span class="header-section-number">7.12.1</span> Operazioni aritmetiche su vettori</h3>
+<p>Le operazioni algebriche in R, come addizione, sottrazione, moltiplicazione e divisione, sono vettorizzate. Questo significa che ogni operazione viene applicata “elemento per elemento” al vettore.</p>
+<p>Consideriamo ad esempio il seguente vettore:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">5</span>, <span class="fl">7</span>, <span class="fl">1</span>, <span class="fl">9</span>, <span class="fl">20</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Se vogliamo moltiplicare ciascun elemento di <code>my_vec</code> per 5, possiamo scrivere:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_vec</span> <span class="op">*</span> <span class="fl">5</span></span>
+<span><span class="co">#&gt; [1]  15  25  35   5  45 100</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Analogamente, possiamo effettuare altre operazioni algebriche, come divisione o elevamento a potenza:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_vec</span> <span class="op">/</span> <span class="fl">2</span></span>
+<span><span class="co">#&gt; [1]  1.5  2.5  3.5  0.5  4.5 10.0</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_vec</span><span class="op">^</span><span class="fl">2</span></span>
+<span><span class="co">#&gt; [1]   9  25  49   1  81 400</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Queste operazioni vengono applicate automaticamente a ciascun elemento del vettore, senza dover iterare su di essi.</p>
+</section><section id="operazioni-elemento-per-elemento-tra-due-vettori" class="level3" data-number="7.12.2"><h3 data-number="7.12.2" class="anchored" data-anchor-id="operazioni-elemento-per-elemento-tra-due-vettori">
+<span class="header-section-number">7.12.2</span> Operazioni elemento per elemento tra due vettori</h3>
+<p>La vettorializzazione consente anche di eseguire operazioni tra due vettori, applicandole elemento per elemento. Supponiamo di avere un secondo vettore:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_vec2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">17</span>, <span class="fl">15</span>, <span class="fl">13</span>, <span class="fl">19</span>, <span class="fl">11</span>, <span class="fl">0</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Se vogliamo sommare i due vettori, possiamo scrivere:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_vec</span> <span class="op">+</span> <span class="va">my_vec2</span></span>
+<span><span class="co">#&gt; [1] 20 20 20 20 20 20</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In questo caso, il primo elemento di <code>my_vec</code> viene sommato al primo elemento di <code>my_vec2</code>, il secondo elemento al secondo, e così via.</p>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Esempio 7.3</strong></span> Di seguito mostriamo come calcolare i punteggi totali per 10 individui che hanno risposto ai 5 item della <em>Satisfaction With Life Scale</em> (SWLS), utilizzando le formule e l’aritmetica vettorializzata di R.</p>
+<p><strong>Step 1:</strong> Definiamo i punteggi per ciascun item. Ogni vettore contiene i punteggi dati dai 10 individui a uno specifico item della scala:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Punteggi dei 10 individui per ciascun item</span></span>
+<span><span class="va">item1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">4</span>, <span class="fl">6</span>, <span class="fl">7</span>, <span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">5</span>, <span class="fl">6</span>, <span class="fl">4</span>, <span class="fl">7</span><span class="op">)</span></span>
+<span><span class="va">item2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">4</span>, <span class="fl">6</span>, <span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">5</span>, <span class="fl">3</span>, <span class="fl">6</span><span class="op">)</span></span>
+<span><span class="va">item3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">5</span>, <span class="fl">6</span>, <span class="fl">5</span>, <span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">5</span>, <span class="fl">7</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span></span>
+<span><span class="va">item4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">2</span>, <span class="fl">5</span><span class="op">)</span></span>
+<span><span class="va">item5</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">4</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>I valori 5, 3, 4, 2, 2 sono i punteggi del primo individuo sui 5 item; i punteggio 4, 2, 5, 3, 2 sono i punteggi del secondo individuo sui 5 item, e così via.</p>
+<p><strong>Step 2:</strong> Sommiamo i punteggi per calcolare il totale. Il punteggio totale di ciascun individuo è la somma dei punteggi relativi ai 5 item. Formalmente, per l’individuo <span class="math inline">\(i\)</span> (<span class="math inline">\(i = 1, 2, \ldots, 10\)</span>), il punteggio totale è calcolato come:</p>
+<p><span class="math display">\[
+\text{PunteggioTotale}_i = \text{item1}_i + \text{item2}_i + \text{item3}_i + \text{item4}_i + \text{item5}_i .
+\]</span></p>
+<p>In R, possiamo sommare i vettori direttamente grazie all’aritmetica vettorializzata:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Calcolo dei punteggi totali per ciascun individuo</span></span>
+<span><span class="va">total_scores</span> <span class="op">&lt;-</span> <span class="va">item1</span> <span class="op">+</span> <span class="va">item2</span> <span class="op">+</span> <span class="va">item3</span> <span class="op">+</span> <span class="va">item4</span> <span class="op">+</span> <span class="va">item5</span></span>
+<span><span class="va">total_scores</span></span>
+<span><span class="co">#&gt;  [1] 16 16 23 25 11  7 20 25 15 27</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Il risultato è un vettore con i punteggi totali per ciascun individuo.</p>
+<p><strong>Step 3:</strong> Mostriamo i risultati. Per organizzare meglio i dati, creiamo una tabella che associa i punteggi totali agli individui:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Creiamo una tabella con i punteggi totali</span></span>
+<span><span class="va">individui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Individuo"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span>
+<span><span class="va">risultati_swls</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>Individuo <span class="op">=</span> <span class="va">individui</span>, PunteggioTotale <span class="op">=</span> <span class="va">total_scores</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">risultati_swls</span><span class="op">)</span></span>
+<span><span class="co">#&gt;       Individuo PunteggioTotale</span></span>
+<span><span class="co">#&gt; 1   Individuo 1              16</span></span>
+<span><span class="co">#&gt; 2   Individuo 2              16</span></span>
+<span><span class="co">#&gt; 3   Individuo 3              23</span></span>
+<span><span class="co">#&gt; 4   Individuo 4              25</span></span>
+<span><span class="co">#&gt; 5   Individuo 5              11</span></span>
+<span><span class="co">#&gt; 6   Individuo 6               7</span></span>
+<span><span class="co">#&gt; 7   Individuo 7              20</span></span>
+<span><span class="co">#&gt; 8   Individuo 8              25</span></span>
+<span><span class="co">#&gt; 9   Individuo 9              15</span></span>
+<span><span class="co">#&gt; 10 Individuo 10              27</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Spiegazione delle operazioni:</p>
+<ol type="1">
+<li><p>Ogni vettore contiene i punteggi di 10 individui per un dato item. Ad esempio, il vettore <code>item1</code> contiene i punteggi relativi al primo item, e così via.</p></li>
+<li>
+<p>Grazie all’aritmetica vettorializzata, quando sommiamo i vettori <span class="math inline">\(\text{item1}\)</span>, <span class="math inline">\(\text{item2}\)</span>, <span class="math inline">\(\text{item3}\)</span>, <span class="math inline">\(\text{item4}\)</span>, <span class="math inline">\(\text{item5}\)</span>, R somma elemento per elemento:</p>
+<p><span class="math display">\[
+\text{total\_scores}_i = \text{item1}_i + \text{item2}_i + \text{item3}_i + \text{item4}_i + \text{item5}_i
+\]</span></p>
+</li>
+<li><p>Questa tecnica consente di calcolare rapidamente i punteggi totali per tutti gli individui senza dover scrivere un ciclo esplicito, rendendo il codice più semplice e leggibile.</p></li>
+</ol>
+<p>Questo esempio illustra come R semplifichi operazioni complesse grazie al calcolo vettorializzato, migliorando l’efficienza e la chiarezza del codice.</p>
+</div>
+</section><section id="attenzione-al-riciclo-dei-vettori" class="level3" data-number="7.12.3"><h3 data-number="7.12.3" class="anchored" data-anchor-id="attenzione-al-riciclo-dei-vettori">
+<span class="header-section-number">7.12.3</span> Attenzione al riciclo dei vettori</h3>
+<p>Se i due vettori hanno lunghezze diverse, R applicherà il meccanismo di <em>riciclo</em>: gli elementi del vettore più corto verranno ripetuti ciclicamente per abbinarsi alla lunghezza del vettore più lungo. Questo comportamento, sebbene utile, richiede attenzione per evitare risultati inattesi.</p>
+<p>Ad esempio:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">short_vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="va">my_vec</span> <span class="op">+</span> <span class="va">short_vec</span></span>
+<span><span class="co">#&gt; [1]  4  7  8  3 10 22</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In questo caso, gli elementi di <code>short_vec</code> vengono riciclati per abbinarsi alla lunghezza di <code>my_vec</code>. Il risultato è:</p>
+<pre><code>(3+1, 5+2, 7+1, 1+2, 9+1, 20+2)</code></pre>
+</section><section id="applicazione-di-funzioni-su-vettori" class="level3" data-number="7.12.4"><h3 data-number="7.12.4" class="anchored" data-anchor-id="applicazione-di-funzioni-su-vettori">
+<span class="header-section-number">7.12.4</span> Applicazione di funzioni su vettori</h3>
+<p>La vettorializzazione non si limita alle operazioni algebriche, ma si estende anche all’uso di funzioni. Supponiamo di voler calcolare il logaritmo naturale di ciascun elemento di un vettore:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">my_vec</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 1.10 1.61 1.95 0.00 2.20 3.00</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>La funzione <code><a href="https://rdrr.io/r/base/Log.html">log()</a></code> viene applicata automaticamente a ogni elemento del vettore. Analogamente, possiamo utilizzare altre funzioni predefinite di R, come:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="va">my_vec</span><span class="op">)</span>  <span class="co"># Calcola la radice quadrata di ciascun elemento</span></span>
+<span><span class="co">#&gt; [1] 1.73 2.24 2.65 1.00 3.00 4.47</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">my_vec</span><span class="op">)</span>   <span class="co"># Eleva e alla potenza specificata da ciascun elemento</span></span>
+<span><span class="co">#&gt; [1]        20.09       148.41      1096.63         2.72      8103.08</span></span>
+<span><span class="co">#&gt; [6] 485165195.41</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In conclusione, la vettorializzazione in R rappresenta un approccio elegante ed efficiente per gestire calcoli su vettori. Che si tratti di operazioni algebriche, operazioni tra vettori o applicazione di funzioni, la possibilità di evitare cicli espliciti migliora la leggibilità e la velocità del codice. Tuttavia, è importante prestare attenzione al riciclo dei vettori per evitare errori non intenzionali.</p>
+</section></section><section id="gestire-dati-mancanti-na" class="level2" data-number="7.13"><h2 data-number="7.13" class="anchored" data-anchor-id="gestire-dati-mancanti-na">
+<span class="header-section-number">7.13</span> Gestire dati mancanti (NA)</h2>
+<p>R rappresenta i dati mancanti con <code>NA</code>. La gestione dei dati mancanti dipende dalla funzione utilizzata.</p>
+<p><em>Calcolo con dati mancanti</em>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">temp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">7.2</span>, <span class="cn">NA</span>, <span class="fl">7.1</span>, <span class="fl">6.9</span>, <span class="fl">6.5</span>, <span class="fl">5.8</span>, <span class="fl">5.8</span>, <span class="fl">5.5</span>, <span class="cn">NA</span>, <span class="fl">5.5</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">temp</span><span class="op">)</span>  <span class="co"># Restituisce NA</span></span>
+<span><span class="co">#&gt; [1] NA</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">temp</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>  <span class="co"># Ignora i valori mancanti</span></span>
+<span><span class="co">#&gt; [1] 6.29</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Nota</strong>: <code>na.rm = TRUE</code> è un argomento comune per ignorare i <code>NA</code>, ma non tutte le funzioni lo supportano. Consulta la documentazione della funzione per verificare come gestisce i dati mancanti.</p>
+<p>In conclusione, manipolare vettori è un’abilità essenziale in R. Dalla selezione e modifica degli elementi all’ordinamento e gestione di dati mancanti, queste tecniche sono alla base dell’analisi dei dati in R.</p>
+</section><section id="i-dati-in-r" class="level2" data-number="7.14"><h2 data-number="7.14" class="anchored" data-anchor-id="i-dati-in-r">
+<span class="header-section-number">7.14</span> I dati in R</h2>
+<p>In R, i dati possono essere rappresentati in diversi tipi e strutture. Comprendere come gestirli è fondamentale per manipolare, analizzare e riassumere i dataset più complessi.</p>
+<section id="tipi-di-dati-in-r" class="level3" data-number="7.14.1"><h3 data-number="7.14.1" class="anchored" data-anchor-id="tipi-di-dati-in-r">
+<span class="header-section-number">7.14.1</span> Tipi di dati in R</h3>
+<p>R supporta diversi tipi di dati:</p>
+<ol type="1">
+<li>
+<em>Numeric</em>: Numeri decimali (es. <code>2.5</code>).</li>
+<li>
+<em>Integer</em>: Numeri interi (es. <code>3</code>).</li>
+<li>
+<em>Logical</em>: Valori booleani (<code>TRUE</code> o <code>FALSE</code>) e <code>NA</code> per dati mancanti.</li>
+<li>
+<em>Character</em>: Stringhe di testo (es. <code>"hello"</code>).</li>
+<li>
+<em>Factor</em>: Variabili categoriche (es. livelli come <code>"low"</code>, <code>"medium"</code>, <code>"high"</code>).</li>
+</ol>
+<p>Puoi verificare il tipo di un oggetto con <code><a href="https://rdrr.io/r/base/class.html">class()</a></code> e controllare se appartiene a un tipo specifico con funzioni come <code><a href="https://rdrr.io/r/base/numeric.html">is.numeric()</a></code>. È anche possibile convertire un tipo in un altro con funzioni come <code><a href="https://rdrr.io/r/base/character.html">as.character()</a></code>.</p>
+</section><section id="strutture-di-dati-in-r" class="level3" data-number="7.14.2"><h3 data-number="7.14.2" class="anchored" data-anchor-id="strutture-di-dati-in-r">
+<span class="header-section-number">7.14.2</span> Strutture di dati in R</h3>
+<p><em>Vettori</em>: Contengono dati dello stesso tipo (es. numeri, stringhe o logici).</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="va">my_vec</span></span>
+<span><span class="co">#&gt; [1] 1 2 3</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><em>Matrici e array</em>: Strutture bidimensionali (matrici) o multidimensionali (array) con dati dello stesso tipo.</p>
+<p>Creare una matrice:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span>, nrow <span class="op">=</span> <span class="fl">3</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">my_mat</span></span>
+<span><span class="co">#&gt;      [,1] [,2] [,3] [,4]</span></span>
+<span><span class="co">#&gt; [1,]    1    2    3    4</span></span>
+<span><span class="co">#&gt; [2,]    5    6    7    8</span></span>
+<span><span class="co">#&gt; [3,]    9   10   11   12</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Operazioni utili:</p>
+<ul>
+<li>
+<em>Trasposizione</em>: <code>t(my_mat)</code>
+</li>
+<li>
+<em>Diagonale</em>: <code>diag(my_mat)</code>
+</li>
+<li>
+<em>Moltiplicazione matriciale</em>: <code>mat1 %*% mat2</code>
+</li>
+</ul>
+<p><em>Liste</em>: Possono contenere elementi di tipi diversi, inclusi vettori, matrici o altre liste.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">my_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>  numbers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, </span>
+<span>  text <span class="op">=</span> <span class="st">"hello"</span>, </span>
+<span>  mat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, nrow <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">my_list</span><span class="op">$</span><span class="va">numbers</span>  <span class="co"># Accedi agli elementi con il nome</span></span>
+<span><span class="co">#&gt; [1] 1 2</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><em>Data frame</em>: Strutture bidimensionali che possono contenere colonne di tipi diversi. Ideale per dataset strutturati.</p>
+<p>Creare un data frame:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">height</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">180</span>, <span class="fl">155</span>, <span class="fl">160</span><span class="op">)</span></span>
+<span><span class="va">weight</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">65</span>, <span class="fl">50</span>, <span class="fl">52</span><span class="op">)</span></span>
+<span><span class="va">names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Joanna"</span>, <span class="st">"Charlotte"</span>, <span class="st">"Helen"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">dataf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>height <span class="op">=</span> <span class="va">height</span>, weight <span class="op">=</span> <span class="va">weight</span>, names <span class="op">=</span> <span class="va">names</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">dataf</span><span class="op">)</span>  <span class="co"># Mostra la struttura del data frame</span></span>
+<span><span class="co">#&gt; 'data.frame':    3 obs. of  3 variables:</span></span>
+<span><span class="co">#&gt;  $ height: num  180 155 160</span></span>
+<span><span class="co">#&gt;  $ weight: num  65 50 52</span></span>
+<span><span class="co">#&gt;  $ names : chr  "Joanna" "Charlotte" "Helen"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Per convertire le stringhe in fattori durante la creazione:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dataf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
+<span>  height <span class="op">=</span> <span class="va">height</span>, </span>
+<span>  weight <span class="op">=</span> <span class="va">weight</span>, </span>
+<span>  names <span class="op">=</span> <span class="va">names</span>, </span>
+<span>  stringsAsFactors <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">dataf</span></span>
+<span><span class="co">#&gt;   height weight     names</span></span>
+<span><span class="co">#&gt; 1    180     65    Joanna</span></span>
+<span><span class="co">#&gt; 2    155     50 Charlotte</span></span>
+<span><span class="co">#&gt; 3    160     52     Helen</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="operazioni-utili-sui-data-frame" class="level3" data-number="7.14.3"><h3 data-number="7.14.3" class="anchored" data-anchor-id="operazioni-utili-sui-data-frame">
+<span class="header-section-number">7.14.3</span> Operazioni utili sui data frame</h3>
+<ul>
+<li>
+<em>Verificare dimensioni</em>: <code>dim(dataf)</code>
+</li>
+<li>
+<em>Visualizzare struttura</em>: <code>str(dataf)</code>
+</li>
+<li>
+<em>Accedere a colonne</em>: <code>dataf$height</code>
+</li>
+</ul></section></section><section id="operazioni-di-base-in-r" class="level2" data-number="7.15"><h2 data-number="7.15" class="anchored" data-anchor-id="operazioni-di-base-in-r">
+<span class="header-section-number">7.15</span> Operazioni di base in R</h2>
+<section id="operazioni-aritmetiche" class="level3" data-number="7.15.1"><h3 data-number="7.15.1" class="anchored" data-anchor-id="operazioni-aritmetiche">
+<span class="header-section-number">7.15.1</span> Operazioni aritmetiche</h3>
+<p>Come abbiamo visto in precedenza, R supporta le classiche operazioni aritmetiche come somma (<code>+</code>), sottrazione (<code>-</code>), moltiplicazione (<code>*</code>), divisione (<code>/</code>) ed esponenziazione (<code>^</code>).</p>
+</section><section id="operazioni-logiche" class="level3" data-number="7.15.2"><h3 data-number="7.15.2" class="anchored" data-anchor-id="operazioni-logiche">
+<span class="header-section-number">7.15.2</span> Operazioni logiche</h3>
+<p>Le operazioni logiche in R includono:</p>
+<ul>
+<li>
+<code>&amp;</code>: “and” logico<br>
+</li>
+<li>
+<code>|</code>: “or” logico<br>
+</li>
+<li>
+<code>!</code>: “not” logico<br>
+</li>
+<li>
+<code>&gt;</code>: maggiore di<br>
+</li>
+<li>
+<code>&lt;</code>: minore di<br>
+</li>
+<li>
+<code>==</code>: uguale a<br>
+</li>
+<li>
+<code>!=</code>: diverso da</li>
+</ul>
+<p>Per esempio:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Maggiore di</span></span>
+<span><span class="fl">3</span> <span class="op">&gt;</span> <span class="fl">2</span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span>
+<span><span class="co"># Uguale a</span></span>
+<span><span class="fl">3</span> <span class="op">==</span> <span class="fl">2</span></span>
+<span><span class="co">#&gt; [1] FALSE</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Esempio 7.4</strong></span> Consideriamo l’esempio precedente, in cui abbiamo calcolato i punteggi totali dei 10 individui sulla Satisfaction With Life Scale (SWLS). Ora vogliamo determinare la proporzione di individui nel campione che ha ottenuto un punteggio totale maggiore di 15.</p>
+<p>I punteggi totali dei 10 individui sono memorizzati nella colonna <code>PunteggioTotale</code> del data frame <code>risultati_swls</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">risultati_swls</span><span class="op">$</span><span class="va">PunteggioTotale</span></span>
+<span><span class="co">#&gt;  [1] 16 16 23 25 11  7 20 25 15 27</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Possiamo creare un vettore logico che indica, per ciascun individuo, se il suo punteggio totale supera 15. In R, l’operatore di confronto <code>&gt;</code> restituisce un valore TRUE se la condizione è soddisfatta e FALSE altrimenti:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">risultati_swls</span><span class="op">$</span><span class="va">PunteggioTotale</span> <span class="op">&gt;</span> <span class="fl">15</span></span>
+<span><span class="co">#&gt;  [1]  TRUE  TRUE  TRUE  TRUE FALSE FALSE  TRUE  TRUE FALSE  TRUE</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In R, i valori TRUE e FALSE possono essere trattati come numeri: TRUE equivale a 1 e FALSE equivale a 0. Questo ci permette di sommare i valori logici per contare quante volte la condizione è soddisfatta. Per calcolare la proporzione, dividiamo questa somma per il numero totale di individui:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">risultati_swls</span><span class="op">$</span><span class="va">PunteggioTotale</span> <span class="op">&gt;</span> <span class="fl">15</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">risultati_swls</span><span class="op">$</span><span class="va">PunteggioTotale</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.7</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>La proporzione è calcolata come:</p>
+<p><span class="math display">\[
+\text{Proporzione} = \frac{\sum_{i=1}^{n} I(\text{PunteggioTotale}_i &gt; 15)}{n} ,
+\]</span></p>
+<p>dove:</p>
+<ul>
+<li>
+<span class="math inline">\(n\)</span> è il numero totale di individui (in questo caso, 10),</li>
+<li>
+<span class="math inline">\(I(\text{PunteggioTotale}_i &gt; 15)\)</span> è una funzione indicatrice che vale 1 se il punteggio dell’individuo <span class="math inline">\(i\)</span> è maggiore di 15, e 0 altrimenti.</li>
+</ul>
+<p>Nel nostro esempio, la proporzione degli individui con punteggio totale maggiore di 15 è 0.7, cioè il 70% del campione soddisfa questa condizione.</p>
+</div>
+</section></section><section id="estrazione-di-sottoinsiemi-di-oggetti-in-r" class="level2" data-number="7.16"><h2 data-number="7.16" class="anchored" data-anchor-id="estrazione-di-sottoinsiemi-di-oggetti-in-r">
+<span class="header-section-number">7.16</span> Estrazione di sottoinsiemi di oggetti in R</h2>
+<p>In R esistono tre operatori principali per estrarre sottoinsiemi di oggetti:</p>
+<ol type="1">
+<li><p><strong>Operatore <code>[ ]</code></strong><br>
+Questo operatore restituisce sempre un oggetto della stessa classe dell’originale. È utile per selezionare più elementi da un oggetto. È importante chiudere l’estrazione con <code>]</code>.</p></li>
+<li><p><strong>Operatore <code>[[ ]]</code></strong><br>
+Questo operatore viene utilizzato per estrarre elementi da liste o data frame. A differenza di <code>[ ]</code>, permette di estrarre un solo elemento alla volta e la classe dell’oggetto restituito non sarà necessariamente una lista o un data frame. L’estrazione va chiusa con <code>]]</code>.</p></li>
+<li><p><strong>Operatore <code>$</code></strong><br>
+Come visto in precedenza, questo operatore serve per estrarre elementi da una lista o un data frame utilizzando il loro nome letterale. Il comportamento semantico è simile a quello di <code>[[ ]]</code>.</p></li>
+</ol>
+<section id="gli-indici-di-un-data-frame-in-r" class="level3" data-number="7.16.1"><h3 data-number="7.16.1" class="anchored" data-anchor-id="gli-indici-di-un-data-frame-in-r">
+<span class="header-section-number">7.16.1</span> Gli indici di un data frame in R</h3>
+<p>In R, gli indici di un <em>data frame</em> sono utilizzati per selezionare righe e colonne. La sintassi generale è:</p>
+<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span><span class="op">[</span><span class="va">i</span>, <span class="va">j</span><span class="op">]</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>dove:</p>
+<ul>
+<li>
+<code>i</code> rappresenta l’indice o gli indici delle righe,<br>
+</li>
+<li>
+<code>j</code> rappresenta l’indice o gli indici delle colonne.</li>
+</ul>
+<p>Se uno degli indici viene omesso, si considerano <em>tutte le righe</em> o <em>tutte le colonne</em>, a seconda della dimensione omessa.</p>
+<section id="esempi-pratici" class="level4" data-number="7.16.1.1"><h4 data-number="7.16.1.1" class="anchored" data-anchor-id="esempi-pratici">
+<span class="header-section-number">7.16.1.1</span> Esempi pratici</h4>
+<ol type="1">
+<li>
+<p><em>Selezione di righe specifiche su tutte le colonne</em><br>
+Se vogliamo estrarre solo alcune righe, possiamo specificare gli indici delle righe nel primo argomento e lasciare vuoto il secondo. Ad esempio:</p>
+<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">5</span><span class="op">)</span>, <span class="op">]</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Questo seleziona la <em>seconda</em>, <em>terza</em> e <em>quinta</em> riga del data frame <code>df</code>, includendo <em>tutte le colonne</em>.</p>
+</li>
+<li>
+<p><em>Selezione di colonne specifiche su tutte le righe</em><br>
+Per selezionare solo alcune colonne, specifichiamo i loro indici nel secondo argomento e lasciamo vuoto il primo. Ad esempio:</p>
+<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">5</span><span class="op">)</span><span class="op">]</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Questo seleziona la <em>seconda</em>, <em>terza</em> e <em>quinta</em> colonna del data frame <code>df</code>, includendo <em>tutte le righe</em>.</p>
+</li>
+<li>
+<p><em>Selezione di righe e colonne specifiche</em><br>
+Possiamo combinare gli indici per selezionare una sotto-matrice specifica. Ad esempio:</p>
+<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">4</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span><span class="op">]</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Questo seleziona le righe <em>2</em> e <em>4</em> e le colonne <em>1</em> e <em>3</em>.</p>
+</li>
+</ol></section><section id="ulteriori-dettagli" class="level4" data-number="7.16.1.2"><h4 data-number="7.16.1.2" class="anchored" data-anchor-id="ulteriori-dettagli">
+<span class="header-section-number">7.16.1.2</span> Ulteriori dettagli</h4>
+<ul>
+<li>
+<p><em>Selezione singola di riga o colonna</em><br>
+Se vogliamo estrarre una singola riga o colonna, possiamo specificare un solo valore per <code>i</code> o <code>j</code>. Ad esempio:</p>
+<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span>  <span class="co"># Prima riga, tutte le colonne</span></span>
+<span><span class="va">df</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span>  <span class="co"># Seconda colonna, tutte le righe</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</li>
+<li>
+<p><em>Uso di nomi invece di indici</em><br>
+Se il data frame ha <em>nomi</em> per righe o colonne, possiamo utilizzarli per la selezione. Ad esempio:</p>
+<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span><span class="op">[</span><span class="st">"nome_riga"</span>, <span class="op">]</span>        <span class="co"># Seleziona la riga con nome "nome_riga"</span></span>
+<span><span class="va">df</span><span class="op">[</span>, <span class="st">"nome_colonna"</span><span class="op">]</span>     <span class="co"># Seleziona la colonna con nome "nome_colonna"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</li>
+<li>
+<p><em>Selezione logica</em><br>
+Possiamo utilizzare un vettore logico per selezionare righe o colonne. Ad esempio, per selezionare le righe dove il valore nella prima colonna è maggiore di 10:</p>
+<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span><span class="op">[</span><span class="va">df</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&gt;</span> <span class="fl">10</span>, <span class="op">]</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</li>
+</ul></section><section id="sintesi-visiva" class="level4" data-number="7.16.1.3"><h4 data-number="7.16.1.3" class="anchored" data-anchor-id="sintesi-visiva">
+<span class="header-section-number">7.16.1.3</span> Sintesi visiva</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 66%">
+</colgroup>
+<thead><tr class="header">
+<th>Sintassi</th>
+<th>Descrizione</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><code>df[i, ]</code></td>
+<td>Seleziona la riga <code>i</code> con tutte le colonne.</td>
+</tr>
+<tr class="even">
+<td><code>df[, j]</code></td>
+<td>Seleziona la colonna <code>j</code> con tutte le righe.</td>
+</tr>
+<tr class="odd">
+<td><code>df[c(i1, i2), c(j1, j2)]</code></td>
+<td>Seleziona righe e colonne specifiche.</td>
+</tr>
+<tr class="even">
+<td><code>df[i, j]</code></td>
+<td>Seleziona l’intersezione di righe e colonne.</td>
+</tr>
+<tr class="odd">
+<td><code>df[ , ]</code></td>
+<td>Restituisce l’intero data frame.</td>
+</tr>
+</tbody>
+</table>
+<p>Questa flessibilità rende l’indicizzazione dei data frame in R potente ed efficace per manipolare e analizzare i dati.</p>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Esempio 7.5</strong></span> Consideriamo il data frame <code>iris</code> incluso di default in <code>base</code> R.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">iris</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width Species</span></span>
+<span><span class="co">#&gt; 1          5.1         3.5          1.4         0.2  setosa</span></span>
+<span><span class="co">#&gt; 2          4.9         3.0          1.4         0.2  setosa</span></span>
+<span><span class="co">#&gt; 3          4.7         3.2          1.3         0.2  setosa</span></span>
+<span><span class="co">#&gt; 4          4.6         3.1          1.5         0.2  setosa</span></span>
+<span><span class="co">#&gt; 5          5.0         3.6          1.4         0.2  setosa</span></span>
+<span><span class="co">#&gt; 6          5.4         3.9          1.7         0.4  setosa</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Usiamo la funzione <code><a href="https://rdrr.io/r/utils/head.html">head()</a></code> per stampare le prime 6 righe del data frame.</p>
+<p>L’istruzione seguente restituisce le prime tre colonne del dataset <code>iris</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb81"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">iris</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   Sepal.Length Sepal.Width Petal.Length</span></span>
+<span><span class="co">#&gt; 1          5.1         3.5          1.4</span></span>
+<span><span class="co">#&gt; 2          4.9         3.0          1.4</span></span>
+<span><span class="co">#&gt; 3          4.7         3.2          1.3</span></span>
+<span><span class="co">#&gt; 4          4.6         3.1          1.5</span></span>
+<span><span class="co">#&gt; 5          5.0         3.6          1.4</span></span>
+<span><span class="co">#&gt; 6          5.4         3.9          1.7</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Selezione di colonne specifiche per nome:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">iris</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Sepal.Length'</span>, <span class="st">'Petal.Length'</span><span class="op">)</span><span class="op">]</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span>  </span>
+<span><span class="co">#&gt;   Sepal.Length Petal.Length</span></span>
+<span><span class="co">#&gt; 1          5.1          1.4</span></span>
+<span><span class="co">#&gt; 2          4.9          1.4</span></span>
+<span><span class="co">#&gt; 3          4.7          1.3</span></span>
+<span><span class="co">#&gt; 4          4.6          1.5</span></span>
+<span><span class="co">#&gt; 5          5.0          1.4</span></span>
+<span><span class="co">#&gt; 6          5.4          1.7</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Selezione di una singola colonna:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">iris</span><span class="op">[</span>, <span class="st">'Petal.Length'</span><span class="op">]</span> </span>
+<span><span class="co">#&gt;   [1] 1.4 1.4 1.3 1.5 1.4 1.7 1.4 1.5 1.4 1.5 1.5 1.6 1.4 1.1 1.2 1.5 1.3 1.4</span></span>
+<span><span class="co">#&gt;  [19] 1.7 1.5 1.7 1.5 1.0 1.7 1.9 1.6 1.6 1.5 1.4 1.6 1.6 1.5 1.5 1.4 1.5 1.2</span></span>
+<span><span class="co">#&gt;  [37] 1.3 1.4 1.3 1.5 1.3 1.3 1.3 1.6 1.9 1.4 1.6 1.4 1.5 1.4 4.7 4.5 4.9 4.0</span></span>
+<span><span class="co">#&gt;  [55] 4.6 4.5 4.7 3.3 4.6 3.9 3.5 4.2 4.0 4.7 3.6 4.4 4.5 4.1 4.5 3.9 4.8 4.0</span></span>
+<span><span class="co">#&gt;  [73] 4.9 4.7 4.3 4.4 4.8 5.0 4.5 3.5 3.8 3.7 3.9 5.1 4.5 4.5 4.7 4.4 4.1 4.0</span></span>
+<span><span class="co">#&gt;  [91] 4.4 4.6 4.0 3.3 4.2 4.2 4.2 4.3 3.0 4.1 6.0 5.1 5.9 5.6 5.8 6.6 4.5 6.3</span></span>
+<span><span class="co">#&gt; [109] 5.8 6.1 5.1 5.3 5.5 5.0 5.1 5.3 5.5 6.7 6.9 5.0 5.7 4.9 6.7 4.9 5.7 6.0</span></span>
+<span><span class="co">#&gt; [127] 4.8 4.9 5.6 5.8 6.1 6.4 5.6 5.1 5.6 6.1 5.6 5.5 4.8 5.4 5.6 5.1 5.1 5.9</span></span>
+<span><span class="co">#&gt; [145] 5.7 5.2 5.0 5.2 5.4 5.1</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>oppure</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">iris</span><span class="op">$</span><span class="va">Petal.Length</span></span>
+<span><span class="co">#&gt;   [1] 1.4 1.4 1.3 1.5 1.4 1.7 1.4 1.5 1.4 1.5 1.5 1.6 1.4 1.1 1.2 1.5 1.3 1.4</span></span>
+<span><span class="co">#&gt;  [19] 1.7 1.5 1.7 1.5 1.0 1.7 1.9 1.6 1.6 1.5 1.4 1.6 1.6 1.5 1.5 1.4 1.5 1.2</span></span>
+<span><span class="co">#&gt;  [37] 1.3 1.4 1.3 1.5 1.3 1.3 1.3 1.6 1.9 1.4 1.6 1.4 1.5 1.4 4.7 4.5 4.9 4.0</span></span>
+<span><span class="co">#&gt;  [55] 4.6 4.5 4.7 3.3 4.6 3.9 3.5 4.2 4.0 4.7 3.6 4.4 4.5 4.1 4.5 3.9 4.8 4.0</span></span>
+<span><span class="co">#&gt;  [73] 4.9 4.7 4.3 4.4 4.8 5.0 4.5 3.5 3.8 3.7 3.9 5.1 4.5 4.5 4.7 4.4 4.1 4.0</span></span>
+<span><span class="co">#&gt;  [91] 4.4 4.6 4.0 3.3 4.2 4.2 4.2 4.3 3.0 4.1 6.0 5.1 5.9 5.6 5.8 6.6 4.5 6.3</span></span>
+<span><span class="co">#&gt; [109] 5.8 6.1 5.1 5.3 5.5 5.0 5.1 5.3 5.5 6.7 6.9 5.0 5.7 4.9 6.7 4.9 5.7 6.0</span></span>
+<span><span class="co">#&gt; [127] 4.8 4.9 5.6 5.8 6.1 6.4 5.6 5.1 5.6 6.1 5.6 5.5 4.8 5.4 5.6 5.1 5.1 5.9</span></span>
+<span><span class="co">#&gt; [145] 5.7 5.2 5.0 5.2 5.4 5.1</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Per selezionare righe specifiche, definiamo gli indici corrispondenti. Per esempio, l’istruzione seguente restituisce le righe 1 e 3.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb85"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">iris</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span>, <span class="op">]</span></span>
+<span><span class="co">#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width Species</span></span>
+<span><span class="co">#&gt; 1          5.1         3.5          1.4         0.2  setosa</span></span>
+<span><span class="co">#&gt; 3          4.7         3.2          1.3         0.2  setosa</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Filtraggio logico di righe:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">iris</span><span class="op">[</span><span class="va">iris</span><span class="op">$</span><span class="va">Species</span> <span class="op">==</span> <span class="st">'versicolor'</span>, <span class="op">]</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    Sepal.Length Sepal.Width Petal.Length Petal.Width    Species</span></span>
+<span><span class="co">#&gt; 51          7.0         3.2          4.7         1.4 versicolor</span></span>
+<span><span class="co">#&gt; 52          6.4         3.2          4.5         1.5 versicolor</span></span>
+<span><span class="co">#&gt; 53          6.9         3.1          4.9         1.5 versicolor</span></span>
+<span><span class="co">#&gt; 54          5.5         2.3          4.0         1.3 versicolor</span></span>
+<span><span class="co">#&gt; 55          6.5         2.8          4.6         1.5 versicolor</span></span>
+<span><span class="co">#&gt; 56          5.7         2.8          4.5         1.3 versicolor</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Restituisce le righe con <code>Species</code> uguale a “versicolor”. Numero di righe e colonne del sottoinsieme:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb87"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span><span class="va">iris</span><span class="op">$</span><span class="va">Species</span> <span class="op">==</span> <span class="st">'versicolor'</span>, <span class="op">]</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 50  5</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section></section><section id="filtraggio-avanzato-con-operatori-logici" class="level3" data-number="7.16.2"><h3 data-number="7.16.2" class="anchored" data-anchor-id="filtraggio-avanzato-con-operatori-logici">
+<span class="header-section-number">7.16.2</span> Filtraggio avanzato con operatori logici</h3>
+<p>Gli operatori logici <code>&amp;</code> (AND), <code>|</code> (OR) e <code>!</code> (NOT) permettono un filtraggio più sofisticato.</p>
+<p>Esempio: Filtrare le osservazioni di specie “versicolor” con lunghezza del sepalo non superiore a 5.0:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">iris</span><span class="op">[</span><span class="op">(</span><span class="va">iris</span><span class="op">$</span><span class="va">Species</span> <span class="op">==</span> <span class="st">'versicolor'</span><span class="op">)</span> <span class="op">&amp;</span> <span class="op">(</span><span class="va">iris</span><span class="op">$</span><span class="va">Sepal.Length</span> <span class="op">&lt;=</span> <span class="fl">5.0</span><span class="op">)</span>, <span class="op">]</span></span>
+<span><span class="co">#&gt;    Sepal.Length Sepal.Width Petal.Length Petal.Width    Species</span></span>
+<span><span class="co">#&gt; 58          4.9         2.4          3.3           1 versicolor</span></span>
+<span><span class="co">#&gt; 61          5.0         2.0          3.5           1 versicolor</span></span>
+<span><span class="co">#&gt; 94          5.0         2.3          3.3           1 versicolor</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Numero di osservazioni trovate:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb89"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span><span class="op">(</span><span class="va">iris</span><span class="op">$</span><span class="va">Species</span> <span class="op">==</span> <span class="st">'versicolor'</span><span class="op">)</span> <span class="op">&amp;</span> <span class="op">(</span><span class="va">iris</span><span class="op">$</span><span class="va">Sepal.Length</span> <span class="op">&lt;=</span> <span class="fl">5.0</span><span class="op">)</span>, <span class="op">]</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 3 5</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section></section><section id="riflessioni-conclusive" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="riflessioni-conclusive">Riflessioni conclusive</h2>
+<p>R non è soltanto un linguaggio di programmazione per la statistica, ma rappresenta una filosofia che si fonda su tre principi chiave: <em>apertura</em>, <em>collaborazione</em> e <em>avanzamento della conoscenza scientifica</em>.</p>
+<p>Per chi si avvicina a R, sia nel campo della comunicazione sia in altri ambiti, cogliere questa filosofia è essenziale per apprezzarne appieno il valore. R promuove non solo competenze tecniche, ma anche un impegno verso pratiche di <em>ricerca trasparente e riproducibile</em>, che costituiscono un pilastro fondamentale per una scienza rigorosa e affidabile.</p>
+<p><strong>Open Source</strong><br>
+R è un software open source, liberamente accessibile a tutti. Questo significa che chiunque può visualizzarne, modificarne e distribuirne il codice sorgente, promuovendo un ambiente trasparente e collaborativo. Essendo gratuito, R garantisce accessibilità a ricercatori di tutto il mondo, indipendentemente dal budget o dal supporto istituzionale. Inoltre, grazie alla sua natura aperta, R beneficia del contributo collettivo di una comunità globale eterogenea.</p>
+<p><strong>Contributi della Comunità</strong><br>
+La comunità di R è uno dei suoi punti di forza principali. Statistici, ricercatori e data scientist di diverse discipline arricchiscono continuamente R sviluppando pacchetti: raccolte di funzioni, dati e codice che ampliano le sue funzionalità. Questa collaborazione ha portato alla creazione di migliaia di pacchetti che coprono tecniche statistiche, metodi grafici e strumenti per la manipolazione dei dati, rendendo R uno strumento sempre più versatile e adatto a un’ampia gamma di esigenze di ricerca.</p>
+<p><strong>Ricerca Riproducibile</strong><br>
+La ricerca riproducibile consiste nel condurre studi in modo tale che altri possano replicarne i risultati utilizzando gli stessi dati e seguendo la stessa metodologia. Questo approccio è cruciale per la validazione delle scoperte scientifiche, permettendo la verifica dei risultati e la costruzione di nuove conoscenze su basi solide.</p>
+<p>R facilita la ricerca riproducibile grazie a:</p>
+<ul>
+<li>Un ecosistema completo di pacchetti per l’analisi dei dati e la generazione di report dinamici.<br>
+</li>
+<li>Strumenti come R Markdown e Quarto, che permettono di integrare testo descrittivo e codice R in un unico documento. Questa integrazione consente di documentare ogni fase del processo di ricerca—dalla pulizia dei dati all’analisi e alla presentazione dei risultati—garantendo trasparenza e replicabilità.</li>
+</ul>
+<p>In conclusione, comprendere la filosofia open source di R e il suo ruolo nella promozione della ricerca riproducibile fornisce un quadro chiaro del motivo per cui R è diventato uno strumento essenziale per ricercatori e statistici di diverse discipline. Per chi opera in psicologia, sfruttare le potenzialità di R significa produrre risultati di ricerca più trasparenti, replicabili e credibili, contribuendo alla robustezza e affidabilità della conoscenza scientifica nel settore.</p>
+<div class="callout callout-style-simple callout-important no-icon callout-titled" title="Problemi 1">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Problemi 1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Svolgere gli esercizi da 1 a 38, sia in modo <strong>manuale</strong> che utilizzando <strong>R</strong>. Gli esercizi sono disponibili al seguente link:<br><a href="https://math.libretexts.org/Courses/Cosumnes_River_College/Math_370%3A_Precalculus/07%3A_Sequences_and_the_Binomial_Theorem/7.02%3A_Summation_Notation/7.2E%3A_Exercises">Esercizi su Summation Notation</a>.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-important no-icon callout-titled" title="Problemi 2">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Problemi 2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>In questo esercizio, lavorerai con i dati della <strong>Satisfaction With Life Scale (SWLS)</strong> raccolti da ciascuno degli studenti del gruppo TPV di appartenenza.</p>
+<p><em>Istruzioni SWLS:</em> Di seguito sono riportate alcune affermazioni con cui puoi descrivere la tua soddisfazione rispetto alla tua vita. Indica quanto sei d’accordo con ciascuna affermazione utilizzando la scala di risposta fornita.</p>
+<ul>
+<li>Il più delle volte la mia vita è vicina al mio ideale di vita.</li>
+<li>Le condizioni della mia vita sono eccellenti.</li>
+<li>Sono soddisfatto/a della mia vita.</li>
+<li>Finora ho ottenuto le cose importanti che voglio dalla vita.</li>
+<li>Se io potessi rivivere la mia vita, non cambierei quasi nulla.</li>
+</ul>
+<p>La SWLS utilizza una scala Likert a 7 punti, con i seguenti ancoraggi:</p>
+<ol type="1">
+<li>Fortemente in disaccordo</li>
+<li>Disaccordo</li>
+<li>Leggermente in disaccordo</li>
+<li>Né d’accordo né in disaccordo</li>
+<li>Leggermente d’accordo</li>
+<li>D’accordo</li>
+<li>Fortemente d’accordo</li>
+</ol>
+<p>Il tuo compito sarà analizzare i dati raccolti <strong>sia manualmente su carta</strong> che utilizzando <strong>R</strong>.</p>
+<p><strong>Parte 1: Calcolo Manuale</strong></p>
+<ol type="1">
+<li>
+<p><strong>Calcolo del punteggio totale</strong></p>
+<ul>
+<li>La SWLS è composta da 5 item, ciascuno valutato su una scala Likert da 1 a 7.</li>
+<li>Somma i punteggi dei 5 item per ciascun partecipante per ottenere il punteggio totale.<br>
+</li>
+<li>Registra i punteggi totali su carta.</li>
+</ul>
+</li>
+<li>
+<p><strong>Determinazione della media del campione</strong></p>
+<ul>
+<li>Calcola la media aritmetica dei punteggi totali dei 10 studenti.</li>
+<li>Scrivi il calcolo e il risultato.</li>
+</ul>
+</li>
+<li>
+<p><strong>Calcolo della deviazione standard</strong></p>
+<ul>
+<li>
+<p>Calcola la deviazione standard dei punteggi totali manualmente utilizzando la formula:</p>
+<p><span class="math display">\[
+s^2 = \sqrt{\frac{\sum_{i=1}^n (x_i - \bar{x})^2}{n-1}}.
+\]</span></p>
+</li>
+<li><p>Registra il risultato.</p></li>
+</ul>
+</li>
+</ol>
+<p><strong>Parte 2: Analisi con R</strong></p>
+<ol start="4" type="1">
+<li>
+<p><strong>Creazione del dataset in R</strong></p>
+<ul>
+<li>Inserisci i dati in R come un vettore chiamato <code>swls_scores</code>.</li>
+</ul>
+</li>
+<li>
+<p><strong>Calcolo della media e della deviazione standard in R</strong></p>
+<ul>
+<li>Usa le funzioni <code><a href="https://rdrr.io/r/base/mean.html">mean()</a></code> e <code><a href="https://rdrr.io/r/stats/sd.html">sd()</a></code> per ottenere la media e la deviazione standard dei punteggi totali.</li>
+</ul>
+</li>
+<li>
+<p><strong>Visualizzazione dei dati</strong></p>
+<ul>
+<li>Crea un istogramma per visualizzare la distribuzione dei punteggi totali utilizzando <code><a href="https://rdrr.io/r/graphics/hist.html">hist()</a></code>. Se non conosci l’istogramma, fai una ricerca su web; commenta il risultato ottenuto.</li>
+</ul>
+</li>
+<li>
+<p><strong>Identificazione dei punteggi superiori a 20</strong></p>
+<ul>
+<li>Utilizza un’operazione logica per contare quanti partecipanti hanno un punteggio totale maggiore di 20.</li>
+</ul>
+</li>
+<li>
+<p><strong>Filtraggio dei dati</strong></p>
+<ul>
+<li>Estrai e visualizza solo i punteggi superiori alla media del campione.</li>
+</ul>
+</li>
+<li>
+<p><strong>Esportazione dei risultati</strong></p>
+<ul>
+<li>Salva i punteggi totali in un file CSV utilizzando la funzione <code><a href="https://rdrr.io/r/utils/write.table.html">write.csv()</a></code>.</li>
+</ul>
+</li>
+</ol>
+<p><strong>Consegna</strong></p>
+<ul>
+<li>Scrivi le risposte della <strong>Parte 1</strong> su carta.</li>
+<li>Scrivi il codice e i risultati della <strong>Parte 2</strong> in un file <code>.R</code> e invialo come consegna.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled" title="Soluzioni 2">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Soluzioni 2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Parte 1: Calcolo Manuale</strong></p>
+<ol type="1">
+<li>
+<strong>Calcolo del punteggio totale</strong>
+<ul>
+<li>
+<p>Supponiamo che i punteggi per 10 studenti siano:</p>
+<table class="caption-top table">
+<thead><tr class="header">
+<th>Studente</th>
+<th>Item 1</th>
+<th>Item 2</th>
+<th>Item 3</th>
+<th>Item 4</th>
+<th>Item 5</th>
+<th>Totale</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>5</td>
+<td>4</td>
+<td>6</td>
+<td>3</td>
+<td>2</td>
+<td>20</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>4</td>
+<td>2</td>
+<td>5</td>
+<td>3</td>
+<td>2</td>
+<td>16</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>6</td>
+<td>4</td>
+<td>6</td>
+<td>4</td>
+<td>3</td>
+<td>23</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>7</td>
+<td>6</td>
+<td>5</td>
+<td>3</td>
+<td>4</td>
+<td>25</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>3</td>
+<td>2</td>
+<td>3</td>
+<td>2</td>
+<td>1</td>
+<td>11</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>2</td>
+<td>1</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>7</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>5</td>
+<td>4</td>
+<td>5</td>
+<td>3</td>
+<td>3</td>
+<td>20</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>6</td>
+<td>5</td>
+<td>7</td>
+<td>4</td>
+<td>3</td>
+<td>25</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>4</td>
+<td>3</td>
+<td>4</td>
+<td>2</td>
+<td>2</td>
+<td>15</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>7</td>
+<td>6</td>
+<td>5</td>
+<td>5</td>
+<td>4</td>
+<td>27</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+</li>
+<li>
+<strong>Determinazione della media</strong>
+<ul>
+<li>
+<p>Media:</p>
+<p><span class="math display">\[
+\bar{x} = \frac{20+16+23+25+11+7+20+25+15+27}{10} = 18.9
+\]</span></p>
+</li>
+</ul>
+</li>
+<li>
+<strong>Calcolo della deviazione standard</strong>
+<ul>
+<li>
+<p>La deviazione standard è:</p>
+<p><span class="math display">\[
+s = \sqrt{\frac{1}{9} \sum (x_i - 18.9)^2} \approx 6.56
+\]</span></p>
+</li>
+</ul>
+</li>
+</ol>
+<p><strong>Parte 2: Analisi con R</strong></p>
+<ol start="4" type="1">
+<li>
+<p><strong>Creazione del dataset in R</strong></p>
+<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">swls_scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">16</span>, <span class="fl">23</span>, <span class="fl">25</span>, <span class="fl">11</span>, <span class="fl">7</span>, <span class="fl">20</span>, <span class="fl">25</span>, <span class="fl">15</span>, <span class="fl">27</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</li>
+<li>
+<p><strong>Calcolo della media e della deviazione standard</strong></p>
+<div class="sourceCode" id="cb91"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">swls_scores</span><span class="op">)</span>  <span class="co"># Media</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">swls_scores</span><span class="op">)</span>    <span class="co"># Deviazione standard</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</li>
+<li>
+<p><strong>Visualizzazione dei dati</strong></p>
+<div class="sourceCode" id="cb92"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="va">swls_scores</span>, main<span class="op">=</span><span class="st">"Distribuzione SWLS"</span>, xlab<span class="op">=</span><span class="st">"Punteggi"</span>, col<span class="op">=</span><span class="st">"lightblue"</span>, border<span class="op">=</span><span class="st">"black"</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</li>
+<li>
+<p><strong>Identificazione dei punteggi superiori a 20</strong></p>
+<div class="sourceCode" id="cb93"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">swls_scores</span> <span class="op">&gt;</span> <span class="fl">20</span><span class="op">)</span>  <span class="co"># Numero di studenti con punteggio &gt; 20</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</li>
+<li>
+<p><strong>Filtraggio dei dati</strong></p>
+<div class="sourceCode" id="cb94"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">swls_scores</span><span class="op">[</span><span class="va">swls_scores</span> <span class="op">&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">swls_scores</span><span class="op">)</span><span class="op">]</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</li>
+<li>
+<p><strong>Esportazione dei risultati</strong></p>
+<div class="sourceCode" id="cb95"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>Student<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, Score<span class="op">=</span><span class="va">swls_scores</span><span class="op">)</span>, <span class="st">"swls_results.csv"</span>, row.names<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</li>
+</ol>
+<p><strong>Conclusione</strong> Questi esercizi hanno permesso di confrontare il calcolo manuale con l’automatizzazione tramite R, facilitando l’analisi statistica della SWLS.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled" title="Informazioni sull'ambiente di sviluppo">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Informazioni sull’ambiente di sviluppo
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb96"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; R version 4.5.1 (2025-06-13)</span></span>
+<span><span class="co">#&gt; Platform: aarch64-apple-darwin20</span></span>
+<span><span class="co">#&gt; Running under: macOS Sequoia 15.6.1</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Matrix products: default</span></span>
+<span><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRblas.0.dylib </span></span>
+<span><span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; locale:</span></span>
+<span><span class="co">#&gt; [1] C/UTF-8/C/C/C/C</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; time zone: Europe/Rome</span></span>
+<span><span class="co">#&gt; tzcode source: internal</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; attached base packages:</span></span>
+<span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; other attached packages:</span></span>
+<span><span class="co">#&gt;  [1] pillar_1.11.0         tinytable_0.13.0      patchwork_1.3.2      </span></span>
+<span><span class="co">#&gt;  [4] ggdist_3.3.3          tidybayes_3.0.7       bayesplot_1.14.0     </span></span>
+<span><span class="co">#&gt;  [7] ggplot2_3.5.2         reliabilitydiag_0.2.1 priorsense_1.1.1     </span></span>
+<span><span class="co">#&gt; [10] posterior_1.6.1       loo_2.8.0             rstan_2.32.7         </span></span>
+<span><span class="co">#&gt; [13] StanHeaders_2.32.10   brms_2.22.0           Rcpp_1.1.0           </span></span>
+<span><span class="co">#&gt; [16] sessioninfo_1.2.3     conflicted_1.2.0      janitor_2.2.1        </span></span>
+<span><span class="co">#&gt; [19] matrixStats_1.5.0     modelr_0.1.11         tibble_3.3.0         </span></span>
+<span><span class="co">#&gt; [22] dplyr_1.1.4           tidyr_1.3.1           rio_1.2.3            </span></span>
+<span><span class="co">#&gt; [25] here_1.0.1           </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
+<span><span class="co">#&gt;  [1] svUnit_1.0.8          tidyselect_1.2.1      farver_2.1.2         </span></span>
+<span><span class="co">#&gt;  [4] fastmap_1.2.0         TH.data_1.1-4         tensorA_0.36.2.1     </span></span>
+<span><span class="co">#&gt;  [7] pacman_0.5.1          digest_0.6.37         timechange_0.3.0     </span></span>
+<span><span class="co">#&gt; [10] estimability_1.5.1    lifecycle_1.0.4       survival_3.8-3       </span></span>
+<span><span class="co">#&gt; [13] magrittr_2.0.3        compiler_4.5.1        rlang_1.1.6          </span></span>
+<span><span class="co">#&gt; [16] tools_4.5.1           knitr_1.50            bridgesampling_1.1-2 </span></span>
+<span><span class="co">#&gt; [19] htmlwidgets_1.6.4     curl_7.0.0            pkgbuild_1.4.8       </span></span>
+<span><span class="co">#&gt; [22] RColorBrewer_1.1-3    abind_1.4-8           multcomp_1.4-28      </span></span>
+<span><span class="co">#&gt; [25] withr_3.0.2           purrr_1.1.0           grid_4.5.1           </span></span>
+<span><span class="co">#&gt; [28] stats4_4.5.1          colorspace_2.1-1      xtable_1.8-4         </span></span>
+<span><span class="co">#&gt; [31] inline_0.3.21         emmeans_1.11.2-8      scales_1.4.0         </span></span>
+<span><span class="co">#&gt; [34] MASS_7.3-65           cli_3.6.5             mvtnorm_1.3-3        </span></span>
+<span><span class="co">#&gt; [37] rmarkdown_2.29        ragg_1.5.0            generics_0.1.4       </span></span>
+<span><span class="co">#&gt; [40] RcppParallel_5.1.11-1 cachem_1.1.0          stringr_1.5.1        </span></span>
+<span><span class="co">#&gt; [43] splines_4.5.1         parallel_4.5.1        vctrs_0.6.5          </span></span>
+<span><span class="co">#&gt; [46] V8_7.0.0              Matrix_1.7-4          sandwich_3.1-1       </span></span>
+<span><span class="co">#&gt; [49] jsonlite_2.0.0        arrayhelpers_1.1-0    systemfonts_1.2.3    </span></span>
+<span><span class="co">#&gt; [52] glue_1.8.0            codetools_0.2-20      distributional_0.5.0 </span></span>
+<span><span class="co">#&gt; [55] lubridate_1.9.4       stringi_1.8.7         gtable_0.3.6         </span></span>
+<span><span class="co">#&gt; [58] QuickJSR_1.8.0        htmltools_0.5.8.1     Brobdingnag_1.2-9    </span></span>
+<span><span class="co">#&gt; [61] R6_2.6.1              textshaping_1.0.3     rprojroot_2.1.1      </span></span>
+<span><span class="co">#&gt; [64] evaluate_1.0.5        lattice_0.22-7        backports_1.5.0      </span></span>
+<span><span class="co">#&gt; [67] memoise_2.0.1         broom_1.0.9           snakecase_0.11.1     </span></span>
+<span><span class="co">#&gt; [70] rstantools_2.5.0      coda_0.19-4.1         gridExtra_2.3        </span></span>
+<span><span class="co">#&gt; [73] nlme_3.1-168          checkmate_2.3.3       xfun_0.53            </span></span>
+<span><span class="co">#&gt; [76] zoo_1.8-14            pkgconfig_2.0.3</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</section><section id="bibliografia" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="bibliografia">Bibliografia</h2>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
+<div id="ref-open2015estimating" class="csl-entry" role="listitem">
+Collaboration, O. S. (2015). Estimating the reproducibility of psychological science. <em>Science</em>, <em>349</em>(6251), aac4716.
+</div>
+<div id="ref-irizarry2024introduction" class="csl-entry" role="listitem">
+Irizarry, R. A. (2024). <em>Introduction to Data Science: Data Wrangling and Visualization with R</em>. CRC Press.
+</div>
+<div id="ref-knuth1984literate" class="csl-entry" role="listitem">
+Knuth, D. E. (1984). Literate programming. <em>The Computer Journal</em>, <em>27</em>(2), 97–111.
+</div>
+<div id="ref-obels2020analysis" class="csl-entry" role="listitem">
+Obels, P., Lakens, D., Coles, N. A., Gottfried, J., &amp; Green, S. A. (2020). Analysis of open data and computational reproducibility in registered reports in psychology. <em>Advances in Methods and Practices in Psychological Science</em>, <em>3</em>(2), 229–237.
+</div>
+<div id="ref-okoye2024introduction" class="csl-entry" role="listitem">
+Okoye, K., &amp; Hosseini, S. (2024). Introduction to R Programming and RStudio Integrated Development Environment (IDE). In <em>R Programming: Statistical Data Analysis in Research</em> (pp. 3–24). Springer.
+</div>
+<div id="ref-wickham2023r" class="csl-entry" role="listitem">
+Wickham, H., Çetinkaya-Rundel, M., &amp; Grolemund, G. (2023). <em>R for data science</em>. " O’Reilly Media, Inc.".
+</div>
+</div>
+</section></main><!-- /main --><script>
+document.body.classList.add('classic-book');
+document.addEventListener('DOMContentLoaded', function() {
+  const paragraphs = document.querySelectorAll('p');
+  paragraphs.forEach(p => {
+    if (p.textContent.length > 200) {
+      p.style.hyphens = 'auto';
+      p.style.hyphenateCharacter = '-';
+    }
+  });
+  const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+  headings.forEach(h => {
+    h.style.fontFeatureSettings = '"liga" 1, "dlig" 1, "smcp" 1';
+  });
+});
+</script><script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiato!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiato!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/ccaudek\.github\.io\/utet-eda\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+            // default icon
+            link.classList.add("external");
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="../../chapters/R/introduction_r_lang.html" class="pagination-link" aria-label="R">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">R</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../chapters/R/02_utility_functions.html" class="pagination-link" aria-label="Utility functions">
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Utility functions</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
+    <div class="nav-footer-left">
+<p><strong>Analisi esplorativa dei dati (EDA)</strong> — Modulo del progetto UTET a supporto del manuale <em>Metodi bayesiani in psicologia</em>.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/R/01_r_syntax.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>
