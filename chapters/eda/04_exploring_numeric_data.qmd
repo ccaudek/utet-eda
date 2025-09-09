@@ -1,0 +1,844 @@
+# Esplorare i dati numerici {#sec-eda-exploring-num-data}
+
+::: {.epigraph}
+> “Exploratory data analysis can never be the whole story, but nothing else can serve as the foundation stone.”
+>
+> -- **John W. Tukey**, Exploratory Data Analysis (1977)
+:::
+
+## Introduzione {.unnumbered .unlisted}
+
+In questo capitolo ci concentreremo sull'analisi dei dati numerici. In particolare, esamineremo le distribuzioni di frequenza e i quantili, insieme alle tecniche di visualizzazione più comuni, come l'istogramma, l'istogramma smussato e il box-plot. Tratteremo sia gli aspetti computazionali che quelli interpretativi di queste misure, fornendo strumenti utili non solo per una comprensione personale, ma anche per la comunicazione efficace dei risultati, in particolare con chi utilizza questi dati per prendere decisioni pratiche nel mondo reale.
+
+### Panoramica del capitolo {.unnumbered .unlisted}
+
+- costruire e interpretare distribuzioni di frequenza e cumulative;  
+- comprendere e confrontare istogrammi e stime di densità kernel;  
+- utilizzare boxplot e violin plot per individuare differenze tra gruppi;  
+- riconoscere la forma di una distribuzione e i suoi indici di posizione;  
+- comunicare i risultati con grafici chiari ed efficaci. 
+
+::: {.callout-tip collapse=true}
+## Prerequisiti
+
+- Leggere l'Appendice @sec-apx-sums prima di procedere con la lettura di questo capitolo.
+- Leggere il capitolo [Exploring numerical data](https://openintro-ims.netlify.app/explore-numerical) di [Introduction to Modern Statistics (2e)](https://openintro-ims.netlify.app) di Mine Çetinkaya-Rundel e Johanna Hardin.
+:::
+
+::: {.callout-caution collapse=true title="Preparazione del Notebook"}
+
+```{r}
+here::here("code", "_common.R") |> 
+  source()
+
+# Load packages
+if (!requireNamespace("pacman")) install.packages("pacman")
+pacman::p_load(ggbeeswarm, dslabs, gridExtra, ggpubr, cowplot, viridis)
+```
+:::
+
+
+## Le aspettative negative nella depressione
+
+Consideriamo i dati relativi alle aspettative negative, individuate come un meccanismo chiave nel mantenimento della depressione [@zetsche_2019future]. Supponiamo di voler analizzare la distribuzione di una singola variabile quantitativa.
+
+Importiamo i dati:
+
+```{r}
+df <- rio::import(here::here("data", "data.mood.csv"))
+```
+
+
+### Data Wrangling
+
+Per questo esercizio, ci concentreremo sulle variabili `esm_id` (il codice del soggetto), `group` (il gruppo) e `bdi` (il valore BDI-II).
+
+```{r}
+df <- df |> 
+  dplyr::select("esm_id", "group", "bdi")
+df |> 
+  head()
+```
+
+Se elenchiamo le modalità presenti in `group` utilizzando il metodo `unique()`, scopriamo che corrispondono a `mdd` (pazienti) e `ctl` (controlli sani).
+
+```{r}
+df$group |> 
+  unique()
+```
+
+Rimuoviamo i duplicati per ottenere un unico valore BDI-II per ogni soggetto:
+
+```{r}
+df <- df[!duplicated(df), ]
+```
+
+Verifichiamo di avere ottenuto il risultato desiderato.
+
+```{r}
+dim(df)
+```
+
+```{r}
+head(df)
+```
+
+Si noti che il nuovo DataFrame (con 67 righe) conserva il "nome" delle righe (ovvero, l'indice di riga) del DataFrame originario (con 1188 righe). Per esempio, il secondo soggetto (con codice identificativo 9) si trova sulla seconda riga del DataFrame, ma il suo indice di riga è 15. Questo non ha nessuna conseguenza perché non useremo l'indice di riga nelle analisi seguenti.
+
+Eliminiamo eventuali valori mancanti:
+
+```{r}
+df <- df[!is.na(df$bdi), ]
+```
+
+Otteniamo così il DataFrame finale per gli scopi presenti (66 righe e 3 colonne):
+
+```{r}
+dim(df)
+```
+
+
+### Anteprima dei dati  
+
+Prima di approfondire l'analisi, è fondamentale esaminare una anteprima dei dati per comprenderne struttura, formati e potenziali anomalie.  
+
+La funzione `glimpse()` fornisce una panoramica compatta del dataset: numero di righe/colonne, tipo di variabili (es. `chr`, `num`, `dbl`) ed esempi di valori. Utile per identificare rapidamente formati errati o colonne non attese:
+
+```{r}  
+glimpse(df)  
+```  
+
+La funzione `summary()` genera statistiche descrittive per ogni colonna:  
+
+- per variabili numeriche: media, mediana, quartili, min/max; 
+- per variabili categoriche: frequenza dei livelli; 
+- segnala valori mancanti (`NA`), aiutando a valutare la qualità dei dati.  
+
+```{r}  
+summary(df)  
+``` 
+
+I comandi `head()` e `tail()` ci permettono di visualizzare le prime o le ultime righe di un dataset:
+
+```{r}
+head(df)
+```
+
+```{r}
+tail(df)
+```
+
+
+### Conversione da `char` a `factor`
+
+In R, i tipi di dato *character* e *factor* rappresentano informazioni testuali, ma hanno utilizzi distinti:
+
+- *character*: è una semplice stringa di testo;
+- *factor*: è una variabile categoriale, ideale per rappresentare dati con un numero finito di categorie (livelli). I dati in formato `factor` sono utili per analisi statistiche, poiché trattano i valori come categorie discrete.
+
+Nel seguente esempio, convertiamo una variabile `group` da `character` a `factor`, in modo da poterla utilizzare come variabile categoriale:
+
+```{r}
+df$group <- as.factor(df$group)  # Converte 'group' in un factor
+```
+
+Successivamente, il comando `summary()` fornisce un riepilogo della variabile categoriale, mostrando il conteggio dei valori per ciascun livello:
+
+```{r}
+summary(df$group)
+```
+
+## Distribuzioni di frequenza
+
+Le distribuzioni di frequenza sono strumenti essenziali per visualizzare e comprendere la variabilità di una variabile. In questo capitolo verrà illustrato come costruire una distribuzione di frequenza e, successivamente, come generare in R una distribuzione cumulativa empirica, un istogramma, un Kernel Density Plot e un boxplot.
+
+A titolo esemplificativo, consideriamo i punteggi del BDI-II. Iniziamo ordinando i dati in ordine crescente:
+
+```{r}
+df$bdi |> sort()
+```
+
+Una distribuzione di frequenza evidenzia quante volte i valori di una variabile ricorrono in determinati intervalli. Ad esempio, per i punteggi del BDI-II è consuetudine raggruppare i dati nelle seguenti classi:
+
+- 0–13: depressione minima;
+- 14–19: depressione lieve-moderata;
+- 20–28: depressione moderata-severa;
+- 29–63: depressione severa.
+
+Definendo ciascuna classe, indicata con $\Delta_i$, come un intervallo $[a_i, b_i)$ o $(a_i, b_i]$, possiamo calcolare le seguenti misure:
+
+- *Frequenza assoluta ($n_i$)*: numero di osservazioni in $\Delta_i$. La somma delle frequenze assolute corrisponde al totale delle osservazioni, $n$.
+- *Frequenza relativa ($f_i$)*: proporzione di osservazioni in $\Delta_i$, calcolata come $f_i = n_i/n$; la somma delle frequenze relative è pari a 1.
+- *Frequenza cumulata ($N_i$)*: somma delle frequenze assolute fino alla classe $i$, ovvero $N_i = \sum_{j=1}^i n_j$.
+- *Frequenza cumulata relativa ($F_i$)*: somma delle frequenze relative fino alla classe $i$, data da $F_i = \sum_{j=1}^i f_j$.
+
+Queste misure consentono di sintetizzare la distribuzione dei punteggi, facilitando l’interpretazione delle caratteristiche del campione.
+
+
+### Frequenze assolute e relative
+
+Per analizzare la distribuzione dei punteggi BDI-II nel dataset di @zetsche_2019future, è utile creare una variabile categoriale che classifichi ogni osservazione in una delle quattro classi di gravità della depressione. A tal fine, utilizziamo la funzione `cut()`, che permette di suddividere il vettore dei punteggi (`bdi`) in intervalli definiti.
+
+Nel comando seguente, il parametro `breaks` specifica i limiti degli intervalli, mentre `include.lowest = TRUE` garantisce che il valore minimo sia incluso nel primo intervallo:
+
+```{r}
+# Creazione della variabile categoriale per i livelli di depressione
+df <- df %>% 
+  mutate(
+    bdi_class = cut(
+      bdi, 
+      breaks = c(0, 13.5, 19.5, 28.5, 63),
+      include.lowest = TRUE
+    )
+  )
+```
+
+I punteggi vengono suddivisi nelle seguenti classi:
+
+- 0–13: depressione minima;
+- 14–19: depressione lieve-moderata;
+- 20–28: depressione moderata-;
+- 29–63: depressione severa.
+
+Una volta creata la variabile `bdi_class`, possiamo calcolare le frequenze assolute e relative.
+
+
+#### Frequenze assolute
+
+Utilizzando la funzione `table()`, si ottiene il numero di osservazioni in ciascuna classe:
+
+```{r}
+table(df$bdi_class)
+```
+
+
+#### Frequenze relative
+
+Con `prop.table()` è possibile determinare la proporzione di osservazioni per ogni classe:
+
+```{r}
+prop.table(table(df$bdi_class))
+```
+
+
+### Distribuzioni congiunte
+
+Le distribuzioni congiunte di frequenze permettono di analizzare la relazione tra due variabili, considerando tutte le possibili combinazioni dei loro valori. Ad esempio, se analizziamo le variabili `bdi_class` e `group`, la tabella congiunta mostrerà la frequenza (assoluta o relativa) per ogni coppia di valori.
+
+Per ottenere la distribuzione congiunta relativa, utilizziamo:
+
+```{r}
+prop.table(table(df$bdi_class, df$group))
+```
+
+In questo modo, possiamo esaminare come le classi di punteggi BDI-II si distribuiscono all’interno dei diversi gruppi, con la somma complessiva delle frequenze relative pari a 1.
+
+
+### La distribuzione cumulativa empirica
+
+La *distribuzione cumulativa empirica* (eCDF, *empirical Cumulative Distribution Function*) è un modo utile per rappresentare la distribuzione di dati numerici. Questa funzione indica la proporzione di dati che sono inferiori o uguali a un certo valore $a$, per tutti i possibili valori di $a$. Matematicamente, la eCDF è definita come:
+
+$$
+F(a) = \text{Proporzione dei dati con valore} \leq a.
+$$
+
+In altre parole, la eCDF ci dice quale frazione dei dati osservati è minore o uguale a un determinato valore $a$. Questo è particolarmente utile per comprendere come i dati sono distribuiti e per identificare pattern o caratteristiche specifiche della distribuzione, come la presenza di bimodalità (cioè, due picchi distinti nella distribuzione).
+
+
+#### Esempio con i dati di @zetsche_2019future
+
+Nel contesto dei dati di @zetsche_2019future, possiamo utilizzare la eCDF per visualizzare la distribuzione dei punteggi BDI-II. Ecco come viene rappresentata la eCDF per l'intero dataset:
+
+```{r}
+df |> 
+  ggplot(aes(bdi)) + 
+  stat_ecdf() +
+  labs(x = "BDI", y = "F(BDI)")
+```
+
+In questo grafico:
+
+- l'asse $x$ rappresenta i valori del BDI-II,
+- l'asse $y$ rappresenta la proporzione cumulativa dei dati, cioè $F(a)$.
+
+
+#### Interpretazione del grafico
+
+1. *Crescita della curva*: La curva della eCDF parte da 0 (nessun dato è inferiore al valore minimo osservato) e cresce gradualmente fino a 1 (tutti i dati sono inferiori o uguali al valore massimo osservato).
+2. *Bimodalità*: Se la curva presenta dei "gradini" o delle aree con una pendenza più ripida, questo può indicare la presenza di bimodalità, ovvero due gruppi distinti di dati con caratteristiche diverse. Nel caso dei dati BDI-II, la bimodalità potrebbe riflettere la presenza di due sottogruppi di partecipanti con livelli di depressione diversi.
+
+
+#### Filtrare i dati per il campione clinico
+
+Se vogliamo analizzare solo i dati relativi al campione clinico (ad esempio, i pazienti con depressione maggiore), possiamo filtrare i dati e rappresentare la eCDF solo per questo gruppo:
+
+```{r}
+df |> dplyr::filter(group == "mdd") |> 
+  ggplot(aes(bdi)) + 
+  stat_ecdf() +
+  labs(x = "a", y = "F(a)")
+```
+
+In questo caso, la eCDF ci mostrerà come i punteggi BDI-II sono distribuiti tra i pazienti con depressione maggiore, permettendoci di identificare eventuali pattern specifici per questo gruppo.
+
+In sintesi, la eCDF è uno strumento potente per analizzare e visualizzare la distribuzione di dati numerici, specialmente quando si vogliono identificare pattern specifici o confrontare distribuzioni tra diversi gruppi.
+
+
+## Istogramma
+
+Sebbene il concetto di *Funzione di Distribuzione Empirica Cumulativa* (eCDF) venga ampiamente discusso nei testi di statistica, in pratica tale rappresentazione non è molto diffusa. Il motivo principale è che l'eCDF non rende immediatamente visibili alcune caratteristiche fondamentali della distribuzione, come il valore intorno al quale essa è centrata, se la distribuzione sia simmetrica o quali intervalli contengano il 95% dei dati, ad esempio. Gli istogrammi, invece, sono molto più utilizzati perché facilitano notevolmente la comprensione di queste proprietà, sacrificando solo un po' di informazione per fornire una rappresentazione più intuitiva.
+
+Un *istogramma* è un grafico che rappresenta la distribuzione delle frequenze di una variabile. Sull’asse orizzontale (ascisse) vengono indicati i limiti delle classi $\Delta_i$, mentre sull’asse verticale (ordinate) si riporta la densità della frequenza relativa della variabile $X$ per ciascuna classe $\Delta_i$.
+
+Per descrivere formalmente la densità della frequenza relativa, si utilizza una funzione costante a tratti definita come:
+
+$$
+\varphi_n(x) = \frac{f_i}{b_i - a_i},
+$$
+
+dove:
+
+- $f_i$ è la frequenza relativa della classe $\Delta_i$,
+- $b_i - a_i$ è l’ampiezza della classe $\Delta_i$.
+
+In questo modo, l’area del rettangolo corrispondente a $\Delta_i$ in un istogramma risulta proporzionale alla frequenza relativa $f_i$. Poiché la somma delle frequenze relative deve essere pari a 1, l’area totale di un istogramma delle frequenze relative risulta anch’essa uguale a 1, corrispondendo alla somma delle aree di tutti i rettangoli.
+
+Gli istogrammi costituiscono quindi uno strumento essenziale per visualizzare e comprendere le principali caratteristiche di una distribuzione, agevolando l’analisi della sua forma, della sua tendenza centrale e della sua dispersione.
+
+Per fare un esempio, costruiamo un istogramma per i valori BDI-II di @zetsche_2019future. Con i quattro intervalli individuati dai cut-off del BDI-II creiamo una prima versione dell'istogramma -- si notino le frequenze assolute sull'asse delle ordinate.
+
+```{r}
+ggplot(df, aes(x = bdi)) +
+  geom_histogram(
+    breaks = c(0, 13.5, 19.5, 28.5, 63),
+    aes(y = after_stat(density)),  # oppure after_stat(count / sum(count))
+    linewidth = 0.5
+  ) +
+  labs(
+    x = "BDI-II", 
+    y = "Densità"
+  ) 
+```
+
+Anche se nel caso presente è sensato usare ampiezze diverse per gli intervalli delle classi, in generale gli istogrammi si costruiscono utilizzando intervalli riportati sulle ascisse con un'ampiezza uguale. 
+
+```{r}
+ggplot(df, aes(x = bdi)) +
+  geom_histogram(
+    aes(y = after_stat(density))
+  ) +
+  labs(
+    x = "BDI-II", 
+    y = "Densità"
+  )
+```
+
+## Kernel Density Plot
+
+Un limite evidente degli istogrammi è che la loro forma dipende da scelte arbitrarie: il numero e l’ampiezza delle classi (o *bin*) può infatti influenzare in modo sostanziale l’aspetto finale del grafico, rendendo più difficile l’interpretazione della distribuzione dei dati. Una soluzione a questo problema è offerta dalla *stima della densità kernel* (*Kernel Density Estimation*, KDE), un metodo che fornisce un profilo continuo e smussato della distribuzione, meno condizionato dall’arbitrarietà delle classi.
+
+
+### Differenza tra istogramma e KDE
+
+Nell’istogramma, dividiamo l’asse orizzontale in intervalli di ampiezza prefissata (i *bin*) e costruiamo rettangoli la cui altezza è proporzionale alla frequenza (o densità) dei dati che ricadono in ciascun intervallo. Se cambiamo il numero o la larghezza dei bin, la forma dell’istogramma può variare sensibilmente.
+
+La KDE, invece, non suddivide i dati in intervalli fissi. Al contrario, “appoggia” una piccola curva (il *kernel*) su ogni singola osservazione. Le curve utilizzate (ad esempio di tipo gaussiano) hanno una larghezza, detta *bandwidth*, che controlla il grado di *smussamento*: con un bandwidth molto piccolo, la stima segue da vicino le singole osservazioni, generando un profilo più frastagliato; con un bandwidth più ampio, la curva risultante è più liscia, ma rischia di nascondere dettagli importanti.
+
+Per comprendere in modo intuitivo il concetto di KDE, possiamo partire da un esempio semplice. Immaginiamo di costruire un istogramma con classi di ampiezza sempre più piccola. Se avessimo a disposizione un numero *enorme* di dati (ad esempio, un milione di misurazioni dell'altezza di individui) e li rappresentassimo con bin sempre più stretti (0.1, 0.01, ecc.), l'istogramma diventerebbe sempre più levigato, avvicinandosi a una curva continua. Questo processo illustra l'idea alla base della KDE, che approssima la distribuzione dei dati in modo fluido e continuo.
+
+La KDE, tuttavia, opera in modo più elegante e senza richiedere un numero enorme di punti: posiziona un piccolo “dosso di campana” (o un altro tipo di kernel) su ciascun punto dati e somma tutte queste curve in un’unica curva finale.
+
+::: {.callout-note}
+## Che cosa vuol dire “dosso di campana”?
+
+Possiamo immaginarlo come una piccola curva gaussiana: una curva simile alla forma di una campana che si innalza e poi discende dolcemente.
+
+- Ogni singolo dato viene “coperto” da questa mini-campana.
+- L’ampiezza (o “larghezza”) della campana è regolata dal bandwidth, che stabilisce se la curva sarà più o meno “distesa” sul grafico.
+- Sommando tutte le piccole campane (una per ogni osservazione), otteniamo una curva di densità liscia e continua che rappresenta la distribuzione dei dati senza i “salti” tipici dell’istogramma.
+:::
+
+Il risultato è una *curva di densità* che:
+
+1. *È continua*: a differenza degli istogrammi, non presenta bruschi salti di altezza tra i bin: la curva scorre in modo uniforme lungo tutto l’asse orizzontale.
+2. *Mostra la proporzione di dati in ogni intervallo*: l'area sotto la curva in un determinato range corrisponde alla percentuale (o probabilità) di dati che cadono in quell'intervallo.
+3. *Dipende dal bandwidth*: 
+    - Un bandwidth *piccolo* produce una curva più ondulata e “frastagliata” (poiché segue da vicino ogni singolo dato).
+    - Un bandwidth *grande* genera una curva più liscia e arrotondata, ma rischia di “coprire” troppi dettagli della distribuzione originaria.
+
+Si noti che la stima della densità kernel introduce, tuttavia, un’ipotesi di fondo: che la distribuzione dei dati “reali” sia “liscia” e non presenti discontinuità improvvise. Questo è spesso ragionevole (ad esempio per dati fisiologici come l’altezza), ma in altri casi potrebbe non esserlo. È quindi importante scegliere un bandwidth che rifletta adeguatamente il livello di dettaglio che vogliamo mostrare.
+
+Inoltre, l’asse delle ordinate (l’asse *y*) rappresenta la densità, non la frequenza assoluta. È possibile costruire un istogramma in cui l’altezza dei rettangoli mostra quante osservazioni ricadono in ciascun bin. Nella KDE, l’altezza della curva è tale che l’area totale sotto di essa sia pari a 1, rispecchiando la natura di una funzione di densità di probabilità.
+
+Di seguito esaminiamo un esempio che mostra la costruzione passo dopo passo di istogrammi con diversi valori di binwidth, fino a passare a una stima di densità. Consideriemo un dataset con un numero di osservazioni molto elevato (i valori di altezza, `heights`, riportati da 1050 partecipanti, estratti dal pacchetto `dslabs`), suddiviso in due gruppi: maschi e femmine. Ecco come potremmo prima costruire un istogramma di altezze per i maschi, per poi tracciare una curva di densità smussata:
+
+```{r}
+# Istogramma con bin di ampiezza 1
+ggplot(heights |> dplyr::filter(sex == "Male"), aes(height)) +
+  geom_histogram(
+    binwidth = 1
+  )
+```
+
+```{r}
+# Aggiunta della curva di densità sopra l'istogramma
+ggplot(heights |> dplyr::filter(sex == "Male"), aes(height)) +
+  geom_histogram(
+    aes(y = after_stat(density)), 
+    binwidth = 1
+  ) +
+  geom_line(stat = 'density')
+```
+
+Variando il parametro di regolazione (*adjust* o *bandwidth*) nella funzione `geom_density()`, possiamo modificare il livello di smussamento:
+
+```{r}
+# Istogramma base con alpha e colore coerente
+p <- ggplot(heights |> filter(sex == "Male"), aes(x = height)) +
+  geom_histogram(
+    aes(y = after_stat(density)),
+    binwidth = 1
+  ) +
+  labs(
+    x = "Altezza",
+    y = "Densità"
+  )
+
+# Più ondulato (banda piccola)
+p1 <- p +
+  geom_line(stat = "density", adjust = 0.5) +
+  labs(subtitle = "Smoothing accentuato (adjust = 0.5)")
+
+# Più liscio (banda larga)
+p2 <- p +
+  geom_line(stat = "density", adjust = 2) +
+  labs(subtitle = "Smoothing attenuato (adjust = 2)")
+```
+
+```{r}
+p1
+```
+
+```{r}
+p2
+```
+
+Per illustrare ulteriormente l’uso della KDE, ora consideriamo i punteggi BDI-II di  @zetsche_2019future. Con il codice seguente creiamo due curve di densità, una per ogni gruppo:
+
+```{r}
+ggplot(df, aes(x = bdi, fill = group)) +
+  geom_density() +
+  labs(
+    x = "BDI-II",
+    y = "Densità"
+  )
+```
+
+Qui, la sovrapposizione delle due curve ci consente di confrontare la distribuzione dei punteggi BDI-II tra i due gruppi in maniera molto più *fluida* e intuitiva rispetto a quanto faremmo con due istogrammi separati o con un istogramma combinato. Inoltre, non siamo più vincolati alla scelta dei bin: l’aspetto delle curve dipende soltanto dalla funzione kernel utilizzata e dal parametro di smussamento. 
+
+In conclusione, 
+
+- l’*istogramma* rimane uno strumento rapido e intuitivo, *privo di assunzioni*, ma sensibile alla scelta di numero e ampiezza dei bin;
+- la *stima della densità kernel (KDE)* offre una rappresentazione continua della distribuzione dei dati, fornendo un quadro più “morbido” e spesso più informativo. Tuttavia, introduce alcune assunzioni e richiede la scelta del bandwidth ottimale.
+
+In definitiva, è consigliabile usare entrambe le tecniche per ottenere una panoramica completa dei propri dati: l’istogramma permette di dare un primo sguardo alla loro distribuzione “grezza” (senza presupposti), mentre la KDE aiuta a comprenderne l’eventuale struttura “liscia” di fondo.
+
+
+### Area sottesa alla curva di densità: un'interpretazione probabilistica
+
+Quando si lavora con una curva di densità, è importante capire che l'area totale sotto la curva rappresenta la probabilità totale, che è sempre pari a 1 (o 100%). Questo significa che l'area sotto la curva in un determinato intervallo corrisponde alla probabilità che un dato valore cada in quell'intervallo.
+
+
+#### Come interpretare l'asse Y
+
+L'asse y di un grafico di densità non rappresenta direttamente la probabilità, ma è scalato in modo che l'area totale sotto la curva sia uguale a 1. Se immaginiamo di creare un "bin" (un intervallo) con una base di 1 unità di lunghezza, il valore sull'asse y ci indica la proporzione di valori che cadono in quel bin. Tuttavia, questa interpretazione è valida solo per bin di dimensione 1. Per intervalli di altre dimensioni, il modo migliore per determinare la proporzione di dati in quell'intervallo è calcolare la proporzione dell'area totale sotto la curva che cade in quell'intervallo.
+
+
+#### Esempio pratico
+
+Consideriamo un esempio con i dati delle altezze degli uomini. Supponiamo di voler sapere quale proporzione di uomini ha un'altezza compresa tra 65 e 68 pollici. Per farlo, calcoliamo l'area sotto la curva di densità in quell'intervallo.
+
+Ecco come appare graficamente:
+
+```{r summaries-area-under-curve, echo = FALSE}
+# Calcolo della densità
+d <- with(heights, density(height[sex == "Male"]))
+tmp <- data.frame(height = d$x, density = d$y)
+
+# Plot coerente con il tema globale e la palette definita
+ggplot(tmp, aes(x = height, y = density)) +
+  geom_line(linewidth = 1) +
+  geom_area(
+    data = dplyr::filter(tmp, between(height, 65, 68)),
+    aes(x = height, y = density),
+    alpha = 0.3
+  ) +
+  labs(
+    subtitle = "Area evidenziata tra 65 e 68 pollici",
+    x = "Altezza (in pollici)",
+    y = "Densità"
+  )
+
+```
+
+L'area evidenziata in azzurro rappresenta la proporzione di uomini con altezza tra 65 e 68 pollici. Calcolando questa area, troviamo che circa il `r round(mean(dplyr::between(heights$height[heights$sex=="Male"], 65, 68)), 2)` (ovvero il `r noquote(paste0(round(mean(dplyr::between(heights$height[heights$sex=="Male"], 65, 68)), 2)*100, '%'))` degli uomini ha un'altezza in questo intervallo.
+
+
+#### Utilizzo della curva di densità come riepilogo
+
+Comprendendo questo concetto, possiamo utilizzare la curva di densità come un efficace strumento di riepilogo. Per questo dataset, l'assunzione di smoothness (lisciatura) della curva è ragionevole, e possiamo condividere questa rappresentazione grafica per comunicare in modo chiaro e intuitivo la distribuzione delle altezze degli uomini.
+
+Ecco un esempio di come appare la curva di densità smooth per le altezze degli uomini:
+
+```{r summaries-example-of-smoothed-density-2, echo = FALSE}
+heights |> 
+  dplyr::filter(sex == "Male") |> 
+  ggplot(aes(x = height)) + 
+  geom_density(
+    alpha = 0.3
+  ) +
+  labs(
+    x = "Altezza (in pollici)",
+    y = "Densità"
+  )
+```
+
+In sintesi, l'area sotto la curva di densità in un determinato intervallo rappresenta la probabilità che un valore casuale cada in quell'intervallo, rendendo la curva di densità uno strumento potente per comprendere e comunicare la distribuzione dei dati.
+
+
+## Forma di una distribuzione
+
+In statistica, la forma di una distribuzione descrive come i dati sono distribuiti intorno ai valori centrali. Si distingue tra distribuzioni simmetriche e asimmetriche, e tra distribuzioni unimodali e multimodali. Un'illustrazione grafica è fornita nella figura seguente. Nel pannello 1, la distribuzione è unimodale con asimmetria negativa; nel pannello 2, la distribuzione è unimodale con asimmetria positiva; nel pannello 3, la distribuzione è simmetrica e unimodale; nel pannello 4, la distribuzione è bimodale.
+
+![Distribuzioni](../../figures/shape_distribution.png){width="55%"}
+
+Il grafico della densità di kernel (Kernel Density Plot) dei valori BDI-II nel campione di @zetsche_2019future è bimodale. Questo indica che le osservazioni della distribuzione si raggruppano in due cluster distinti: un gruppo di osservazioni tende ad avere valori BDI-II bassi, mentre l'altro gruppo tende ad avere valori BDI-II alti. Questi due cluster di osservazioni corrispondono al gruppo di controllo e al gruppo clinico nel campione di dati esaminato da @zetsche_2019future.
+
+
+## Indici di posizione
+
+### Quantili
+
+La distribuzione dei valori BDI-II di @zetsche_2019future può essere sintetizzata attraverso l'uso dei quantili, che sono valori caratteristici che suddividono i dati in parti ugualmente numerose. I quartili sono tre quantili specifici: il primo quartile, $q_1$, divide i dati in due parti, lasciando a sinistra il 25% del campione; il secondo quartile, $q_2$, corrisponde alla mediana e divide i dati in due parti uguali; il terzo quartile lascia a sinistra il 75% del campione.
+
+Inoltre, ci sono altri indici di posizione chiamati decili e percentili che suddividono i dati in parti di dimensioni uguali a 10% e 1%, rispettivamente.
+
+Per calcolare i quantili, i dati vengono prima ordinati in modo crescente e poi viene determinato il valore di $np$, dove $n$ è la dimensione del campione e $p$ è l'ordine del quantile. Se $np$ non è un intero, il valore del quantile corrisponde al valore del dato che si trova alla posizione successiva alla parte intera di $np$. Se $np$ è un intero, il valore del quantile corrisponde alla media dei dati nelle posizioni $k$ e $k+1$, dove $k$ è la parte intera di $np$.
+
+Gli indici di posizione possono essere utilizzati per creare un box-plot, una rappresentazione grafica della distribuzione dei dati che è molto popolare e può essere utilizzata in alternativa ad un istogramma.
+
+Ad esempio, per calcolare la mediana della distribuzione dei nove soggetti con un unico episodio di depressione maggiore del campione clinico di @zetsche_2019future, si determina il valore di $np = 9 \cdot 0.5 = 4.5$, che non è un intero. Pertanto, il valore del secondo quartile è pari al valore del dato che si trova alla posizione successiva alla parte intera di $np$, ovvero $q_2 = x_{4 + 1} = 27$. Per calcolare il quantile di ordine $2/3$, si determina il valore di $np = 9 \cdot 2/3 = 6$, che è un intero. Quindi, il valore del quantile corrisponde alla media dei dati nelle posizioni $6$ e $7$, ovvero $q_{\frac{2}{3}} = \frac{1}{2} (x_{6} + x_{7}) = \frac{1}{2} (33 + 33) = 33$.
+
+Usiamo `quantile()` per trovare la soluzione dell'esercizio precedente.
+
+```{r}
+x = c(19, 26, 27, 28, 28, 33, 33, 41, 43)
+quantile(x, 2 / 3)
+```
+
+
+## Mostrare i dati
+
+### Diagramma a scatola
+
+Il box plot è uno strumento grafico che visualizza la dispersione di una distribuzione. I *boxplot* forniscono una rappresentazione visiva sintetica di cinque valori caratteristici: *minimo*, *primo quartile (25%)*, *mediana (50%)*, *terzo quartile (75%)* e *massimo*. Spesso però, i boxplot “ignorano” i valori considerati anomali (*outlier*), segnalandoli con punti isolati. 
+
+Per creare un box plot, si disegna un rettangolo (la "scatola") di altezza arbitraria, basato sulla distanza interquartile (IQR), che corrisponde alla differenza tra il terzo quartile ($q_{0.75}$) e il primo quartile ($q_{0.25}$). La mediana ($q_{0.5}$) è rappresentata da una linea all'interno del rettangolo.
+
+Ai lati della scatola, vengono tracciati due segmenti di retta, detti "baffi", che rappresentano i valori adiacenti inferiore e superiore. Il valore adiacente inferiore è il valore più basso tra le osservazioni che è maggiore o uguale al primo quartile meno 1.5 volte la distanza interquartile. Il valore adiacente superiore è il valore più alto tra le osservazioni che è minore o uguale al terzo quartile più 1.5 volte la distanza interquartile.
+
+Se ci sono dei valori che cadono al di fuori dei valori adiacenti, vengono chiamati "valori anomali" e sono rappresentati individualmente nel box plot per evidenziare la loro presenza e posizione. In questo modo, il box plot fornisce una rappresentazione visiva della distribuzione dei dati, permettendo di individuare facilmente eventuali valori anomali e di comprendere la dispersione dei dati.
+
+![](../../figures/boxplot.png){width="90%"}
+
+### Stratificazione
+
+Nell'analisi dei dati, è comune suddividere le osservazioni in gruppi in base ai valori di una o più variabili associate a tali osservazioni. Questo processo è chiamato *stratificazione*, e i gruppi risultanti sono detti *strati*. Ad esempio, nella sezione successiva, dividiamo i valori dei punteggi BDI-II in due gruppi in base alla condizione sperimentale: campione clinico e campione di controllo. 
+
+La stratificazione è particolarmente utile nella visualizzazione dei dati, poiché spesso siamo interessati a comprendere come la distribuzione di una variabile differisca tra diversi sottogruppi. 
+
+Per esempio, per rappresentare graficamente la distribuzione dei punteggi BDI-II nel gruppo dei pazienti e nel gruppo di controllo, possiamo utilizzare un box-plot. Questo tipo di grafico ci permette di confrontare visivamente la distribuzione dei punteggi tra i due gruppi, evidenziando eventuali differenze.
+
+```{r}
+ggplot(df, aes(x = group, y = bdi)) +
+  geom_boxplot() +
+  labs(
+    x = "Gruppo", 
+    y = "BDI-II"
+  )
+```
+
+In questo grafico:
+
+- l'asse *x* rappresenta i due gruppi (pazienti e controllo),
+- l'asse *y* rappresenta i punteggi BDI-II,
+- i box (scatole) mostrano la distribuzione dei punteggi, con la linea centrale che indica la mediana e i "baffi" che rappresentano la variabilità dei dati.
+
+La stratificazione ci aiuta a identificare rapidamente se ci sono differenze nella distribuzione dei punteggi BDI-II tra i due gruppi. Nel caso presente, il grafico mostra come non vi sia alcuna sovrapposizione tra le due distribuzioni.
+
+Un risultato migliore si ottiene utilizzando un grafico a violino (*violin plot*) e includendo anche i dati grezzi.
+
+
+### Grafico a violino
+
+I grafici a violino combinano le caratteristiche dei box plot e dei grafici di densità di kernel (KDE plot) per offrire una rappresentazione più dettagliata dei dati. 
+
+```{r}
+ggplot(df, aes(x = group, y = bdi, fill = group)) +
+  geom_violin() +
+  labs(
+    x = "Gruppo",
+    y = "BDI-II"
+  )
+```
+
+
+### Grafico Beeswarm
+
+Il pacchetto *{ggbeeswarm}* include una funzione chiamata `geom_beeswarm`, che può essere utilizzata per creare un grafico beeswarm in ggplot2. Un grafico beeswarm è una variazione del grafico a punti che disperde i dati in modo che non si sovrappongano, rendendo visibili tutti i singoli punti dati. Questo tipo di visualizzazione è particolarmente utile quando si desidera esaminare la distribuzione e la densità di un set di dati, senza ricorrere all'uso di barre d'errore o di scatole e baffi (boxplot), mantenendo un'alta leggibilità anche quando i set di dati sono densi.
+
+```{r}
+ggplot(df, aes(x = group, y = bdi, color = group)) +
+  geom_beeswarm(cex = 2) +
+  labs(
+    x = "Gruppo",
+    y = "BDI-II"
+  ) 
+```
+
+
+
+## Riflessioni conclusive {.unnumbered .unlisted}
+
+In questo capitolo abbiamo illustrato una varietà di tecniche per sintetizzare e visualizzare i dati numerici, concentrandoci sia sugli aspetti descrittivi (come distribuzioni di frequenze, istogrammi e distribuzioni cumulative) sia su metodi più raffinati come la stima della densità kernel. Questi strumenti non solo facilitano la comprensione immediata dei pattern e delle caratteristiche fondamentali dei dati, ma rappresentano anche un passaggio essenziale per identificare anomalie e guidare ulteriori analisi statistiche.
+
+La capacità di trasformare dati grezzi in rappresentazioni grafiche chiare e intuitive è fondamentale per comunicare in modo efficace i risultati dell’analisi, soprattutto quando si tratta di supportare decisioni pratiche o di sviluppare ipotesi di ricerca. In questo senso, una visualizzazione accurata e ben strutturata consente di evidenziare aspetti come la forma della distribuzione, la presenza di outlier e le differenze tra sottogruppi, contribuendo a una più profonda interpretazione dei fenomeni studiati.
+
+Infine, l’integrazione di tecniche di visualizzazione con analisi statistiche sintetiche migliora la trasparenza e l’interpretabilità dei dati, offrendo un quadro completo che supporta sia la valutazione critica che la comunicazione dei risultati.
+
+
+::: {.callout-important title="Problemi" collapse="true"}
+In questo esercizio, gli studenti raccoglieranno e analizzeranno dati relativi alla **Satisfaction With Life Scale (SWLS)** [@Diener1985] e alla **Scala della Rete Sociale di Lubben (LSNS-6)** [@Lubben2006]. L'obiettivo è comprendere la relazione tra la soddisfazione di vita e la qualità delle relazioni sociali, esplorando la distribuzione delle variabili e le possibili associazioni tra di esse.
+
+La **Scala della Rete Sociale di Lubben a 6 item (LSNS-6)** è uno strumento utilizzato per valutare l'isolamento sociale negli adulti più anziani, misurando il supporto sociale percepito sia da parte dei familiari che degli amici. La scala comprende sei domande suddivise in due sezioni:
+
+**FAMIGLIA: Considerando le persone a cui sei legato per nascita, matrimonio, adozione, ecc.**
+
+1. Quanti parenti vedi o senti almeno una volta al mese?
+2. Con quanti parenti ti senti a tuo agio nel parlare di questioni personali?
+3. Con quanti parenti ti senti così vicino da poter chiedere loro aiuto?
+
+**AMICIZIE: Considerando tutti i tuoi amici, inclusi quelli che vivono nel tuo quartiere**
+
+4. Quanti dei tuoi amici vedi o senti almeno una volta al mese?
+5. Con quanti amici ti senti a tuo agio nel parlare di questioni personali?
+6. Con quanti amici ti senti così vicino da poter chiedere loro aiuto?
+
+La scala di risposta è:
+
+   - 0 = nessuno
+   - 1 = uno
+   - 2 = due
+   - 3 = tre o quattro
+   - 4 = da cinque a otto
+   - 5 = nove o più
+
+Il punteggio totale della LSNS-6 si ottiene sommando i punteggi dei sei item, con un range che va da 0 a 30. Un punteggio di 12 o inferiore indica un rischio di isolamento sociale. 
+
+**Dati da Raccogliere** 
+
+Ogni studente dovrà raccogliere i seguenti dati su se stesso e sui membri del proprio gruppo TPV:
+
+- **`student_id`**: Identificativo univoco dello studente.  
+- **`group`**: Gruppo di appartenenza (es. Gruppo 1, Gruppo 2, ecc.).  
+- **`swls`**: Punteggio totale sulla Satisfaction With Life Scale (SWLS).  
+- **`gender`**: Genere (`M`, `F`).  
+- **`lsns_total`**: Punteggio totale della Scala della Rete Sociale di Lubben (LSNS-6).  
+- **`lsns_family`**: Punteggio della sottoscala *engagement with family members* (somma degli item 1-3).  
+- **`lsns_friends`**: Punteggio della sottoscala *engagement with friends* (somma degli item 4-6).  
+
+Queste variabili permetteranno di investigare come la **soddisfazione di vita** sia associata alla **quantità e qualità delle relazioni sociali**, distinguendo tra contatti con la famiglia e con gli amici.
+
+**Obiettivi dell'Analisi**  
+
+L'esercizio è strutturato in tre parti:
+
+1. **Esplorazione dei dati e distribuzione delle variabili**  
+2. **Visualizzazione e confronto tra gruppi**  
+3. **Analisi delle possibili associazioni tra SWLS e le componenti della rete sociale**
+
+**Parte 1: Esplorazione dei Dati**
+
+**1.1 Caricamento e preparazione del dataset**
+
+1. Importa il dataset `swls_lsns_students.csv`.  
+2. Seleziona le variabili indicate sopra.  
+3. Controlla ed elimina eventuali duplicati.  
+4. Controlla ed elimina eventuali valori mancanti.  
+
+```r
+# Caricamento del dataset
+df <- rio::import(here::here("data", "swls_lsns_students.csv"))
+
+# Selezione delle variabili
+df <- df |> dplyr::select(student_id, group, swls, gender, 
+                          lsns_total, lsns_family, lsns_friends)
+
+# Rimozione dei duplicati
+df <- df[!duplicated(df$student_id), ]
+
+# Rimozione dei valori mancanti
+df <- df[complete.cases(df), ]
+```
+
+**1.2 Distribuzione delle variabili** 
+
+5. Calcola la **distribuzione di frequenza** per `swls`, `lsns_total`, `lsns_family` e `lsns_friends`:
+   - Frequenze assolute e relative  
+   - Frequenze cumulative  
+
+```r
+# Frequenze assolute e relative
+table(df$swls)
+prop.table(table(df$swls))
+
+table(df$lsns_total)
+prop.table(table(df$lsns_total))
+```
+
+6. Crea un **istogramma** della distribuzione delle variabili.
+
+```r
+ggplot(df, aes(x = swls)) +
+  geom_histogram(bins = 10, fill = "lightblue", color = "black") +
+  labs(title = "Distribuzione dei punteggi SWLS",
+       x = "Punteggio SWLS",
+       y = "Frequenza")
+```
+
+```r
+ggplot(df, aes(x = lsns_total)) +
+  geom_histogram(bins = 10, fill = "lightblue", color = "black") +
+  labs(title = "Distribuzione dei punteggi LSNS-6 (totale)",
+       x = "Punteggio LSNS-6",
+       y = "Frequenza")
+```
+
+7. Costruisci la **funzione di distribuzione empirica cumulativa (eCDF)**.
+
+```r
+ggplot(df, aes(x = swls)) +
+  stat_ecdf(geom = "step", color = "blue") +
+  labs(title = "Funzione di distribuzione empirica cumulativa SWLS",
+       x = "Punteggio SWLS",
+       y = "F(x)")
+```
+
+8. Genera la **curva di densità kernel (KDE)** per ogni variabile.
+
+```r
+ggplot(df, aes(x = swls)) +
+  geom_density(fill = "lightblue", alpha = 0.5) +
+  labs(title = "Curva di densità dei punteggi SWLS",
+       x = "Punteggio SWLS",
+       y = "Densità")
+```
+
+```r
+ggplot(df, aes(x = lsns_total)) +
+  geom_density(fill = "lightblue", alpha = 0.5) +
+  labs(title = "Curva di densità LSNS-6 (totale)",
+       x = "Punteggio LSNS-6",
+       y = "Densità")
+```
+
+**Parte 2: Confronto tra Gruppi**
+
+9. Costruisci una **tabella di contingenza** per `gender` e livello di rete sociale (alta o bassa, separando sopra e sotto la mediana di `lsns_total`).
+
+```r
+df <- df |> 
+  mutate(lsns_level = ifelse(lsns_total >= median(lsns_total), "Alto", "Basso"))
+
+table(df$gender, df$lsns_level)
+prop.table(table(df$gender, df$lsns_level), margin = 1)
+```
+
+10. Crea un **grafico a barre** per la distribuzione di `lsns_level` per genere.
+
+```r
+ggplot(df, aes(x = lsns_level, fill = gender)) +
+  geom_bar(position = "dodge") +
+  labs(title = "Distribuzione del livello di rete sociale per genere",
+       x = "Livello LSNS",
+       y = "Conteggio",
+       fill = "Genere")
+```
+
+11. Costruisci un **box plot** per confrontare `swls` tra i gruppi di rete sociale.
+
+```r
+ggplot(df, aes(x = lsns_level, y = swls, fill = lsns_level)) +
+  geom_boxplot() +
+  labs(title = "Distribuzione dei punteggi SWLS per livello di rete sociale",
+       x = "Livello di rete sociale",
+       y = "Punteggio SWLS")
+```
+
+12. Usa un **violin plot** per visualizzare la distribuzione dettagliata.
+
+```r
+ggplot(df, aes(x = lsns_level, y = swls, fill = lsns_level)) +
+  geom_violin(alpha = 0.5) +
+  geom_jitter(width = 0.1, alpha = 0.5) +
+  labs(title = "Violin plot con dati grezzi sovrapposti",
+       x = "Livello di rete sociale",
+       y = "Punteggio SWLS")
+```
+
+**Parte 3: Analisi delle Associazioni tra SWLS e la Rete Sociale**
+
+Il concetto di correlazione verrà approfondito nel @sec-correlation. Per i nostri scopi attuali, possiamo considerarlo come un indice numerico che misura l'intensità e la direzione dell'associazione tra due variabili. Un valore di 0 indica l'assenza di una relazione lineare tra le variabili, mentre i valori +1 e -1 indicano una relazione lineare perfetta, positiva o negativa rispettivamente. I valori intermedi tra -1 e +1 rappresentano associazioni più deboli o forti, a seconda della loro vicinanza agli estremi.
+
+13. **Correlazioni** tra SWLS e le sottoscale della LSNS.
+
+```r
+cor(df$swls, df$lsns_total, method = "pearson")
+cor(df$swls, df$lsns_family, method = "pearson")
+cor(df$swls, df$lsns_friends, method = "pearson")
+```
+
+Spiega in maniera inuitiva il significato dei valori ottenuti.
+
+14. **Grafico di dispersione** tra SWLS e LSNS-6 totale.
+
+Un grafico di dispersione è un diagramma cartesiano in cui ogni punto rappresenta un'osservazione (nel caso attuale, uno studente). Le coordinate dei punti sui due assi, X e Y, indicano i valori delle due variabili considerate per ciascuno studente.
+
+```r
+ggplot(df, aes(x = lsns_total, y = swls)) +
+  geom_point(alpha = 0.7) +
+  geom_smooth(method = "lm", color = "red") +
+  labs(title = "Relazione tra rete sociale totale e SWLS",
+       x = "Punteggio LSNS-6 Totale",
+       y = "Punteggio SWLS")
+```
+
+Per ogni grafico generato, includi una descrizione chiara e concisa del suo significato in relazione ai dati analizzati.
+
+**Conclusioni**
+
+L'obiettivo è analizzare se e come la **soddisfazione di vita** degli studenti universitari è influenzata dalle **relazioni sociali**, distinguendo tra **engagement con la famiglia e con gli amici**. 
+
+**Consegna**
+
+Consegna il file `.qmd` contenente il codice, le visualizzazioni e le interpretazioni.
+:::
+
+::: {.callout-note collapse=true title="Informazioni sull'ambiente di sviluppo"}
+```{r}
+sessionInfo()
+```
+:::
+
+## Bibliografia {.unnumbered .unlisted}
+

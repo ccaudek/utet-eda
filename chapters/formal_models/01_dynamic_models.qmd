@@ -1,0 +1,392 @@
+# Il modello di revisione degli obiettivi {#sec-dynamic-models-goal-updating}
+
+::: {.epigraph}
+> “To understand a complex information-processing system, one must analyze it at different levels — computational, algorithmic, and implementational.”
+>
+> -- **David Marr**, Vision (1982)
+:::
+
+## Introduzione {.unnumbered .unlisted}
+
+Molti fenomeni psicologici sono intrinsecamente *dinamici*: non si esauriscono in una fotografia istantanea, ma si sviluppano e si trasformano nel tempo. L’apprendimento, l’adattamento agli errori, la regolazione degli obiettivi, l’insorgere o la remissione di sintomi clinici sono tutti esempi di *processi temporali*, nei quali ciò che osserviamo in un dato momento è il risultato di una *storia pregressa*.
+
+Eppure, gran parte degli strumenti statistici più diffusi in psicologia tende a ignorare questa dimensione. Confrontiamo medie, calcoliamo correlazioni, stimiamo regressioni, trattando spesso le osservazioni come se fossero *indipendenti* tra loro. Questo approccio è utile per molte domande, ma risulta inadeguato quando l’obiettivo è comprendere l’*evoluzione* di un comportamento o di uno stato psicologico.
+
+Se vogliamo indagare come le persone modificano i propri obiettivi, cambiano strategia, o si adattano nel tempo a esperienze positive e negative, dobbiamo ricorrere a strumenti che considerino esplicitamente la *sequenza degli eventi*. Non ci basta descrivere uno stato: serve un modello che formalizzi le *regole del cambiamento*, ovvero il modo in cui il presente dipende dal passato e condiziona il futuro.
+
+In questo capitolo introdurremo dunque i *modelli dinamici*, mostrando come essi permettano di spostare l’attenzione dalla semplice descrizione dei dati alla rappresentazione dei processi psicologici sottostanti.
+
+::: {.callout-tip collapse=true}
+## Prerequisiti
+
+- Leggere *The role of the individual in the coming era of process-based therapy* [@hayes2019role].
+:::
+
+
+## Perché abbiamo bisogno di modelli dinamici?
+
+Un *modello dinamico* è una rappresentazione matematica che esplicita il modo in cui un sistema evolve nel tempo. La caratteristica distintiva di questi modelli è la presenza di *dipendenze temporali*: almeno una delle variabili dipende da valori passati, non solo da ciò che accade nel presente.
+
+Questo è ciò che li differenzia dai modelli statici, dove ogni osservazione è trattata come indipendente dalle precedenti. Nei modelli dinamici, invece, esiste una *memoria* del passato, che influenza l’andamento futuro del processo. Nei modelli statici, la variabilità del comportamento è trattata come rumore o differenza individuale. Nei modelli dinamici, questa variabilità diventa informativa: è l'espressione dell'adattamento del sistema alle condizioni del contesto o alla propria storia passata.
+
+Una classe importante di variabili in questo contesto è costituita dalle *variabili di stato* (in inglese: *state variables* o *stock variables*), che rappresentano il livello accumulato di una certa quantità nel tempo: un obiettivo personale, un livello di motivazione, una credenza, o un sintomo. Queste variabili si aggiornano a ogni passo temporale secondo una *regola di cambiamento* che è definita in termini matematici.
+
+
+### Come si costruisce un modello dinamico?
+
+Formulare un modello dinamico significa tradurre in termini espliciti una teoria del cambiamento. I passaggi fondamentali sono:
+
+1. *Identificare le variabili rilevanti*: quali sono gli elementi del sistema che vogliamo modellare?
+2. *Stabilire le regole di aggiornamento*: come cambia ciascuna variabile nel tempo in risposta a feedback o input esterni?
+3. *Formalizzare il modello in equazioni*: trasformare le regole in una struttura matematica coerente.
+4. *Valutare la validità del modello*: confrontare le sue previsioni con i dati osservati, utilizzando metodi statistici appropriati.
+
+Questo approccio è particolarmente adatto alla psicologia, dove l'interesse non riguarda solo il fatto che un comportamento cambi, ma anche il modo in cui evolve nel tempo.
+
+
+## Un esempio concreto: il modello di revisione degli obiettivi
+
+Per chiarire meglio questo concetto, in questo e nel successivo capitolo considereremo un esempio concreto discusso da @knight2023tutorial: la regolazione degli obiettivi in base ai feedback. Immaginiamo un esperimento in cui i partecipanti devono svolgere un compito ripetitivo, come la classificazione di coppie di immagini. Prima di ogni prova (*trial*), ciascuno  partecipante fissa un obiettivo personale, ad esempio migliorare la velocità o la precisione rispetto al tentativo precedente. Al termine di ogni prova, il partecipante riceve un feedback sulla propria performance e può quindi decidere se mantenere o modificare l'obiettivo per la prova successiva.
+
+Questo ciclo – *definizione dell’obiettivo, esecuzione, feedback, aggiustamento* – è dinamico e si ripete in modo iterativo. Un buon modello dinamico riesce a catturare con precisione tale meccanismo, e, ad esempio, permette di stimare con quanta rapidità una persona riveda le proprie aspirazioni in risposta a successi o fallimenti.  
+
+Nel resto del capitolo, mostreremo come formalizzare matematicamente questo processo e come stimare i suoi parametri con un approccio bayesiano implementato in Stan. 
+
+
+### Come formalizzare questo processo?
+
+Una delle ipotesi più semplici, ma sorprendentemente potenti, è che le persone modifichino i propri obiettivi in funzione della discrepanza tra i risultati ottenuti (*performance*) e le aspettative (*goal*). Se la performance supera l'obiettivo, le aspettative tendono ad aumentare (ambizione crescente). Se la performance è inferiore, invece, si tende a ridurre le aspettative (aggiustamento conservativo).
+
+@knight2023tutorial hanno formalizzato questa intuizione nel seguente modello dinamico lineare
+
+$$
+G_t = G_{t-1} + \alpha \cdot (P_{t-1} - G_{t-1}) + \beta ,
+$$ {#eq-knight2023}
+dove:
+
+*   $G_t$ è l'obiettivo fissato al trial $t$,
+*   $G_{t-1}$ è l'obiettivo del trial precedente,
+*   $P_{t-1}$ è la performance osservata al trial precedente,
+*   $\alpha$ è un parametro che rappresenta la sensibilità alla discrepanza (quanto il goal viene aggiornato in risposta all'errore),
+*   $\beta$ è un bias sistematico. $\beta > 0$ indica una deriva ambiziosa (es., pressione sociale), mentre $\beta < 0$ indica una deriva cautelativa (es., affaticamento).
+
+In altre parole, l'obiettivo del trial corrente ($G_t$) è determinato dall'obiettivo precedente ($G_{t-1}$), corretto per una frazione ($\alpha$) della discrepanza (errore) tra la performance passata ($P_{t-1}$) e l'obiettivo passato ($G_{t-1}$). A questo risultato si aggiunge una tendenza sistematica ($\beta$) a migliorare o peggiorare le proprie aspettative, indipendentemente dalla performance.
+
+Si noti che questo è un modello *a livello di campione* (*sample-level*), in quanto assume che tutti i partecipanti condividano gli stessi parametri $\alpha$ e $\beta$, i quali vengono stimati aggregando i dati dell'intero campione.
+
+
+### Illustrazione numerica del modello
+
+Per esplorare il comportamento del modello, consideriamo due scenari contrastanti con gli stessi parametri:
+
+*   **$\alpha = 0.5$**: un tasso di apprendimento moderato, per cui il 50% della discrepanza osservata viene incorporato nel nuovo obiettivo.
+*   **$\beta = 2$**: un bias positivo che spinge sistematicamente l'obiettivo verso l'alto di 2 punti a ogni trial, indipendentemente dalla performance.
+
+**Scenario 1: Successo (Performance > Obiettivo)**
+
+*   obiettivo precedente ($G_{t-1}$): 50 punti;
+*   performance ($P_{t-1}$): 60 punti (supera l'obiettivo di 10 punti).
+
+**Calcolo:**
+$G_t = 50 + 0.5 \cdot (60 - 50) + 2 = 50 + 5 + 2 = \mathbf{57}$.
+
+**Interpretazione:**
+Il partecipante ha ottenuto un risultato superiore alle aspettative. Il nuovo obiettivo viene quindi aumentato per incorporare metà di questo successo (+5 punti, effetto di $\alpha$). A questo si aggiunge la spinta ambiziosa sistematica data da $\beta$ (+2 punti). Il risultato è un *aggiustamento ambizioso* da 50 a 57 punti, in cui il bias $\beta$ amplifica l'effetto della performance positiva.
+
+**Scenario 2: Insuccesso (Performance < Obiettivo)**
+
+*   Obiettivo precedente ($G_{t-1}$): 50 punti;
+*   performance ($P_{t-1}$): 40 punti (inferiore di 10 punti rispetto all'obiettivo).
+
+**Calcolo:**
+$G_t = 50 + 0.5 \cdot (40 - 50) + 2 = 50 - 5 + 2 = \mathbf{47}$.
+
+**Interpretazione:**
+Nonostante la performance deludente, l'aggiustamento è stato attenuato. La discrepanza negativa porta a una riduzione dell'obiettivo (-5 punti, effetto di $\alpha$), ma il bias positivo $\beta$ (+2 punti) contrasta parzialmente tale riduzione. Questo meccanismo può modellare fenomeni come la *resilienza* (non penalizzare eccessivamente gli insuccessi) o l'effetto di una *pressione esterna* continua a migliorare.
+
+### Il ruolo cruciale del parametro $\beta$
+
+Per isolare l'effetto della deriva sistematica, confrontiamo i risultati dei due scenari con il caso in cui $\beta = 0$.
+
+| Scenario | Con $\beta=+2$ | Con $\beta=0$ | Differenza | Effetto di $\beta$ |
+| :--- | :--- | :--- | :--- | :--- |
+| **Successo** | 57 | 55 | +2 | Amplifica il successo |
+| **Insuccesso** | 47 | 45 | +2 | Attutisce il fallimento |
+
+**Conclusioni e insight:**
+
+*   **$\alpha$ (Sensibilità)** controlla l'*adattamento reattivo*: determina quanto rapidamente l'obiettivo "insegue" la performance passata.
+*   **$\beta$ (Bias)** introduce una *tendenza proattiva* spingendo l'obiettivo in una direzione specifica (in questo caso verso l'alto), indipendentemente dal feedback immediato;
+    *   $\beta > 0$: induce un'*ambizione sistematica*, spingendo a fare di più anche dopo un fallimento;
+    *   $\beta < 0$: riflette una *cautela strutturale* (es., affaticamento, avversione al rischio)e porta a ridurre le aspettative anche dopo un successo.
+
+**Sintesi delle interazioni:**
+Un modello completo richiede entrambi i parametri per catturare sia le risposte locali ai feedback ($\alpha$) sia le tendenze globali e motivazionali a lungo termine ($\beta$). La loro interazione definisce la dinamica complessiva della fissazione degli obiettivi.
+
+
+### Perché questo modello è importante? 
+
+Questo approccio rappresenta un ponte tra la psicologia e la modellizzazione matematica, trasformando ipotesi sui processi cognitivi—in particolare la regolazione degli obiettivi—in relazioni quantitative e verificabili. Sul piano metodologico, supera i limiti delle descrizioni qualitative attraverso una formalizzazione elegante: il parametro $\alpha$ quantifica la sensibilità individuale alla discrepanza tra prestazioni attese ed effettive, rivelando la prontezza nel ricalibrare gli obiettivi. Valori elevati denotano un adattamento rapido all’errore, mentre valori bassi indicano maggiore perseveranza. Parallelamente, $\beta$ cattura tendenze sistemiche indipendenti dalla performance, come un’ambizione costante ($\beta > 0$) o una deriva cautelativa ($\beta < 0$). Questa dualità consente di discriminare con precisione il peso relativo del feedback esperito rispetto a fattori contestuali intrinseci o ambientali.
+
+Il modello offre un notevole valore predittivo, rendendolo uno strumento operativo in contesti applicativi. Una volta stimati i parametri $\alpha$ e $\beta$ per un individuo o un gruppo, è possibile anticipare le risposte a specifici schemi di feedback, abilitando interventi su misura.
+
+- In *ambito educativo*, si possono progettare interventi che bilancino sostegno e sfida per ottimizzare la motivazione.
+- In *contesti clinici*, il modello aiuta a identificare schemi disfunzionali -- come una combinazione di basso $\alpha$ (scarsa reattività al feedback) e $\beta$ negativo (deriva al ribasso) -- tipici di stati depressivi o ansiosi.
+- Nel *mondo organizzativo*, permette di adattare sistemi di valutazione e incentivazione alle caratteristiche dei team.
+
+La flessibilità del modello lo rende inoltre una base solida per esplorare complessità aggiuntive, come effetti non lineari, differenze individuali o influenze contestuali, mantenendo al contempo una struttura interpretabile.
+
+In sintesi, questo modello fornisce un linguaggio comune per studiare, prevedere e influenzare i meccanismi cognitivi alla base della regolazione degli obiettivi, contribuendo così a una psicologia più rigorosa e a interventi più mirati.
+
+## Stima dei parametri con Stan
+
+Passando dalla teoria alla pratica, affrontiamo ora il cuore operativo della modellizzazione: la stima dei parametri che quantificano il processo di aggiornamento degli obiettivi. Il modello dinamico precedentemente descritto trova la sua concretizzazione statistica attraverso tre parametri chiave:
+
+* $\alpha$: rappresenta la sensibilità alla discrepanza tra performance e obiettivi;
+* $\beta$: cattura le tendenze sistemiche nel cambiamento degli obiettivi;
+* $\sigma$: misura la variabilità residua non spiegata dal modello.
+
+Per farlo, traduciamo l’equazione teorica in un *modello statistico* e utilizziamo un approccio bayesiano per stimare la distribuzione a posteriori dei parametri.
+
+
+### Dal modello teorico al modello statistico
+
+Il modello dinamico di base esprime la regola di aggiornamento degli obiettivi attraverso un'equazione deterministica 
+
+$$
+G_t = G_{t-1} + \alpha (P_{t-1} - G_{t-1}) + \beta .
+$$
+Tuttavia, per trasformarla in un modello statistico adatto all'analisi empirica, dobbiamo considerare la componente stocastica del processo. Introduciamo quindi un termine di errore che catturi la variabilità naturale del processo di fissazione degli obiettivi, l'effetto di fattori non modellati esplicitamente e gli eventuali errori di misurazione. La versione statistica del modello diventa:
+
+$$
+\text{Goal osservato} \sim \mathcal{N}(G_t, \sigma) .
+$$ {#eq-knight-stat}
+In altre parole, si assume che il goal osservato sia distribuito normalmente attorno al valore previsto con una certa variabilità, indicata con $\sigma$.
+
+
+### Il vantaggio dell'approccio bayesiano per modelli dinamici
+
+La natura ricorsiva dei modelli dinamici, in cui ogni stima dipende dal valore precedente, rende difficile l’applicazione dei metodi frequentisti tradizionali. L’inferenza bayesiana offre invece un quadro naturale per gestire sia le dipendenze temporali sia l’incertezza sui parametri. Stan rappresenta uno strumento particolarmente adatto a questo scopo, perché implementa algoritmi MCMC avanzati in grado di trattare in modo efficiente le correlazioni tra parametri, propagare l’incertezza lungo le catene temporali e incorporare le conoscenze pregresse attraverso distribuzioni a priori.
+
+A differenza degli approcci classici, l’output bayesiano non si riduce a una stima puntuale, ma fornisce l’intera distribuzione a posteriori, che riflette tutte le relazioni probabilistiche tra parametri e stati latenti. Questo permette di quantificare l’incertezza in modo rigoroso, formulare probabilità dirette per le ipotesi teoriche e sviluppare previsioni robuste che integrano le diverse fonti di variabilità presenti nei dati. 
+
+
+### Esempio: implementazione del modello in Stan
+
+Il codice Stan presentato qui di seguito segue esattamente la struttura logica del modello teorico:
+
+* i dati in input sono il numero di trial, i goal osservati e le performance;
+* i parametri da stimare sono $\alpha$, $\beta$ e $\sigma$;
+* la regola di aggiornamento è implementata in un ciclo `for`, trial per trial;
+* la distribuzione normale collega il goal previsto a quello osservato;
+* un blocco aggiuntivo (`generated quantities`) consente di generare dati simulati a partire dai parametri stimati.
+
+
+### Il codice Stan
+
+Di seguito, riportiamo il modello completo implementato in Stan. Analizzeremo poi ciascuna parte.
+
+```stan
+// MODELLO PER L'AGGIORNAMENTO DEGLI OBIETTIVI BASATO SULLA PERFORMANCE PRECEDENTE
+
+// ---------------------------
+// BLOCCO DEI DATI: COSA FORNIAMO AL MODELLO
+// ---------------------------
+data {
+  int Ntotal;                      // Numero totale di osservazioni (es. 600 trial)
+  real trial[Ntotal];              // Numero del trial (es. 1, 2, 3, ..., 600)
+  real observed_goal[Ntotal];      // Obiettivo desiderato osservato in ciascun trial
+  real performance[Ntotal];        // Prestazione osservata in ciascun trial
+}
+
+// ---------------------------
+// PARAMETRI DEL MODELLO: COSA VOGLIAMO STIMARE
+// ---------------------------
+parameters {
+  real alpha;                      // Quanto il partecipante adatta il proprio obiettivo (apprendimento)
+  real beta;                       // Tendenza generale a incrementare l’obiettivo (motivazione costante)
+  real<lower=0> sigma;             // Variazione casuale attorno al goal previsto (rumore)
+}
+
+// ---------------------------
+// MODELLO: COME SI SPIEGANO I DATI
+// ---------------------------
+model {
+  real predicted_goal;             // Variabile temporanea per salvare la previsione del goal
+
+  // --- PRIORS: aspettative iniziali sui parametri ---
+  alpha ~ normal(0, 1);            // Alpha: in media 0, con incertezza (deviazione standard = 1)
+  beta ~ normal(0, 1);             // Beta: idem
+  sigma ~ normal(0, 1);            // Sigma: deviazione standard del rumore (deve essere positiva)
+
+  // --- CICLO PER OGNI TRIAL ---
+  for (i in 1:Ntotal) {
+
+    // Caso speciale: primo trial → nessuna previsione, usiamo direttamente il dato osservato
+    if (trial[i] == 1) {
+      predicted_goal = observed_goal[i];
+    }
+
+    // Tutti i trial successivi → aggiornamento del goal basato sulla performance precedente
+    if (trial[i] > 1) {
+      predicted_goal += alpha * (performance[i - 1] - predicted_goal) + beta;
+      // ↑ Questa è la "regola di apprendimento":
+      // - Se la performance precedente è migliore del goal → l’obiettivo aumenta
+      // - Se la performance è peggiore → l’obiettivo diminuisce
+      // - Quanto cambia? Dipende da alpha (quanto il partecipante si adatta)
+      // - A ogni passo si aggiunge anche un piccolo incremento costante (beta)
+    }
+
+    // Likelihood: assumiamo che il goal osservato sia vicino al goal previsto, con un po’ di rumore
+    observed_goal[i] ~ normal(predicted_goal, sigma);
+  }
+}
+
+// ---------------------------
+// BLOCCO PER GENERARE PREVISIONI (non necessario, ma utile per valutare il modello)
+// ---------------------------
+generated quantities {
+  real predicted_goal;              // Valore previsto dal modello
+  real sampled_goal[Ntotal];        // Goal "simulati", generati dal modello
+
+  for (i in 1:Ntotal) {
+    if (trial[i] == 1) {
+      predicted_goal = observed_goal[i];
+    }
+    if (trial[i] > 1) {
+      predicted_goal += alpha * (performance[i - 1] - predicted_goal) + beta;
+    }
+
+    // Simuliamo un nuovo goal come se fosse stato osservato, aggiungendo variabilità
+    sampled_goal[i] = normal_rng(predicted_goal, sigma);
+  }
+}
+```
+
+### La Struttura del Codice Stan: Quattro Blocchi Logici
+
+#### 1. **`data` – “Cosa sappiamo”**
+
+```stan
+data {
+  int Ntotal;                 // Numero di trial osservati
+  real trial[Ntotal];         // Indice del trial
+  real observed_goal[Ntotal]; // Obiettivi dichiarati
+  real performance[Ntotal];   // Performance ottenute
+}
+```
+
+Qui definiamo i dati raccolti nell’esperimento, cioè le informazioni che Stan utilizzerà per stimare il modello.
+
+
+#### 2. **`parameters` – “Cosa vogliamo scoprire”**
+
+```stan
+parameters {
+  real alpha;                 // Tasso di apprendimento (sensibilità al feedback)
+  real beta;                  // Tendenza sistematica
+  real<lower=0> sigma;        // Rumore decisionale
+}
+```
+
+Sono i parametri ignoti che Stan deve stimare sulla base dei dati.
+
+
+#### 3. **`model` – “Come funziona il processo”**
+
+In questo blocco specifichiamo sia le ipotesi a priori sia la dinamica trial-per-trial.
+
+**(a) Priors: aspettative iniziali**
+
+```stan
+alpha ~ normal(0, 1);
+beta  ~ normal(0, 1);
+sigma ~ normal(0, 1);
+```
+
+Prima dei dati, ipotizziamo che $\alpha$ e $\beta$ siano vicini a zero, pur ammettendo un’ampia incertezza.
+
+**(b) Aggiornamento sequenziale**
+
+```stan
+for (i in 1:Ntotal) {
+  if (trial[i] == 1) {
+    predicted_goal = observed_goal[i]; // primo trial: usiamo l’osservato
+  } else {
+    predicted_goal += alpha * (performance[i-1] - predicted_goal) + beta;
+  }
+  observed_goal[i] ~ normal(predicted_goal, sigma);
+}
+```
+
+Ad ogni trial il modello aggiorna l’obiettivo previsto e lo confronta con quello effettivamente osservato.
+
+
+#### 4. **`generated quantities` – “E se simulassimo?”**
+
+Questo blocco permette di generare nuovi dati a partire dai parametri stimati, replicando la stessa dinamica ipotizzata dal modello.
+
+```stan
+generated quantities {
+  real sampled_goal[Ntotal];
+  for (i in 1:Ntotal) {
+    sampled_goal[i] = normal_rng(predicted_goal, sigma);
+  }
+}
+```
+
+Le traiettorie simulate hanno un duplice scopo: da un lato consentono i *posterior predictive checks*, cioè il confronto tra dati osservati e dati generati per valutare la plausibilità del modello; dall’altro offrono uno strumento per fare previsioni su come potrebbe evolvere il comportamento in situazioni nuove.
+
+\
+
+In sintesi, questo modello “apre la scatola nera” dei processi decisionali: trasforma osservazioni empiriche in parametri interpretabili, mostrando come feedback, tendenze personali e rumore si combinino nell’aggiornare gli obiettivi.
+
+
+#### Risultati finali e interpretazione
+
+L’analisi produce innanzitutto le *distribuzioni posteriori* dei parametri $\alpha$, $\beta$ e $\sigma.$ Queste non restituiscono un singolo valore, ma un insieme di possibilità plausibili da cui ricavare medie, intervalli credibili e sintesi utili all’interpretazione psicologica. In questo modo possiamo valutare quanto i partecipanti si adattino ai feedback ($\alpha$), se mostrino derive sistematiche di crescita o declino negli obiettivi ($\beta$) e quanta variabilità residua caratterizzi il loro processo decisionale ($\sigma$).
+
+La solidità delle stime viene garantita dagli *indicatori diagnostici MCMC*, come $\hat{R}$ per la convergenza e $n_{\text{eff}}$ per l’efficienza campionaria. Solo quando questi indici segnalano un campionamento affidabile le distribuzioni posteriori possono essere considerate attendibili.
+
+Infine, la *validazione predittiva* tramite i dati simulati nel blocco *generated quantities* consente un confronto diretto tra le traiettorie osservate e quelle generate dal modello. Questo passaggio, noto come *posterior predictive check*, è cruciale perché permette di verificare se il modello riproduce i pattern empirici e, quindi, di valutarne la plausibilità e la capacità esplicativa.
+
+
+### Verso una modellizzazione più ricca: estensioni del modello base
+
+Il modello di base, pur essendo utile, è una rappresentazione semplificata. Per cogliere la reale eterogeneità del comportamento umano, sono state sviluppate diverse estensioni che mantengono il nucleo teorico originale, ma ne aumentano il potere esplicativo.
+
+**Modello a livello individuale.**
+Stima parametri specifici ($\alpha_i$, $\beta_i$) per ogni partecipante, consentendo di mappare differenze sistematiche nella sensibilità al feedback e nelle tendenze motivazionali.
+
+**Modelli gerarchici (multilevel).**
+Stimano i parametri individuali come estratti da distribuzioni di gruppo. In questo modo si ottiene un duplice vantaggio: si preservano le differenze tra individui e, al tempo stesso, si guadagna robustezza statistica grazie alla condivisione di informazione (*shrinkage*). Ne risultano stime più stabili ed equilibrate, particolarmente preziose con campioni piccoli o dati rumorosi.
+
+**Modelli a gruppi noti.**
+Permettono di stimare $\alpha$ e $\beta$ separatamente per diverse condizioni sperimentali (es., diversi tipi di incentivo), testando direttamente l'effetto di manipolazioni contestuali.
+
+**Modelli di mistura (Mixture Models).**
+Identificano sottogruppi latenti di partecipanti con dinamiche distinte (es., "adattatori rapidi" vs. "perseveranti") senza richiedere categorie predefinite.
+
+Queste estensioni, che approfondiremo nel capitolo successivo, spostano l’attenzione dalla semplice stima di una tendenza centrale alla modellizzazione della variabilità, trasformando le differenze individuali da rumore a informazione teoricamente cruciale. Il modello di base rimane un punto di riferimento concettuale, mentre le versioni avanzate ne aumentano la precisione nel catturare la complessità psicologica, mantenendo intatta l’idea centrale di un aggiornamento dinamico degli obiettivi guidato da feedback e inclinazioni personali.
+
+## Riflessioni conclusive {.unnumbered .unlisted}
+
+L’esempio discusso ha mostrato come concetti psicologici complessi, come la *regolazione degli obiettivi*, possano essere tradotti in modelli dinamici capaci di descrivere l’*evoluzione temporale* dei processi cognitivi. L’approccio integra tre componenti centrali: la formalizzazione teorica in equazioni, l’implementazione computazionale in Stan e l’inferenza bayesiana per stimare e valutare il modello sui dati.
+
+Rispetto ai modelli statici, questa prospettiva consente di indagare non solo *se* il comportamento cambia, ma anche *come* e *quando* lo fa, e in risposta a quali condizioni. Pur nella sua semplicità, il modello discusso mette in evidenza il potenziale di una psicologia formale orientata a identificare i *meccanismi generativi* che sottendono i dati osservati.
+
+Come sottolineano @knight2023tutorial, un approccio di questo tipo si articola in tre passaggi: (1) la costruzione di un modello generativo che espliciti i meccanismi ipotizzati, (2) la traduzione delle ipotesi in codice eseguibile, e (3) la valutazione del modello non solo con indici statistici, ma anche attraverso il *confronto tra dati osservati e simulati*.
+
+Un modello può essere utile anche se semplice, purché soddisfi tre condizioni: si fonda su ipotesi teoriche esplicite, produce previsioni verificabili e resta estendibile per affrontare nuove domande di ricerca. Il modello *sample-level* discusso qui rappresenta dunque un punto di partenza che può evolvere introducendo parametri individuali, strutture gerarchiche o gruppi latenti per rilevare pattern nascosti.
+
+Dal punto di vista didattico, questo capitolo mostra come le teorie psicologiche possano essere tradotte in *equazioni formali* da simulare, testare e validare empiricamente. Le ipotesi diventano così affermazioni quantitative verificabili, e l’attenzione si sposta dall’analisi di semplici correlazioni all’analisi dei *processi dinamici*.
+
+In sintesi, la costruzione di modelli dinamici segna un passo verso una psicologia più *rigorosa e cumulativa*, capace di spiegare i fenomeni invece di limitarsi a descriverli, e di orientare la disciplina verso una vera *scienza predittiva* dei processi cognitivi e comportamentali.
+
+::: {.callout-note collapse=true title="Informazioni sull'ambiente di sviluppo"}
+```{r}
+sessionInfo()
+```
+:::
+
+## Bibliografia {.unnumbered .unlisted}

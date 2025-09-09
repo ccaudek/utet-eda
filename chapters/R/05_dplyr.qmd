@@ -1,0 +1,368 @@
+# Usare `dplyr` {#sec-dplyr}
+
+## Introduzione {.unnumbered .unlisted}
+
+L'obiettivo di questo capitolo è fornire un'introduzione alle funzioni principali del pacchetto `dplyr` per le operazioni di *data wrangling*, cioè per il preprocessing e la pulizia dei dati. In R, queste operazioni sono strettamente legate al concetto di "data tidying", che si riferisce all'organizzazione sistematica dei dati per facilitare l'analisi.[^1]
+
+[^1]: Per comprendere meglio il concetto di "data tidying", possiamo rifarci a una citazione tratta dal testo di riferimento [*R for Data Science (2e)*](https://r4ds.hadley.nz): "Tidy datasets are all alike, but every messy dataset is messy in its own way." 
+
+L'essenza del "data tidying" è organizzare i dati in un formato che sia facile da gestire e analizzare. Anche se gli stessi dati possono essere rappresentati in vari modi, non tutte le rappresentazioni sono ugualmente efficienti o facili da usare. Un dataset "tidy" segue tre principi fondamentali che lo rendono particolarmente pratico:
+
+1. **Ogni variabile è una colonna**: ogni colonna nel dataset rappresenta una singola variabile.
+2. **Ogni osservazione è una riga**: ogni riga nel dataset rappresenta un'unica osservazione.
+3. **Ogni valore è una cella**: ogni cella del dataset contiene un singolo valore.
+
+Il pacchetto R *{dplyr}* e gli altri pacchetti del tidyverse sono progettati specificamente per lavorare con dati in formato "tidy", permettendo agli utenti di eseguire operazioni di manipolazione e visualizzazione in modo più intuitivo ed efficiente.
+
+::: {.callout-tip collapse=true}
+## Prerequisiti
+
+- Leggere [R for Data Science (2e)](https://r4ds.hadley.nz).
+- Consultare [Data cleaning for social scientists](https://bookdown.org/f_lennert/data-prep_2days/).
+- Leggere il capitolo *Data Wrangling* di [Statistical Inference via Data Science: A ModernDive into R and the Tidyverse (Second Edition)](https://moderndive.com/v2/). 
+- Consultare [Introduction to Data Science: Data Wrangling and Visualization with R](https://rafalab.dfci.harvard.edu/dsbook-part-1/) [@irizarry2024introduction]
+:::
+
+::: {.callout-caution collapse=true title="Preparazione del Notebook"}
+
+```{r}
+here::here("code", "_common.R") |> source()
+
+# Load packages
+if (!requireNamespace("pacman")) install.packages("pacman")
+pacman::p_load(tidyr, mice, missForest)
+```
+:::
+
+
+## Pipe
+
+Il pacchetto `dplyr`, così come l'intero ecosistema `tidyverse`, fa largo uso dell'operatore pipe, che consente di concatenare una sequenza di operazioni in modo leggibile ed efficiente. In R, esistono due principali notazioni per il pipe: 
+
+1. **`|>`**: introdotto nativamente a partire dalla versione 4.1.0 di R.
+2. **`%>%`**: introdotto dal pacchetto `magrittr`, ed è una delle componenti centrali del `tidyverse`.
+
+Entrambi gli operatori permettono di ottenere risultati simili e, per la maggior parte degli utilizzi, possono essere considerati intercambiabili. Tuttavia, è importante sottolineare alcune differenze:
+
+- **`|>`** è integrato nel linguaggio R e non richiede pacchetti aggiuntivi.
+- **`%>%`**, essendo parte di `magrittr`, richiede che il pacchetto sia installato e caricato (`library(magrittr)` o automaticamente tramite `tidyverse`).
+
+Consideriamo l'esempio seguente (che anticipa l'uso della funzione `filter()` che descriveremo in seguito). Un'operazione comune è filtrare un data frame e calcolare la media di una colonna. Con il pipe, questa sequenza di operazioni diventa più leggibile:
+
+```{r}
+# Usando %>%
+iris %>%
+  dplyr::filter(Species == "setosa") |> 
+  summarise(
+    mean_sepal_length = mean(Sepal.Length)
+  ) 
+```
+
+```{r}
+# Usando |>
+iris |> 
+  dplyr::filter(Species == "setosa") |> 
+  summarise(
+    mean_sepal_length = mean(Sepal.Length)
+  ) 
+```
+
+
+### Cosa Fa la Pipe?
+
+La pipe è uno strumento potente che permette di collegare in modo diretto l'output di una funzione come input della funzione successiva. Questo approccio:
+
+- Riduce la necessità di creare variabili intermedie.
+- Migliora la leggibilità del codice.
+- Rende il flusso delle operazioni più chiaro e lineare.
+
+Ogni funzione applicata con la pipe riceve automaticamente l'output della funzione precedente come suo primo argomento. Ciò consente di scrivere sequenze di operazioni in un formato compatto e intuitivo.
+
+Ecco un altro esempio:
+
+```{r}
+# Utilizzo della pipe per trasformare un dataset
+df <- data.frame(
+  id = 1:5,
+  value = c(10, 20, 30, 40, 50)
+)
+
+# Filtra i dati, seleziona colonne e calcola nuovi valori
+df_clean <- df |>
+  dplyr::filter(value > 20) |>
+  dplyr::select(id, value) |>
+  mutate(squared_value = value^2)
+```
+
+In questa sequenza, il dataset originale `df` viene filtrato, le colonne desiderate vengono selezionate e viene aggiunta una nuova colonna con il valore al quadrato.
+
+```{r}
+head(df_clean)
+```
+
+In sintesi, la pipe è uno strumento fondamentale per scrivere codice R moderno e leggibile, indipendentemente dal fatto che si utilizzi `|>` o `%>%`. 
+
+## Verbi
+
+Le funzioni principali ("verbi) di `dplyr` sono le seguenti:
+
+| Verbo dplyr  | Descrizione                                               |
+|--------------|-----------------------------------------------------------|
+| `select()`   | Seleziona colonne                                          |
+| `filter()`   | Filtra righe                                               |
+| `arrange()`  | Riordina o organizza le righe                              |
+| `mutate()`   | Crea nuove colonne                                         |
+| `summarise()`| Riassume i valori                                          |
+| `group_by()` | Consente di eseguire operazioni di gruppo                  |
+
+I verbi di `dplyr` sono suddivisi in quattro gruppi, in base all'elemento su cui operano: righe, colonne, gruppi o tabelle.
+
+Inoltre, le diverse funzioni `bind_` e `_joins` permettono di combinare più tibbles (ovvero, data frame) in uno solo.
+
+Per fare un esempio prarico, usiamo nuovamente il dataset `msleep`.
+
+```{r}
+data(msleep)
+dim(msleep)
+```
+
+Esaminiamo i dati:
+
+```{r}
+glimpse(msleep)
+```
+
+Le colonne, nell'ordine, corrispondono a quanto segue:
+
+| Nome colonna   | Descrizione                                     |
+|----------------|-------------------------------------------------|
+| name           | Nome comune                                     |
+| genus          | Rango tassonomico                               |
+| vore           | Carnivoro, onnivoro o erbivoro?                 |
+| order          | Rango tassonomico                               |
+| conservation   | Stato di conservazione del mammifero            |
+| sleep_total    | Quantità totale di sonno, in ore                |
+| sleep_rem      | Sonno REM, in ore                               |
+| sleep_cycle    | Durata del ciclo di sonno, in ore               |
+| awake          | Quantità di tempo trascorso sveglio, in ore     |
+| brainwt        | Peso del cervello, in chilogrammi               |
+| bodywt         | Peso corporeo, in chilogrammi                   |
+
+## Righe
+
+I verbi più importanti che operano sulle righe di un dataset sono `filter()`, che seleziona le righe da includere senza modificarne l'ordine, e `arrange()`, che cambia l'ordine delle righe senza alterare la selezione delle righe presenti.
+
+```{r}
+msleep |>
+  dplyr::filter(sleep_total < 4) |>
+  arrange(sleep_total)
+```
+
+Possiamo usare `filter()` speficicano più di una condizione logica.
+
+```{r}
+msleep |>
+  dplyr::filter((sleep_total < 4 & bodywt > 100) | brainwt > 1) |>
+  arrange(sleep_total)
+```
+
+## Colonne
+
+Esistono quattro verbi principali che modificano le colonne di un dataset senza cambiare le righe:
+
+- `relocate()` cambia la posizione delle colonne;
+- `rename()` modifica i nomi delle colonne;
+- `select()` seleziona le colonne da includere o escludere;
+- `mutate()` crea nuove colonne a partire da quelle esistenti.
+
+```{r}
+msleep2 <- msleep |>
+  mutate(
+    rem_prop = sleep_rem / sleep_total * 100
+  ) |>
+  dplyr::select(name, vore, rem_prop, sleep_total) |>
+  arrange(desc(rem_prop))
+
+glimpse(msleep2)
+```
+
+In questo esempio, utilizziamo `mutate()` per creare una nuova colonna `rem_prop` che rappresenta la percentuale di sonno REM sul totale del sonno. Successivamente, `select()` viene utilizzato per scegliere solo alcune colonne del dataset, e infine `desc(rem_prop)` ordina i valori di `rem_prop` in ordine decrescente, dal valore maggiore a quello minore.
+
+Per cambiare il nome di una colonna possiamo usare `rename()`. Inoltre, possiamo cambiare l'ordine delle variabili con `relocate()`.
+
+```{r}
+msleep2 |>
+  rename(rem_perc = rem_prop) |>
+  relocate(rem_perc, .before = name)
+```
+
+## Gruppi
+
+Il verbo `group_by()` viene utilizzato per suddividere un dataset in gruppi, in base a una o più variabili, che siano rilevanti per l'analisi. Questo permette di eseguire operazioni di sintesi su ciascun gruppo separatamente, ottenendo informazioni aggregate.
+
+Ad esempio, nel codice seguente:
+
+```{r}
+msleep |>
+  group_by(order) |>
+  summarise(
+    avg_sleep = mean(sleep_total),
+    min_sleep = min(sleep_total),
+    max_sleep = max(sleep_total),
+    total = n()
+  ) |>
+  arrange(desc(avg_sleep))
+```
+
+1. `group_by(order)` suddivide il dataset `msleep` in gruppi, ciascuno corrispondente a un valore distinto della variabile `order`.
+  
+2. Successivamente, `summarise()` calcola diverse statistiche per ogni gruppo:
+   - `avg_sleep` è la media del totale del sonno (`sleep_total`) all'interno di ciascun gruppo.
+   - `min_sleep` è il valore minimo di `sleep_total` in ogni gruppo.
+   - `max_sleep` è il valore massimo di `sleep_total` in ogni gruppo.
+   - `total` è il numero di osservazioni (o righe) per ciascun gruppo, calcolato con la funzione `n()`.
+
+3. Infine, `arrange(desc(avg_sleep))` ordina i risultati in ordine decrescente in base alla media del sonno totale (`avg_sleep`), mostrando prima i gruppi con la media di sonno più alta. 
+
+Questo tipo di approccio è utile quando si vuole analizzare come cambiano le caratteristiche dei dati a seconda dei gruppi specifici, fornendo una visione più dettagliata e utile.
+
+
+## Riflessioni conclusive {.unnumbered .unlisted}
+
+Il *data wrangling* è una delle fasi più importanti in qualsiasi pipeline di analisi dei dati. In questo capitolo abbiamo introdotto l'uso del pacchetto `tidyverse` di R per la manipolazione dei dati e il suo utilizzo in scenari di base. Tuttavia, il tidyverse è un ecosistema ampio e qui abbiamo trattato solo gli elementi fondamentali. Per approfondire, si consiglia di consultare ulteriori risorse come quelle disponibili sul sito web del tidyverse e il libro [*R for Data Science (2e)*](https://r4ds.hadley.nz), di cui esiste anche una [traduzione italiana](https://it.r4ds.hadley.nz).
+
+
+::: {.callout-tip title="Esercizio" collapse="true"}
+In questo esercizio, utilizzerai il pacchetto `dplyr` per imparare a manipolare e trasformare i dati della SWLS (Satisfaction With Life Scale). Gli esercizi ti aiuteranno a consolidare la conoscenza dei principali verbi di `dplyr`, inclusi `filter()`, `select()`, `mutate()`, `arrange()` e `group_by()`.
+
+**Parte 1: Comprensione Teorica**
+
+1. **Cos'è un dataset "tidy"?**  
+   - Descrivi con parole tue cosa significa avere un dataset "tidy" e quali sono le sue tre caratteristiche principali.
+
+2. **Cos’è la pipe (`%>%` o `|>`) e perché è utile?**  
+   - Spiega a cosa serve l’operatore pipe e fornisci un esempio di utilizzo.
+
+3. **Quali sono i verbi principali di `dplyr`?**  
+   - Elenca e spiega brevemente i sei verbi principali di `dplyr` per la manipolazione dei dati.
+
+4. **Cosa fa il verbo `group_by()`?**  
+   - Spiega il suo scopo e come viene utilizzato in combinazione con `summarise()`.
+
+**Parte 2: Applicazione Pratica con i Dati SWLS**
+
+5. **Caricamento dei dati SWLS**  
+   - Crea un data frame in R contenente i punteggi SWLS che hai raccolto.
+
+6. **Selezione delle colonne**  
+   - Usa `select()` per mantenere solo le colonne con i punteggi degli item.
+
+7. **Filtraggio dei dati**  
+   - Usa `filter()` per selezionare solo gli individui che hanno un punteggio totale superiore a 20.
+
+8. **Creazione di una nuova colonna**  
+   - Usa `mutate()` per calcolare il punteggio totale della SWLS per ciascun individuo e salvarlo in una nuova colonna chiamata `punteggio_totale`.
+
+9. **Riordinamento dei dati**  
+   - Usa `arrange()` per ordinare il dataset in base al punteggio totale, dal più alto al più basso.
+
+10. **Raggruppamento e sintesi dei dati**  
+   - Usa `group_by()` e `summarise()` per calcolare la media e la deviazione standard del punteggio SWLS totale nel dataset.
+
+**Consegna**
+
+- Scrivi le risposte della **Parte 1** su carta.
+- Scrivi il codice e i risultati della **Parte 2** in un file `.R` e invialo come consegna.
+:::
+
+::: {.callout-tip title="Soluzione" collapse="true"}
+**Parte 1: Comprensione Teorica**
+
+1. **Cos'è un dataset "tidy"?**  
+   - Un dataset "tidy" è un dataset organizzato in modo sistematico per facilitare l'analisi. Le sue tre caratteristiche principali sono:
+     1. Ogni variabile è una colonna.
+     2. Ogni osservazione è una riga.
+     3. Ogni valore è una cella.
+
+2. **Cos’è la pipe (`%>%` o `|>`) e perché è utile?**  
+   - La pipe (`%>%` o `|>`) permette di concatenare più operazioni di manipolazione dati in modo leggibile ed efficiente.
+   - Esempio:
+     ```r
+     df |> 
+       filter(score > 20) |> 
+       select(name, score)
+     ```
+
+3. **Quali sono i verbi principali di `dplyr`?**  
+   - `select()`: Seleziona colonne.
+   - `filter()`: Filtra righe.
+   - `arrange()`: Riordina le righe.
+   - `mutate()`: Crea nuove colonne.
+   - `summarise()`: Riassume i dati.
+   - `group_by()`: Permette di raggruppare i dati.
+
+4. **Cosa fa il verbo `group_by()`?**  
+   - `group_by()` suddivide i dati in gruppi, permettendo di applicare funzioni di aggregazione con `summarise()`.
+   - Esempio:
+     ```r
+     df |> 
+       group_by(gruppo) |> 
+       summarise(media = mean(score), sd = sd(score))
+     ```
+
+**Parte 2: Applicazione Pratica con i Dati SWLS**
+
+5. **Caricamento dei dati SWLS**  Per svolgere l'esercizio, simuliamo i dati di 10 individui su 5 item (numeri casuali da 1 a 7):
+
+   ```r
+   set.seed(123)
+   swls <- data.frame(
+     id = 1:10,
+     item1 = sample(1:7, 10, replace = TRUE),
+     item2 = sample(1:7, 10, replace = TRUE),
+     item3 = sample(1:7, 10, replace = TRUE),
+     item4 = sample(1:7, 10, replace = TRUE),
+     item5 = sample(1:7, 10, replace = TRUE)
+   )
+   print(swls)
+   ```
+
+6. **Selezione delle colonne**  
+   ```r
+   swls_selected <- swls |> select(item1:item5)
+   ```
+
+7. **Filtraggio dei dati**  
+   ```r
+   swls_filtered <- swls |> filter(rowSums(select(swls, item1:item5)) > 20)
+   ```
+
+8. **Creazione di una nuova colonna**  
+   ```r
+   swls <- swls |> mutate(punteggio_totale = rowSums(select(swls, item1:item5)))
+   ```
+
+9. **Riordinamento dei dati**  
+   ```r
+   swls_sorted <- swls |> arrange(desc(punteggio_totale))
+   ```
+
+10. **Raggruppamento e sintesi dei dati**  
+   ```r
+   swls_summary <- swls |> 
+     summarise(media = mean(punteggio_totale), sd = sd(punteggio_totale))
+   ```
+
+**Conclusione**
+
+Questi esercizi hanno mostrato come usare `dplyr` per manipolare dati in modo efficace e leggibile.
+:::
+
+
+::: {.callout-note collapse=true title="Informazioni sull'ambiente di sviluppo"}
+```{r}
+sessionInfo()
+```
+:::
+
+## Bibliografia {.unnumbered .unlisted}

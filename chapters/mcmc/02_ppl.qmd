@@ -1,0 +1,56 @@
+# Linguaggi di programmazione probabilistici {#sec-mcmc-ppl}
+
+## Introduzione {.unnumbered .unlisted}
+
+Nel capitolo precedente abbiamo introdotto l’algoritmo di Metropolis come soluzione generale al problema dell’inferenza bayesiana. Abbiamo visto che, grazie a questo metodo, è sempre possibile generare campioni dalla distribuzione a posteriori, anche quando non conosciamo la sua forma analitica. Questo rappresenta una conquista concettuale decisiva: l’inferenza bayesiana non è limitata ai casi semplici delle famiglie coniugate, ma può essere applicata a qualunque modello.
+
+Tuttavia, la libertà concettuale offerta da Metropolis si scontra con difficoltà pratiche. Implementare l’algoritmo in modo efficiente per ciascun modello richiede di scrivere molto codice su misura, e non è banale stabilire buone regole di proposta per garantire un campionamento rapido e affidabile. In altre parole, sappiamo che l’inferenza è sempre possibile, ma non sempre è semplice metterla in pratica.
+
+Per superare questi limiti sono nati i *linguaggi probabilistici* (*probabilistic programming languages*, PPL). L’idea è elegante: invece di programmare a mano l’algoritmo per ogni modello, lo scienziato specifica direttamente il modello in un linguaggio formale vicino alla notazione statistica. Sarà poi il software a occuparsi di eseguire il campionamento in modo efficiente, utilizzando algoritmi avanzati che generalizzano e migliorano la logica di Metropolis.
+
+Questo cambiamento ha avuto un impatto profondo sulla pratica della ricerca. Con i PPL, il ricercatore può concentrarsi sul *modello psicologico* che vuole esprimere – ad esempio un modello di apprendimento, un modello gerarchico o un modello di decisione – senza doversi preoccupare di tutti i dettagli computazionali del campionamento. È un passaggio simile a quello che, in altri campi scientifici, ha permesso di separare la formulazione delle teorie dalle tecniche di calcolo numerico necessarie per applicarle.
+
+Tra i PPL disponibili oggi, *Stan* occupa un posto di rilievo. È diventato lo standard in molti ambiti della statistica bayesiana e delle scienze sociali, grazie alla combinazione di tre caratteristiche: un linguaggio chiaro per specificare i modelli, algoritmi di campionamento all’avanguardia (come NUTS, una variante efficiente di Hamiltonian Monte Carlo) e una forte integrazione con strumenti di analisi dei dati come R e Python.
+
+Dal punto di vista didattico, è importante sottolineare che Stan non è una “scatola nera”. Il cuore concettuale rimane quello visto con l’algoritmo di Metropolis: generare campioni dalla distribuzione a posteriori per approssimarla numericamente. La differenza è che, invece di scrivere da zero il codice per ogni modello, ci limitiamo a dichiarare il modello e lasciamo che il software si occupi delle scelte tecniche necessarie.
+
+In questo senso, i PPL non rappresentano una rottura rispetto a quanto appreso finora, ma una naturale evoluzione. Ci permettono di spostare l’attenzione dall’aspetto computazionale all’aspetto scientifico: non tanto *come* campionare, ma *quale modello* vogliamo costruire per descrivere il fenomeno psicologico che ci interessa.
+
+## Perché abbiamo bisogno della programmazione probabilistica?
+
+Abbiamo visto che l’algoritmo di Metropolis fornisce una soluzione generale: in linea di principio, possiamo sempre ottenere campioni dalla distribuzione a posteriori, qualunque sia il modello specificato. Tuttavia, questa libertà concettuale si accompagna a limiti pratici. Scrivere un campionatore funzionante per ogni modello richiede tempo, competenze tecniche avanzate e una grande attenzione agli aspetti numerici. Basta poco per ritrovarsi con algoritmi inefficienti o catene che non convergono. In altre parole, sappiamo che il problema dell’inferenza bayesiana è risolvibile, ma non è detto che sia agevole affrontarlo a mano ogni volta.
+
+Per rendere questa potenza utilizzabile anche nella pratica quotidiana, sono nati i *linguaggi di programmazione probabilistica* (*probabilistic programming languages*, PPL). Essi rappresentano un’evoluzione naturale: invece di programmare direttamente gli algoritmi di campionamento, lo scienziato dichiara semplicemente il modello in un linguaggio vicino alla notazione statistica. Sarà il software a occuparsi di tradurre questa dichiarazione in inferenza numerica, scegliendo algoritmi avanzati e ottimizzati.
+
+
+## Dalle prime implementazioni a Stan
+
+I primi PPL, come *BUGS* e *WinBUGS*, hanno aperto la strada negli anni ’90. Per la prima volta era possibile scrivere un modello bayesiano in modo dichiarativo e ottenere automaticamente un campione dalla distribuzione a posteriori. Questa idea, che all’epoca sembrava quasi visionaria, ha cambiato il modo di concepire l’inferenza: non più come un calcolo complesso da eseguire a mano, ma come una specifica da fornire a un motore di calcolo.
+
+Nel tempo, questi strumenti si sono evoluti. A fianco di BUGS e del suo successore JAGS, sono nati PPL moderni come *PyMC* in ambiente Python e soprattutto *Stan*, che oggi rappresenta uno standard in molti ambiti della statistica applicata. Stan combina un linguaggio chiaro per dichiarare i modelli con algoritmi di campionamento estremamente efficienti, come NUTS (No-U-Turn Sampler), una variante avanzata dell’Hamiltonian Monte Carlo. Ciò che prima era accessibile solo a chi possedeva competenze molto specialistiche è diventato così patrimonio di una comunità scientifica molto più ampia.
+
+
+## Cosa cambia per la ricerca psicologica
+
+Per la psicologia e le scienze sociali, l’arrivo dei PPL ha significato un vero salto di qualità. I ricercatori possono finalmente concentrarsi sui *modelli teorici* che vogliono testare – modelli di apprendimento, di decisione, di effetti gerarchici nei dati – senza doversi preoccupare di reinventare ogni volta la parte algoritmica. Questo permette di sperimentare con strutture di modelli più ricche, di formalizzare meglio le ipotesi psicologiche e di tradurle direttamente in codice eseguibile.
+
+La conseguenza è una maggiore trasparenza e una più stretta connessione tra teoria e analisi empirica. I PPL, infatti, non nascondono i modelli dietro procedure automatiche, ma li rendono espliciti: ogni ipotesi è dichiarata in modo chiaro e tracciabile, e il processo inferenziale diventa riproducibile.
+
+
+## Interfacce di alto livello
+
+Naturalmente, anche i PPL richiedono un certo impegno. Scrivere modelli complessi in Stan o in PyMC comporta comunque una buona familiarità con la programmazione e con la statistica bayesiana. Per ampliare l’accessibilità, negli ultimi anni sono state sviluppate interfacce di più alto livello, come *brms* (in R, basata su Stan) e *Bambi* (in Python, basata su PyMC).
+
+Queste interfacce utilizzano una sintassi semplificata e familiare a chi lavora già con modelli statistici tradizionali. In R, ad esempio, *brms* consente di specificare un modello di regressione con la stessa logica di `lm` o `lmer`, aggiungendo la possibilità di definire priori e di stimare i parametri con algoritmi bayesiani. In questo modo, anche chi non ha esperienza di programmazione avanzata può avvicinarsi con relativa facilità all’inferenza bayesiana, beneficiando della potenza dei PPL senza doverne conoscere i dettagli più tecnici.
+
+
+## Riflessioni conclusive {.unnumbered .unlisted}
+
+I linguaggi di programmazione probabilistica segnano un momento di svolta nella storia dell’inferenza bayesiana. Essi rappresentano il passaggio da una fase pionieristica, in cui ogni ricercatore doveva implementare da sé algoritmi complicati, a una fase matura, in cui l’attenzione può finalmente concentrarsi sulla costruzione dei modelli e sulla loro interpretazione scientifica.
+
+La logica di fondo rimane sempre quella introdotta con Metropolis: campionare dalla distribuzione a posteriori per approssimarla numericamente. La differenza è che, grazie ai PPL, non siamo più costretti a scrivere da zero codice specializzato per ogni problema. Possiamo dichiarare i nostri modelli in un linguaggio standardizzato, lasciare che il software si occupi del campionamento e concentrare le nostre energie sulla sostanza psicologica e teorica.
+
+Questo capitolo funge quindi da ponte: dall’algoritmo di Metropolis, che ci ha mostrato la logica generale, passiamo ora a strumenti concreti come Stan e le sue interfacce, che renderanno possibile mettere in pratica questa logica nei contesti complessi della ricerca psicologica contemporanea.
+
+
+

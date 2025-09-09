@@ -1,0 +1,1340 @@
+# Distribuzioni coniugate {#sec-bayesian-inference-conjugate-1}
+
+::: {.epigraph}
+> “Conjugate families are not chosen because they are realistic, but because they allow us to see the Bayesian machinery at work in its simplest form.”
+>
+> -- **Morris H. DeGrootx**, Optimal Statistical Decisions (1970)
+:::
+
+
+## Introduzione {.unnumbered .unlisted}
+
+Nei capitoli precedenti abbiamo visto in azione l’aggiornamento bayesiano in un caso concreto: la stima della proporzione di successi con il modello *Beta-Binomiale*. Lì abbiamo osservato come la distribuzione *a priori* (Beta) e la verosimiglianza (Binomiale) si combinino attraverso il teorema di Bayes per produrre una distribuzione *a posteriori* che appartiene alla stessa famiglia della prior. Questo ci ha permesso di seguire passo dopo passo l’evoluzione delle nostre credenze in modo intuitivo e matematicamente elegante.
+
+In questo capitolo generalizziamo questa idea e introduciamo il concetto di *distribuzioni coniugate*. Due distribuzioni sono dette coniugate quando, combinando una prior con la corrispondente verosimiglianza, otteniamo un posterior che appartiene alla stessa famiglia della prior. In altre parole, la forma della distribuzione rimane stabile, e a cambiare sono soltanto i parametri.
+
+Questa proprietà, apparentemente tecnica, ha in realtà un grande valore didattico e pratico. Dal punto di vista concettuale, ci aiuta a visualizzare con chiarezza come i dati modifichino le nostre credenze: i parametri della distribuzione si aggiornano in modo diretto e cumulativo. Dal punto di vista operativo, rende il calcolo immediato, senza dover ricorrere a metodi di approssimazione numerica.
+
+Naturalmente, sappiamo già dai capitoli precedenti che il mondo reale è spesso più complesso: non sempre abbiamo a disposizione una coppia coniugata, e per modelli più articolati ricorriamo a metodi computazionali come il campionamento MCMC. Ma prima di affrontare quei casi, è utile familiarizzare con le famiglie coniugate, che costituiscono il laboratorio ideale per comprendere a fondo la logica dell’aggiornamento bayesiano.
+
+
+### Panoramica del capitolo {.unnumbered .unlisted}
+
+- Introduzione del modello beta-binomiale.
+- Analisi della distribuzione Beta e del suo ruolo come distribuzione a priori.
+- Aescrizione del processo di aggiornamento bayesiano e dei vantaggi derivanti dall'uso di distribuzioni coniugate.
+
+::: {.callout-tip collapse=true}
+## Prerequisiti
+
+- Leggere il capitolo *Conjugate Families* del testo di @Johnson2022bayesrules.
+:::
+
+::: {.callout-caution collapse=true title="Preparazione del Notebook"}
+
+```{r}
+here::here("code", "_common.R") |>
+    source()
+
+# Load packages
+if (!requireNamespace("pacman")) install.packages("pacman")
+pacman::p_load(mice)
+```
+:::
+
+
+## Il modello Beta-Binomiale 
+
+Il *modello beta-binomiale* è un esempio classico per analizzare una proporzione $\theta$, ossia la probabilità di successo in una sequenza di prove binarie (ad esempio, successo/fallimento). Supponiamo di osservare $y$ successi su $n$ prove, dove ogni prova è indipendente e con la stessa probabilità di successo $\theta$, che appartiene all'intervallo $[0,1]$.
+
+La funzione di verosimiglianza, basata sulla distribuzione binomiale, è espressa come:
+
+$$
+\mathcal{Binomial}(y \mid n, \theta) = \binom{n}{y} \theta^y (1 - \theta)^{n - y},
+$$
+dove $\binom{n}{y}$ è il coefficiente binomiale che conta il numero di modi in cui $y$ successi possono verificarsi in $n$ prove.
+
+Per modellare la nostra conoscenza preliminare su $\theta$, scegliamo una distribuzione a priori *Beta*, che rappresenta un'ampia gamma di credenze iniziali con parametri flessibili.
+
+## La distribuzione Beta
+
+La distribuzione Beta è definita come:
+
+$$
+\mathcal{Beta}(\theta \mid \alpha, \beta) = \frac{1}{B(\alpha, \beta)} \theta^{\alpha - 1} (1 - \theta)^{\beta - 1}, \quad \text{con } \theta \in (0, 1),
+$$
+dove:
+
+* $\alpha > 0$ e $\beta > 0$ sono i *parametri* che determinano la forma della distribuzione,
+* $B(\alpha, \beta)$ è la *funzione Beta di Eulero*, calcolata come:
+
+    $$
+    B(\alpha, \beta) = \frac{\Gamma(\alpha)\Gamma(\beta)}{\Gamma(\alpha + \beta)},
+    $$
+
+    dove $\Gamma(x)$ è la funzione Gamma, una generalizzazione del fattoriale.
+
+In termini bayesiani, possiamo pensare a questi parametri nel modo seguente:
+
+* $\alpha -1$ rappresenta il numero ipotetico di "successi" a priori,
+* $\beta -1$ rappresenta il numero ipotetico di "fallimenti" a priori.
+
+Ad esempio:
+
+- una distribuzione *Beta(1, 1)* è uniforme (0 successi a priori e 0 fallimenti), indicando totale incertezza iniziale (assenza di credenze informate);
+- una distribuzione *Beta(10, 20)* rappresenta una conoscenza a priori basata su 9 successi e 19 fallimenti ipotizzati, indicando una convinzione iniziale relativamente solida, poiché deriva da un totale di 28 osservazioni virtuali che riflettono le nostre credenze precedenti.
+
+Questa interpretazione consente di calibrare le credenze a priori in base all'evidenza disponibile o alla fiducia nella stima.
+
+La distribuzione Beta è estremamente versatile:
+
+- valori diversi di $\alpha$ e $\beta$ producono distribuzioni simmetriche, asimmetriche o uniformi;
+- valori elevati di $\alpha$ e $\beta$ riducono la varianza, riflettendo credenze più forti.
+
+Questa flessibilità rende la distribuzione Beta una scelta ideale per rappresentare credenze iniziali sulle proporzioni.
+
+
+## Aggiornamento bayesiano
+
+L'aggiornamento bayesiano combina le informazioni iniziali (distribuzione a priori) con i dati osservati (verosimiglianza) per produrre una nuova distribuzione delle nostre credenze (distribuzione a posteriori). Nel caso del modello beta-binomiale, questo processo è particolarmente semplice grazie alla "coniugazione": il prior Beta e la verosimiglianza Binomiale producono una distribuzione a posteriori che appartiene ancora alla famiglia Beta. 
+
+::: {#thm-beta-binomial}
+Sia $Y\sim\mathrm{Binomial}(n,\theta)$ il numero di successi $y$ in $n$ prove indipendenti con probabilità di successo $\theta$, e sia la nostra distribuzione a priori su $\theta$ una Beta$\bigl(\alpha,\beta\bigr).$ Allora la distribuzione a posteriori di $\theta$ dato l’osservazione $Y=y$ è
+
+$$
+\theta \mid Y=y 
+\;\sim\;
+\mathrm{Beta}\bigl(\alpha + y,\;\beta + (n - y)\bigr),
+$$ {#eq-beta-binom-post}
+ovvero i parametri si aggiornano come
+
+$$
+\alpha' = \alpha + y,
+\quad
+\beta' = \beta + n - y.
+$$ {#eq-beta-binom-post-params}
+:::
+
+
+::: {.callout-note collapse="true"}
+## Derivazione.
+
+**Obiettivo.** Mostrare che, con prior $\theta \sim \mathrm{Beta}(\alpha,\beta)$ e dati $Y\sim\mathrm{Binomiale}(n,\theta)$, la posteriori è
+
+$$
+\theta \mid Y=y \;\sim\; \mathrm{Beta}\bigl(\alpha+y,\;\beta+n-y\bigr).
+$$
+
+**1) Formula di Bayes (forma proporzionale).** Per qualunque $\theta\in(0,1)$:
+
+$$
+p(\theta\mid y)\;\propto\; p(y\mid\theta)\, p(\theta),
+$$
+dove “$\propto$” significa “uguale a una costante (che non dipende da $\theta$) per…”. Quella costante verrà ripristinata alla fine.
+
+**2) Verosimiglianza binomiale (parte che dipende da $\theta$).**
+
+$$
+p(y\mid\theta) \;=\; \binom{n}{y}\,\theta^{\,y}\,(1-\theta)^{\,n-y}.
+$$
+Poiché $\binom{n}{y}$ *non* dipende da $\theta$, ai fini di “$\propto$” possiamo scrivere:
+
+$$
+p(y\mid\theta)\;\propto\; \theta^{\,y}\,(1-\theta)^{\,n-y}.
+$$
+
+**3) Prior Beta (parte che dipende da $\theta$).**
+
+$$
+p(\theta) \;=\; \frac{1}{B(\alpha,\beta)}\,\theta^{\,\alpha-1}\,(1-\theta)^{\,\beta-1},
+$$
+e dunque, ignorando la costante $B(\alpha,\beta)$:
+
+$$
+p(\theta)\;\propto\;\theta^{\,\alpha-1}\,(1-\theta)^{\,\beta-1}.
+$$
+
+**4) Prodotto “prior × verosimiglianza”.** Moltiplichiamo i soli termini che dipendono da $\theta$:
+
+$$
+\begin{aligned}
+p(\theta\mid y)
+&\;\propto\; \bigl[\theta^{\,y}(1-\theta)^{\,n-y}\bigr]\;\bigl[\theta^{\,\alpha-1}(1-\theta)^{\,\beta-1}\bigr] \\
+&\;=\; \theta^{\,(\alpha-1)+y}\; (1-\theta)^{\,(\beta-1)+(n-y)}.
+\end{aligned}
+$$
+
+**5) Riconoscere la forma Beta (matching degli esponenti).** La *forma non normalizzata* di una $\mathrm{Beta}(a,b)$ è:
+
+$$
+\theta^{\,a-1}\,(1-\theta)^{\,b-1}.
+$$
+Confrontando gli esponenti otteniamo:
+
+$$
+a-1 = (\alpha-1)+y \;\;\Rightarrow\;\; a = \alpha + y,
+$$
+$$
+b-1 = (\beta-1)+(n-y) \;\;\Rightarrow\;\; b = \beta + (n-y).
+$$
+Quindi la *densità non normalizzata* della distribuzione a posteriori è
+
+$$
+p(\theta\mid y)\;\propto\;\theta^{\,(\alpha+y)-1}\,(1-\theta)^{\,(\beta+n-y)-1}.
+$$
+
+**6) Ripristino della costante di normalizzazione.** Per essere una densità, $p(\theta\mid y)$ deve integrare a 1 su $\theta\in(0,1)$. La costante corretta è l’inverso della funzione Beta con i nuovi parametri:
+
+$$
+p(\theta\mid y)
+\;=\;
+\frac{1}{B(\alpha+y,\;\beta+n-y)}\;
+\theta^{\,(\alpha+y)-1}\,(1-\theta)^{\,(\beta+n-y)-1}.
+$$
+
+**7) Conclusione (forma parametrica della posteriori).** 
+
+$$
+\boxed{
+\;\theta\mid Y=y \;\sim\; \mathrm{Beta}\bigl(\alpha+y,\;\beta+n-y\bigr).\;
+}
+$$
+
+
+**Intuizione in termini di “pseudocontenuti di informazione”.**
+
+* La Beta$(\alpha,\beta)$ può essere interpretata in termini di *pseudoconteggi*: $\alpha-1$ “successi” e $\beta-1$ “insuccessi” precedenti ai dati.
+* Dopo aver osservato $y$ successi e $n-y$ insuccessi, *si sommano* i conteggi:
+
+  $$
+  \alpha \to \alpha+y,\qquad \beta \to \beta+(n-y).
+  $$
+* Questa additività spiega la *conjugatezza*: prior e posterior appartengono alla stessa famiglia.
+
+
+**Controllo rapido della normalizzazione.** Usiamo la definizione di $B(a,b)$:
+
+$$
+B(a,b) \;=\; \int_0^1 \theta^{a-1}(1-\theta)^{b-1}\,d\theta.
+$$
+Con $a=\alpha+y$ e $b=\beta+n-y$, l’integrale della nostra forma non normalizzata è $B(\alpha+y,\beta+n-y)$; moltiplicando per $1/B(\alpha+y,\beta+n-y)$ otteniamo dunque una densità che integra a 1.
+:::
+
+::: {.callout-note collapse="true"}
+## Alcune quantità riassuntive utili.
+
+Per $\theta\mid y \sim \mathrm{Beta}(\alpha+y,\beta+n-y)$:
+
+* *Media posteriori*:
+
+  $$
+  \mathbb{E}[\theta\mid y] \;=\; \frac{\alpha+y}{\alpha+\beta+n}.
+  $$
+* *Moda* (se parametri $>1$):
+
+  $$
+  \frac{\alpha+y-1}{\alpha+\beta+n-2}.
+  $$
+* *Varianza*:
+
+  $$
+  \mathrm{Var}(\theta\mid y) \;=\; 
+  \frac{(\alpha+y)(\beta+n-y)}{(\alpha+\beta+n)^2\,(\alpha+\beta+n+1)}.
+  $$
+:::
+
+### Vantaggi del modello Beta-Binomiale
+
+1. *Semplicità analitica*: la coniugatezza della distribuzione Beta-Binomiale semplifica i calcoli, rendendo immediato l'aggiornamento dei parametri.
+2. *Interpretazione intuitiva*: l'aggiornamento dei parametri $\alpha$ e $\beta$ mostra in modo trasparente come i dati influenzino le credenze.
+
+In sintesi, il modello Beta-Binomiale è un esempio didattico fondamentale per comprendere l'inferenza bayesiana e rappresenta un punto di partenza ideale per approcci più avanzati.
+
+
+::: {.callout-note collapse="true"}
+## Esercizio 1.
+
+Nel @sec-bayesian-inference-proportion abbiamo utilizzato il metodo basato su griglia per determinare la distribuzione a posteriori nel caso di $y = 6$ successi su $n = 9$ prove [vedi anche @McElreath_rethinking per una discussione dettagliata]. Ora esploriamo un approccio alternativo, sfruttando le proprietà delle famiglie coniugate.
+
+La verosimiglianza binomiale per questo esperimento è espressa dalla seguente funzione:
+
+$$
+\mathcal{L}(\theta) \propto \theta^y (1-\theta)^{n-y},
+$$
+dove $y = 6$ rappresenta il numero di successi e $n = 9$ il numero totale di prove.
+
+Scegliendo una distribuzione a priori Beta con parametri $\alpha = 2$ e $\beta = 5$, possiamo applicare il teorema di Bayes per calcolare i parametri aggiornati della distribuzione a posteriori. In base alla regola di aggiornamento per distribuzioni coniugate, otteniamo:
+
+$$
+\alpha' = \alpha + y = 2 + 6 = 8.
+$$
+$$
+\beta' = \beta + n - y = 5 + 9 - 6 = 8.
+$$
+La distribuzione a posteriori risultante è quindi una distribuzione Beta con parametri $\mathcal{Beta}(8, 8)$.
+
+Procediamo ora a visualizzare le tre distribuzioni rilevanti:
+
+1. **Distribuzione a priori**: $\mathcal{Beta}(2, 2)$,
+2. **Verosimiglianza binomiale**: per $y = 6$ e $n = 9$,
+3. **Distribuzione a posteriori**: $\text{Beta}(8, 5)$.
+
+Ecco il codice R per generare il grafico comparativo:
+
+```{r}
+# Definizione dei parametri
+alpha_prior <- 2
+beta_prior <- 5
+y <- 6
+n <- 9
+
+# Parametri della distribuzione a posteriori
+alpha_post <- alpha_prior + y
+beta_post <- beta_prior + n - y
+
+# Sequenza di valori di theta
+theta <- seq(0, 1, length.out = 1000)
+
+# Calcolo delle PDF
+prior_pdf <- dbeta(theta, shape1 = alpha_prior, shape2 = beta_prior)
+likelihood <- theta^y * (1 - theta)^(n - y)
+
+# Normalizzazione della verosimiglianza
+likelihood_integral <- sum(likelihood) * (theta[2] - theta[1])
+normalized_likelihood <- likelihood / likelihood_integral
+
+posterior_pdf <- dbeta(theta, shape1 = alpha_post, shape2 = beta_post)
+
+# Creare un dataframe contenente i dati per il grafico
+df <- data.frame(
+  theta = rep(theta, 3),
+  densita = c(prior_pdf, normalized_likelihood, posterior_pdf),
+  distribuzione = rep(c("Prior", "Likelihood", "Posterior"), each = length(theta))
+)
+
+# Creare il grafico 
+ggplot(df, aes(x = theta, y = densita, color = distribuzione)) +
+  geom_line(size = 1) +  # Aggiungere le linee per le distribuzioni
+  scale_color_manual(values = c("Prior" = "blue", "Likelihood" = "green", "Posterior" = "red")) +  # Assegnare i colori
+  labs(title = "Distribuzioni Prior, Likelihood e Posterior",
+       x = expression(theta),
+       y = "Densità",
+       color = "Distribuzione") +  # Aggiungere titoli e label
+  theme(legend.position = "top")  # Posizionare la legenda in alto
+```
+
+- *Curva blu*: Prior $\mathcal{Beta}(2, 5)$, che riflette le credenze iniziali prima dell'osservazione dei dati.  
+- *Curva verde*: Likelihood (normalizzata), rappresenta l'evidenza fornita dai dati osservati.  
+- *Curva rossa*: Posterior $\mathcal{Beta}(8, 8)$, risultato dell'aggiornamento bayesiano che combina prior e likelihood.  
+
+**Nota sulla normalizzazione della verosimiglianza.** La verosimiglianza binomiale non è una distribuzione di probabilità (il suo integrale non è pari a 1). Per rappresentarla visivamente accanto alla distribuzione a priori e a quella a posteriori, è necessario normalizzarla. Questo è fatto calcolando il suo integrale su $\theta \in [0, 1]$ e dividendo la funzione per il risultato. La normalizzazione serve solo per la visualizzazione e non influisce sui calcoli analitici.
+:::
+
+::: {.callout-note collapse="true"}
+## Esercizio 2.
+
+Esaminiamo ora un esempio discuso da @Johnson2022bayesrules. In uno studio molto famoso, Stanley Milgram ha studiato la propensione delle persone a obbedire agli ordini delle figure di autorità, anche quando tali ordini potrebbero danneggiare altre persone (Milgram 1963). Nell'articolo, Milgram descrive lo studio come
+
+> consistente nell'ordinare a un soggetto ingenuo di somministrare una scossa elettrica a una vittima. Viene utilizzato un generatore di scosse simulato, con 30 livelli di tensione chiaramente contrassegnati che vanno da IS a 450 volt. Lo strumento porta delle designazioni verbali che vanno da Scossa Lieve a Pericolo: Scossa Grave. Le risposte della vittima, che è un complice addestrato dell'esperimentatore, sono standardizzate. Gli ordini di somministrare scosse vengono dati al soggetto ingenuo nel contesto di un 'esperimento di apprendimento' apparentemente organizzato per studiare gli effetti della punizione sulla memoria. Man mano che l'esperimento procede, al soggetto ingenuo viene ordinato di somministrare scosse sempre più intense alla vittima, fino al punto di raggiungere il livello contrassegnato Pericolo: Scossa Grave.
+
+In altre parole, ai partecipanti allo studio veniva dato il compito di testare un altro partecipante (che in realtà era un attore addestrato) sulla loro capacità di memorizzare una serie di item. Se l'attore non ricordava un item, al partecipante veniva ordinato di somministrare una scossa all'attore e di aumentare il livello della scossa con ogni fallimento successivo. I partecipanti non erano consapevoli del fatto che le scosse fossero finte e che l'attore stesse solo fingendo di provare dolore dalla scossa.
+
+Nello studio di Milgram, 26 partecipanti su 40 hanno somministrato scosse al livello "Pericolo: Scossa Grave". Il problema richiede di costruire la distribuzione a posteriori della probabilità $\theta$ di infliggere una scossa a l livello "Pericolo: Scossa Grave", ipotizzando che uno studio precedente aveva stabilito che $\theta$ segue una distribuzione Beta(1, 10).
+
+Iniziamo a fornire una rappresentazione grafica della distribuzione a priori.
+
+```{r}
+# Impostazione dei parametri della distribuzione Beta
+alpha <- 1
+beta_val <- 10
+
+# Creazione di valori x per il plot
+x_values <- seq(0, 1, length.out = 1000)
+
+# Calcolo della densità di probabilità per ogni valore di x
+beta_pdf <- dbeta(x_values, shape1 = alpha, shape2 = beta_val)
+
+# Creare un dataframe contenente i dati per il grafico
+df <- data.frame(
+  x = x_values,
+  densita = beta_pdf
+)
+
+# Creare il grafico
+ggplot(df, aes(x = x, y = densita)) +
+  geom_line(color = "#b97c7c", size = 1) +  # Aggiungere la linea per la densità
+  labs(title = "Distribuzione Beta(1, 10)",  # Aggiungere il titolo
+       x = "x",  # Label dell'asse x
+       y = "Densità di probabilità") +  # Label dell'asse y
+  theme(plot.title = element_text(hjust = 0.5)) +  # Centrare il titolo
+  geom_vline(xintercept = 0, color = "black", linetype = "dashed", size = 0.5) +  # Linea verticale opzionale
+  geom_vline(xintercept = 1, color = "black", linetype = "dashed", size = 0.5) +  # Linea verticale opzionale
+  annotate("text", x = 0.8, y = max(beta_pdf) * 0.9, label = "Beta(1, 10)", color = "#b97c7c", size = 5)  # Aggiungere una legenda
+```
+
+La distribuzione a posteriori segue una distribuzione Beta con parametri aggiornati:
+
+```{r}
+y <- 26
+n <- 40
+
+alpha_prior <- 1
+beta_prior <- 10
+
+alpha_post <- alpha_prior + y
+beta_post <- beta_prior + n - y
+
+alpha_post
+beta_post
+```
+
+Creazione di un grafico per la distribuzione a posteriori:
+
+```{r}
+# Creazione di valori x per il plot
+x_values <- seq(0, 1, length.out = 1000)
+
+# Calcolo della densità di probabilità per ogni valore di x
+beta_pdf <- dbeta(x_values, alpha_post, beta_post)
+
+# Creare un dataframe contenente i dati per il grafico
+df <- data.frame(
+  theta = x_values,
+  densita = beta_pdf
+)
+
+# Creare il grafico con ggplot2
+ggplot(df, aes(x = theta, y = densita)) +
+  geom_line(color = "blue", size = 1) +  # Aggiungere la linea per la densità
+  labs(title = "Distribuzione Beta(27, 24)",  # Aggiungere il titolo
+       x = expression(theta),  # Label dell'asse x usando espressioni matematiche
+       y = "Densità di probabilità") +  # Label dell'asse y
+  theme(plot.title = element_text(hjust = 0.5)) +  # Centrare il titolo
+  annotate("text", x = 0.8, y = max(beta_pdf) * 0.9, label = "Beta(27, 24)", color = "blue", size = 5)  
+```
+
+Calcolo della media a posteriori di $\theta$:
+
+```{r}
+alpha_post / (alpha_post + beta_post)
+```
+
+Calcolo della moda a posteriori:
+
+```{r}
+(alpha_post - 1) / (alpha_post + beta_post - 2)
+```
+
+Calcolo della probabilità che $\theta > 0.6$:
+
+```{r}
+pbeta(0.6, alpha_post, beta_post, lower.tail = FALSE)
+```
+
+Ovvero:
+
+```{r}
+1 - pbeta(0.6, alpha_post, beta_post)
+```
+
+Eseguiamo il problema utilizzando il metodo basato su griglia. Definiamo la griglia di interesse:
+
+```{r}
+theta <- seq(0, 1, length.out = 100)
+```
+
+Creiamo la distribuzione a priori:
+
+```{r}
+prior <- dbeta(theta, alpha_prior, beta_prior)
+
+# Normalizzazione della densità per ottenere una somma pari a 1
+prior_normalized <- prior / sum(prior)
+
+# Creare un dataframe contenente i dati per il grafico
+df <- data.frame(
+  theta = theta,
+  probabilita = prior_normalized
+)
+
+# Creare il grafico con ggplot2
+ggplot(df, aes(x = theta, y = probabilita)) +
+  geom_segment(aes(x = theta, xend = theta, y = 0, yend = probabilita), 
+               color = "blue", size = 1) +  # Linee verticali per rappresentare le probabilità
+  labs(title = "Distribuzione a priori",  # Aggiungere il titolo
+       x = expression(theta),  # Label dell'asse x usando espressioni matematiche
+       y = "Probabilità") +  # Label dell'asse y
+  theme(plot.title = element_text(hjust = 0.5))  # Centrare il titolo
+```
+
+Creiamo la verosimiglianza:
+
+```{r}
+lk <- dbinom(y, n, theta)
+
+# Normalizzazione della verosimiglianza per ottenere una somma pari a 1
+lk_normalized <- lk / sum(lk)
+
+# Creare un dataframe contenente i dati per il grafico
+df <- data.frame(
+  theta = theta,
+  probabilita = lk_normalized
+)
+
+# Creare il grafico con ggplot2
+ggplot(df, aes(x = theta, y = probabilita)) +
+  geom_segment(aes(x = theta, xend = theta, y = 0, yend = probabilita), 
+               color = "red", size = 1) +  # Linee verticali per rappresentare la verosimiglianza
+  labs(title = "Verosimiglianza",  # Aggiungere il titolo
+       x = expression(theta),  # Label dell'asse x usando espressioni matematiche
+       y = "Probabilità") +  # Label dell'asse y
+  theme(plot.title = element_text(hjust = 0.5))  # Centrare il titolo
+```
+
+Calcoliamo la distribuzione a posteriori:
+
+```{r}
+post <- (prior * lk) / sum(prior * lk)
+
+# Normalizzazione della verosimiglianza per ottenere una somma pari a 1
+lk_normalized <- lk / sum(lk)
+
+# Creare un dataframe contenente i dati per il grafico
+df <- data.frame(
+  theta = theta,
+  probabilita = lk_normalized
+)
+
+# Creare il grafico con ggplot2
+ggplot(df, aes(x = theta, y = probabilita)) +
+  geom_segment(aes(x = theta, xend = theta, y = 0, yend = probabilita), 
+               color = "green", size = 1) +  # Linee verticali per rappresentare la verosimiglianza
+  labs(title = "Distribuzione a posteriori",  # Aggiungere il titolo
+       x = expression(theta),  # Label dell'asse x usando espressioni matematiche
+       y = "Probabilità") +  # Label dell'asse y
+  theme(plot.title = element_text(hjust = 0.5))  # Centrare il titolo
+```
+
+Estrazione di un campione dalla distribuzione a posteriori:
+
+```{r}
+samples <- sample(theta, size = 1e6, replace = TRUE, prob = post)
+```
+
+Troviamo la media a posteriori:
+
+```{r}
+mean(samples)
+```
+
+Calcoliamo la probabilità che $\theta > 0.6$:
+
+```{r}
+mean(samples > 0.6)
+```
+
+Questo codice mantiene la struttura logica del problema e produce risultati equivalenti utilizzando R.
+:::
+
+
+::: {.callout-note collapse="true"}
+## Esercizio 3.
+
+Consideriamo un esempio discusso da @nalborczyk2018 nel quale, oltre all'applicazione del teorema beta-binimiale, viene anche introdotto il concetto di posterior-predictive check.
+
+Supponiamo di reclutare partecipanti per uno studio di mezza ora:  
+
+- Possiamo farlo fra le 9:00 e le 18:00, con sessioni ogni 30 minuti.  
+- In una settimana lavorativa (lun–ven) otteniamo $n = 90$ time slot.  
+- Ad ogni slot, il partecipante o si presenta ($1$) o manca ($0$).  
+
+Vogliamo stimare la probabilità media di presenza, che chiameremo $\theta$.  
+
+Modello:
+
+$$
+\begin{cases}
+    Y \mid \theta \;\sim\;\mathrm{Binomial}(n,\theta),\\[6pt]
+    \theta \;\sim\;\mathrm{Beta}(\alpha,\beta).
+    \end{cases}
+$$
+
+
+Scelta del prior:
+
+- conoscenze pregresse suggeriscono che $\theta$ sia intorno a 0.5;  
+- scegliamo quindi un **prior** $\;\mathrm{Beta}(2,2)$, che ha media $0.5$ e riflette incertezza moderata.  
+
+
+Dati osservati:
+
+```{r}
+# vettore di 0/1 con n = 90 osservazioni
+y <- c(
+  0,0,0,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,
+  0,1,0,1,1,1,0,0,1,1,1,1,1,1,1,0,0,1,
+  1,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,
+  1,0,0,1,1,1,0,1,1,1,1,1,1,0,0,0,0,1,
+  0,1,0,1,1,1,0,0,0,0,0,1,1,1,1,1,1,0
+)
+```
+
+Calcoliamo  
+
+```{r}
+n <- length(y)  # numero di slot = 90
+z <- sum(y)     # numero di presenze = numero di 1
+```
+
+
+**Posterior Beta–Binomiale.**
+
+I parametri aggiornati sono  
+
+$$
+\alpha_{post} = \alpha + z,
+\quad
+\beta_{post} = \beta + (n - z).
+$$
+
+In particolare, con $\alpha=\beta=2$:  
+
+```{r}
+a <- b <- 2
+a_post <- a + z
+b_post <- b + (n - z)
+```
+
+Il *posterior* è quindi  
+
+$$
+\theta\mid y \;\sim\;\mathrm{Beta}(a+z,\;b+n-z).
+$$
+
+
+Visualizzazione:
+
+```{r}
+# griglia per theta
+grid <- seq(0, 1, length.out = 1000)
+
+# densità
+prior     <- dbeta(grid, a,      b)
+posterior <- dbeta(grid, a_post, b_post)
+
+df <- data.frame(theta = grid,
+                 prior = prior,
+                 posterior = posterior)
+
+ggplot(df) +
+  geom_area(aes(x = theta, y = prior,
+                fill = "Prior", colour = "Prior"),
+            alpha = 0.5, size = 1) +
+  geom_area(aes(x = theta, y = posterior,
+                fill = "Posterior", colour = "Posterior"),
+            alpha = 0.5, size = 1) +
+  scale_fill_grey(name = "") +
+  scale_colour_grey(name = "") +
+  theme_bw(base_size = 12) +
+  xlab(expression(theta)) +
+  ylab("") +
+  ggtitle("Densità Prior e Posterior\nmodello Beta–Binomiale")
+```
+
+**Introduzione ai posterior predictive checks.**
+
+Il modello assume *indipendenza* fra i time slot.  Se questa assunzione è violata (ad es. presenza autocorrelata nel tempo), le nostre stime potrebbero essere fuorvianti.
+
+**Idea**:  
+
+1. Simulare $\theta$ dal posterior.  
+2. Dato ciascun $\theta$, generare una nuova serie $y^{rep}$ da  
+   $\mathrm{Binomial}(n,\theta)$.  
+3. Calcolare su ogni $y^{rep}$ una **test-quantità** $T(y^{rep})$.  
+4. Confrontare la distribuzione di $T(y^{rep})$ con il valore osservato $T(y)$.  
+
+Se $T(y)$ è un outlier rispetto ai $T(y^{rep})$, l’assunzione di indipendenza è sospetta.
+
+
+**Test‐quantità: numero di “switch”.** 
+
+Definiamo una funzione che conta quante volte la serie passa da 0→1 o da 1→0:
+
+```{r}
+count_switches <- function(x) {
+  sum(abs(diff(x)) == 1)
+}
+
+# valore osservato
+Ty <- count_switches(y)
+cat("Switch osservati:", Ty, "\n")
+```
+
+**Simulazione e istogramma.**
+
+```{r}
+set.seed(123)      # per riproducibilità
+nsims <- 10000     # numero di repliche
+
+sim_switches <- replicate(nsims, {
+  # 1) estrai un theta dal posterior
+  theta_sim <- rbeta(1, a_post, b_post)
+  # 2) genera y^rep ~ Bernoulli(theta_sim)
+  y_sim     <- rbinom(n, size = 1, prob = theta_sim)
+  # 3) conta gli switch
+  count_switches(y_sim)
+})
+
+# Istogramma
+hist(sim_switches,
+     breaks = 30,
+     col    = "lightgrey",
+     main   = "Distribuzione Posterior Predictive\ndel numero di switch",
+     xlab   = "Numero di switch",
+     ylab   = "Frequenza")
+abline(v = Ty, col = "darkgreen", lty = 2, lwd = 2)
+```
+
+**Bayesian p‐value.**
+
+Calcoliamo la probabilità di ottenere un numero di switch **≤** di quello osservato:
+
+```{r}
+p_value <- mean(sim_switches <= Ty)
+cat("Bayesian p-value:", round(p_value, 4), "\n")
+```
+
+- Un valore molto basso (es. $<0.05$) indica che $T(y)$ è sorprendente rispetto alle predizioni del modello.  
+- Qui: se $p\approx 0.01$, la bassa variabilità di switch suggerisce **dipendenza** fra le osservazioni.
+
+
+**Interpretazione.**  
+
+- *Un modello non è “giusto” o “sbagliato”*, ma deve descrivere bene il processo che genera i dati.  
+- Il nostro check mostra che il numero di switch osservato è **molto** minore di quanto ci aspetteremmo sotto l'ipotesi di indipendenza.  
+- Con tutta probabilità c’è **autocorrelazione temporale** (le presenze dipendono dall’ora del giorno).  
+- Per tenerne conto, si potrebbero usare modelli più avanzati (es. processi gaussiani).
+
+In sintesi, il posterior predictive checking ci offre un modo flessibile per diagnosticare *diverse* violazioni del modello, scegliendo test‐quantities adatte (media, varianza, max, autocorrelazione, …). Come scrivono Gelman et al. (2013), “i p-valori posteriori … possono essere calcolati per varie test-quantities per valutare più modi in cui un modello può fallire”.
+:::
+
+
+## Principali distribuzioni coniugate
+
+Esistono altre combinazioni di verosimiglianza e distribuzione a priori che producono una distribuzione a posteriori con la stessa forma della distribuzione a priori. Ecco alcune delle più note coniugazioni tra modelli statistici e distribuzioni a priori:
+
+- Nel modello *Normale-Normale* $\mathcal{N}(\mu, \sigma^2_0)$, la distribuzione a priori è $\mathcal{N}(\mu_0, \tau^2)$ e la distribuzione a posteriori è $\mathcal{N}\left(\frac{\mu_0\sigma^2 + \bar{y}n\tau^2}{\sigma^2 + n\tau^2}, \frac{\sigma^2\tau^2}{\sigma^2 + n\tau^2} \right)$.
+
+- Nel modello *Poisson-gamma* $\text{Po}(\theta)$, la distribuzione a priori è $\Gamma(\lambda, \delta)$ e la distribuzione a posteriori è $\Gamma(\lambda + n \bar{y}, \delta +n)$.
+
+- Nel modello *Esponenziale* $\text{Exp}(\theta)$, la distribuzione a priori è $\Gamma(\lambda, \delta)$ e la distribuzione a posteriori è $\Gamma(\lambda + n, \delta +n\bar{y})$.
+
+- Nel modello *Uniforme-Pareto* $\text{U}(0, \theta)$, la distribuzione a priori è $\text{Pa}(\alpha, \varepsilon)$ e la distribuzione a posteriori è $\text{Pa}(\alpha + n, \max(y_{(n)}, \varepsilon))$.
+
+
+## Riflessioni conclusive {.unnumbered .unlisted}
+
+In questo capitolo abbiamo approfondito l’idea di *famiglia coniugata*, mostrando come, in certi casi, il teorema di Bayes mantenga invariata la forma della distribuzione a priori. L’esempio del modello Beta-Binomiale, già incontrato in precedenza, ci ha offerto l’occasione di vedere con chiarezza come i dati modifichino le nostre credenze in modo semplice e cumulativo: basta aggiornare i parametri della distribuzione, senza cambiare la sua struttura.
+
+Questa proprietà, apparentemente tecnica, riveste una grande importanza concettuale. Le distribuzioni coniugate costituiscono il *laboratorio ideale* per comprendere a fondo la logica dell’inferenza bayesiana: permettono di seguire con trasparenza il passaggio da prior a posterior, di vedere come ogni nuova osservazione si traduca in un aggiornamento dei parametri e di cogliere in maniera intuitiva la natura dinamica del processo.
+
+Naturalmente, sappiamo che la coniugazione è un caso speciale. Nella maggior parte dei problemi reali, soprattutto quando i modelli diventano complessi e includono più parametri o strutture gerarchiche, non esiste una coppia prior–verosimiglianza coniugata che semplifichi i calcoli. È in questi casi che entrano in gioco metodi computazionali più generali, come il campionamento MCMC, che ci permettono di affrontare situazioni realistiche senza rinunciare alla coerenza dell’approccio bayesiano [@Johnson2022bayesrules].
+
+In questo senso, le famiglie coniugate non rappresentano un punto di arrivo, ma un passaggio fondamentale: ci insegnano i principi dell’aggiornamento bayesiano in un contesto semplice, che prepara la strada verso strumenti più potenti e flessibili.
+
+
+::: {.callout-important title="Problemi 1" collapse="true"}
+Si consideri lo studio "*An excess of positive results: Comparing the standard psychology literature with registered reports*" di @scheel2021excess. In questo lavoro, gli autori confrontano il tasso di risultati positivi $\theta$ ottenuti in studi psicologici pubblicati senza preregistrazione con quelli pubblicati con preregistrazione. Si utilizzi il tasso di successo riportato negli studi preregistrati per costruire una distribuzione a priori per il parametro $\theta$.
+
+Secondo i risultati degli studi preregistrati, gli autori riscontrano un tasso di successo del 43.66%, con un intervallo di confidenza al 95% [CI] = [31.91, 55.95]. Sulla base di questi dati, si costruisca una distribuzione beta come distribuzione a priori per $\theta$, seguendo il metodo illustrato da @Johnson2022bayesrules.
+
+Successivamente, utilizzando questa distribuzione beta come distribuzione a priori, si determini la distribuzione a posteriori utilizzando il metodo delle famiglie coniugate per due scenari distinti, basati su 152 studi osservati:
+(a) Un tasso di successo del 60%
+(b) Un tasso di successo del 96% (come riportato per gli studi non preregistrati da @scheel2021excess).
+
+Infine, si commentino i risultati derivanti dall'analisi delle distribuzioni a posteriori ottenute per entrambi gli scenari.
+:::
+
+::: {.callout-tip title="Soluzioni 1" collapse="true"}
+```r
+# Caricamento delle librerie necessarie
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+
+# Funzione per trovare i parametri della distribuzione beta
+find_beta_parameters <- function(mean, lower, upper, conf_level = 0.95) {
+  # Funzione obiettivo da minimizzare
+  objective <- function(alpha) {
+    beta <- alpha * (1 - mean) / mean
+    predicted_ci <- qbeta(c((1-conf_level)/2, 1-(1-conf_level)/2), alpha, beta)
+    error <- (predicted_ci[1] - lower)^2 + (predicted_ci[2] - upper)^2
+    return(error)
+  }
+  
+  # Ottimizzazione per trovare alpha
+  result <- optimize(objective, interval = c(0.1, 100))
+  alpha <- result$minimum
+  beta <- alpha * (1 - mean) / mean
+  
+  return(list(alpha = alpha, beta = beta))
+}
+
+# Parametri degli studi preregistrati
+mean_preregistered <- 0.4366
+ci_lower <- 0.3191
+ci_upper <- 0.5595
+
+# Calcolo dei parametri della distribuzione beta a priori
+prior_params <- find_beta_parameters(mean_preregistered, ci_lower, ci_upper)
+alpha_prior <- prior_params$alpha
+beta_prior <- prior_params$beta
+
+# Dati osservati
+n <- 152  # numero di studi
+successes_60 <- round(0.60 * n)  # scenario (a)
+successes_96 <- round(0.96 * n)  # scenario (b)
+
+# Calcolo delle distribuzioni a posteriori
+alpha_post_60 <- alpha_prior + successes_60
+beta_post_60 <- beta_prior + (n - successes_60)
+
+alpha_post_96 <- alpha_prior + successes_96
+beta_post_96 <- beta_prior + (n - successes_96)
+
+# Creazione del dataframe per il plotting
+theta <- seq(0, 1, length.out = 1000)
+
+df <- data.frame(
+  theta = rep(theta, 3),
+  density = c(
+    dbeta(theta, alpha_prior, beta_prior),
+    dbeta(theta, alpha_post_60, beta_post_60),
+    dbeta(theta, alpha_post_96, beta_post_96)
+  ),
+  distribution = rep(c("Priori", "Posteriori (60%)", "Posteriori (96%)"), 
+                    each = length(theta))
+)
+
+# Creazione del grafico
+p <- ggplot(df, aes(x = theta, y = density, color = distribution)) +
+  geom_line(size = 1) +
+  labs(
+    title = "Distribuzioni a Priori e a Posteriori",
+    x = expression(theta),
+    y = "Densità",
+    color = "Distribuzione"
+  ) +
+  theme(legend.position = "bottom")
+
+# Calcolo degli intervalli di credibilità al 95%
+credible_intervals <- data.frame(
+  Distribution = c("Priori", "Posteriori (60%)", "Posteriori (96%)"),
+  Mean = c(
+    alpha_prior / (alpha_prior + beta_prior),
+    alpha_post_60 / (alpha_post_60 + beta_post_60),
+    alpha_post_96 / (alpha_post_96 + beta_post_96)
+  ),
+  Lower = c(
+    qbeta(0.025, alpha_prior, beta_prior),
+    qbeta(0.025, alpha_post_60, beta_post_60),
+    qbeta(0.025, alpha_post_96, beta_post_96)
+  ),
+  Upper = c(
+    qbeta(0.975, alpha_prior, beta_prior),
+    qbeta(0.975, alpha_post_60, beta_post_60),
+    qbeta(0.975, alpha_post_96, beta_post_96)
+  )
+)
+
+# Visualizzazione dei risultati
+print("Parametri della distribuzione beta a priori:")
+print(paste("alpha =", round(alpha_prior, 2)))
+print(paste("beta =", round(beta_prior, 2)))
+
+print("\nIntervalli di credibilità al 95%:")
+print(credible_intervals)
+
+# Visualizza il grafico
+print(p)
+```
+:::
+
+
+::: {.callout-important title="Problemi 2" collapse="true"}
+Tra i fattori che possono influenzare il rapporto tra i sessi alla nascita c'è la condizione materna di placenta previa, una condizione insolita della gravidanza in cui la placenta è impiantata in basso nell'utero, impedendo un normale parto vaginale del feto. Uno studio condotto in Germania ha esaminato il sesso dei neonati in casi di placenta previa e ha riscontrato che, su un totale di 980 nascite, 437 erano femmine.
+
+Quanta evidenza fornisce questo studio a supporto dell'ipotesi che la proporzione di nascite femminili nella popolazione di placenta previa sia inferiore a 0.485, che rappresenta la proporzione di nascite femminili nella popolazione generale? (Esercizio tratto da @gelman1995bayesian)
+:::
+
+::: {.callout-tip title="Soluzioni 2" collapse="true"}
+```r
+# Caricamento delle librerie necessarie
+library(ggplot2)
+
+# Dati osservati
+n <- 980        # numero totale di nascite
+y <- 437        # numero di femmine
+p0 <- 0.485     # proporzione nella popolazione generale
+
+# Calcolo della proporzione osservata
+p_hat <- y/n
+print(paste("Proporzione osservata di femmine:", round(p_hat, 3)))
+
+# Test dell'ipotesi utilizzando il Bayes Factor
+# H0: p = 0.485 vs H1: p < 0.485
+
+# Funzione per calcolare la verosimiglianza marginale sotto H1
+marginal_likelihood_h1 <- function(y, n, p_max = 0.485) {
+  # Integrazione numerica sulla distribuzione uniforme tra 0 e p_max
+  p_grid <- seq(0, p_max, length.out = 1000)
+  likelihood <- dbinom(y, n, p_grid)
+  prior <- dunif(p_grid, 0, p_max)
+  mean(likelihood * prior) * p_max
+}
+
+# Verosimiglianza sotto H0
+likelihood_h0 <- dbinom(y, n, p0)
+
+# Verosimiglianza marginale sotto H1
+marg_lik_h1 <- marginal_likelihood_h1(y, n)
+
+# Calcolo del Bayes Factor
+bf10 <- marg_lik_h1 / likelihood_h0
+print(paste("Bayes Factor (H1 vs H0):", round(bf10, 2)))
+
+# Visualizzazione delle distribuzioni a posteriori
+p_grid <- seq(0, 1, length.out = 1000)
+likelihood <- dbinom(y, n, p_grid)
+prior <- dunif(p_grid, 0, 1)
+posterior <- likelihood * prior
+posterior <- posterior / sum(posterior)
+
+# Creazione del dataframe per il plotting
+df <- data.frame(
+  p = p_grid,
+  Posterior = posterior / max(posterior)  # normalizzato per la visualizzazione
+)
+
+# Creazione del grafico
+p <- ggplot(df, aes(x = p, y = Posterior)) +
+  geom_line(size = 1) +
+  geom_vline(xintercept = p0, linetype = "dashed", color = "red") +
+  geom_vline(xintercept = p_hat, linetype = "dashed", color = "blue") +
+  labs(
+    title = "Distribuzione a Posteriori della Proporzione di Nascite Femminili",
+    x = "Proporzione di Nascite Femminili (p)",
+    y = "Densità a Posteriori (normalizzata)"
+  ) +
+  annotate("text", x = p0, y = 0.1, 
+           label = "Popolazione Generale", 
+           angle = 90, vjust = -0.5, color = "red") +
+  annotate("text", x = p_hat, y = 0.1, 
+           label = "Proporzione Osservata", 
+           angle = 90, vjust = -0.5, color = "blue")
+
+# Calcolo dell'intervallo di credibilità al 95%
+sorted_p <- sort(p_grid)
+cum_post <- cumsum(posterior)
+lower <- sorted_p[which(cum_post > 0.025)[1]]
+upper <- sorted_p[which(cum_post > 0.975)[1]]
+
+print(paste("Intervallo di credibilità al 95%: [", 
+            round(lower, 3), ",", round(upper, 3), "]"))
+
+# Calcolo della probabilità a posteriori che p < 0.485
+prob_less_than_p0 <- sum(posterior[p_grid < p0])
+print(paste("Probabilità a posteriori che p < 0.485:", 
+            round(prob_less_than_p0, 3)))
+
+# Visualizza il grafico
+print(p)
+```
+:::
+
+::: {.callout-important title="Problemi 3" collapse="true"}
+Per valutare la sensibilità della soluzione precedente alla scelta della distribuzione a priori, ripetere l'esercizio utilizzando come distribuzione a priori per la proporzione di nascite femminili una distribuzione Beta(48.5, 51.5). Questa distribuzione è centrata su 0.485 e concentra la maggior parte della sua massa nell'intervallo [0.385, 0.585]. Interpretare i risultati ottenuti.
+:::
+
+::: {.callout-tip title="Soluzioni 3" collapse="true"}
+```r
+# Caricamento delle librerie necessarie
+library(ggplot2)
+
+# Dati osservati
+n <- 980        # numero totale di nascite
+y <- 437        # numero di femmine
+p0 <- 0.485     # proporzione nella popolazione generale
+
+# Parametri della distribuzione beta a priori
+alpha_prior <- 48.5
+beta_prior <- 51.5
+
+# Calcolo dei parametri della distribuzione beta a posteriori
+alpha_post <- alpha_prior + y
+beta_post <- beta_prior + (n - y)
+
+# Creazione della griglia per il plotting
+p_grid <- seq(0, 1, length.out = 1000)
+
+# Calcolo delle densità
+prior_density <- dbeta(p_grid, alpha_prior, beta_prior)
+posterior_density <- dbeta(p_grid, alpha_post, beta_post)
+
+# Creazione del dataframe per il plotting
+df <- data.frame(
+  p = rep(p_grid, 2),
+  density = c(prior_density, posterior_density),
+  distribution = rep(c("Priori Beta(48.5, 51.5)", "Posteriori"), each = length(p_grid))
+)
+
+# Creazione del grafico
+p <- ggplot(df, aes(x = p, y = density, color = distribution)) +
+  geom_line(size = 1) +
+  geom_vline(xintercept = p0, linetype = "dashed", color = "red") +
+  labs(
+    title = "Distribuzioni a Priori e a Posteriori",
+    subtitle = "Proporzione di Nascite Femminili con Placenta Previa",
+    x = "Proporzione di Nascite Femminili (p)",
+    y = "Densità",
+    color = "Distribuzione"
+  ) +
+  theme(legend.position = "bottom") +
+  annotate("text", x = p0, y = max(posterior_density)/2, 
+           label = "Popolazione Generale (0.485)", 
+           angle = 90, vjust = -0.5, color = "red")
+
+# Calcolo statistiche rilevanti
+# Media a priori e posteriori
+prior_mean <- alpha_prior / (alpha_prior + beta_prior)
+post_mean <- alpha_post / (alpha_post + beta_post)
+
+# Intervalli di credibilità al 95%
+prior_ci <- qbeta(c(0.025, 0.975), alpha_prior, beta_prior)
+post_ci <- qbeta(c(0.025, 0.975), alpha_post, beta_post)
+
+# Probabilità a posteriori che p < 0.485
+prob_less_than_p0 <- pbeta(p0, alpha_post, beta_post)
+
+# Output dei risultati
+cat("\nRisultati dell'analisi:\n")
+cat("------------------------\n")
+cat("Dati osservati:\n")
+cat(sprintf("Numero totale di nascite: %d\n", n))
+cat(sprintf("Numero di femmine: %d\n", y))
+cat(sprintf("Proporzione osservata: %.3f\n\n", y/n))
+
+cat("Analisi a priori:\n")
+cat(sprintf("Media a priori: %.3f\n", prior_mean))
+cat(sprintf("Intervallo di credibilità al 95%%: [%.3f, %.3f]\n\n", 
+            prior_ci[1], prior_ci[2]))
+
+cat("Analisi a posteriori:\n")
+cat(sprintf("Media a posteriori: %.3f\n", post_mean))
+cat(sprintf("Intervallo di credibilità al 95%%: [%.3f, %.3f]\n", 
+            post_ci[1], post_ci[2]))
+cat(sprintf("Probabilità che p < %.3f: %.3f\n", p0, prob_less_than_p0))
+
+# Visualizza il grafico
+print(p)
+```
+```r
+# Caricamento delle librerie necessarie
+library(ggplot2)
+
+# Dati osservati
+n <- 980        # numero totale di nascite
+y <- 437        # numero di femmine
+p0 <- 0.485     # proporzione nella popolazione generale
+
+# Parametri della distribuzione beta a priori
+alpha_prior <- 48.5
+beta_prior <- 51.5
+
+# Calcolo dei parametri della distribuzione beta a posteriori
+alpha_post <- alpha_prior + y
+beta_post <- beta_prior + (n - y)
+
+# Creazione della griglia per il plotting
+p_grid <- seq(0, 1, length.out = 1000)
+
+# Calcolo delle densità
+prior_density <- dbeta(p_grid, alpha_prior, beta_prior)
+posterior_density <- dbeta(p_grid, alpha_post, beta_post)
+
+# Creazione del dataframe per il plotting
+df <- data.frame(
+  p = rep(p_grid, 2),
+  density = c(prior_density, posterior_density),
+  distribution = rep(c("Priori Beta(48.5, 51.5)", "Posteriori"), each = length(p_grid))
+)
+
+# Creazione del grafico
+p <- ggplot(df, aes(x = p, y = density, color = distribution)) +
+  geom_line(size = 1) +
+  geom_vline(xintercept = p0, linetype = "dashed", color = "red") +
+  labs(
+    title = "Distribuzioni a Priori e a Posteriori",
+    subtitle = "Proporzione di Nascite Femminili con Placenta Previa",
+    x = "Proporzione di Nascite Femminili (p)",
+    y = "Densità",
+    color = "Distribuzione"
+  ) +
+  theme(legend.position = "bottom") +
+  annotate("text", x = p0, y = max(posterior_density)/2, 
+           label = "Popolazione Generale (0.485)", 
+           angle = 90, vjust = -0.5, color = "red")
+
+# Calcolo statistiche rilevanti
+# Media a priori e posteriori
+prior_mean <- alpha_prior / (alpha_prior + beta_prior)
+post_mean <- alpha_post / (alpha_post + beta_post)
+
+# Intervalli di credibilità al 95%
+prior_ci <- qbeta(c(0.025, 0.975), alpha_prior, beta_prior)
+post_ci <- qbeta(c(0.025, 0.975), alpha_post, beta_post)
+
+# Probabilità a posteriori che p < 0.485
+prob_less_than_p0 <- pbeta(p0, alpha_post, beta_post)
+
+# Output dei risultati
+cat("\nRisultati dell'analisi:\n")
+cat("------------------------\n")
+cat("Dati osservati:\n")
+cat(sprintf("Numero totale di nascite: %d\n", n))
+cat(sprintf("Numero di femmine: %d\n", y))
+cat(sprintf("Proporzione osservata: %.3f\n\n", y/n))
+
+cat("Analisi a priori:\n")
+cat(sprintf("Media a priori: %.3f\n", prior_mean))
+cat(sprintf("Intervallo di credibilità al 95%%: [%.3f, %.3f]\n\n", 
+            prior_ci[1], prior_ci[2]))
+
+cat("Analisi a posteriori:\n")
+cat(sprintf("Media a posteriori: %.3f\n", post_mean))
+cat(sprintf("Intervallo di credibilità al 95%%: [%.3f, %.3f]\n", 
+            post_ci[1], post_ci[2]))
+cat(sprintf("Probabilità che p < %.3f: %.3f\n", p0, prob_less_than_p0))
+
+# Visualizza il grafico
+print(p)
+
+```
+
+I risultati mostrano che:
+
+1. La proporzione osservata nel campione (0.446) è inferiore al valore di riferimento della popolazione generale (0.485)
+
+2. La distribuzione a priori Beta(48.5, 51.5):
+
+- Ha media 0.485
+- Riflette la nostra conoscenza iniziale sulla proporzione di nascite femminili
+- Fornisce un'incertezza ragionevole attorno al valore di riferimento
+
+3. La distribuzione a posteriori:
+
+- Ha una media di circa 0.447
+- L'intervallo di credibilità al 95% esclude il valore di riferimento 0.485
+- Indica una probabilità elevata che la vera proporzione sia inferiore a 0.485
+
+4. Questa analisi suggerisce che:
+
+- Esiste un'associazione tra placenta previa e una minor proporzione di nascite femminili
+- L'effetto è moderato ma statisticamente rilevante
+- La stima è abbastanza precisa grazie alla dimensione campionaria considerevole
+:::
+
+::: {.callout-important title="Problemi 4" collapse="true"}
+In uno studio recente, @gori2024italian hanno esaminato un campione di 202 adulti italiani e hanno riscontrato una prevalenza di mancini del 6.4%. Una meta-analisi di @papadatou2020human, condotta su un totale di 2,396,170 soggetti, riporta che la proporzione di mancini varia tra il 9.3% e il 18.1%, a seconda di come viene misurata la lateralità manuale. Inoltre, @papadatou2020human mostrano che la prevalenza della lateralità manuale varia tra i paesi e nel tempo. Considerata questa incertezza, si determini la distribuzione a posteriori che combina i dati dello studio di @gori2024italian con le informazioni pregresse fornite da Papadatou-Pastou et al. (2020). Le informazioni di @papadatou2020human possono essere espresse in termini di una distribuzione Beta(8, 60).
+:::
+
+::: {.callout-tip title="Soluzioni 4" collapse="true"}
+```r
+# Caricamento delle librerie necessarie
+library(ggplot2)
+
+# Dati dello studio di Gori et al. (2024)
+n <- 202       # dimensione del campione
+y <- round(0.064 * n)  # numero di mancini (6.4% del campione)
+
+# Parametri della distribuzione beta a priori (da Papadatou-Pastou et al., 2020)
+alpha_prior <- 8
+beta_prior <- 60
+
+# Calcolo dei parametri della distribuzione beta a posteriori
+alpha_post <- alpha_prior + y
+beta_post <- beta_prior + (n - y)
+
+# Creazione della griglia per il plotting
+p_grid <- seq(0, 0.3, length.out = 1000)  # limitato a 0.3 per migliore visualizzazione
+
+# Calcolo delle densità
+prior_density <- dbeta(p_grid, alpha_prior, beta_prior)
+posterior_density <- dbeta(p_grid, alpha_post, beta_post)
+
+# Creazione del dataframe per il plotting
+df <- data.frame(
+  p = rep(p_grid, 2),
+  density = c(prior_density, posterior_density),
+  distribution = rep(c("Priori (Papadatou-Pastou et al., 2020)", 
+                      "Posteriori (con dati Gori et al., 2024)"), 
+                    each = length(p_grid))
+)
+
+# Calcolo statistiche rilevanti
+prior_mean <- alpha_prior / (alpha_prior + beta_prior)
+post_mean <- alpha_post / (alpha_post + beta_post)
+
+prior_ci <- qbeta(c(0.025, 0.975), alpha_prior, beta_prior)
+post_ci <- qbeta(c(0.025, 0.975), alpha_post, beta_post)
+
+# Creazione del grafico
+p <- ggplot(df, aes(x = p, y = density, color = distribution)) +
+  geom_line(size = 1) +
+  geom_vline(xintercept = 0.064, linetype = "dashed", color = "red") +
+  labs(
+    title = "Distribuzione della Prevalenza dei Mancini",
+    subtitle = "Confronto tra Distribuzione a Priori e a Posteriori",
+    x = "Proporzione di Mancini",
+    y = "Densità",
+    color = "Distribuzione"
+  ) +
+  theme(legend.position = "bottom") +
+  annotate("text", x = 0.064, y = max(posterior_density)/2, 
+           label = "Valore osservato (6.4%)", 
+           angle = 90, vjust = -0.5, color = "red")
+
+# Output dei risultati
+cat("\nRisultati dell'analisi:\n")
+cat("------------------------\n")
+cat("Distribuzione a priori (Papadatou-Pastou et al., 2020):\n")
+cat(sprintf("Media: %.1f%%\n", prior_mean * 100))
+cat(sprintf("Intervallo di credibilità al 95%%: [%.1f%%, %.1f%%]\n\n", 
+            prior_ci[1] * 100, prior_ci[2] * 100))
+
+cat("Dati osservati (Gori et al., 2024):\n")
+cat(sprintf("Campione: %d individui\n", n))
+cat(sprintf("Mancini osservati: %d (%.1f%%)\n\n", y, y/n * 100))
+
+cat("Distribuzione a posteriori:\n")
+cat(sprintf("Media: %.1f%%\n", post_mean * 100))
+cat(sprintf("Intervallo di credibilità al 95%%: [%.1f%%, %.1f%%]\n", 
+            post_ci[1] * 100, post_ci[2] * 100))
+
+# Visualizza il grafico
+print(p)
+```
+
+```r
+# Caricamento delle librerie necessarie
+library(ggplot2)
+
+# Dati dello studio di Gori et al. (2024)
+n <- 202       # dimensione del campione
+y <- round(0.064 * n)  # numero di mancini (6.4% del campione)
+
+# Parametri della distribuzione beta a priori (da Papadatou-Pastou et al., 2020)
+alpha_prior <- 8
+beta_prior <- 60
+
+# Calcolo dei parametri della distribuzione beta a posteriori
+alpha_post <- alpha_prior + y
+beta_post <- beta_prior + (n - y)
+
+# Creazione della griglia per il plotting
+p_grid <- seq(0, 0.3, length.out = 1000)  # limitato a 0.3 per migliore visualizzazione
+
+# Calcolo delle densità
+prior_density <- dbeta(p_grid, alpha_prior, beta_prior)
+posterior_density <- dbeta(p_grid, alpha_post, beta_post)
+
+# Creazione del dataframe per il plotting
+df <- data.frame(
+  p = rep(p_grid, 2),
+  density = c(prior_density, posterior_density),
+  distribution = rep(c("Priori (Papadatou-Pastou et al., 2020)", 
+                      "Posteriori (con dati Gori et al., 2024)"), 
+                    each = length(p_grid))
+)
+
+# Calcolo statistiche rilevanti
+prior_mean <- alpha_prior / (alpha_prior + beta_prior)
+post_mean <- alpha_post / (alpha_post + beta_post)
+
+prior_ci <- qbeta(c(0.025, 0.975), alpha_prior, beta_prior)
+post_ci <- qbeta(c(0.025, 0.975), alpha_post, beta_post)
+
+# Creazione del grafico
+p <- ggplot(df, aes(x = p, y = density, color = distribution)) +
+  geom_line(size = 1) +
+  geom_vline(xintercept = 0.064, linetype = "dashed", color = "red") +
+  labs(
+    title = "Distribuzione della Prevalenza dei Mancini",
+    subtitle = "Confronto tra Distribuzione a Priori e a Posteriori",
+    x = "Proporzione di Mancini",
+    y = "Densità",
+    color = "Distribuzione"
+  ) +
+  theme(legend.position = "bottom") +
+  annotate("text", x = 0.064, y = max(posterior_density)/2, 
+           label = "Valore osservato (6.4%)", 
+           angle = 90, vjust = -0.5, color = "red")
+
+# Output dei risultati
+cat("\nRisultati dell'analisi:\n")
+cat("------------------------\n")
+cat("Distribuzione a priori (Papadatou-Pastou et al., 2020):\n")
+cat(sprintf("Media: %.1f%%\n", prior_mean * 100))
+cat(sprintf("Intervallo di credibilità al 95%%: [%.1f%%, %.1f%%]\n\n", 
+            prior_ci[1] * 100, prior_ci[2] * 100))
+
+cat("Dati osservati (Gori et al., 2024):\n")
+cat(sprintf("Campione: %d individui\n", n))
+cat(sprintf("Mancini osservati: %d (%.1f%%)\n\n", y, y/n * 100))
+
+cat("Distribuzione a posteriori:\n")
+cat(sprintf("Media: %.1f%%\n", post_mean * 100))
+cat(sprintf("Intervallo di credibilità al 95%%: [%.1f%%, %.1f%%]\n", 
+            post_ci[1] * 100, post_ci[2] * 100))
+
+# Visualizza il grafico
+print(p)
+
+```
+
+L'analisi bayesiana della prevalenza dei mancini combina le informazioni provenienti dalla meta-analisi di Papadatou-Pastou et al. (2020) con i dati più recenti di Gori et al. (2024). Di seguito sono riportati i principali risultati:
+
+1. **Distribuzione a priori** (basata su Papadatou-Pastou et al., 2020):  
+   - Modellata come una distribuzione Beta(8, 60).  
+   - Presenta una media intorno all'11,8%.  
+   - Riflette la variabilità osservata nella meta-analisi.  
+   - L'intervallo di credibilità al 95% copre approssimativamente il range 9,3%-18,1%, come riportato nello studio.  
+
+2. **Dati osservati** (Gori et al., 2024):  
+   - 202 partecipanti italiani.  
+   - 13 mancini, corrispondenti al 6,4% del campione.  
+   - Questo valore è inferiore alla media stimata dalla meta-analisi globale.  
+
+3. **Distribuzione a posteriori**:  
+   - Combina le informazioni a priori con i nuovi dati osservati.  
+   - La media a posteriori si è spostata verso il basso rispetto alla distribuzione a priori.  
+   - L'intervallo di credibilità si è ristretto, indicando una riduzione dell'incertezza.  
+   - Maggiore peso è stato attribuito ai dati italiani rispetto alla meta-analisi globale.  
+
+4. **Interpretazione**:  
+   - La stima finale suggerisce una prevalenza di mancini nella popolazione italiana inferiore alla media globale.  
+   - Questo risultato potrebbe riflettere specificità culturali o metodologiche dello studio italiano.  
+   - L'incertezza nella stima finale è diminuita rispetto alla meta-analisi, ma rimane significativa.  
+   - I risultati supportano l'ipotesi di una variabilità geografica nella prevalenza della mancinismo.  
+
+La distribuzione a posteriori fornisce una sintesi equilibrata tra le conoscenze globali precedenti e i dati specifici della popolazione italiana, suggerendo che potrebbero esistere peculiarità culturali o demografiche che influenzano la prevalenza del mancinismo in Italia.
+:::
+
+
+::: {.callout-note collapse=true title="Informazioni sull'ambiente di sviluppo"}
+```{r}
+sessionInfo()
+```
+:::
+
+## Bibliografia {.unnumbered .unlisted}

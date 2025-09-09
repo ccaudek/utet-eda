@@ -1,0 +1,375 @@
+# Distribuzione predittiva a posteriori {#sec-bayesian-inference-post-pred-distr}
+
+::: {.epigraph}
+> “The general idea of posterior predictive checking is simple: if a model is a good fit to data, then replicated data generated under the model should look similar to the observed data.”
+>
+> -- **Andrew Gelman, Xiao-Li Meng & Hal Stern**, Posterior predictive assessment of model fitness via realized discrepancies (Statistica Sinica, 1996, p. 733)
+:::
+
+
+
+## Introduzione {.unnumbered .unlisted}
+
+Nei capitoli precedenti abbiamo visto due aspetti fondamentali dell’inferenza bayesiana: da un lato, la costruzione delle distribuzioni a posteriori per i parametri di interesse; dall’altro, l’importanza di verificare i priori attraverso i controlli predittivi, per assicurarci che le nostre assunzioni iniziali siano coerenti con la realtà psicologica che vogliamo studiare.
+
+Ora compiamo un passo ulteriore: invece di chiederci se i nostri priori siano ragionevoli, ci chiediamo se *l’intero modello*, dopo aver incorporato i dati osservati, sia in grado di generare previsioni plausibili. Questo ci porta al concetto di *distribuzione predittiva a posteriori* (*posterior predictive distribution*).
+
+La logica è semplice e potente: se un modello è una rappresentazione credibile del processo che ha generato i dati, allora dovrebbe essere in grado non solo di adattarsi ai dati raccolti, ma anche di simulare dati nuovi con caratteristiche simili. In questo senso, le distribuzioni predittive a posteriori diventano uno strumento centrale per la valutazione dei modelli: collegano direttamente i parametri stimati ai dati futuri che ci aspettiamo di osservare.
+
+In questo capitolo vedremo come costruire la distribuzione predittiva a posteriori, come interpretarla e come utilizzarla per verificare la coerenza del modello con l’evidenza empirica. Questo approccio ci permetterà di mettere alla prova in modo pratico la capacità del modello di spiegare e prevedere i fenomeni psicologici che ci interessano.
+
+
+### Panoramica del capitolo {.unnumbered .unlisted}
+
+- Previsione bayesiana: incorporare incertezza parametrica e variabilità intrinseca.
+- Verifica di coerenza: valutare l'adeguatezza del modello ai dati osservati.
+- Caso beta-binomiale: applicazione pratica del framework predittivo.
+
+::: {.callout-tip collapse=true}
+## Prerequisiti
+
+- Leggere il capitolo [Posterior Inference & Prediction](https://www.bayesrulesbook.com/chapter-8#ch8-post-pred) di [Bayes Rules!](https://www.bayesrulesbook.com).
+- Consultare *Bayesian statistics and modelling* [@van2021bayesian].
+:::
+
+::: {.callout-caution collapse=true title="Preparazione del Notebook"}
+
+```{r}
+here::here("code", "_common.R") |> 
+  source()
+```
+:::
+
+
+## Definizione formale
+
+Si considerino dati osservati $y = \{y_1, y_2, \ldots, y_n\}$, generati da un modello probabilistico parametrizzato da $\theta$, dove $\theta$ può rappresentare una probabilità, una media, un vettore di coefficienti o altri parametri di interesse. La conoscenza iniziale su $\theta$ è formalizzata attraverso una *distribuzione a priori* $p(\theta)$. L'osservazione dei dati consente di aggiornare questa conoscenza mediante il teorema di Bayes, ottenendo la *distribuzione a posteriori*:
+
+$$
+p(\theta \mid y) = \frac{p(y \mid \theta)\, p(\theta)}{p(y)},
+$$
+dove:
+
+* $p(\theta \mid y)$ è la distribuzione a posteriori, che rappresenta l'incertezza su $\theta$ condizionata ai dati osservati;
+* $p(y \mid \theta)$ è la *funzione di verosimiglianza*, che specifica la probabilità dei dati dati i parametri;
+* $p(\theta)$ è la distribuzione a priori;
+* $p(y)$ è l'*evidenza* marginale, calcolata come
+
+  $$
+  p(y) = \int p(y \mid \theta) p(\theta)\, d\theta.
+  $$
+
+### La distribuzione predittiva a posteriori
+
+Sia $\tilde{y}$ una nuova osservazione da prevedere. La *distribuzione predittiva a posteriori* $p(\tilde{y} \mid y)$ fornisce la distribuzione probabilistica di $\tilde{y}$ condizionata ai dati osservati.
+
+#### Natura di $\tilde{y}$
+
+* $\tilde{y}$ rappresenta un dato futuro non ancora osservato;
+* Nell'esempio binomiale, se $y$ è il numero di successi in $n$ prove, $\tilde{y}$ può rappresentare il numero di successi in $n_{\text{new}}$ prove future.
+
+#### Relazione condizionale
+
+* $p(\tilde{y} \mid \theta)$ esprime la probabilità di $\tilde{y}$ assumendo noto il parametro $\theta$;
+* Nel caso binomiale: $p(\tilde{y} \mid \theta) = \binom{n_{\text{new}}}{\tilde{y}} \theta^{\tilde{y}} (1-\theta)^{n_{\text{new}}-\tilde{y}}$.
+
+#### Integrazione sull'incertezza parametrica
+
+Poiché $\theta$ è incerto, la distribuzione predittiva a posteriori integra su tutti i possibili valori di $\theta$, pesati secondo la distribuzione a posteriori:
+
+$$
+p(\tilde{y} \mid y) = \int p(\tilde{y} \mid \theta)\, p(\theta \mid y)\, d\theta.
+$$ {#eq-post-pred-distr}
+
+#### Interpretazione
+
+La distribuzione predittiva a posteriori $p(\tilde{y} \mid y)$ rappresenta la migliore previsione probabilistica per dati futuri, incorporando tanto l'incertezza sui parametri del modello quanto la variabilità intrinseca del processo generativo dei dati.
+
+
+## Il modello Beta-Binomiale
+
+Si consideri un esperimento binomiale consistente in $n$ prove indipendenti, dove si osserva il numero di successi $y$ (ad esempio, il numero di teste nel lancio di una moneta). L'approccio bayesiano si articola in tre fasi fondamentali:
+
+1. **Specificazione della distribuzione a priori**
+   La conoscenza iniziale riguardante la probabilità di successo $p$ viene formalizzata attraverso una distribuzione *Beta($\alpha, \beta$)*, particolarmente appropriata per parametri definiti sull'intervallo unitario:
+
+   * Il parametro $\alpha$ rappresenta un numero pseudo-osservato di successi;
+   * Il parametro $\beta$ rappresenta un numero pseudo-osservato di insuccessi.
+
+   Questa parametrizzazione consente di incorporare conoscenze pregresse in forma di "evidenza virtuale".
+
+2. **Aggiornamento bayesiano alla distribuzione a posteriori**
+   Dopo l'osservazione di $y$ successi in $n$ prove, la distribuzione a posteriori si ottiene mediante aggiornamento coniugato:
+
+   $$
+   p \mid y \sim \text{Beta}(\alpha + y, \beta + n - y).
+   $$
+
+   Questa distribuzione caratterizza completamente l'incertezza residua sul parametro $p$ condizionatamente ai dati osservati.
+
+3. **Costruzione della distribuzione predittiva a posteriori**
+   Per prevedere il numero di successi $y_{\text{new}}$ in $n_{\text{new}}$ prove future, si integra l'incertezza parametrica con la variabilità campionaria attraverso il seguente procedimento:
+
+   * Campionamento parametrico: $p^{(s)} \sim \text{Beta}(\alpha + y, \beta + n - y)$
+   * Generazione predittiva: $y_{\text{new}}^{(s)} \sim \text{Binomial}(n_{\text{new}}, p^{(s)})$
+
+   La distribuzione empirica dei valori $y_{\text{new}}^{(s)}$ costituisce un'approssimazione Monte Carlo della distribuzione predittiva a posteriori, incorporando sia l'incertezza epistemica su $p$ sia la variabilità aleatoria del processo binomiale.
+
+
+## Un esempio numerico
+
+### I dati e le nostre conoscenze iniziali
+
+* **Dati osservati**: 70 successi su 100 prove (ad esempio, 70 teste su 100 lanci di moneta)
+* **Conoscenza iniziale (prior)**: usiamo una distribuzione Beta(2, 2). Questa prior è "debole" e suggerisce che pensiamo che la moneta sia probabilmente equilibrata (p ≈ 0.5), ma siamo aperti ad altre possibilità.
+
+### Aggiornamento delle nostre conoscenze
+
+Dopo aver visto i dati, aggiorniamo le nostre convinzioni sulla probabilità di successo p:
+
+```
+alpha_posterior = 2 + 70 = 72
+beta_posterior = 2 + (100 - 70) = 32
+```
+
+Ora crediamo che p segua una distribuzione Beta(72, 32), che è centrata attorno a 0.7.
+
+### Simulazione delle previsioni
+
+Vogliamo prevedere cosa succederà in 10 lanci futuri:
+
+```{r}
+# Dati osservati
+successi_osservati <- 70
+lanci_totali <- 100
+
+# Prior (conoscenza iniziale)
+alpha_prior <- 2
+beta_prior <- 2
+
+# Posterior (conoscenza aggiornata)
+alpha_post <- alpha_prior + successi_osservati
+beta_post <- beta_prior + (lanci_totali - successi_osservati)
+
+# Simuliamo 1000 valori plausibili per p
+valori_p <- rbeta(1000, alpha_post, beta_post)
+
+# Per ogni valore di p, simuliamo 10 lanci futuri
+successi_futuri <- rbinom(1000, size = 10, prob = valori_p)
+
+# Calcoliamo le proporzioni di successo
+proporzioni_future <- successi_futuri / 10
+```
+
+
+### Spiegazione passo per passo
+
+Abbiamo osservato 70 successi su 100 lanci. Con una prior Beta(2,2), la distribuzione a posteriori diventa Beta(72,32). Questo significa che non conosciamo il valore esatto della probabilità di successo $p$, ma possiamo descrivere in modo plausibile l’incertezza che lo circonda: molto probabilmente $p$ si trova vicino a 0.7, con una certa variabilità intorno a questo valore.
+
+Per rappresentare questa incertezza, estraiamo 1000 valori da una distribuzione Beta(72,32): `valori_p <- rbeta(1000, 72, 32)`. Ciascun valore estratto è un candidato possibile per $p$, compatibile con i dati osservati e con la nostra conoscenza iniziale. A questo punto, ci chiediamo: cosa potremmo osservare nei prossimi lanci? Per rispondere, per ogni valore di $p$ simuliamo 10 nuovi lanci, ottenendo così 1000 possibili scenari futuri: `successi_futuri <- rbinom(1000, size = 10, prob = valori_p)`.
+
+Infine, trasformiamo il numero di successi in proporzioni dividendo per 10, in modo da avere risultati immediatamente interpretabili come probabilità di successo nei lanci futuri: `proporzioni_future <- successi_futuri / 10`. In altre parole, otteniamo un quadro di ciò che possiamo aspettarci, tenendo insieme due fonti di incertezza: da un lato non sappiamo il valore esatto di $p$, dall’altro anche conoscendo $p$ i risultati dei lanci rimarrebbero comunque soggetti al caso.
+
+Il vettore `proporzioni_future` riassume queste possibilità: non una singola previsione puntuale, ma un’intera distribuzione di esiti futuri, coerente con i dati raccolti e con il modello bayesiano adottato.
+
+
+### Visualizziamo i risultati
+
+Distribuzione iniziale (prima di vedere i dati):
+```{r}
+ggplot(data.frame(x = c(0, 1)), aes(x = x)) +
+  stat_function(fun = dbeta, 
+                args = list(shape1 = alpha_prior, shape2 = beta_prior), 
+                color = "#4682B4", size = 1) +
+  labs(x = "Probabilità di successo (p)",
+       y = "Densità")
+```
+
+Conoscenza aggiornata (dopo aver visto i dati):
+```{r}
+ggplot(data.frame(x = c(0, 1)), aes(x = x)) +
+  stat_function(fun = dbeta, 
+                args = list(shape1 = alpha_post, shape2 = beta_post), 
+                color = "#A0522D", size = 1) +
+  labs(x = "Probabilità di successo (p)",
+       y = "Densità")
+```
+
+Previsioni per i prossimi 10 lanci:
+```{r}
+ggplot(data.frame(proporzioni = proporzioni_future), aes(x = proporzioni)) +
+  geom_histogram(aes(y = ..density..), bins = 20) +
+  geom_vline(aes(xintercept = successi_osservati / lanci_totali), 
+             color = "black", size = 1, linetype = "dashed") +
+  labs(x = "Proporzione di successi attesi",
+       y = "Densità")
+```
+
+### Interpretazione dei risultati
+
+* La nostra conoscenza su $p$ è ora concentrata attorno a 0.7 (grafico in rosso).
+* Le previsioni per 10 lanci futuri sono più variabili perché:
+  - Siamo ancora un po' incerti sul valore esatto di $p$.
+  - Anche se conoscessimo p perfettamente, 10 lanci potrebbero dare risultati leggermente diversi.
+
+* Il risultato osservato (70% di successi) cade nella zona più probabile delle nostre previsioni: questo ci dice che il nostro modello è ragionevole e può essere usato per fare previsioni future.
+
+**In pratica**: se dovessi scommettere sui prossimi 10 lanci, ti aspetteresti probabilmente 6-8 successi, ma potrebbero essercene anche 5 o 9 per puro caso.
+
+
+::: {.callout-caution collapse=true title="Nota"}
+Il fatto che, nel nostro esempio, la distribuzione predittiva a posteriori riproduca efficacemente i dati osservati potrebbe apparire come un risultato scontato. In realtà, questo esito positivo è significativo e tutt'altro che banale; dimostra che il nostro modello semplice è ben calibrato. Abbiamo scelto deliberatamente un modello binomiale con prior Beta proprio per la sua chiarezza espositiva, che ci permette di illustrare in modo trasparente la logica sottostante alla distribuzione predittiva a posteriori e mostrare visivamente come l'incertezza sui parametri e la variabilità intrinseca dei dati si integrino in un unico framework.
+
+Tuttavia, è fondamentale comprendere che nella ricerca psicologica reale ci si confronta con modelli notevolmente più complessi. In questi contesti, la corrispondenza tra i dati effettivamente osservati e quelli generati dal modello attraverso la distribuzione predittiva non può mai essere considerata una garanzia preliminare. Al contrario, questa corrispondenza rappresenta proprio l'obiettivo da verificare.
+:::
+
+
+## Riflessioni conclusive {.unnumbered .unlisted}
+
+Le distribuzioni predittive a posteriori rappresentano il naturale completamento del percorso iniziato con i priori. Se i *prior predictive checks* ci consentono di controllare la plausibilità delle nostre assunzioni iniziali, i *posterior predictive checks* ci permettono di verificare la plausibilità del modello alla luce dei dati.
+
+Dal punto di vista concettuale, questo passaggio è cruciale: sposta l’attenzione dai parametri astratti ai dati concreti, e ci chiede di valutare i modelli sulla base della loro capacità di generare osservazioni simili a quelle reali. In questo senso, la distribuzione predittiva a posteriori non è soltanto un accessorio tecnico, ma una vera e propria *prova di realtà* per i modelli psicologici.
+
+Dal punto di vista applicativo, questo approccio rafforza la trasparenza e la robustezza delle nostre inferenze. Non ci limitiamo più a riportare valori puntuali o intervalli credibili per i parametri: mostriamo esplicitamente quali dati il nostro modello ritiene plausibili e li confrontiamo con i dati effettivamente raccolti. Questo rende la comunicazione dei risultati più chiara e intuitiva, anche per chi non ha familiarità con la statistica bayesiana.
+
+In sintesi, le distribuzioni predittive a posteriori ci ricordano che la forza dell’approccio bayesiano non risiede soltanto nella stima dei parametri, ma soprattutto nella capacità di *prevedere e spiegare* i fenomeni. Nei capitoli successivi vedremo come questa logica si estenda anche al confronto sistematico tra modelli, aprendo la strada a un approccio più rigoroso e cumulativo alla scienza psicologica.
+
+
+::: {.callout-important title="Problemi" collapse="true"}
+
+Consideriamo i dati della SWLS somministrata a un campione di studenti, ottenendo per ciascuno uno *score* complessivo. Per semplicità, vogliamo “dichiarare positivo” lo studente se il punteggio SWLS supera una determinata **soglia** (ad esempio, 20 su 35). In questo modo otteniamo una variabile dicotomica (0/1), che useremo come “successo” in un modello binomiale.
+
+1. **Dati e conteggio dei successi**  
+
+   - Carica il dataset con le risposte SWLS.  
+   - Costruisci la variabile binaria (ad esempio `SWLS_dich`) che vale 1 se lo score ≥ 20, e 0 altrimenti.  
+   - Calcola il **numero di successi** (numero di persone che superano la soglia) e il **numero totale di osservazioni** (N).
+
+2. **Modello beta-binomiale (approccio manuale via simulazione)**  
+
+   - **Specifica una distribuzione Beta(a, b)** come prior per la probabilità di successo $p$. Scegli una coppia $(a, b)$ relativamente poco informativa, ad esempio (2,2) o (1,1).  
+   - Osservando $y$ successi su $n$ soggetti, aggiorna i parametri a posteriori:
+     $$
+       a_{\text{post}} = a + y, 
+       \quad
+       b_{\text{post}} = b + (n - y).
+     $$  
+   - Simula un gran numero di campioni di $p$ dalla distribuzione Beta$\bigl(a_{\text{post}},\, b_{\text{post}}\bigr)$.  
+   - Per ciascun campione di $p$, genera un valore $\tilde{y}$ da una Binomiale$\bigl(n_{\text{new}}, p\bigr)$, dove $n_{\text{new}}$ è la dimensione di un ipotetico nuovo campione (che puoi scegliere, ad esempio, uguale a $n$ oppure un valore diverso). Otterrai così una **posterior predictive distribution** per $\tilde{y}$.  
+   - Infine, calcola statistiche descrittive (media, varianza, intervalli) e/o disegna un istogramma di $\tilde{y}$ o della proporzione $\tilde{y}/n_{\text{new}}$.  
+
+3. **Replicare con *brms***  
+
+   - Usa il pacchetto **brms** per costruire un modello binomiale. Per esempio:
+   
+     ```r
+     library(brms)
+     
+     # Crea un data frame con la variabile dicotomica
+     df_binom <- data.frame(
+       successes = y,    # conteggio dei successi
+       failures  = n - y
+     )
+     
+     # Modello binomiale con prior Beta(a,b) approssimato tramite logit
+     fit_brms <- brm(
+       bf(successes | trials(n) ~ 1), 
+       data = df_binom,
+       family = binomial(link = "logit"),
+       prior = c(
+         prior(beta(2, 2), class = "Intercept", dpar = "mu") 
+         # NOTA: la specifica di una "beta(2,2)" diretta sull'intercetta
+         # è un'approssimazione, tipicamente serve passare a una scala logit.
+         # In brms, di solito si usa prior su scale normali dell'intercetta.
+       ),
+       seed = 123
+     )
+     ```
+     *(Le specifiche del `prior` potrebbero richiedere una formulazione differente se vuoi rispettare esattamente la corrispondenza con Beta(a,b). In ogni caso, l’idea è mostrare come definire un prior e costruire un modello binomiale con `brms`.)*
+     
+   - Verifica la convergenza e poi estrai la **posterior predictive distribution** con le funzioni di *brms*:
+   
+     ```r
+     pp_check(fit_brms, nsamples = 100)
+     ```
+     Questo ti mostrerà come i dati predetti dal modello (in termini di binomiale) si confrontano con i dati osservati.  
+
+4. **Confronto e interpretazione**  
+
+   - Metti a confronto i risultati della simulazione “manuale” (Beta-Binomial) e quelli ottenuti con *brms*. Noterai che le distribuzioni predittive dovrebbero essere coerenti, se hai impostato un prior per *brms* simile a quello del modello Beta-Binomiale.  
+   - Discuti brevemente se la distribuzione predittiva a posteriori acquisita è plausibile rispetto ai dati osservati. Ad esempio, la probabilità di osservare $\tilde{y}$ simile a $y$ dovrebbe essere relativamente alta se il modello è appropriato.  
+   - Se vuoi, puoi cambiare $n_{\text{new}}$ (es. previsione su 200 soggetti futuri) per vedere come la variabilità della previsione si “ridimensiona” o cresce a seconda della taglia del campione.  
+:::
+
+::: {.callout-tip title="Soluzioni" collapse="true"}
+
+1. **Costruzione del dataset**  
+
+   - Se la SWLS varia tra 5 e 35, e la soglia è 20, puoi fare:
+   
+     ```r
+     df$SWLS_dich <- ifelse(df$SWLS_score >= 20, 1, 0)
+     y <- sum(df$SWLS_dich)
+     n <- nrow(df)
+     ```
+2. **Approccio Beta-Binomial manuale** 
+
+   - Prior: $(a, b) = (2, 2)$  
+   - Posterior: $(a_{\text{post}}, b_{\text{post}}) = (2 + y,\, 2 + n - y)$.  
+   - Generazione dei campioni:
+   
+     ```r
+     N_sim <- 2000
+     p_post <- rbeta(N_sim, a_post, b_post)
+     y_pred <- rbinom(N_sim, size = n_new, prob = p_post)
+     
+     # Se preferisci la proporzione futura:
+     prop_pred <- y_pred / n_new
+     ```
+     
+   - Statistiche: 
+   
+     ```r
+     mean_p <- mean(p_post) # media a posteriori di p
+     quantile_p <- quantile(p_post, c(0.025, 0.975))  
+     
+     mean_prop_pred <- mean(prop_pred)
+     quantile_prop_pred <- quantile(prop_pred, c(0.025, 0.975))
+     ```
+   - Grafici (istogramma e densità):
+   
+     ```r
+     hist(prop_pred, freq=FALSE, col='lightblue',
+          main='Posterior Predictive Distribution: prop. di successi')
+     ```
+3. **Modello con *brms***  
+
+   - Usa la sintassi di una binomiale con offset o con `trials(n)`.  
+   - Specifica un prior che approssimi Beta(2,2) sullo scale logit, ad esempio:
+   
+     ```r
+     # Beta(2,2) ha media ~ 0.5, varianza relativamente ampia.
+     # Approssimandola su scala logit ~ normal(0, 2.2) 
+     # (valore indicativo: la normal(0, 2) su logit copre un intervallo ampio).
+     
+     prior_approx <- prior(normal(0, 2), class = "Intercept")
+     ```
+   - Esegui `pp_check(fit_brms)` e interpreta.
+
+4. **Interpretazione**  
+
+   - Se la soglia scelta per la SWLS cattura un “buon livello di soddisfazione”, potresti aspettarti una certa % di successi.  
+   - Se i dati futuri simulati sono coerenti con i dati reali — ad esempio, la media di $\tilde{y}$ è vicina a $y$ — allora il modello sembra descrivere bene la realtà. Altrimenti, potresti rivedere la soglia o la specifica del prior.
+
+L’elemento chiave è che la **distribuzione predittiva a posteriori** (posterior predictive distribution) non si limita a considerare *un solo* valore di $p$, bensì campiona molteplici valori plausibili (dalla *posterior*), e per *ciascuno* simula un potenziale outcome. Così facendo, si riflette pienamente l’incertezza residua sul parametro e l’aleatorietà del processo binomiale.
+:::
+
+::: {.callout-note collapse=true title="Informazioni sull'ambiente di sviluppo"}
+```{r}
+sessionInfo()
+```
+:::
+
+## Bibliografia {.unnumbered .unlisted}
+
+

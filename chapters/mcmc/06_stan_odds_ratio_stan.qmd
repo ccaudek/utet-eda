@@ -1,0 +1,379 @@
+# Analisi bayesiana dell'odds ratio {#sec-bayes-odds-ratio}
+
+## Introduzione {.unnumbered .unlisted}
+
+Abbiamo già incontrato il problema dell’inferenza sulle proporzioni quando abbiamo discusso il modello Beta–Binomiale. In quel contesto, grazie alla coniugazione, era stato possibile ottenere una soluzione analitica della distribuzione a posteriori. Abbiamo anche visto come la stessa logica potesse essere approssimata con una griglia, rendendo trasparente la costruzione della distribuzione.
+
+Ora vogliamo compiere un passo ulteriore. Nei capitoli precedenti abbiamo introdotto Stan come strumento generale per l’inferenza bayesiana tramite MCMC. È arrivato il momento di metterlo in pratica, partendo da un esempio che colleghi quanto già appreso con le potenzialità di questo nuovo ambiente: l’odds ratio.
+
+L’odds ratio è una misura largamente utilizzata nelle scienze sociali e psicologiche. Esprime quanto la probabilità di un certo esito differisca tra due gruppi. Ad esempio, può essere usato per quantificare se la probabilità di successo in un compito sperimentale sia maggiore in un gruppo sperimentale rispetto a un gruppo di controllo.
+
+Questo esempio ha un duplice scopo. Da un lato, ci permette di vedere come tradurre in Stan un modello che conosciamo già, verificando che la logica bayesiana rimane invariata: si tratta sempre di combinare priori, verosimiglianza e dati per ottenere una distribuzione a posteriori. Dall’altro lato, ci offre un primo contatto concreto con la sintassi di Stan e con il modo in cui vengono eseguiti i campionamenti MCMC, che diventeranno il nostro strumento abituale per l’analisi di modelli più complessi.
+
+### Panoramica del capitolo {.unnumbered .unlisted}
+
+- Come si definiscono probabilità, odds e odds ratio. 
+- Come si interpreta l’odds ratio in contesti psicologici.  
+- Come stimarlo in ottica bayesiana, implementando un modello in *Stan*.  
+- Come presentare i risultati con intervalli di credibilità.  
+
+
+::: {.callout-tip collapse=true}
+## Prerequisiti
+* Nozioni di base su Bernoulli/Binomiale, odds e odds ratio.
+* Concetto di prior e posteriore.
+:::
+
+::: {.callout-caution collapse=true title="Preparazione del Notebook"}
+
+```{r}
+#| output: false
+
+here::here("code", "_common.R") |> 
+  source()
+
+if (!requireNamespace("pacman")) install.packages("pacman")
+pacman::p_load(cmdstanr, posterior, bayesplot, ggplot2, dplyr, tibble)
+conflicts_prefer(posterior::ess_bulk)
+conflicts_prefer(posterior::ess_tail)
+```
+:::
+
+
+## Il contesto sperimentale 
+
+Per introdurre l’analisi bayesiana dell’odds ratio, consideriamo il seguente esperimento. Nella prima metà del Novecento, Karl von Frisch si domandò se le api possedessero la *visione dei colori*. Per verificarlo, ideò una serie di esperimenti in cui le api potevano associare un colore a una ricompensa. Ispirandoci a una ricostruzione proposta da @hoffmann2022bayesian, possiamo immaginare una versione semplificata del disegno sperimentale:
+
+- **Gruppo sperimentale**: api addestrate ad associare un disco blu a una soluzione zuccherina.
+- **Gruppo di controllo**: api che non ricevono alcun addestramento.
+
+Nella fase di *test*, la soluzione zuccherina viene rimossa, e si registra il numero di volte in cui le api si avvicinano al disco blu (evento critico).
+
+I risultati osservati sono riportati nella tabella seguente:
+  
+  | Gruppo       | Successi (scelta blu) | Totale |
+  | ------------ | --------------------- | ------ |
+  | Sperimentale | 130                   | 200    |
+  | Controllo    | 100                   | 200    |
+  
+La domanda di ricerca può essere così formulata: *le api addestrate mostrano un odds maggiore di scegliere il disco blu rispetto alle api di controllo?*
+
+
+### Dalle probabilità agli odds
+
+La probabilità di successo (scelta del blu) nel gruppo sperimentale è:
+
+$$
+p_1 = \frac{130}{200} = 0.65.
+$$
+
+I corrispondenti *odds* si calcolano come:
+
+$$
+\text{odds}_1 = \frac{p_1}{1-p_1} = \frac{0.65}{0.35} \approx 1.86.
+$$
+
+Per il gruppo di controllo:
+
+$$
+p_2 = \frac{100}{200} = 0.50, \quad \text{odds}_2 = \frac{0.50}{0.50} = 1.00.
+$$
+
+### Calcolo dell'odds ratio
+
+L'odds ratio (OR) confronta i due odds:
+
+$$
+\text{OR} = \frac{\text{odds}_1}{\text{odds}_2} = \frac{1.86}{1.00} \approx 1.86.
+$$
+
+**Interpretazione:** le api addestrate presentano odds circa 1.9 volte maggiori di scegliere il disco blu rispetto alle api non addestrate. Questo non implica che la loro probabilità sia raddoppiata, ma che il rapporto tra successi e insuccessi risulta quasi doppio.
+
+Quanto è affidabile questa stima? È a questo punto che l'approccio bayesiano mostra il suo valore: anziché limitarci a una stima puntuale, possiamo ottenere un'intera distribuzione a posteriori per l'OR, che esprime la nostra incertezza dopo aver osservato i dati.
+
+
+### Approccio bayesiano
+
+Nell'approccio frequentista, l'odds ratio viene stimato come rapporto tra stime puntuali, accompagnato da un intervallo di confidenza derivato da approssimazioni asintotiche. L'approccio bayesiano, al contrario, fornisce direttamente la *distribuzione a posteriori dell'odds ratio*, offrendo diversi vantaggi interpretativi:
+
+- **Probabilità diretta**: possiamo calcolare la probabilità che l'OR sia maggiore di 1;
+- **Valutazione di equivalenza**: possiamo determinare la probabilità che l'OR ricada in un intervallo di equivalenza pratica (ROPE);
+- **Intervalli di credibilità**: possiamo ottenere intervalli di credibilità esatti (ETI o HDI) senza ricorrere ad approssimazioni asintotiche.
+
+Questo framework consente non solo una rappresentazione più intuitiva dei risultati, ma permette anche di rispondere direttamente a domande inferenziali in termini probabilistici. Ad esempio: qual è la probabilità che le api addestrate mostrino effettivamente una preferenza maggiore per il blu? O, più formalmente: qual è la probabilità che l'OR sia maggiore di 1?
+
+### Relazione con la regressione logistica
+
+Il collegamento fondamentale emerge nell'ambito della *regressione logistica*. Modellando la probabilità di successo $p_i$ mediante un modello logit:
+
+$$
+\text{logit}(p_i) = \alpha + \beta \cdot x_i,
+$$
+dove $x_i$ è una variabile indicatrice (0 = gruppo di controllo, 1 = gruppo sperimentale), si ottiene che:
+
+- $\exp(\beta)$ corrisponde esattamente all’*odds ratio* tra il gruppo sperimentale e quello di controllo.
+
+Ciò implica che la stima di un modello di regressione logistica binaria equivale alla stima dell’odds ratio, con il notevole vantaggio di poter estendere agevolmente il modello all’inclusione di ulteriori predittori, covariate o strutture gerarchiche.
+
+## Versione con modello logistico
+
+I dati vengono rappresentati a livello individuale: ogni ape è codificata come 1 (ha scelto il blu) o 0 (non ha scelto il blu).
+
+```{r}
+# Dati individuali
+y <- c(rep(1, 130), rep(0, 70),   # gruppo sperimentale: 130 successi, 70 insuccessi
+       rep(1, 100), rep(0, 100))  # gruppo di controllo: 100 successi, 100 insuccessi
+x <- c(rep(1, 200), rep(0, 200))  # 1 = sperimentale, 0 = controllo
+
+data_list <- list(N = length(y), y = y, x = x)
+glimpse(data_list)
+```
+
+### Specifica del modello in Stan
+
+```{r}
+stancode_or <- "
+data {
+  int<lower=1> N;                  // numero totale di osservazioni
+  array[N] int<lower=0,upper=1> y; // esito binario (0/1)
+  vector[N] x;                     // variabile indicatrice del gruppo (0 = controllo, 1 = sperimentale)
+}
+parameters {
+  real alpha;    // intercetta (log-odds nel gruppo di controllo)
+  real beta;     // coefficiente (differenza in log-odds tra gruppo sperimentale e controllo)
+}
+model {
+  // Priors
+  alpha ~ normal(0, 5);
+  beta  ~ normal(0, 5);
+  
+  // Likelihood
+  y ~ bernoulli_logit(alpha + beta * x);
+}
+generated quantities {
+  real OR = exp(beta);  // odds ratio
+}
+"
+```
+
+#### Compilazione ed esecuzione del modello
+
+```{r}
+#| output: false
+
+stanmod_or <- cmdstanr::cmdstan_model(write_stan_file(stancode_or))
+
+fit_or <- stanmod_or$sample(
+  data = data_list,
+  iter_warmup = 1000,
+  iter_sampling = 4000,
+  chains = 4,
+  seed = 123,
+  refresh = 0
+)
+```
+
+#### Interpretazione dei risultati
+
+Riassunto dei parametri di interesse:
+
+```{r}
+print(fit_or$summary(c("alpha", "beta", "OR")), n = Inf)
+```
+
+- `alpha`: log-odds di successo nel gruppo di controllo
+- `beta`: differenza nei log-odds tra gruppo sperimentale e controllo
+- `OR`: odds ratio (`exp(beta)`)
+
+Distribuzione a posteriori dell'OR:
+
+```{r}
+posterior::summarise_draws(
+  fit_or$draws("OR"),
+  mean, sd, ~quantile(.x, c(0.025, 0.5, 0.975))
+)
+```
+
+Il output mostra media, deviazione standard, mediana e intervallo di credibilità al 95% per l'odds ratio.
+
+Visualizzazione della distribuzione a posteriori:
+
+```{r}
+bayesplot::mcmc_hist(fit_or$draws("OR")) +
+  xlab("Odds Ratio") + ylab("Densità")
+```
+
+```{r}
+bayesplot::mcmc_areas(fit_or$draws("OR"), prob = 0.95) +
+  xlab("Odds Ratio")
+```
+
+I grafici mostrano chiaramente che la distribuzione dell'odds ratio è concentrata su valori superiori a 1, con alta probabilità.
+
+**Interpretazione:** I risultati forniscono evidenza credibile che l'addestramento aumenta le probabilità che le api scelgano il disco blu rispetto al gruppo di controllo. La distribuzione a posteriori dell'OR indica che questo effetto è statisticamente credibile e praticamente significativo.
+
+#### Diagnostica essenziale 
+
+```{r}
+# Indicatori numerici chiave: Rhat ~ 1, ESS adeguati
+posterior::summarize_draws(
+  fit_or$draws(c("alpha","beta","OR")),
+  "rhat", "ess_bulk", "ess_tail"
+)
+```
+
+```{r}
+# Traceplot di controllo su OR
+bayesplot::mcmc_trace(fit_or$draws("OR")) 
+```
+
+Se emergono problemi (Rhat > 1.01, ESS basso, divergenze riportate in output), conviene aumentare `iter_warmup`/`iter_sampling`, alzare `adapt_delta` o, in ultima istanza, riconsiderare i prior se sono eccessivamente stretti.
+
+## Versione binomiale con prior Beta
+
+Un approccio alternativo alla stima dell'odds ratio consiste nel modellare separatamente le proporzioni di successo nei due gruppi utilizzando distribuzioni binomiali con prior Beta. Questo metodo risulta particolarmente intuitivo quando i dati sono naturalmente aggregabili in una tabella 2×2.
+
+L'odds ratio viene calcolato come trasformazione delle due probabilità stimate:
+
+$$
+\text{OR} = \frac{\theta_1/(1-\theta_1)}{\theta_2/(1-\theta_2)} = \exp\left(\operatorname{logit}(\theta_1) - \operatorname{logit}(\theta_2)\right)
+$$
+
+Questa formulazione offre una trasparenza didattica immediata: stimiamo separatamente le probabilità di successo nei due gruppi per poi derivare l'effetto di interesse. La scelta di prior Beta(2,2) per entrambi i parametri mantiene coerenza con le impostazioni del capitolo, utilizzando prior debolmente informative.
+
+### Implementazione in Stan: modello Beta-Binomiale
+
+```{r}
+stancode_or_beta <- "
+data {
+  int<lower=0> k1;  // numero di successi nel gruppo sperimentale
+  int<lower=1> n1;  // numero totale di prove nel gruppo sperimentale
+  int<lower=0> k2;  // numero di successi nel gruppo di controllo
+  int<lower=1> n2;  // numero totale di prove nel gruppo di controllo
+}
+parameters {
+  real<lower=0,upper=1> theta1;  // probabilità di successo nel gruppo sperimentale
+  real<lower=0,upper=1> theta2;  // probabilità di successo nel gruppo di controllo
+}
+model {
+  // Prior distributions
+  theta1 ~ beta(2, 2);
+  theta2 ~ beta(2, 2);
+  
+  // Likelihood
+  k1 ~ binomial(n1, theta1);
+  k2 ~ binomial(n2, theta2);
+}
+generated quantities {
+  real logOR = logit(theta1) - logit(theta2);  // log-odds ratio
+  real OR = exp(logOR);                        // odds ratio
+}
+"
+```
+
+```{r}
+# Dati aggregati per il modello binomiale
+data_list_beta <- list(
+  k1 = 130, n1 = 200,  # gruppo sperimentale: 130 successi su 200 prove
+  k2 = 100, n2 = 200   # gruppo di controllo: 100 successi su 200 prove
+)
+```
+
+#### Compilazione ed esecuzione del modello
+
+```{r}
+#| output: false
+
+stanmod_or_beta <- cmdstanr::cmdstan_model(write_stan_file(stancode_or_beta))
+
+fit_or_beta <- stanmod_or_beta$sample(
+  data = data_list_beta,
+  iter_warmup = 1000,
+  iter_sampling = 4000,
+  chains = 4,
+  parallel_chains = 4,
+  seed = 123,
+  refresh = 0
+)
+```
+
+#### Analisi comparativa dei risultati
+
+Riassunti posteriori per il modello Beta-Binomiale:
+
+```{r}
+posterior::summarise_draws(
+  fit_or_beta$draws(c("theta1", "theta2", "logOR", "OR")),
+  mean, sd, ~quantile(.x, c(0.025, 0.5, 0.975))
+)
+```
+
+Confronto degli intervalli di credibilità tra i due approcci:
+
+```{r}
+summ_logit <- posterior::summarise_draws(
+  fit_or$draws("OR"),
+  mean, sd, ~quantile(.x, c(0.025, 0.5, 0.975))
+)
+summ_beta <- posterior::summarise_draws(
+  fit_or_beta$draws("OR"),
+  mean, sd, ~quantile(.x, c(0.025, 0.5, 0.975))
+)
+
+list(Regressione_Logistica = summ_logit, Beta_Binomiale = summ_beta)
+```
+
+Confronto visivo delle distribuzioni posteriori:
+
+```{r}
+OR_logit <- as.numeric(fit_or$draws("OR"))
+OR_beta <- as.numeric(fit_or_beta$draws("OR"))
+
+tibble(
+  OR = c(OR_logit, OR_beta),
+  Modello = rep(c("Regressione Logistica", "Beta-Binomiale"), 
+                c(length(OR_logit), length(OR_beta)))
+) |>
+  ggplot(aes(x = OR, fill = Modello)) +
+  geom_density(alpha = 0.4) +
+  labs(x = "Odds Ratio", y = "Densità")
+```
+
+Probabilità a posteriori che l'OR sia maggiore di 1:
+
+```{r}
+c(
+  Regressione_Logistica = mean(OR_logit > 1),
+  Beta_Binomiale = mean(OR_beta > 1)
+)
+```
+
+## Considerazioni metodologiche
+
+I due approcci producono risultati sostanzialmente equivalenti, confermando la robustezza delle conclusioni inferenziali. La scelta tra le due specificazioni dipende da considerazioni pratiche e comunicative:
+
+- **Regressione logistica**: Ideale per dati individuali e modelli che includono multiple covariate. Offre maggiore flessibilità per estensioni multivariate.
+
+- **Modello Beta-Binomiale**: Particolarmente adatto per dati aggregati in tabelle di contingenza. Risulta più intuitivo per comprendere il meccanismo di stima delle proporzioni sottostanti.
+
+Entrambi gli approcci conducono alle stesse conclusioni sostanziali riguardo all'effetto dell'addestramento sulla preferenza delle api per il disco blu, dimostrando la coerenza dei metodi bayesiani nella stima dell'odds ratio.
+
+
+## Riflessioni conclusive {.unnumbered .unlisted}
+
+Questo capitolo ci ha mostrato come l’inferenza bayesiana sulle proporzioni, che inizialmente avevamo affrontato con soluzioni analitiche e metodi su griglia, possa essere espressa ed eseguita direttamente in Stan. L’uso dell’odds ratio come esempio ha evidenziato due aspetti fondamentali.
+
+Primo, la continuità concettuale: Stan non cambia la logica dell’inferenza bayesiana. Il cuore rimane lo stesso – campionare dalla distribuzione a posteriori per descrivere la nostra incertezza sui parametri – ma la potenza computazionale consente di applicarlo a modelli più articolati senza dover ricorrere a soluzioni chiuse.
+
+Secondo, l’aspetto pratico: attraverso questo esempio abbiamo visto come Stan possa diventare uno strumento quotidiano per l’analisi dei dati psicologici, anche nei casi in cui i modelli sono relativamente semplici. In questo senso, l’odds ratio rappresenta un ponte: ci permette di acquisire familiarità con Stan su un terreno noto, preparandoci a utilizzarlo in contesti più complessi, come i modelli di Poisson o i modelli gerarchici.
+
+In prospettiva, la lezione più importante di questo capitolo è che l’inferenza bayesiana non deve più essere limitata ai casi “risolvibili” a mano o con approssimazioni semplicistiche. Con Stan, la logica bayesiana diventa praticabile in modo sistematico e riproducibile, aprendo la strada a un uso più maturo e trasparente dei modelli statistici nella ricerca psicologica.
+
+::: {.callout-note collapse=true title="Informazioni sull'ambiente di sviluppo"}
+```{r}
+sessionInfo()
+```
+:::
+
+## Bibliografia {.unnumbered .unlisted}
+
