@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.34">
+<meta name="generator" content="quarto-1.8.24">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>20&nbsp; Introduzione alla distribuzione normale – Analisi esplorativa dei dati (EDA) in psicologia</title>
 <style>
@@ -86,14 +86,15 @@ div.csl-indent {
 <link href="../../style/gauss.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-0a72236910a44089af39cd28873f322e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-9908c7b05874059c2106d454ac00f1d0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="../../site_libs/bootstrap/bootstrap-af5d064118ae80f4bafc3d843c3c3870.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -126,30 +127,7 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 </script><style>html{ scroll-behavior: smooth; }</style>
-<script>
-window.MathJax = {
-  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
-  svg: { scale: 1, mtextInheritFont: true, fontCache: 'none', minScale: 1 },
-  options: { renderActions: { addMenu: [0, '', ''] } },
-  loader: { load: ['input/tex','output/svg'] }
-};
-</script><script>
-window.MathJax = {
-  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
-  svg: { scale: 1, mtextInheritFont: true, fontCache: 'none', minScale: 1 },
-  options: { renderActions: { addMenu: [0, '', ''] } },
-  loader: { load: ['input/tex','output/svg'] }
-};
-// Suggerimento CSS: vedi sezione 3 per gli spazi attorno a display math
-</script><script>
-window.MathJax = {
-  tex: {
-    packages: {'[+]': ['boldsymbol']},
-    inlineMath: [['$', '$'], ['\\(', '\\)']]
-  },
-  svg: { fontCache: 'global' }
-};
-</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+<script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
 const typesetMath = (el) => {
   if (window.MathJax) {
     // MathJax Typeset
@@ -160,7 +138,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -174,10 +152,7 @@ const typesetMath = (el) => {
 window.Quarto = {
   typesetMath
 };
-</script><link rel="stylesheet" href="../../style/_typography-extras.css">
-<link rel="stylesheet" href="../../style/_code-extras.css">
-<link rel="stylesheet" href="../../style/_math-extras.css">
-<link rel="stylesheet" href="../../style/styles.css">
+</script>
 </head>
 <body class="nav-sidebar floating quarto-light">
 
@@ -195,7 +170,9 @@ window.Quarto = {
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../../index.html" class="sidebar-logo-link">
+      </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="../../">Analisi esplorativa dei dati (EDA) in psicologia</a> 
         <div class="sidebar-tools-main">
@@ -455,12 +432,12 @@ window.Quarto = {
 <li>Distribuzione normale e statistiche descrittive.</li>
 </ul>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Prerequisiti
+<span class="screen-reader-only">Consiglio</span>Prerequisiti
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -475,12 +452,12 @@ Prerequisiti
 </div>
 <p>::: {.callout-caution collapse=true=“Preparazione del Notebook”}</p>
 <div class="cell">
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"code"</span>, <span class="st">"_common.R"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"code"</span>, <span class="st">"_common.R"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/source.html">source</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Load packages</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">"pacman"</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"pacman"</span><span class="op">)</span></span>
-<span><span class="fu">pacman</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pacman/man/p_load.html">p_load</a></span><span class="op">(</span><span class="va">ggbeeswarm</span>, <span class="va">dslabs</span>, <span class="va">gridExtra</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu">pacman</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pacman/man/p_load.html">p_load</a></span><span class="op">(</span><span class="va">ggbeeswarm</span>, <span class="va">dslabs</span>, <span class="va">gridExtra</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>:::</p>
 </section></section><section id="sec-normal-distribution" class="level2" data-number="20.1"><h2 data-number="20.1" class="anchored" data-anchor-id="sec-normal-distribution">
@@ -494,11 +471,11 @@ Prerequisiti
 <p>Non è necessario memorizzare o padroneggiare i dettagli di questa formula, ma è importante sapere che la distribuzione normale è completamente determinata da due soli parametri: <span class="math inline">\(\mu\)</span> e <span class="math inline">\(\sigma\)</span>. Gli altri simboli nella formula (<span class="math inline">\(\pi\)</span>, <span class="math inline">\(e\)</span>, <span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span>) rappresentano costanti matematiche o gli estremi dell’intervallo. In particolare, <span class="math inline">\(\mu\)</span> è il valore medio (o media) e <span class="math inline">\(\sigma\)</span> è la deviazione standard.</p>
 <p>Questa distribuzione è simmetrica, centrata sulla media <span class="math inline">\(\mu\)</span>, e la maggior parte dei valori (circa il 95%) si trova entro 2 deviazioni standard dalla media, cioè nell’intervallo <span class="math inline">\(\mu \pm 2\sigma\)</span>. Ecco un esempio di come appare la distribuzione normale quando <span class="math inline">\(\mu = 0\)</span> e <span class="math inline">\(\sigma = 1\)</span>:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fl">0</span>; <span class="va">s</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fl">0</span>; <span class="va">s</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
 <span><span class="va">norm_dist</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>, <span class="fl">4</span>, length.out <span class="op">=</span> <span class="fl">50</span><span class="op">)</span><span class="op">*</span><span class="va">s</span> <span class="op">+</span> <span class="va">m</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">mutate</span><span class="op">(</span>density <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">dnorm</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">m</span>, <span class="va">s</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">norm_dist</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">x</span>, <span class="va">density</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_line</span><span class="op">(</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">x</span>, <span class="va">density</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_line</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="07_introduction_normal_distribution_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
@@ -508,21 +485,21 @@ Prerequisiti
 </div>
 <p>Il fatto che la distribuzione sia descritta da due parametri implica che, se un insieme di dati reali si approssima bene a una distribuzione normale, due soli numeri (media e deviazione standard) possono fornire un riassunto sintetico della distribuzione. Vediamo ora come si calcolano, in pratica, questi due parametri per una lista di valori arbitraria.</p>
 <p>Supponiamo di avere un vettore <code>x</code> che contiene una serie di valori numerici. Abbiamo visto come, in R, la media si trova come:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <p>e la deviazione standard è:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">s</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="op">(</span><span class="va">x</span> <span class="op">-</span> <span class="va">m</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">s</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="op">(</span><span class="va">x</span> <span class="op">-</span> <span class="va">m</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <p>La deviazione standard si può interpretare come la distanza media dei valori dalla loro media.</p>
 <section id="un-esempio-pratico" class="level3" data-number="20.1.1"><h3 data-number="20.1.1" class="anchored" data-anchor-id="un-esempio-pratico">
 <span class="header-section-number">20.1.1</span> Un esempio pratico</h3>
 <p>Per calcolare media e deviazione standard dell’altezza maschile in un dataset, ipotizziamo che il vettore <code>heights$height</code> contenga le altezze di alcuni individui, mentre <code>heights$sex</code> contenga il genere corrispondente. Se vogliamo estrarre solo i valori relativi ai maschi, possiamo scrivere:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">index</span> <span class="op">&lt;-</span> <span class="va">heights</span><span class="op">$</span><span class="va">sex</span> <span class="op">==</span> <span class="st">"Male"</span></span>
-<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="va">heights</span><span class="op">$</span><span class="va">height</span><span class="op">[</span><span class="va">index</span><span class="op">]</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">index</span> <span class="op">&lt;-</span> <span class="va">heights</span><span class="op">$</span><span class="va">sex</span> <span class="op">==</span> <span class="st">"Male"</span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="va">heights</span><span class="op">$</span><span class="va">height</span><span class="op">[</span><span class="va">index</span><span class="op">]</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Quindi usiamo le funzioni predefinite di R:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
-<span><span class="va">s</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="va">s</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-simple callout-warning no-icon">
 <div class="callout-body d-flex">
@@ -536,7 +513,7 @@ Prerequisiti
 </div>
 <p>Possiamo ora mettere a confronto la curva di densità osservata dei dati (in blu) con quella teorica (in nero) della distribuzione normale con media e deviazione standard stimate:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">norm_dist</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">norm_dist</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>, <span class="fl">4</span>, length.out <span class="op">=</span> <span class="fl">50</span><span class="op">)</span><span class="op">*</span><span class="va">s</span> <span class="op">+</span> <span class="va">m</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">mutate</span><span class="op">(</span>density <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">dnorm</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">m</span>, <span class="va">s</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -544,7 +521,7 @@ Prerequisiti
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">sex</span> <span class="op">==</span> <span class="st">"Male"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">height</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_density</span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"lightblue"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">x</span>, <span class="va">density</span><span class="op">)</span>, linewidth<span class="op">=</span><span class="fl">1.5</span>, data <span class="op">=</span> <span class="va">norm_dist</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">x</span>, <span class="va">density</span><span class="op">)</span>, linewidth<span class="op">=</span><span class="fl">1.5</span>, data <span class="op">=</span> <span class="va">norm_dist</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="07_introduction_normal_distribution_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
@@ -562,14 +539,14 @@ z = \frac{x - m}{s} ,
 <p>dove <span class="math inline">\(m\)</span> e <span class="math inline">\(s\)</span> sono la media e la deviazione standard della distribuzione. Questa trasformazione ci dice di quante deviazioni standard un particolare valore si discosta dalla media. Ad esempio, se <span class="math inline">\(z=0\)</span>, il valore <span class="math inline">\(x\)</span> corrisponde esattamente alla media; se <span class="math inline">\(z = 2\)</span>, il valore <span class="math inline">\(x\)</span> si trova a due deviazioni standard sopra la media; se <span class="math inline">\(z = -2\)</span>, a due deviazioni standard sotto la media, e così via.</p>
 <p>In R, possiamo calcolare le unità standard con la funzione:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">z</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">z</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">z</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1]  1.574  0.190 -0.364  1.297 -2.303 -0.641</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [1]  1.574  0.190 -0.364  1.297 -2.303 -0.641</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Se vogliamo sapere, ad esempio, quale frazione di individui si trova entro 2 deviazioni standard dalla media (cioè <span class="math inline">\(|z| &lt; 2\)</span>), basta scrivere:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">z</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.95</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">z</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.95</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Vedremo, in molti casi, un valore intorno al 95%, in linea con quanto previsto dalla distribuzione normale. Per confermare la bontà dell’approssimazione, si usano spesso i grafici quantile-quantile, detti anche <em>qqplot</em>.</p>
 </section><section id="grafici-quantile-quantile" class="level2" data-number="20.3"><h2 data-number="20.3" class="anchored" data-anchor-id="grafici-quantile-quantile">
@@ -593,11 +570,11 @@ z = \frac{x - m}{s} ,
 </ol>
 <p>Esempio in R:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0.05</span>, <span class="fl">0.95</span>, <span class="fl">0.05</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0.05</span>, <span class="fl">0.95</span>, <span class="fl">0.05</span><span class="op">)</span></span>
 <span><span class="va">sample_quantiles</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">p</span><span class="op">)</span></span>
 <span><span class="va">theoretical_quantiles</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span><span class="op">(</span><span class="va">p</span>, mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">qplot</span><span class="op">(</span><span class="va">theoretical_quantiles</span>, <span class="va">sample_quantiles</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_abline</span><span class="op">(</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu">qplot</span><span class="op">(</span><span class="va">theoretical_quantiles</span>, <span class="va">sample_quantiles</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_abline</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="07_introduction_normal_distribution_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
@@ -607,9 +584,9 @@ z = \frac{x - m}{s} ,
 </div>
 <p>Se però abbiamo già convertito in unità standard (quindi <span class="math inline">\(\mu = 0\)</span> e <span class="math inline">\(\sigma = 1\)</span>), il confronto si semplifica:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sample_quantiles</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">z</span>, <span class="va">p</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sample_quantiles</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">z</span>, <span class="va">p</span><span class="op">)</span></span>
 <span><span class="va">theoretical_quantiles</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span>
-<span><span class="fu">qplot</span><span class="op">(</span><span class="va">theoretical_quantiles</span>, <span class="va">sample_quantiles</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_abline</span><span class="op">(</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu">qplot</span><span class="op">(</span><span class="va">theoretical_quantiles</span>, <span class="va">sample_quantiles</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_abline</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="07_introduction_normal_distribution_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
@@ -619,10 +596,10 @@ z = \frac{x - m}{s} ,
 </div>
 <p>In pratica, per creare rapidamente un qqplot si usa spesso ggplot2 con la geometria <code>geom_qq</code>:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">heights</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">sex</span> <span class="op">==</span> <span class="st">"Male"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">heights</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">sex</span> <span class="op">==</span> <span class="st">"Male"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>sample <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="op">(</span><span class="va">height</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu">geom_qq</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_abline</span><span class="op">(</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu">geom_abline</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="07_introduction_normal_distribution_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
@@ -640,7 +617,7 @@ z = \frac{x - m}{s} ,
 <p>La distribuzione normale è definita dalla sua media (<span class="math inline">\(\mu\)</span>) e dalla sua deviazione standard (<span class="math inline">\(\sigma\)</span>). La formula della densità di probabilità della distribuzione normale è data dall’<a href="#eq-gaussian-density" class="quarto-xref">Equazione&nbsp;<span>20.1</span></a>. Questa formula mostra che, conoscendo solo <span class="math inline">\(\mu\)</span> e <span class="math inline">\(\sigma\)</span>, possiamo ricostruire l’intera curva di densità. Pertanto, se i dati empirici sono ben approssimati da una distribuzione normale, la media e la deviazione standard sono sufficienti per descrivere la distribuzione.</p>
 <p>Supponiamo di avere un dataset che segue una distribuzione normale con media 50 e deviazione standard 10. Possiamo generare dati casuali e visualizzare la curva di densità in R:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Generiamo dati da una distribuzione normale</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Generiamo dati da una distribuzione normale</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
 <span><span class="va">dati</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">1000</span>, mean <span class="op">=</span> <span class="fl">50</span>, sd <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span></span>
@@ -656,7 +633,7 @@ z = \frac{x - m}{s} ,
 <span>       x <span class="op">=</span> <span class="st">"Valori"</span>,</span>
 <span>       y <span class="op">=</span> <span class="st">"Densità"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">annotate</span><span class="op">(</span><span class="st">"text"</span>, x <span class="op">=</span> <span class="va">media</span> <span class="op">+</span> <span class="fl">5</span>, y <span class="op">=</span> <span class="fl">0.03</span>, label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Media ="</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">media</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">annotate</span><span class="op">(</span><span class="st">"text"</span>, x <span class="op">=</span> <span class="va">media</span> <span class="op">+</span> <span class="fl">5</span>, y <span class="op">=</span> <span class="fl">0.025</span>, label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Deviazione Standard ="</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">deviazione_standard</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu">annotate</span><span class="op">(</span><span class="st">"text"</span>, x <span class="op">=</span> <span class="va">media</span> <span class="op">+</span> <span class="fl">5</span>, y <span class="op">=</span> <span class="fl">0.025</span>, label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Deviazione Standard ="</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">deviazione_standard</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="07_introduction_normal_distribution_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
@@ -708,7 +685,7 @@ La <strong>kurtosi</strong> descrive quanto una distribuzione sia “appuntita�
 </ul>
 <p>Nel seguente esempio, generiamo dati da una distribuzione esponenziale, notoriamente asimmetrica:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Generiamo dati da una distribuzione esponenziale</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Generiamo dati da una distribuzione esponenziale</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
 <span><span class="va">dati_esponenziali</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html">rexp</a></span><span class="op">(</span><span class="fl">1000</span>, rate <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
 <span></span>
@@ -728,7 +705,7 @@ La <strong>kurtosi</strong> descrive quanto una distribuzione sia “appuntita�
 <span>           color <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">annotate</span><span class="op">(</span><span class="st">"text"</span>, x <span class="op">=</span> <span class="va">media_esp</span> <span class="op">+</span> <span class="fl">1</span>, y <span class="op">=</span> <span class="fl">0.18</span>, </span>
 <span>           label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Deviazione Standard ="</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">deviazione_standard_esp</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>, </span>
-<span>           color <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>           color <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="07_introduction_normal_distribution_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
@@ -744,7 +721,7 @@ La <strong>kurtosi</strong> descrive quanto una distribuzione sia “appuntita�
 </ul>
 <p>Misure alternative, come la mediana e i quartili, forniscono informazioni più affidabili:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Calcoliamo mediana e quartili</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Calcoliamo mediana e quartili</span></span>
 <span><span class="va">mediana</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">dati_esponenziali</span><span class="op">)</span></span>
 <span><span class="va">quartili</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">dati_esponenziali</span>, probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.25</span>, <span class="fl">0.75</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -753,7 +730,7 @@ La <strong>kurtosi</strong> descrive quanto una distribuzione sia “appuntita�
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Primo Quartile (Q1):"</span>, <span class="va">quartili</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="st">"\n"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Primo Quartile (Q1): 0.613</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Terzo Quartile (Q3):"</span>, <span class="va">quartili</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, <span class="st">"\n"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Terzo Quartile (Q3): 2.85</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; Terzo Quartile (Q3): 2.85</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>In conclusione, quando i dati non presentano una forma vicina alla normalità (ad esempio perché asimmetrici, multimodali o con kurtosi anomala), media e deviazione standard possono risultare fuorvianti o poco utili. In questi casi, è fondamentale adottare misure alternative o complementari (mediana, quartili, skewness, kurtosis) per ottenere una descrizione più accurata della distribuzione.</p>
 </section></section><section id="riflessioni-conclusive" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="riflessioni-conclusive">Riflessioni conclusive</h2>
@@ -955,7 +932,7 @@ z = \frac{x - \mu}{\sigma}
 </ul>
 <p><strong>Esplorazione e Visualizzazione dei Dati SWLS</strong></p>
 <p><strong>Caricamento e struttura dei dati</strong></p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Supponiamo che i dati siano i seguenti</span></span>
@@ -968,9 +945,9 @@ z = \frac{x - \mu}{\sigma}
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">swls</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">swls</span><span class="op">$</span><span class="va">SWLS</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">swls</span><span class="op">$</span><span class="va">SWLS</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Visualizzazioni</strong></p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Istogramma con curva di densità</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Istogramma con curva di densità</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">swls</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">SWLS</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html">after_stat</a></span><span class="op">(</span><span class="va">density</span><span class="op">)</span><span class="op">)</span>, bins <span class="op">=</span> <span class="fl">6</span>, fill <span class="op">=</span> <span class="st">"blue"</span>, alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html">geom_density</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"red"</span>, size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
@@ -979,21 +956,21 @@ z = \frac{x - \mu}{\sigma}
 <span><span class="co"># Boxplot</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">swls</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">SWLS</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">geom_boxplot</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"cyan"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">gg</span><span class="op">(</span><span class="st">"Boxplot dei punteggi SWLS"</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu">gg</span><span class="op">(</span><span class="st">"Boxplot dei punteggi SWLS"</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>2. Confronto con la Distribuzione Normale</strong></p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># QQ-plot per valutare la normalità</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># QQ-plot per valutare la normalità</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">swls</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="va">SWLS</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_abline</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">gg</span><span class="op">(</span><span class="st">"QQ-plot dei punteggi SWLS"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Osservazione</strong>:</p>
 <ul>
 <li>Se i punti si allineano lungo la diagonale, i dati sono approssimativamente normali.</li>
 <li>Se ci sono deviazioni marcate, la distribuzione potrebbe essere asimmetrica o presentare code pesanti.</li>
 </ul>
 <p><strong>3. Standardizzazione dei punteggi SWLS</strong></p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">swls</span><span class="op">$</span><span class="va">Z_SWLS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="op">(</span><span class="va">swls</span><span class="op">$</span><span class="va">SWLS</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">swls</span><span class="op">$</span><span class="va">Z_SWLS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="op">(</span><span class="va">swls</span><span class="op">$</span><span class="va">SWLS</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">swls</span><span class="op">$</span><span class="va">Z_SWLS</span><span class="op">)</span>  <span class="co"># Dovrebbe essere circa 0</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">swls</span><span class="op">$</span><span class="va">Z_SWLS</span><span class="op">)</span>    <span class="co"># Dovrebbe essere circa 1</span></span>
@@ -1001,16 +978,16 @@ z = \frac{x - \mu}{\sigma}
 <span><span class="co"># Proporzione entro 1, 2, 3 deviazioni standard</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">swls</span><span class="op">$</span><span class="va">Z_SWLS</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fl">1</span><span class="op">)</span>  <span class="co"># Atteso ~68%</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">swls</span><span class="op">$</span><span class="va">Z_SWLS</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fl">2</span><span class="op">)</span>  <span class="co"># Atteso ~95%</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">swls</span><span class="op">$</span><span class="va">Z_SWLS</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fl">3</span><span class="op">)</span>  <span class="co"># Atteso ~99.7%</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">swls</span><span class="op">$</span><span class="va">Z_SWLS</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fl">3</span><span class="op">)</span>  <span class="co"># Atteso ~99.7%</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>4. Relazione tra SWLS e LSNS</strong></p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Grafico di dispersione</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Grafico di dispersione</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">swls</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">LSNS</span>, y <span class="op">=</span> <span class="va">SWLS</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"blue"</span>, size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"lm"</span>, color <span class="op">=</span> <span class="st">"red"</span>, se <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">gg</span><span class="op">(</span><span class="st">"Relazione tra SWLS e LSNS"</span><span class="op">)</span> </span>
 <span></span>
 <span><span class="co"># Calcolo della correlazione</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">swls</span><span class="op">$</span><span class="va">SWLS</span>, <span class="va">swls</span><span class="op">$</span><span class="va">LSNS</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">swls</span><span class="op">$</span><span class="va">SWLS</span>, <span class="va">swls</span><span class="op">$</span><span class="va">LSNS</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Interpretazione</strong>:</p>
 <ul>
 <li>Un valore di correlazione positivo indica che livelli più alti di supporto sociale (LSNS) sono associati a una maggiore soddisfazione della vita (SWLS).<br>
@@ -1019,29 +996,29 @@ z = \frac{x - \mu}{\sigma}
 :::</li>
 </ul>
 <div class="callout callout-style-simple callout-note no-icon callout-titled" title="Informazioni sull'ambiente di sviluppo">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Informazioni sull’ambiente di sviluppo
+<span class="screen-reader-only">Nota</span>Informazioni sull’ambiente di sviluppo
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.5.1 (2025-06-13)</span></span>
 <span><span class="co">#&gt; Platform: aarch64-apple-darwin20</span></span>
-<span><span class="co">#&gt; Running under: macOS Sequoia 15.6.1</span></span>
+<span><span class="co">#&gt; Running under: macOS Tahoe 26.0</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
 <span><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRblas.0.dylib </span></span>
 <span><span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; locale:</span></span>
-<span><span class="co">#&gt; [1] C/UTF-8/C/C/C/C</span></span>
+<span><span class="co">#&gt; [1] C.UTF-8/UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; time zone: Europe/Rome</span></span>
 <span><span class="co">#&gt; tzcode source: internal</span></span>
@@ -1050,45 +1027,45 @@ Informazioni sull’ambiente di sviluppo
 <span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt;  [1] gridExtra_2.3         dslabs_0.8.0          ggbeeswarm_0.7.2     </span></span>
-<span><span class="co">#&gt;  [4] pillar_1.11.0         tinytable_0.13.0      patchwork_1.3.2      </span></span>
+<span><span class="co">#&gt;  [1] gridExtra_2.3         dslabs_0.9.0          ggbeeswarm_0.7.2     </span></span>
+<span><span class="co">#&gt;  [4] pillar_1.11.1         tinytable_0.13.0      patchwork_1.3.2      </span></span>
 <span><span class="co">#&gt;  [7] ggdist_3.3.3          tidybayes_3.0.7       bayesplot_1.14.0     </span></span>
-<span><span class="co">#&gt; [10] ggplot2_3.5.2         reliabilitydiag_0.2.1 priorsense_1.1.1     </span></span>
+<span><span class="co">#&gt; [10] ggplot2_4.0.0         reliabilitydiag_0.2.1 priorsense_1.1.1     </span></span>
 <span><span class="co">#&gt; [13] posterior_1.6.1       loo_2.8.0             rstan_2.32.7         </span></span>
-<span><span class="co">#&gt; [16] StanHeaders_2.32.10   brms_2.22.0           Rcpp_1.1.0           </span></span>
+<span><span class="co">#&gt; [16] StanHeaders_2.32.10   brms_2.23.0           Rcpp_1.1.0           </span></span>
 <span><span class="co">#&gt; [19] sessioninfo_1.2.3     conflicted_1.2.0      janitor_2.2.1        </span></span>
 <span><span class="co">#&gt; [22] matrixStats_1.5.0     modelr_0.1.11         tibble_3.3.0         </span></span>
 <span><span class="co">#&gt; [25] dplyr_1.1.4           tidyr_1.3.1           rio_1.2.3            </span></span>
-<span><span class="co">#&gt; [28] here_1.0.1           </span></span>
+<span><span class="co">#&gt; [28] here_1.0.2           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span><span class="co">#&gt;  [1] inline_0.3.21         sandwich_3.1-1        rlang_1.1.6          </span></span>
-<span><span class="co">#&gt;  [4] magrittr_2.0.3        multcomp_1.4-28       snakecase_0.11.1     </span></span>
+<span><span class="co">#&gt;  [4] magrittr_2.0.4        multcomp_1.4-28       snakecase_0.11.1     </span></span>
 <span><span class="co">#&gt;  [7] compiler_4.5.1        systemfonts_1.2.3     vctrs_0.6.5          </span></span>
-<span><span class="co">#&gt; [10] stringr_1.5.1         pkgconfig_2.0.3       arrayhelpers_1.1-0   </span></span>
+<span><span class="co">#&gt; [10] stringr_1.5.2         pkgconfig_2.0.3       arrayhelpers_1.1-0   </span></span>
 <span><span class="co">#&gt; [13] fastmap_1.2.0         backports_1.5.0       labeling_0.4.3       </span></span>
 <span><span class="co">#&gt; [16] rmarkdown_2.29        ragg_1.5.0            purrr_1.1.0          </span></span>
 <span><span class="co">#&gt; [19] xfun_0.53             cachem_1.1.0          jsonlite_2.0.0       </span></span>
-<span><span class="co">#&gt; [22] broom_1.0.9           parallel_4.5.1        R6_2.6.1             </span></span>
+<span><span class="co">#&gt; [22] broom_1.0.10          parallel_4.5.1        R6_2.6.1             </span></span>
 <span><span class="co">#&gt; [25] stringi_1.8.7         RColorBrewer_1.1-3    lubridate_1.9.4      </span></span>
 <span><span class="co">#&gt; [28] estimability_1.5.1    knitr_1.50            zoo_1.8-14           </span></span>
 <span><span class="co">#&gt; [31] pacman_0.5.1          Matrix_1.7-4          splines_4.5.1        </span></span>
 <span><span class="co">#&gt; [34] timechange_0.3.0      tidyselect_1.2.1      abind_1.4-8          </span></span>
 <span><span class="co">#&gt; [37] codetools_0.2-20      curl_7.0.0            pkgbuild_1.4.8       </span></span>
 <span><span class="co">#&gt; [40] lattice_0.22-7        withr_3.0.2           bridgesampling_1.1-2 </span></span>
-<span><span class="co">#&gt; [43] coda_0.19-4.1         evaluate_1.0.5        survival_3.8-3       </span></span>
-<span><span class="co">#&gt; [46] RcppParallel_5.1.11-1 tensorA_0.36.2.1      checkmate_2.3.3      </span></span>
-<span><span class="co">#&gt; [49] stats4_4.5.1          distributional_0.5.0  generics_0.1.4       </span></span>
-<span><span class="co">#&gt; [52] rprojroot_2.1.1       rstantools_2.5.0      scales_1.4.0         </span></span>
-<span><span class="co">#&gt; [55] xtable_1.8-4          glue_1.8.0            emmeans_1.11.2-8     </span></span>
-<span><span class="co">#&gt; [58] tools_4.5.1           mvtnorm_1.3-3         grid_4.5.1           </span></span>
-<span><span class="co">#&gt; [61] QuickJSR_1.8.0        colorspace_2.1-1      nlme_3.1-168         </span></span>
-<span><span class="co">#&gt; [64] beeswarm_0.4.0        vipor_0.4.7           cli_3.6.5            </span></span>
-<span><span class="co">#&gt; [67] textshaping_1.0.3     svUnit_1.0.8          Brobdingnag_1.2-9    </span></span>
-<span><span class="co">#&gt; [70] V8_7.0.0              gtable_0.3.6          digest_0.6.37        </span></span>
-<span><span class="co">#&gt; [73] TH.data_1.1-4         htmlwidgets_1.6.4     farver_2.1.2         </span></span>
-<span><span class="co">#&gt; [76] memoise_2.0.1         htmltools_0.5.8.1     lifecycle_1.0.4      </span></span>
-<span><span class="co">#&gt; [79] MASS_7.3-65</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [43] S7_0.2.0              coda_0.19-4.1         evaluate_1.0.5       </span></span>
+<span><span class="co">#&gt; [46] survival_3.8-3        RcppParallel_5.1.11-1 tensorA_0.36.2.1     </span></span>
+<span><span class="co">#&gt; [49] checkmate_2.3.3       stats4_4.5.1          distributional_0.5.0 </span></span>
+<span><span class="co">#&gt; [52] generics_0.1.4        rprojroot_2.1.1       rstantools_2.5.0     </span></span>
+<span><span class="co">#&gt; [55] scales_1.4.0          xtable_1.8-4          glue_1.8.0           </span></span>
+<span><span class="co">#&gt; [58] emmeans_1.11.2-8      tools_4.5.1           mvtnorm_1.3-3        </span></span>
+<span><span class="co">#&gt; [61] grid_4.5.1            QuickJSR_1.8.0        colorspace_2.1-1     </span></span>
+<span><span class="co">#&gt; [64] nlme_3.1-168          beeswarm_0.4.0        vipor_0.4.7          </span></span>
+<span><span class="co">#&gt; [67] cli_3.6.5             textshaping_1.0.3     svUnit_1.0.8         </span></span>
+<span><span class="co">#&gt; [70] Brobdingnag_1.2-9     V8_7.0.0              gtable_0.3.6         </span></span>
+<span><span class="co">#&gt; [73] digest_0.6.37         TH.data_1.1-4         htmlwidgets_1.6.4    </span></span>
+<span><span class="co">#&gt; [76] farver_2.1.2          memoise_2.0.1         htmltools_0.5.8.1    </span></span>
+<span><span class="co">#&gt; [79] lifecycle_1.0.4       MASS_7.3-65</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -1101,22 +1078,7 @@ Informazioni sull’ambiente di sviluppo
 Irizarry, R. A. (2024). <em>Introduction to Data Science: Data Wrangling and Visualization with R</em>. CRC Press.
 </div>
 </div>
-</section></main><!-- /main --><script>
-document.body.classList.add('classic-book');
-document.addEventListener('DOMContentLoaded', function() {
-  const paragraphs = document.querySelectorAll('p');
-  paragraphs.forEach(p => {
-    if (p.textContent.length > 200) {
-      p.style.hyphens = 'auto';
-      p.style.hyphenateCharacter = '-';
-    }
-  });
-  const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
-  headings.forEach(h => {
-    h.style.fontFeatureSettings = '"liga" 1, "dlig" 1, "smcp" 1';
-  });
-});
-</script><script id="quarto-html-after-body" type="application/javascript">
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
     const anchorJS = new window.AnchorJS();
@@ -1167,13 +1129,14 @@ document.addEventListener('DOMContentLoaded', function() {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

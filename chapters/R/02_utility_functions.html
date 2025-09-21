@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.34">
+<meta name="generator" content="quarto-1.8.24">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>8&nbsp; Utility functions – Analisi esplorativa dei dati (EDA) in psicologia</title>
 <style>
@@ -86,14 +86,15 @@ div.csl-indent {
 <link href="../../style/gauss.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-0a72236910a44089af39cd28873f322e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-9908c7b05874059c2106d454ac00f1d0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="../../site_libs/bootstrap/bootstrap-af5d064118ae80f4bafc3d843c3c3870.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -126,33 +127,6 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 </script><style>html{ scroll-behavior: smooth; }</style>
-<script>
-window.MathJax = {
-  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
-  svg: { scale: 1, mtextInheritFont: true, fontCache: 'none', minScale: 1 },
-  options: { renderActions: { addMenu: [0, '', ''] } },
-  loader: { load: ['input/tex','output/svg'] }
-};
-</script><script>
-window.MathJax = {
-  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
-  svg: { scale: 1, mtextInheritFont: true, fontCache: 'none', minScale: 1 },
-  options: { renderActions: { addMenu: [0, '', ''] } },
-  loader: { load: ['input/tex','output/svg'] }
-};
-// Suggerimento CSS: vedi sezione 3 per gli spazi attorno a display math
-</script><script>
-window.MathJax = {
-  tex: {
-    packages: {'[+]': ['boldsymbol']},
-    inlineMath: [['$', '$'], ['\\(', '\\)']]
-  },
-  svg: { fontCache: 'global' }
-};
-</script><link rel="stylesheet" href="../../style/_typography-extras.css">
-<link rel="stylesheet" href="../../style/_code-extras.css">
-<link rel="stylesheet" href="../../style/_math-extras.css">
-<link rel="stylesheet" href="../../style/styles.css">
 </head>
 <body class="nav-sidebar floating quarto-light">
 
@@ -170,7 +144,9 @@ window.MathJax = {
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../../index.html" class="sidebar-logo-link">
+      </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="../../">Analisi esplorativa dei dati (EDA) in psicologia</a> 
         <div class="sidebar-tools-main">
@@ -423,12 +399,12 @@ window.MathJax = {
 <li>Usare i percorsi relativi rispetto alla radice del progetto con <code><a href="https://here.r-lib.org/reference/here.html">here::here()</a></code>.</li>
 </ul>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Prerequisiti
+<span class="screen-reader-only">Consiglio</span>Prerequisiti
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -443,24 +419,24 @@ Prerequisiti
 </div>
 </div>
 <div class="callout callout-style-simple callout-caution no-icon callout-titled" title="Preparazione del Notebook">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Preparazione del Notebook
+<span class="screen-reader-only">Attenzione</span>Preparazione del Notebook
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell">
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"code"</span>, <span class="st">"_common.R"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"code"</span>, <span class="st">"_common.R"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/source.html">source</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Load packages</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">"pacman"</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"pacman"</span><span class="op">)</span></span>
-<span><span class="fu">pacman</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pacman/man/p_load.html">p_load</a></span><span class="op">(</span><span class="va">tidyr</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu">pacman</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pacman/man/p_load.html">p_load</a></span><span class="op">(</span><span class="va">tidyr</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -482,7 +458,7 @@ Preparazione del Notebook
 </section><section id="come-funziona-import" class="level3" data-number="8.1.2"><h3 data-number="8.1.2" class="anchored" data-anchor-id="come-funziona-import">
 <span class="header-section-number">8.1.2</span> Come Funziona <code>import()</code>
 </h3>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Carica il pacchetto (installalo prima con install.packages("rio"))</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Carica il pacchetto (installalo prima con install.packages("rio"))</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://gesistsa.github.io/rio/">rio</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Importa un file CSV da una cartella "dati" nel tuo progetto</span></span>
@@ -492,7 +468,7 @@ Preparazione del Notebook
 <span><span class="va">tempi_reazione</span> <span class="op">&lt;-</span> <span class="fu">rio</span><span class="fu">::</span><span class="fu"><a href="http://gesistsa.github.io/rio/reference/import.html">import</a></span><span class="op">(</span><span class="st">"dati/esperimento1.xlsx"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Importa un file SPSS con dati demografici</span></span>
-<span><span class="va">dati_demografici</span> <span class="op">&lt;-</span> <span class="fu">rio</span><span class="fu">::</span><span class="fu"><a href="http://gesistsa.github.io/rio/reference/import.html">import</a></span><span class="op">(</span><span class="st">"dati/partecipanti.sav"</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="va">dati_demografici</span> <span class="op">&lt;-</span> <span class="fu">rio</span><span class="fu">::</span><span class="fu"><a href="http://gesistsa.github.io/rio/reference/import.html">import</a></span><span class="op">(</span><span class="st">"dati/partecipanti.sav"</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Perché è utile:</strong></p>
 <ol type="1">
 <li>riconosce <strong>automaticamente</strong> il formato dal nome del file;</li>
@@ -502,8 +478,8 @@ Preparazione del Notebook
 <span class="header-section-number">8.1.3</span> Esportare Dati con <code>rio::export()</code>
 </h3>
 <p>Dopo aver pulito i dati, è possibile salvarli in qualsiasi formato usando <code><a href="http://gesistsa.github.io/rio/reference/export.html">rio::export()</a></code>:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">rio</span><span class="fu">::</span><span class="fu"><a href="http://gesistsa.github.io/rio/reference/export.html">export</a></span><span class="op">(</span><span class="va">risposte</span>, <span class="st">"dati/cleaned/dati_puliti.xlsx"</span><span class="op">)</span></span>
-<span><span class="fu">rio</span><span class="fu">::</span><span class="fu"><a href="http://gesistsa.github.io/rio/reference/export.html">export</a></span><span class="op">(</span><span class="va">tempi_reazione</span>, <span class="st">"dati/cleaned/tempi_reazione.sav"</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">rio</span><span class="fu">::</span><span class="fu"><a href="http://gesistsa.github.io/rio/reference/export.html">export</a></span><span class="op">(</span><span class="va">risposte</span>, <span class="st">"dati/cleaned/dati_puliti.xlsx"</span><span class="op">)</span></span>
+<span><span class="fu">rio</span><span class="fu">::</span><span class="fu"><a href="http://gesistsa.github.io/rio/reference/export.html">export</a></span><span class="op">(</span><span class="va">tempi_reazione</span>, <span class="st">"dati/cleaned/tempi_reazione.sav"</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </section></section><section id="utilizzare-percorsi-relativi-con-herehere" class="level2" data-number="8.2"><h2 data-number="8.2" class="anchored" data-anchor-id="utilizzare-percorsi-relativi-con-herehere">
 <span class="header-section-number">8.2</span> Utilizzare Percorsi Relativi con <code>here::here()</code>
 </h2>
@@ -511,18 +487,18 @@ Preparazione del Notebook
 <ol type="1">
 <li>
 <p><strong>Percatori sbagliati</strong></p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># SBAGLIATO (il file non è nella cartella di lavoro)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># SBAGLIATO (il file non è nella cartella di lavoro)</span></span>
 <span><span class="fu"><a href="http://gesistsa.github.io/rio/reference/import.html">import</a></span><span class="op">(</span><span class="st">"questionario.csv"</span><span class="op">)</span>  </span>
 <span></span>
 <span><span class="co"># CORRETTO: usa percorsi relativi o il pacchetto 'here'</span></span>
-<span><span class="fu"><a href="http://gesistsa.github.io/rio/reference/import.html">import</a></span><span class="op">(</span><span class="st">"dati/raw/questionario.csv"</span><span class="op">)</span>  </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="http://gesistsa.github.io/rio/reference/import.html">import</a></span><span class="op">(</span><span class="st">"dati/raw/questionario.csv"</span><span class="op">)</span>  </span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </li>
 <li><p><strong>File aperti in altri programmi</strong><br>
 “Errore: non posso aprire il file” → Chiudi Excel/SPSS e riprova</p></li>
 <li>
 <p><strong>Codifica caratteri strani</strong><br>
 Se vedi � nei testi, specifica l’encoding:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="http://gesistsa.github.io/rio/reference/import.html">import</a></span><span class="op">(</span><span class="st">"dati/testo.txt"</span>, encoding <span class="op">=</span> <span class="st">"UTF-8"</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="http://gesistsa.github.io/rio/reference/import.html">import</a></span><span class="op">(</span><span class="st">"dati/testo.txt"</span>, encoding <span class="op">=</span> <span class="st">"UTF-8"</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </li>
 </ol>
 <section id="evitare-percorsi-assoluti" class="level3" data-number="8.2.1"><h3 data-number="8.2.1" class="anchored" data-anchor-id="evitare-percorsi-assoluti">
@@ -538,14 +514,14 @@ Se vedi � nei testi, specifica l’encoding:</p>
 <p>Il pacchetto <strong>here</strong> rende l’importazione dei dati più semplice, evitando problemi dovuti a percorsi assoluti che possono cambiare se si modifica la directory di lavoro o si sposta il progetto.</p>
 <p>La funzione <code><a href="https://here.r-lib.org/reference/here.html">here()</a></code> crea <strong>percorsi relativi a partire dalla radice del progetto</strong> (cioè dalla cartella che contiene il file <code>.Rproj</code> o da dove viene inizializzato il progetto RStudio).</p>
 <p><strong>Esempio di utilizzo combinato con <code><a href="http://gesistsa.github.io/rio/reference/import.html">rio::import()</a></code>:</strong></p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://gesistsa.github.io/rio/">rio</a></span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://gesistsa.github.io/rio/">rio</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://here.r-lib.org/">here</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Percorso robusto al file csv</span></span>
 <span><span class="va">dati</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://gesistsa.github.io/rio/reference/import.html">import</a></span><span class="op">(</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"data"</span>, <span class="st">"dati.csv"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Percorso robusto al file Excel</span></span>
-<span><span class="va">dati_excel</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://gesistsa.github.io/rio/reference/import.html">import</a></span><span class="op">(</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"data"</span>, <span class="st">"dati.xlsx"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="va">dati_excel</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://gesistsa.github.io/rio/reference/import.html">import</a></span><span class="op">(</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"data"</span>, <span class="st">"dati.xlsx"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <p>In questo modo, l’importazione diventa indipendente dalla cartella di lavoro attuale e il codice sarà più facilmente condivisibile e riproducibile.</p>
 <p><strong>Vantaggi:</strong></p>
 <ul>
@@ -624,20 +600,20 @@ Se vedi � nei testi, specifica l’encoding:</p>
 │   └── analisi.R
 └── output/</code></pre>
 <p>La prima cosa da fare è caricare i pacchetti necessari:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://gesistsa.github.io/rio/">rio</a></span><span class="op">)</span>    <span class="co"># Per importare i dati</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://here.r-lib.org/">here</a></span><span class="op">)</span>   <span class="co"># Per gestire i percorsi in modo affidabile</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://gesistsa.github.io/rio/">rio</a></span><span class="op">)</span>    <span class="co"># Per importare i dati</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://here.r-lib.org/">here</a></span><span class="op">)</span>   <span class="co"># Per gestire i percorsi in modo affidabile</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <p>A questo punto possiamo importare i dati:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">msleep</span> <span class="op">&lt;-</span> <span class="fu">rio</span><span class="fu">::</span><span class="fu"><a href="http://gesistsa.github.io/rio/reference/import.html">import</a></span><span class="op">(</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">msleep</span> <span class="op">&lt;-</span> <span class="fu">rio</span><span class="fu">::</span><span class="fu"><a href="http://gesistsa.github.io/rio/reference/import.html">import</a></span><span class="op">(</span></span>
 <span>  <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span>  <span class="co"># Costruisce il percorso automaticamente</span></span>
 <span>    <span class="st">"data"</span>,    <span class="co"># Cartella dei dati</span></span>
 <span>    <span class="st">"msleep.csv"</span>  <span class="co"># Nome del file</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Controlli post-importazione (fondamentali!)</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                         name      genus  vore        order conservation</span></span>
 <span><span class="co">#&gt; 1                    Cheetah   Acinonyx carni    Carnivora           lc</span></span>
 <span><span class="co">#&gt; 2                 Owl monkey      Aotus  omni     Primates             </span></span>
@@ -651,10 +627,10 @@ Se vedi � nei testi, specifica l’encoding:</p>
 <span><span class="co">#&gt; 3        14.4       2.4          NA   9.6      NA   1.350</span></span>
 <span><span class="co">#&gt; 4        14.9       2.3       0.133   9.1 0.00029   0.019</span></span>
 <span><span class="co">#&gt; 5         4.0       0.7       0.667  20.0 0.42300 600.000</span></span>
-<span><span class="co">#&gt; 6        14.4       2.2       0.767   9.6      NA   3.850</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; 6        14.4       2.2       0.767   9.6      NA   3.850</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">)</span></span>
 <span><span class="co">#&gt; 'data.frame':    83 obs. of  11 variables:</span></span>
 <span><span class="co">#&gt;  $ name        : chr  "Cheetah" "Owl monkey" "Mountain beaver" "Greater short-tailed shrew" ...</span></span>
 <span><span class="co">#&gt;  $ genus       : chr  "Acinonyx" "Aotus" "Aplodontia" "Blarina" ...</span></span>
@@ -666,10 +642,10 @@ Se vedi � nei testi, specifica l’encoding:</p>
 <span><span class="co">#&gt;  $ sleep_cycle : num  NA NA NA 0.133 0.667 ...</span></span>
 <span><span class="co">#&gt;  $ awake       : num  11.9 7 9.6 9.1 20 9.6 15.3 17 13.9 21 ...</span></span>
 <span><span class="co">#&gt;  $ brainwt     : num  NA 0.0155 NA 0.00029 0.423 NA NA NA 0.07 0.0982 ...</span></span>
-<span><span class="co">#&gt;  $ bodywt      : num  50 0.48 1.35 0.019 600 ...</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;  $ bodywt      : num  50 0.48 1.35 0.019 600 ...</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">glimpse</span><span class="op">(</span><span class="va">msleep</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">glimpse</span><span class="op">(</span><span class="va">msleep</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 83</span></span>
 <span><span class="co">#&gt; Columns: 11</span></span>
 <span><span class="co">#&gt; $ name         &lt;chr&gt; "Cheetah", "Owl monkey", "Mountain beaver", "Greater shor…</span></span>
@@ -682,17 +658,17 @@ Se vedi � nei testi, specifica l’encoding:</p>
 <span><span class="co">#&gt; $ sleep_cycle  &lt;dbl&gt; NA, NA, NA, 0.133, 0.667, 0.767, 0.383, NA, 0.333, NA, NA…</span></span>
 <span><span class="co">#&gt; $ awake        &lt;dbl&gt; 11.9, 7.0, 9.6, 9.1, 20.0, 9.6, 15.3, 17.0, 13.9, 21.0, 1…</span></span>
 <span><span class="co">#&gt; $ brainwt      &lt;dbl&gt; NA, 0.01550, NA, 0.00029, 0.42300, NA, NA, NA, 0.07000, 0…</span></span>
-<span><span class="co">#&gt; $ bodywt       &lt;dbl&gt; 50.000, 0.480, 1.350, 0.019, 600.000, 3.850, 20.490, 0.04…</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; $ bodywt       &lt;dbl&gt; 50.000, 0.480, 1.350, 0.019, 600.000, 3.850, 20.490, 0.04…</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  [1] "name"         "genus"        "vore"         "order"        "conservation"</span></span>
 <span><span class="co">#&gt;  [6] "sleep_total"  "sleep_rem"    "sleep_cycle"  "awake"        "brainwt"     </span></span>
-<span><span class="co">#&gt; [11] "bodywt"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [11] "bodywt"</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 83 11</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 83 11</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><strong>Errori comuni e soluzioni.</strong></p>
 <ol type="1">
@@ -711,9 +687,9 @@ Se vedi � nei testi, specifica l’encoding:</p>
 </li>
 <li>
 <p><strong>Pacchetti non installati</strong>:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Esegui una volta</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Esegui una volta</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"rio"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"here"</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"here"</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </li>
 <li>
 <p><strong>Progetto non aperto</strong>:</p>
@@ -724,62 +700,62 @@ Se vedi � nei testi, specifica l’encoding:</p>
 </ol>
 <p>Esaminiamo le modalità della variabile qualitativa <code>vore</code>:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">$</span><span class="va">vore</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "carni"   "omni"    "herbi"   ""        "insecti"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">$</span><span class="va">vore</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "carni"   "omni"    "herbi"   ""        "insecti"</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Se vogliamo la numerosità di ciascuna categoria, possiamo usare <code><a href="https://rdrr.io/r/base/table.html">table()</a></code>:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">$</span><span class="va">vore</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">$</span><span class="va">vore</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;           carni   herbi insecti    omni </span></span>
-<span><span class="co">#&gt;       7      19      32       5      20</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;       7      19      32       5      20</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Si noti che <code><a href="https://rdrr.io/r/base/table.html">table()</a></code> esclude i dati mancanti.</p>
 <p>Stampiamo i nomi delle colonne del data frame:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  [1] "name"         "genus"        "vore"         "order"        "conservation"</span></span>
 <span><span class="co">#&gt;  [6] "sleep_total"  "sleep_rem"    "sleep_cycle"  "awake"        "brainwt"     </span></span>
-<span><span class="co">#&gt; [11] "bodywt"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [11] "bodywt"</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Esaminiamo il tipo di variabile della colonna <code>vore</code>:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">$</span><span class="va">vore</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "character"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">$</span><span class="va">vore</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "character"</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Le dimensioni del data frame sono date da:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 83 11</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 83 11</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>laddove il primo valore è il numero di righe e il secondo valore è il numero di colonne.</p>
 <p>Il numero di elementi di un vettore è dato da:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">$</span><span class="va">vore</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 83</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">$</span><span class="va">vore</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 83</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>In alternativa, possiamo usare <code><a href="https://rdrr.io/r/base/nrow.html">nrow()</a></code></p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 83</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 83</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>per il numero di righe e <code><a href="https://rdrr.io/r/base/nrow.html">ncol()</a></code></p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 11</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 11</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>per il numero di colonne. In maniera equivalente:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span>
-<span><span class="co">#&gt; [1] 11</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span>
+<span><span class="co">#&gt; [1] 11</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled" title="Esercizio">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Esercizio
+<span class="screen-reader-only">Consiglio</span>Esercizio
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -861,12 +837,12 @@ Esercizio
 </div>
 </div>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled" title="Soluzione">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Soluzione
+<span class="screen-reader-only">Consiglio</span>Soluzione
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -879,7 +855,7 @@ Soluzione
 <ul>
 <li>
 <p>Consideriamo dei valori di risposta arbitrari. Il comando per creare l’oggetto <code>swls_scores</code> è:</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">swls_scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">16</span>, <span class="fl">23</span>, <span class="fl">25</span>, <span class="fl">11</span>, <span class="fl">7</span>, <span class="fl">20</span>, <span class="fl">25</span>, <span class="fl">15</span>, <span class="fl">27</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">swls_scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">16</span>, <span class="fl">23</span>, <span class="fl">25</span>, <span class="fl">11</span>, <span class="fl">7</span>, <span class="fl">20</span>, <span class="fl">25</span>, <span class="fl">15</span>, <span class="fl">27</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </li>
 <li>
 <p>Regole per assegnare un nome a un oggetto in R:</p>
@@ -896,11 +872,11 @@ Soluzione
 <ul>
 <li>
 <p>Per visualizzare il contenuto:</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">swls_scores</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">swls_scores</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </li>
 <li>
 <p>Per visualizzare solo i primi 5 valori:</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">swls_scores</span>, <span class="fl">5</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">swls_scores</span>, <span class="fl">5</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </li>
 </ul>
 </li>
@@ -909,11 +885,11 @@ Soluzione
 <ul>
 <li>
 <p>Per verificare il tipo di dati:</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">swls_scores</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">swls_scores</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </li>
 <li>
 <p>Per verificare il numero di elementi:</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">swls_scores</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">swls_scores</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </li>
 </ul>
 </li>
@@ -922,13 +898,13 @@ Soluzione
 <ol start="4" type="1">
 <li>
 <p><strong>Creazione del dataset in R</strong></p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">swls_scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">16</span>, <span class="fl">23</span>, <span class="fl">25</span>, <span class="fl">11</span>, <span class="fl">7</span>, <span class="fl">20</span>, <span class="fl">25</span>, <span class="fl">15</span>, <span class="fl">27</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">swls_scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">16</span>, <span class="fl">23</span>, <span class="fl">25</span>, <span class="fl">11</span>, <span class="fl">7</span>, <span class="fl">20</span>, <span class="fl">25</span>, <span class="fl">15</span>, <span class="fl">27</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </li>
 <li>
 <p><strong>Verifica della struttura dei dati</strong></p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">swls_scores</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">swls_scores</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">swls_scores</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">swls_scores</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">swls_scores</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>
 <code><a href="https://rdrr.io/r/utils/str.html">str()</a></code> mostra che <code>swls_scores</code> è un vettore numerico.</li>
@@ -940,8 +916,8 @@ Soluzione
 </li>
 <li>
 <p><strong>Visualizzazione dei dati</strong></p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">swls_scores</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="va">swls_scores</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">swls_scores</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="va">swls_scores</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>
 <code><a href="https://rdrr.io/r/utils/head.html">head()</a></code> mostra i primi 6 elementi, <code><a href="https://rdrr.io/r/utils/head.html">tail()</a></code> gli ultimi 6.</li>
@@ -949,19 +925,19 @@ Soluzione
 </li>
 <li>
 <p><strong>Identificazione dei valori unici</strong></p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">swls_scores</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">swls_scores</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>Restituisce: <code>7, 11, 15, 16, 20, 23, 25, 27</code>.</li>
 </ul>
 </li>
 <li>
 <p><strong>Creazione di una tabella con i dati</strong></p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df_swls</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>Studente <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, Punteggio <span class="op">=</span> <span class="va">swls_scores</span><span class="op">)</span></span>
-<span><span class="va">df_swls</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df_swls</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>Studente <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, Punteggio <span class="op">=</span> <span class="va">swls_scores</span><span class="op">)</span></span>
+<span><span class="va">df_swls</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </li>
 <li>
 <p><strong>Esportazione dei dati</strong></p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.csv</a></span><span class="op">(</span><span class="va">df_swls</span>, <span class="st">"swls_data.csv"</span>, row.names<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.csv</a></span><span class="op">(</span><span class="va">df_swls</span>, <span class="st">"swls_data.csv"</span>, row.names<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </li>
 </ol>
 <p><strong>Conclusione</strong></p>
@@ -970,29 +946,29 @@ Soluzione
 </div>
 </div>
 <div class="callout callout-style-simple callout-note no-icon callout-titled" title="Informazioni sull'ambiente di sviluppo">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Informazioni sull’ambiente di sviluppo
+<span class="screen-reader-only">Nota</span>Informazioni sull’ambiente di sviluppo
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.5.1 (2025-06-13)</span></span>
 <span><span class="co">#&gt; Platform: aarch64-apple-darwin20</span></span>
-<span><span class="co">#&gt; Running under: macOS Sequoia 15.6.1</span></span>
+<span><span class="co">#&gt; Running under: macOS Tahoe 26.0</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
 <span><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRblas.0.dylib </span></span>
 <span><span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; locale:</span></span>
-<span><span class="co">#&gt; [1] C/UTF-8/C/C/C/C</span></span>
+<span><span class="co">#&gt; [1] C.UTF-8/UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; time zone: Europe/Rome</span></span>
 <span><span class="co">#&gt; tzcode source: internal</span></span>
@@ -1001,44 +977,45 @@ Informazioni sull’ambiente di sviluppo
 <span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt;  [1] pillar_1.11.0         tinytable_0.13.0      patchwork_1.3.2      </span></span>
+<span><span class="co">#&gt;  [1] pillar_1.11.1         tinytable_0.13.0      patchwork_1.3.2      </span></span>
 <span><span class="co">#&gt;  [4] ggdist_3.3.3          tidybayes_3.0.7       bayesplot_1.14.0     </span></span>
-<span><span class="co">#&gt;  [7] ggplot2_3.5.2         reliabilitydiag_0.2.1 priorsense_1.1.1     </span></span>
+<span><span class="co">#&gt;  [7] ggplot2_4.0.0         reliabilitydiag_0.2.1 priorsense_1.1.1     </span></span>
 <span><span class="co">#&gt; [10] posterior_1.6.1       loo_2.8.0             rstan_2.32.7         </span></span>
-<span><span class="co">#&gt; [13] StanHeaders_2.32.10   brms_2.22.0           Rcpp_1.1.0           </span></span>
+<span><span class="co">#&gt; [13] StanHeaders_2.32.10   brms_2.23.0           Rcpp_1.1.0           </span></span>
 <span><span class="co">#&gt; [16] sessioninfo_1.2.3     conflicted_1.2.0      janitor_2.2.1        </span></span>
 <span><span class="co">#&gt; [19] matrixStats_1.5.0     modelr_0.1.11         tibble_3.3.0         </span></span>
 <span><span class="co">#&gt; [22] dplyr_1.1.4           tidyr_1.3.1           rio_1.2.3            </span></span>
-<span><span class="co">#&gt; [25] here_1.0.1           </span></span>
+<span><span class="co">#&gt; [25] here_1.0.2           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span><span class="co">#&gt;  [1] gridExtra_2.3         inline_0.3.21         sandwich_3.1-1       </span></span>
-<span><span class="co">#&gt;  [4] rlang_1.1.6           magrittr_2.0.3        multcomp_1.4-28      </span></span>
+<span><span class="co">#&gt;  [4] rlang_1.1.6           magrittr_2.0.4        multcomp_1.4-28      </span></span>
 <span><span class="co">#&gt;  [7] snakecase_0.11.1      compiler_4.5.1        systemfonts_1.2.3    </span></span>
-<span><span class="co">#&gt; [10] vctrs_0.6.5           stringr_1.5.1         pkgconfig_2.0.3      </span></span>
+<span><span class="co">#&gt; [10] vctrs_0.6.5           stringr_1.5.2         pkgconfig_2.0.3      </span></span>
 <span><span class="co">#&gt; [13] arrayhelpers_1.1-0    fastmap_1.2.0         backports_1.5.0      </span></span>
 <span><span class="co">#&gt; [16] rmarkdown_2.29        ragg_1.5.0            purrr_1.1.0          </span></span>
 <span><span class="co">#&gt; [19] xfun_0.53             cachem_1.1.0          jsonlite_2.0.0       </span></span>
-<span><span class="co">#&gt; [22] broom_1.0.9           parallel_4.5.1        R6_2.6.1             </span></span>
+<span><span class="co">#&gt; [22] broom_1.0.10          parallel_4.5.1        R6_2.6.1             </span></span>
 <span><span class="co">#&gt; [25] stringi_1.8.7         RColorBrewer_1.1-3    lubridate_1.9.4      </span></span>
 <span><span class="co">#&gt; [28] estimability_1.5.1    knitr_1.50            zoo_1.8-14           </span></span>
 <span><span class="co">#&gt; [31] pacman_0.5.1          R.utils_2.13.0        Matrix_1.7-4         </span></span>
 <span><span class="co">#&gt; [34] splines_4.5.1         timechange_0.3.0      tidyselect_1.2.1     </span></span>
 <span><span class="co">#&gt; [37] abind_1.4-8           codetools_0.2-20      curl_7.0.0           </span></span>
 <span><span class="co">#&gt; [40] pkgbuild_1.4.8        lattice_0.22-7        withr_3.0.2          </span></span>
-<span><span class="co">#&gt; [43] bridgesampling_1.1-2  coda_0.19-4.1         evaluate_1.0.5       </span></span>
-<span><span class="co">#&gt; [46] survival_3.8-3        RcppParallel_5.1.11-1 tensorA_0.36.2.1     </span></span>
-<span><span class="co">#&gt; [49] checkmate_2.3.3       stats4_4.5.1          distributional_0.5.0 </span></span>
-<span><span class="co">#&gt; [52] generics_0.1.4        rprojroot_2.1.1       rstantools_2.5.0     </span></span>
-<span><span class="co">#&gt; [55] scales_1.4.0          xtable_1.8-4          glue_1.8.0           </span></span>
-<span><span class="co">#&gt; [58] emmeans_1.11.2-8      tools_4.5.1           data.table_1.17.8    </span></span>
-<span><span class="co">#&gt; [61] mvtnorm_1.3-3         grid_4.5.1            QuickJSR_1.8.0       </span></span>
-<span><span class="co">#&gt; [64] colorspace_2.1-1      nlme_3.1-168          cli_3.6.5            </span></span>
-<span><span class="co">#&gt; [67] textshaping_1.0.3     svUnit_1.0.8          Brobdingnag_1.2-9    </span></span>
-<span><span class="co">#&gt; [70] V8_7.0.0              gtable_0.3.6          R.methodsS3_1.8.2    </span></span>
-<span><span class="co">#&gt; [73] digest_0.6.37         TH.data_1.1-4         htmlwidgets_1.6.4    </span></span>
-<span><span class="co">#&gt; [76] farver_2.1.2          memoise_2.0.1         htmltools_0.5.8.1    </span></span>
-<span><span class="co">#&gt; [79] R.oo_1.27.1           lifecycle_1.0.4       MASS_7.3-65</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [43] bridgesampling_1.1-2  S7_0.2.0              coda_0.19-4.1        </span></span>
+<span><span class="co">#&gt; [46] evaluate_1.0.5        survival_3.8-3        RcppParallel_5.1.11-1</span></span>
+<span><span class="co">#&gt; [49] tensorA_0.36.2.1      checkmate_2.3.3       stats4_4.5.1         </span></span>
+<span><span class="co">#&gt; [52] distributional_0.5.0  generics_0.1.4        rprojroot_2.1.1      </span></span>
+<span><span class="co">#&gt; [55] rstantools_2.5.0      scales_1.4.0          xtable_1.8-4         </span></span>
+<span><span class="co">#&gt; [58] glue_1.8.0            emmeans_1.11.2-8      tools_4.5.1          </span></span>
+<span><span class="co">#&gt; [61] data.table_1.17.8     mvtnorm_1.3-3         grid_4.5.1           </span></span>
+<span><span class="co">#&gt; [64] QuickJSR_1.8.0        colorspace_2.1-1      nlme_3.1-168         </span></span>
+<span><span class="co">#&gt; [67] cli_3.6.5             textshaping_1.0.3     svUnit_1.0.8         </span></span>
+<span><span class="co">#&gt; [70] Brobdingnag_1.2-9     V8_7.0.0              gtable_0.3.6         </span></span>
+<span><span class="co">#&gt; [73] R.methodsS3_1.8.2     digest_0.6.37         TH.data_1.1-4        </span></span>
+<span><span class="co">#&gt; [76] htmlwidgets_1.6.4     farver_2.1.2          R.oo_1.27.1          </span></span>
+<span><span class="co">#&gt; [79] memoise_2.0.1         htmltools_0.5.8.1     lifecycle_1.0.4      </span></span>
+<span><span class="co">#&gt; [82] MASS_7.3-65</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -1054,22 +1031,7 @@ Irizarry, R. A. (2024). <em>Introduction to Data Science: Data Wrangling and Vis
 Wickham, H., Çetinkaya-Rundel, M., &amp; Grolemund, G. (2023). <em>R for data science</em>. " O’Reilly Media, Inc.".
 </div>
 </div>
-</section></main><!-- /main --><script>
-document.body.classList.add('classic-book');
-document.addEventListener('DOMContentLoaded', function() {
-  const paragraphs = document.querySelectorAll('p');
-  paragraphs.forEach(p => {
-    if (p.textContent.length > 200) {
-      p.style.hyphens = 'auto';
-      p.style.hyphenateCharacter = '-';
-    }
-  });
-  const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
-  headings.forEach(h => {
-    h.style.fontFeatureSettings = '"liga" 1, "dlig" 1, "smcp" 1';
-  });
-});
-</script><script id="quarto-html-after-body" type="application/javascript">
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
     const anchorJS = new window.AnchorJS();
@@ -1120,13 +1082,14 @@ document.addEventListener('DOMContentLoaded', function() {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

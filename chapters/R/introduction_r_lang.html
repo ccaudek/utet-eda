@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.34">
+<meta name="generator" content="quarto-1.8.24">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>R – Analisi esplorativa dei dati (EDA) in psicologia</title>
+<title>R – Analisi esplorativa dei dati in psicologia</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -90,14 +90,15 @@ div.csl-indent {
 <link href="../../style/gauss.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-0a72236910a44089af39cd28873f322e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-9908c7b05874059c2106d454ac00f1d0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-af5d064118ae80f4bafc3d843c3c3870.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -135,35 +136,6 @@ gtag('js', new Date());
 gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 </script>
 <style>html{ scroll-behavior: smooth; }</style>
-<script>
-window.MathJax = {
-  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
-  svg: { scale: 1, mtextInheritFont: true, fontCache: 'none', minScale: 1 },
-  options: { renderActions: { addMenu: [0, '', ''] } },
-  loader: { load: ['input/tex','output/svg'] }
-};
-</script>
-
-<script>
-window.MathJax = {
-  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
-  svg: { scale: 1, mtextInheritFont: true, fontCache: 'none', minScale: 1 },
-  options: { renderActions: { addMenu: [0, '', ''] } },
-  loader: { load: ['input/tex','output/svg'] }
-};
-// Suggerimento CSS: vedi sezione 3 per gli spazi attorno a display math
-</script>
-
-<script>
-window.MathJax = {
-  tex: {
-    packages: {'[+]': ['boldsymbol']},
-    inlineMath: [['$', '$'], ['\\(', '\\)']]
-  },
-  svg: { fontCache: 'global' }
-};
-</script>
-
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -179,7 +151,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -195,10 +167,6 @@ window.Quarto = {
 };
 </script>
 
-<link rel="stylesheet" href="../../style/_typography-extras.css">
-<link rel="stylesheet" href="../../style/_code-extras.css">
-<link rel="stylesheet" href="../../style/_math-extras.css">
-<link rel="stylesheet" href="../../style/styles.css">
 </head>
 
 <body class="nav-sidebar floating quarto-light">
@@ -223,9 +191,11 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../../index.html" class="sidebar-logo-link">
+      </a>
     <div class="sidebar-title mb-0 py-0">
-      <a href="../../">Analisi esplorativa dei dati (EDA) in psicologia</a> 
+      <a href="../../">Analisi esplorativa dei dati in psicologia</a> 
         <div class="sidebar-tools-main">
     <a href="https://github.com/ccaudek/utet-eda/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Attiva/disattiva la modalità lettore">
@@ -499,9 +469,9 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="livello-sintattico-limplementazione-pratica">Livello sintattico: l’implementazione pratica</h3>
 <p>La soluzione algoritmica viene poi tradotta in codice seguendo le regole specifiche del linguaggio scelto:</p>
 <p><strong>Esempio in R</strong></p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>media <span class="ot">&lt;-</span> <span class="fu">sum</span>(x) <span class="sc">/</span> <span class="fu">length</span>(x)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>media <span class="ot">&lt;-</span> <span class="fu">sum</span>(x) <span class="sc">/</span> <span class="fu">length</span>(x)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Esempio in Python</strong></p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>media <span class="op">=</span> <span class="bu">sum</span>(x) <span class="op">/</span> <span class="bu">len</span>(x)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>media <span class="op">=</span> <span class="bu">sum</span>(x) <span class="op">/</span> <span class="bu">len</span>(x)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Pur mantenendo la stessa logica, le differenze sintattiche evidenziano come l’implementazione sia vincolata allo strumento utilizzato.</p>
 </section>
 </section>
@@ -547,22 +517,6 @@ Cooper, N., Clark, A. T., Lecomte, N., Qiao, H., &amp; Ellison, A. M. (2024). Ha
 </section>
 
 </main> <!-- /main -->
-<script>
-document.body.classList.add('classic-book');
-document.addEventListener('DOMContentLoaded', function() {
-  const paragraphs = document.querySelectorAll('p');
-  paragraphs.forEach(p => {
-    if (p.textContent.length > 200) {
-      p.style.hyphens = 'auto';
-      p.style.hyphenateCharacter = '-';
-    }
-  });
-  const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
-  headings.forEach(h => {
-    h.style.fontFeatureSettings = '"liga" 1, "dlig" 1, "smcp" 1';
-  });
-});
-</script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -614,13 +568,14 @@ document.addEventListener('DOMContentLoaded', function() {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

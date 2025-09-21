@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.34">
+<meta name="generator" content="quarto-1.8.24">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>9&nbsp; Programmazione – Analisi esplorativa dei dati (EDA) in psicologia</title>
 <style>
@@ -86,14 +86,15 @@ div.csl-indent {
 <link href="../../style/gauss.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-0a72236910a44089af39cd28873f322e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-9908c7b05874059c2106d454ac00f1d0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="../../site_libs/bootstrap/bootstrap-af5d064118ae80f4bafc3d843c3c3870.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -126,33 +127,6 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 </script><style>html{ scroll-behavior: smooth; }</style>
-<script>
-window.MathJax = {
-  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
-  svg: { scale: 1, mtextInheritFont: true, fontCache: 'none', minScale: 1 },
-  options: { renderActions: { addMenu: [0, '', ''] } },
-  loader: { load: ['input/tex','output/svg'] }
-};
-</script><script>
-window.MathJax = {
-  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
-  svg: { scale: 1, mtextInheritFont: true, fontCache: 'none', minScale: 1 },
-  options: { renderActions: { addMenu: [0, '', ''] } },
-  loader: { load: ['input/tex','output/svg'] }
-};
-// Suggerimento CSS: vedi sezione 3 per gli spazi attorno a display math
-</script><script>
-window.MathJax = {
-  tex: {
-    packages: {'[+]': ['boldsymbol']},
-    inlineMath: [['$', '$'], ['\\(', '\\)']]
-  },
-  svg: { fontCache: 'global' }
-};
-</script><link rel="stylesheet" href="../../style/_typography-extras.css">
-<link rel="stylesheet" href="../../style/_code-extras.css">
-<link rel="stylesheet" href="../../style/_math-extras.css">
-<link rel="stylesheet" href="../../style/styles.css">
 </head>
 <body class="nav-sidebar floating quarto-light">
 
@@ -170,7 +144,9 @@ window.MathJax = {
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../../index.html" class="sidebar-logo-link">
+      </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="../../">Analisi esplorativa dei dati (EDA) in psicologia</a> 
         <div class="sidebar-tools-main">
@@ -418,12 +394,12 @@ window.MathJax = {
 </header><section id="introduzione" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="introduzione">Introduzione</h2>
 <p>In questo capitolo esploreremo tre strumenti fondamentali per la scrittura di codice in R: le funzioni, le istruzioni condizionali e i cicli. Questi elementi costituiscono la base per sviluppare script flessibili, efficienti e riutilizzabili, essenziali per ogni programmatore o analista che utilizza R.</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Prerequisiti
+<span class="screen-reader-only">Consiglio</span>Prerequisiti
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -439,24 +415,24 @@ Prerequisiti
 </div>
 </div>
 <div class="callout callout-style-simple callout-caution no-icon callout-titled" title="Preparazione del Notebook">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Preparazione del Notebook
+<span class="screen-reader-only">Attenzione</span>Preparazione del Notebook
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell">
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"code"</span>, <span class="st">"_common.R"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"code"</span>, <span class="st">"_common.R"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/source.html">source</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Load packages</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">"pacman"</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"pacman"</span><span class="op">)</span></span>
-<span><span class="fu">pacman</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pacman/man/p_load.html">p_load</a></span><span class="op">(</span><span class="va">tidyr</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu">pacman</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pacman/man/p_load.html">p_load</a></span><span class="op">(</span><span class="va">tidyr</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -466,13 +442,13 @@ Preparazione del Notebook
 <p>R offre un’ampia gamma di funzioni integrate per supportare l’analisi statistica, la manipolazione dei dati e la visualizzazione grafica, rendendolo uno strumento estremamente versatile per diverse esigenze.</p>
 <p>Esempi di funzioni comuni includono:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Sommare numeri</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Sommare numeri</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>  <span class="co"># Restituisce la somma dei numeri</span></span>
-<span><span class="co">#&gt; [1] 6</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [1] 6</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Creare un grafico semplice</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span>  <span class="co"># Crea un grafico a dispersione dei valori</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Creare un grafico semplice</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span>  <span class="co"># Crea un grafico a dispersione dei valori</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="03_r_programming_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
@@ -505,11 +481,11 @@ Preparazione del Notebook
 </section></section><section id="sintassi-di-una-funzione" class="level3" data-number="9.1.2"><h3 data-number="9.1.2" class="anchored" data-anchor-id="sintassi-di-una-funzione">
 <span class="header-section-number">9.1.2</span> Sintassi di una Funzione</h3>
 <p>La struttura base di una funzione in R è la seguente:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nome_funzione</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">argomenti</span><span class="op">)</span> <span class="op">{</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nome_funzione</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">argomenti</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="co"># Corpo della funzione</span></span>
 <span>  <span class="va">codice</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">risultato</span><span class="op">)</span>  <span class="co"># Facoltativo: restituisce il valore calcolato</span></span>
-<span><span class="op">}</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="op">}</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>
 <strong><code>nome_funzione</code></strong>: Nome della funzione, scelto per descrivere chiaramente la sua finalità.<br>
@@ -525,11 +501,11 @@ Preparazione del Notebook
 </ul>
 <div id="exm-" class="theorem example">
 <p><span class="theorem-title"><strong>Esempio 9.1</strong></span> Immaginiamo di voler creare una funzione per sommare due numeri.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">somma_due</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">a</span>, <span class="va">b</span><span class="op">)</span> <span class="op">{</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">somma_due</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">a</span>, <span class="va">b</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">a</span> <span class="op">+</span> <span class="va">b</span>  <span class="co"># Restituisce la somma dei due numeri</span></span>
-<span><span class="op">}</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="op">}</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Per utilizzarla, basta richiamarla specificando i parametri:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">somma_due</span><span class="op">(</span><span class="fl">5</span>, <span class="fl">3</span><span class="op">)</span>  <span class="co"># Restituisce 8</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">somma_due</span><span class="op">(</span><span class="fl">5</span>, <span class="fl">3</span><span class="op">)</span>  <span class="co"># Restituisce 8</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Questo approccio aiuta a scrivere codice più leggibile e facile da gestire. Ad esempio, se in futuro volessi modificare il comportamento della somma (ad esempio, aggiungere un messaggio di log), basterà intervenire solo all’interno della funzione.</p>
 </div>
 <div id="exm-" class="theorem example">
@@ -541,7 +517,7 @@ Preparazione del Notebook
 </ol>
 <p><strong>Passo 1:</strong> Simulazione dei Dati. Simuliamo i punteggi di 10 individui su 3 subscale:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Simulazione dei punteggi</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Simulazione dei punteggi</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
 <span><span class="va">punteggi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
 <span>  individuo <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Individuo"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span>,</span>
@@ -560,7 +536,7 @@ Preparazione del Notebook
 <span><span class="co">#&gt; 7   Individuo 7        40        49        49</span></span>
 <span><span class="co">#&gt; 8   Individuo 8        34        48        44</span></span>
 <span><span class="co">#&gt; 9   Individuo 9        49        58        47</span></span>
-<span><span class="co">#&gt; 10 Individuo 10        43        43        41</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; 10 Individuo 10        43        43        41</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>La funzione <code><a href="https://rdrr.io/r/base/sample.html">sample()</a></code> in R è utilizzata per estrarre casualmente un sottoinsieme di valori da un vettore. Nell’esempio sopra, <code><a href="https://rdrr.io/r/base/sample.html">sample()</a></code> viene utilizzata per generare casualmente i punteggi delle subscale dei test psicometrici.</p>
 <p>Nell’istruzione <code>subscale1 &lt;- sample(30:50, 10, replace = TRUE)</code></p>
@@ -578,29 +554,29 @@ Preparazione del Notebook
 <p><strong>Calcolo del punteggio totale per ogni individuo</strong><br>
 Questa funzione somma i punteggi delle subscale di un individuo:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">calcola_totale</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">subscale1</span>, <span class="va">subscale2</span>, <span class="va">subscale3</span><span class="op">)</span> <span class="op">{</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">calcola_totale</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">subscale1</span>, <span class="va">subscale2</span>, <span class="va">subscale3</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">subscale1</span> <span class="op">+</span> <span class="va">subscale2</span> <span class="op">+</span> <span class="va">subscale3</span><span class="op">)</span></span>
-<span><span class="op">}</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="op">}</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </li>
 <li>
 <p><strong>Trovare il punteggio massimo nel campione</strong><br>
 Questa funzione accetta un vettore di punteggi totali e restituisce il valore massimo:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">trova_massimo</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">punteggi_totali</span><span class="op">)</span> <span class="op">{</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">trova_massimo</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">punteggi_totali</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">punteggi_totali</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">}</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="op">}</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </li>
 <li>
 <p><strong>Individuare l’individuo con il punteggio massimo</strong><br>
 Questa funzione accetta un data frame con i punteggi e restituisce il nome dell’individuo con il punteggio più alto:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">trova_individuo_massimo</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">punteggi</span><span class="op">)</span> <span class="op">{</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">trova_individuo_massimo</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">punteggi</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">punteggi_totali</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowSums</a></span><span class="op">(</span><span class="va">punteggi</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"subscale1"</span>, <span class="st">"subscale2"</span>, <span class="st">"subscale3"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span>  <span class="va">indice_massimo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.min.html">which.max</a></span><span class="op">(</span><span class="va">punteggi_totali</span><span class="op">)</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">punteggi</span><span class="op">$</span><span class="va">individuo</span><span class="op">[</span><span class="va">indice_massimo</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="op">}</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="op">}</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>La funzione <code><a href="https://rdrr.io/r/base/which.min.html">which.max()</a></code> restituisce l’indice della posizione in cui si trova il valore massimo in un vettore.</p>
 </li>
@@ -611,7 +587,7 @@ Questa funzione accetta un data frame con i punteggi e restituisce il nome dell�
 <p><strong>Calcolo dei punteggi totali per ogni individuo</strong><br>
 Applichiamo la funzione ai dati simulati:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">punteggi</span><span class="op">$</span><span class="va">punteggio_totale</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span><span class="op">(</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">punteggi</span><span class="op">$</span><span class="va">punteggio_totale</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span><span class="op">(</span></span>
 <span>  <span class="va">punteggi</span>, <span class="fu">calcola_totale</span><span class="op">(</span><span class="va">subscale1</span>, <span class="va">subscale2</span>, <span class="va">subscale3</span><span class="op">)</span></span>
 <span> <span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">punteggi</span><span class="op">)</span></span>
@@ -625,23 +601,23 @@ Applichiamo la funzione ai dati simulati:</p>
 <span><span class="co">#&gt; 7   Individuo 7        40        49        49              138</span></span>
 <span><span class="co">#&gt; 8   Individuo 8        34        48        44              126</span></span>
 <span><span class="co">#&gt; 9   Individuo 9        49        58        47              154</span></span>
-<span><span class="co">#&gt; 10 Individuo 10        43        43        41              127</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; 10 Individuo 10        43        43        41              127</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </li>
 <li>
 <p><strong>Troviamo il punteggio massimo nel campione</strong></p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">massimo</span> <span class="op">&lt;-</span> <span class="fu">trova_massimo</span><span class="op">(</span><span class="va">punteggi</span><span class="op">$</span><span class="va">punteggio_totale</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">massimo</span> <span class="op">&lt;-</span> <span class="fu">trova_massimo</span><span class="op">(</span><span class="va">punteggi</span><span class="op">$</span><span class="va">punteggio_totale</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">massimo</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 157</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [1] 157</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </li>
 <li>
 <p><strong>Troviamo chi ha il punteggio massimo</strong></p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">individuo_massimo</span> <span class="op">&lt;-</span> <span class="fu">trova_individuo_massimo</span><span class="op">(</span><span class="va">punteggi</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">individuo_massimo</span> <span class="op">&lt;-</span> <span class="fu">trova_individuo_massimo</span><span class="op">(</span><span class="va">punteggi</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">individuo_massimo</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Individuo 2"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [1] "Individuo 2"</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </li>
 </ol>
@@ -654,18 +630,18 @@ Applichiamo la funzione ai dati simulati:</p>
 <p>Le istruzioni condizionali permettono di introdurre logica nel tuo codice. Ad esempio, l’operazione <code>x * y</code> si limita a moltiplicare i valori di <code>x</code> e <code>y</code>, senza alcuna logica aggiunta. Con le istruzioni condizionali, puoi dire al programma di eseguire diverse operazioni a seconda che una condizione sia vera (<code>TRUE</code>) o falsa (<code>FALSE</code>).</p>
 <p>L’istruzione condizionale più comune in R è <code>if</code>. Può essere letta come: <strong>“Se la condizione è vera, esegui un’azione”</strong>. Con <code>else</code>, si estende la logica: <strong>“Se la condizione è vera, fai qualcosa; altrimenti fai qualcos’altro”</strong>.</p>
 <p>La struttura generale è questa:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="va">condizione</span><span class="op">)</span> <span class="op">{</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="va">condizione</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="co"># Codice eseguito se la condizione è TRUE</span></span>
 <span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
 <span>  <span class="co"># Codice eseguito se la condizione è FALSE</span></span>
-<span><span class="op">}</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="op">}</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Immagina questa situazione:</p>
 <ul>
 <li>“Se un partecipante al test psicologico riporta un punteggio elevato sulla scala di ansia (es. &gt; 15), consigliagli un esercizio di rilassamento. Altrimenti, non è necessario.”</li>
 </ul>
 <p>Vediamo come rappresentare questa situazione in R.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">anxiety_score</span> <span class="op">&lt;-</span> <span class="fl">18</span> <span class="co"># Punteggio riportato dal partecipante</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">anxiety_score</span> <span class="op">&lt;-</span> <span class="fl">18</span> <span class="co"># Punteggio riportato dal partecipante</span></span>
 <span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="va">anxiety_score</span> <span class="op">&gt;</span> <span class="fl">15</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">exercise</span> <span class="op">&lt;-</span> <span class="st">"rilassamento"</span></span>
@@ -674,7 +650,7 @@ Applichiamo la funzione ai dati simulati:</p>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">exercise</span></span>
-<span><span class="co">#&gt; [1] "rilassamento"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [1] "rilassamento"</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Se il punteggio è maggiore di 15, il risultato sarà:</p>
 <pre><code>[1] "rilassamento"</code></pre>
@@ -685,20 +661,20 @@ Applichiamo la funzione ai dati simulati:</p>
 </h3>
 <p>Un’alternativa più compatta a <code>if</code> e <code>else</code> è la funzione <code><a href="https://rdrr.io/r/base/ifelse.html">ifelse()</a></code>, utile soprattutto per vettori. Ad esempio, supponiamo di avere i punteggi di ansia di un gruppo di partecipanti e vogliamo decidere se assegnare un esercizio di rilassamento a ciascuno:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">anxiety_scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">12</span>, <span class="fl">18</span>, <span class="fl">9</span>, <span class="fl">22</span>, <span class="fl">15</span><span class="op">)</span></span>
-<span><span class="va">exercises</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">anxiety_scores</span> <span class="op">&gt;</span> <span class="fl">15</span>, <span class="st">"rilassamento"</span>, <span class="st">"nessun esercizio"</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">anxiety_scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">12</span>, <span class="fl">18</span>, <span class="fl">9</span>, <span class="fl">22</span>, <span class="fl">15</span><span class="op">)</span></span>
+<span><span class="va">exercises</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">anxiety_scores</span> <span class="op">&gt;</span> <span class="fl">15</span>, <span class="st">"rilassamento"</span>, <span class="st">"nessun esercizio"</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Il risultato sarà:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">exercises</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">exercises</span></span>
 <span><span class="co">#&gt; [1] "nessun esercizio" "rilassamento"     "nessun esercizio" "rilassamento"    </span></span>
-<span><span class="co">#&gt; [5] "nessun esercizio"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [5] "nessun esercizio"</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section><section id="creare-una-funzione-con-istruzioni-condizionali" class="level3" data-number="9.2.2"><h3 data-number="9.2.2" class="anchored" data-anchor-id="creare-una-funzione-con-istruzioni-condizionali">
 <span class="header-section-number">9.2.2</span> Creare una Funzione con Istruzioni Condizionali</h3>
 <p>Le istruzioni condizionali possono essere racchiuse in una funzione per rendere il codice più flessibile e riutilizzabile. Ad esempio, supponiamo di voler personalizzare un feedback per un partecipante in base al punteggio ottenuto in un questionario:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">feedback</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">score</span><span class="op">)</span> <span class="op">{</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">feedback</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">score</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="kw">if</span> <span class="op">(</span><span class="va">score</span> <span class="op">&gt;</span> <span class="fl">15</span><span class="op">)</span> <span class="op">{</span></span>
 <span>        <span class="st">"Consigliamo un esercizio di rilassamento."</span></span>
 <span>    <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">score</span> <span class="op">&gt;</span> <span class="fl">10</span><span class="op">)</span> <span class="op">{</span></span>
@@ -706,19 +682,19 @@ Applichiamo la funzione ai dati simulati:</p>
 <span>    <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
 <span>        <span class="st">"Nessun intervento necessario."</span></span>
 <span>    <span class="op">}</span></span>
-<span><span class="op">}</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="op">}</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">feedback</span><span class="op">(</span><span class="fl">18</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Consigliamo un esercizio di rilassamento."</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">feedback</span><span class="op">(</span><span class="fl">18</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "Consigliamo un esercizio di rilassamento."</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">feedback</span><span class="op">(</span><span class="fl">12</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Monitoriamo la situazione, ma non è necessario alcun intervento."</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">feedback</span><span class="op">(</span><span class="fl">12</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "Monitoriamo la situazione, ma non è necessario alcun intervento."</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">feedback</span><span class="op">(</span><span class="fl">8</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Nessun intervento necessario."</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">feedback</span><span class="op">(</span><span class="fl">8</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "Nessun intervento necessario."</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>In conclusione, le istruzioni condizionali come <code>if</code>, <code>else</code> e <code><a href="https://rdrr.io/r/base/ifelse.html">ifelse()</a></code> sono strumenti fondamentali per introdurre logica e controllo nel tuo codice. Puoi usarle per prendere decisioni, gestire errori e rendere il tuo codice più flessibile ed efficiente. Creare funzioni che incorporano queste istruzioni è un passo fondamentale per scrivere codice ordinato e riutilizzabile in contesti psicologici e non solo.</p>
 </section><section id="combinare-operatori-logici-in-r" class="level3" data-number="9.2.3"><h3 data-number="9.2.3" class="anchored" data-anchor-id="combinare-operatori-logici-in-r">
@@ -733,7 +709,7 @@ Applichiamo la funzione ai dati simulati:</p>
 <p>Vogliamo creare una funzione che prenda questi due fattori e restituisca un messaggio che descrive come potrebbe essere stata la giornata della persona.</p>
 <p>Ecco come possiamo costruire la funzione:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">good_day</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">low_stress</span>, <span class="va">high_support</span><span class="op">)</span> <span class="op">{</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">good_day</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">low_stress</span>, <span class="va">high_support</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="kw">if</span> <span class="op">(</span><span class="va">low_stress</span> <span class="op">==</span> <span class="cn">TRUE</span> <span class="op">&amp;&amp;</span> <span class="va">high_support</span> <span class="op">==</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">{</span></span>
 <span>        <span class="st">"Giornata fantastica! Ti senti calmo e supportato."</span></span>
 <span>    <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">low_stress</span> <span class="op">==</span> <span class="cn">FALSE</span> <span class="op">&amp;&amp;</span> <span class="va">high_support</span> <span class="op">==</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">{</span></span>
@@ -743,28 +719,28 @@ Applichiamo la funzione ai dati simulati:</p>
 <span>    <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">low_stress</span> <span class="op">==</span> <span class="cn">FALSE</span> <span class="op">&amp;&amp;</span> <span class="va">high_support</span> <span class="op">==</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
 <span>        <span class="st">"Giornata difficile: stress elevato e poco supporto sociale."</span></span>
 <span>    <span class="op">}</span></span>
-<span><span class="op">}</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="op">}</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Esempi di utilizzo.</p>
 <p>Caso 1: Stress basso e supporto sociale alto</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">good_day</span><span class="op">(</span>low_stress <span class="op">=</span> <span class="cn">TRUE</span>, high_support <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Giornata fantastica! Ti senti calmo e supportato."</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">good_day</span><span class="op">(</span>low_stress <span class="op">=</span> <span class="cn">TRUE</span>, high_support <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "Giornata fantastica! Ti senti calmo e supportato."</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Caso 2: Stress elevato e supporto sociale alto.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">good_day</span><span class="op">(</span><span class="cn">FALSE</span>, <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Il supporto sociale ti aiuta a gestire lo stress elevato."</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">good_day</span><span class="op">(</span><span class="cn">FALSE</span>, <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "Il supporto sociale ti aiuta a gestire lo stress elevato."</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Caso 3: Stress basso e supporto sociale basso.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">good_day</span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Nonostante lo stress sia basso, la mancanza di supporto sociale pesa."</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">good_day</span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "Nonostante lo stress sia basso, la mancanza di supporto sociale pesa."</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Caso 4: Stress elevato e supporto sociale basso.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">good_day</span><span class="op">(</span><span class="cn">FALSE</span>, <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Giornata difficile: stress elevato e poco supporto sociale."</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">good_day</span><span class="op">(</span><span class="cn">FALSE</span>, <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "Giornata difficile: stress elevato e poco supporto sociale."</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>La funzione considera tutte le combinazioni di stress e supporto sociale:</p>
 <ol type="1">
@@ -785,7 +761,7 @@ Applichiamo la funzione ai dati simulati:</p>
 <strong><code>==</code> (uguale a)</strong>: Verifica se una variabile è vera o falsa.</li>
 </ul>
 <p>Ad esempio, questa condizione:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (low_stress <span class="sc">==</span> <span class="cn">TRUE</span> <span class="sc">&amp;&amp;</span> high_support <span class="sc">==</span> <span class="cn">TRUE</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (low_stress <span class="sc">==</span> <span class="cn">TRUE</span> <span class="sc">&amp;&amp;</span> high_support <span class="sc">==</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <p>verifica se il livello di stress è basso <strong>e</strong> il supporto sociale è alto.</p>
 <p>In conclusione, questa funzione dimostra come combinare condizioni logiche complesse utilizzando operatori logici come <code>&amp;&amp;</code> (AND) e <code>||</code> (OR). Grazie a questi strumenti, possiamo gestire facilmente logiche più articolate, mantenendo il codice leggibile e funzionale.</p>
 </section><section id="gli-operatori-logici-in-r" class="level3" data-number="9.2.4"><h3 data-number="9.2.4" class="anchored" data-anchor-id="gli-operatori-logici-in-r">
@@ -872,14 +848,14 @@ Applichiamo la funzione ai dati simulati:</p>
 </h3>
 <p>Il ciclo <code>for</code> è il più utilizzato per eseguire un’operazione un numero definito di volte. Ecco un esempio base:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span> <span class="op">{</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span><span class="co">#&gt; [1] 1</span></span>
 <span><span class="co">#&gt; [1] 2</span></span>
 <span><span class="co">#&gt; [1] 3</span></span>
 <span><span class="co">#&gt; [1] 4</span></span>
-<span><span class="co">#&gt; [1] 5</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [1] 5</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><strong>Come funziona?</strong></p>
 <ul>
@@ -890,21 +866,21 @@ Applichiamo la funzione ai dati simulati:</p>
 <p><strong>Aggiungere logica nel corpo del ciclo</strong></p>
 <p>Possiamo aggiungere operazioni all’interno del ciclo, come ad esempio sommare 1 a ogni valore:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span> <span class="op">{</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">i</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span><span class="co">#&gt; [1] 2</span></span>
 <span><span class="co">#&gt; [1] 3</span></span>
 <span><span class="co">#&gt; [1] 4</span></span>
 <span><span class="co">#&gt; [1] 5</span></span>
-<span><span class="co">#&gt; [1] 6</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [1] 6</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section><section id="il-ciclo-while" class="level3" data-number="9.3.2"><h3 data-number="9.3.2" class="anchored" data-anchor-id="il-ciclo-while">
 <span class="header-section-number">9.3.2</span> Il ciclo <code>while</code>
 </h3>
 <p>Il ciclo <code>while</code> continua a eseguire le istruzioni fino a quando una condizione logica è soddisfatta. Ecco un esempio:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">i</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">i</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
 <span><span class="kw">while</span> <span class="op">(</span><span class="va">i</span> <span class="op">&lt;=</span> <span class="fl">4</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">i</span> <span class="op">&lt;-</span> <span class="va">i</span> <span class="op">+</span> <span class="fl">1</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span></span>
@@ -913,7 +889,7 @@ Applichiamo la funzione ai dati simulati:</p>
 <span><span class="co">#&gt; [1] 2</span></span>
 <span><span class="co">#&gt; [1] 3</span></span>
 <span><span class="co">#&gt; [1] 4</span></span>
-<span><span class="co">#&gt; [1] 5</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [1] 5</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><strong>Come funziona?</strong></p>
 <ul>
@@ -925,7 +901,7 @@ Applichiamo la funzione ai dati simulati:</p>
 </h3>
 <p>Il ciclo <code>repeat</code> esegue il codice indefinitamente, a meno che non venga interrotto con un’istruzione <code><a href="https://rdrr.io/r/base/Control.html">break</a></code>:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">i</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">i</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
 <span><span class="kw">repeat</span> <span class="op">{</span></span>
 <span>    <span class="va">i</span> <span class="op">&lt;-</span> <span class="va">i</span> <span class="op">+</span> <span class="fl">1</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span></span>
@@ -937,7 +913,7 @@ Applichiamo la funzione ai dati simulati:</p>
 <span><span class="co">#&gt; [1] 2</span></span>
 <span><span class="co">#&gt; [1] 3</span></span>
 <span><span class="co">#&gt; [1] 4</span></span>
-<span><span class="co">#&gt; [1] 5</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [1] 5</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><strong>Quando usarlo?</strong></p>
 <p>Il ciclo <code>repeat</code> è raro e viene utilizzato solo in situazioni molto particolari. Nella maggior parte dei casi, <code>for</code> o <code>while</code> sono più adatti.</p>
@@ -951,7 +927,7 @@ Applichiamo la funzione ai dati simulati:</p>
 <p><code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code> esegue una funzione su ciascun elemento di una lista o vettore e restituisce una lista con i risultati.</p>
 <p>Esempio:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">4</span>, <span class="kw">function</span><span class="op">(</span><span class="va">a</span><span class="op">)</span> <span class="op">{</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">4</span>, <span class="kw">function</span><span class="op">(</span><span class="va">a</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">a</span> <span class="op">+</span> <span class="fl">1</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
@@ -967,17 +943,17 @@ Applichiamo la funzione ai dati simulati:</p>
 <span><span class="co">#&gt; [1] 4</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[5]]</span></span>
-<span><span class="co">#&gt; [1] 5</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [1] 5</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section><section id="la-funzione-sapply" class="level4" data-number="9.3.4.2"><h4 data-number="9.3.4.2" class="anchored" data-anchor-id="la-funzione-sapply">
 <span class="header-section-number">9.3.4.2</span> La funzione <code>sapply()</code>
 </h4>
 <p><code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code> restituisce una lista, ma se vuoi un vettore come output, usa <code><a href="https://rdrr.io/r/base/lapply.html">sapply()</a></code>:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">4</span>, <span class="kw">function</span><span class="op">(</span><span class="va">a</span><span class="op">)</span> <span class="op">{</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">4</span>, <span class="kw">function</span><span class="op">(</span><span class="va">a</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">a</span> <span class="op">+</span> <span class="fl">1</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 1 2 3 4 5</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [1] 1 2 3 4 5</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section></section><section id="quando-usare-i-cicli" class="level3" data-number="9.3.5"><h3 data-number="9.3.5" class="anchored" data-anchor-id="quando-usare-i-cicli">
 <span class="header-section-number">9.3.5</span> Quando usare i cicli?</h3>
@@ -1004,12 +980,12 @@ Applichiamo la funzione ai dati simulati:</p>
 <p>Le istruzioni condizionali, come <code>if</code>, <code>else</code> e <code><a href="https://rdrr.io/r/base/ifelse.html">ifelse()</a></code>, sono fondamentali per introdurre logica e controllo nel codice. Permettono di gestire scenari diversi e prendere decisioni dinamiche, migliorando la flessibilità e l’efficienza dei tuoi script. Combinando queste istruzioni con operatori logici come <code>&amp;&amp;</code> e <code>||</code>, puoi affrontare situazioni complesse con un codice chiaro e leggibile.</p>
 <p>I cicli sono potenti strumenti per eseguire operazioni ripetitive, ma in R il loro utilizzo dovrebbe essere limitato ai casi in cui non esistono alternative più efficienti. Le funzioni <code><a href="https://rdrr.io/r/base/apply.html">apply()</a></code> e simili rappresentano spesso un’opzione migliore per manipolare dati in modo più rapido e leggibile.</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled" title="Esercizio">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Esercizio
+<span class="screen-reader-only">Consiglio</span>Esercizio
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -1100,12 +1076,12 @@ Esercizio
 </div>
 </div>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled" title="Soluzione">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Soluzione
+<span class="screen-reader-only">Consiglio</span>Soluzione
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -1121,10 +1097,10 @@ Soluzione
 </li>
 <li>
 <p><strong>Sintassi delle funzioni</strong></p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nome_funzione</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">argomenti</span><span class="op">)</span> <span class="op">{</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nome_funzione</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">argomenti</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="co"># Corpo della funzione</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">risultato</span><span class="op">)</span></span>
-<span><span class="op">}</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="op">}</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </li>
 <li>
 <p><strong>Uso di istruzioni condizionali</strong></p>
@@ -1132,17 +1108,17 @@ Soluzione
 <li>
 <code>if</code>: Controlla una condizione e esegue codice solo se è vera.</li>
 </ul>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="va">x</span> <span class="op">&gt;</span> <span class="fl">10</span><span class="op">)</span> <span class="op">{</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="st">"Maggiore di 10"</span><span class="op">)</span> <span class="op">}</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="va">x</span> <span class="op">&gt;</span> <span class="fl">10</span><span class="op">)</span> <span class="op">{</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="st">"Maggiore di 10"</span><span class="op">)</span> <span class="op">}</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>
 <code>else</code>: Esegue codice alternativo se la condizione è falsa.</li>
 </ul>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="va">x</span> <span class="op">&gt;</span> <span class="fl">10</span><span class="op">)</span> <span class="op">{</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="st">"Maggiore di 10"</span><span class="op">)</span> <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="st">"10 o meno"</span><span class="op">)</span> <span class="op">}</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="va">x</span> <span class="op">&gt;</span> <span class="fl">10</span><span class="op">)</span> <span class="op">{</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="st">"Maggiore di 10"</span><span class="op">)</span> <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="st">"10 o meno"</span><span class="op">)</span> <span class="op">}</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>
 <code><a href="https://rdrr.io/r/base/ifelse.html">ifelse()</a></code>: Alternativa vettorializzata a <code>if</code>.</li>
 </ul>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">x</span> <span class="op">&gt;</span> <span class="fl">10</span>, <span class="st">"Alto"</span>, <span class="st">"Basso"</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">x</span> <span class="op">&gt;</span> <span class="fl">10</span>, <span class="st">"Alto"</span>, <span class="st">"Basso"</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </li>
 <li>
 <p><strong>Cicli in R</strong></p>
@@ -1150,32 +1126,32 @@ Soluzione
 <li>
 <code>for</code>: Itera su una sequenza.</li>
 </ul>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span> <span class="op">{</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">}</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span> <span class="op">{</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">}</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>
 <code>while</code>: Continua fino a quando una condizione è vera.</li>
 </ul>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">i</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
-<span><span class="kw">while</span> <span class="op">(</span><span class="va">i</span> <span class="op">&lt;=</span> <span class="fl">5</span><span class="op">)</span> <span class="op">{</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span>; <span class="va">i</span> <span class="op">&lt;-</span> <span class="va">i</span> <span class="op">+</span> <span class="fl">1</span> <span class="op">}</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">i</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
+<span><span class="kw">while</span> <span class="op">(</span><span class="va">i</span> <span class="op">&lt;=</span> <span class="fl">5</span><span class="op">)</span> <span class="op">{</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span>; <span class="va">i</span> <span class="op">&lt;-</span> <span class="va">i</span> <span class="op">+</span> <span class="fl">1</span> <span class="op">}</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>
 <code>repeat</code>: Ripete fino a un <code><a href="https://rdrr.io/r/base/Control.html">break</a></code>.</li>
 </ul>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">i</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
-<span><span class="kw">repeat</span> <span class="op">{</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span>; <span class="va">i</span> <span class="op">&lt;-</span> <span class="va">i</span> <span class="op">+</span> <span class="fl">1</span>; <span class="kw">if</span> <span class="op">(</span><span class="va">i</span> <span class="op">&gt;</span> <span class="fl">5</span><span class="op">)</span> <span class="kw">break</span> <span class="op">}</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">i</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
+<span><span class="kw">repeat</span> <span class="op">{</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span>; <span class="va">i</span> <span class="op">&lt;-</span> <span class="va">i</span> <span class="op">+</span> <span class="fl">1</span>; <span class="kw">if</span> <span class="op">(</span><span class="va">i</span> <span class="op">&gt;</span> <span class="fl">5</span><span class="op">)</span> <span class="kw">break</span> <span class="op">}</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </li>
 </ol>
 <p><strong>Parte 2: Creazione ed Esecuzione in R</strong></p>
 <ol start="5" type="1">
 <li>
 <p><strong>Creazione della funzione per il punteggio totale SWLS</strong></p>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">calcola_SWLS</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">punteggi</span><span class="op">)</span> <span class="op">{</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">calcola_SWLS</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">punteggi</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">punteggi</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">}</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="op">}</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </li>
 <li>
 <p><strong>Condizione per determinare la soddisfazione</strong></p>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">valuta_soddisfazione</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">score</span><span class="op">)</span> <span class="op">{</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">valuta_soddisfazione</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">score</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="kw">if</span> <span class="op">(</span><span class="va">score</span> <span class="op">&gt;</span> <span class="fl">24</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="st">"Alta soddisfazione"</span><span class="op">)</span></span>
 <span>  <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">score</span> <span class="op">&gt;=</span> <span class="fl">15</span><span class="op">)</span> <span class="op">{</span></span>
@@ -1183,61 +1159,61 @@ Soluzione
 <span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
 <span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="st">"Bassa soddisfazione"</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
-<span><span class="op">}</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="op">}</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </li>
 <li>
 <p><strong>Applicazione della funzione a più individui</strong></p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">punteggi_lista</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">25</span>, <span class="fl">27</span>, <span class="fl">22</span>, <span class="fl">24</span>, <span class="fl">28</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">18</span>, <span class="fl">20</span>, <span class="fl">17</span>, <span class="fl">16</span>, <span class="fl">19</span><span class="op">)</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">punteggi_lista</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">25</span>, <span class="fl">27</span>, <span class="fl">22</span>, <span class="fl">24</span>, <span class="fl">28</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">18</span>, <span class="fl">20</span>, <span class="fl">17</span>, <span class="fl">16</span>, <span class="fl">19</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">punteggi</span> <span class="kw">in</span> <span class="va">punteggi_lista</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu">valuta_soddisfazione</span><span class="op">(</span><span class="fu">calcola_SWLS</span><span class="op">(</span><span class="va">punteggi</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">}</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="op">}</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </li>
 <li>
 <p><strong>Uso di <code><a href="https://rdrr.io/r/base/ifelse.html">ifelse()</a></code></strong></p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">punteggi_totali</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">28</span>, <span class="fl">19</span>, <span class="fl">15</span>, <span class="fl">10</span>, <span class="fl">25</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">punteggi_totali</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">28</span>, <span class="fl">19</span>, <span class="fl">15</span>, <span class="fl">10</span>, <span class="fl">25</span><span class="op">)</span></span>
 <span><span class="va">soddisfazione</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">punteggi_totali</span> <span class="op">&gt;</span> <span class="fl">24</span>, <span class="st">"Alta"</span>, <span class="st">"Bassa"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">soddisfazione</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">soddisfazione</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </li>
 <li>
 <p><strong>Ciclo <code>while</code> per controllare input</strong></p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">score</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">score</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
 <span><span class="kw">while</span> <span class="op">(</span><span class="va">score</span> <span class="op">&lt;</span> <span class="fl">5</span> <span class="op">||</span> <span class="va">score</span> <span class="op">&gt;</span> <span class="fl">35</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">score</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/readline.html">readline</a></span><span class="op">(</span>prompt <span class="op">=</span> <span class="st">"Inserisci un punteggio SWLS (5-35): "</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">}</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="op">}</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </li>
 <li><p><strong>Esportazione dei dati</strong><br></p></li>
 </ol>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>Punteggio <span class="op">=</span> <span class="va">punteggi_totali</span>, Soddisfazione <span class="op">=</span> <span class="va">soddisfazione</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.csv</a></span><span class="op">(</span><span class="va">df</span>, <span class="st">"swls_results.csv"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>Punteggio <span class="op">=</span> <span class="va">punteggi_totali</span>, Soddisfazione <span class="op">=</span> <span class="va">soddisfazione</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.csv</a></span><span class="op">(</span><span class="va">df</span>, <span class="st">"swls_results.csv"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Conclusione</strong></p>
 <p>Questi esercizi hanno mostrato come scrivere funzioni, utilizzare condizioni e cicli per strutturare meglio il codice in R.</p>
 </div>
 </div>
 </div>
 <div class="callout callout-style-simple callout-note no-icon callout-titled" title="Informazioni sull'ambiente di sviluppo">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Informazioni sull’ambiente di sviluppo
+<span class="screen-reader-only">Nota</span>Informazioni sull’ambiente di sviluppo
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.5.1 (2025-06-13)</span></span>
 <span><span class="co">#&gt; Platform: aarch64-apple-darwin20</span></span>
-<span><span class="co">#&gt; Running under: macOS Sequoia 15.6.1</span></span>
+<span><span class="co">#&gt; Running under: macOS Tahoe 26.0</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
 <span><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRblas.0.dylib </span></span>
 <span><span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; locale:</span></span>
-<span><span class="co">#&gt; [1] C/UTF-8/C/C/C/C</span></span>
+<span><span class="co">#&gt; [1] C.UTF-8/UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; time zone: Europe/Rome</span></span>
 <span><span class="co">#&gt; tzcode source: internal</span></span>
@@ -1246,43 +1222,43 @@ Informazioni sull’ambiente di sviluppo
 <span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt;  [1] pillar_1.11.0         tinytable_0.13.0      patchwork_1.3.2      </span></span>
+<span><span class="co">#&gt;  [1] pillar_1.11.1         tinytable_0.13.0      patchwork_1.3.2      </span></span>
 <span><span class="co">#&gt;  [4] ggdist_3.3.3          tidybayes_3.0.7       bayesplot_1.14.0     </span></span>
-<span><span class="co">#&gt;  [7] ggplot2_3.5.2         reliabilitydiag_0.2.1 priorsense_1.1.1     </span></span>
+<span><span class="co">#&gt;  [7] ggplot2_4.0.0         reliabilitydiag_0.2.1 priorsense_1.1.1     </span></span>
 <span><span class="co">#&gt; [10] posterior_1.6.1       loo_2.8.0             rstan_2.32.7         </span></span>
-<span><span class="co">#&gt; [13] StanHeaders_2.32.10   brms_2.22.0           Rcpp_1.1.0           </span></span>
+<span><span class="co">#&gt; [13] StanHeaders_2.32.10   brms_2.23.0           Rcpp_1.1.0           </span></span>
 <span><span class="co">#&gt; [16] sessioninfo_1.2.3     conflicted_1.2.0      janitor_2.2.1        </span></span>
 <span><span class="co">#&gt; [19] matrixStats_1.5.0     modelr_0.1.11         tibble_3.3.0         </span></span>
 <span><span class="co">#&gt; [22] dplyr_1.1.4           tidyr_1.3.1           rio_1.2.3            </span></span>
-<span><span class="co">#&gt; [25] here_1.0.1           </span></span>
+<span><span class="co">#&gt; [25] here_1.0.2           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span><span class="co">#&gt;  [1] svUnit_1.0.8          tidyselect_1.2.1      farver_2.1.2         </span></span>
-<span><span class="co">#&gt;  [4] fastmap_1.2.0         TH.data_1.1-4         tensorA_0.36.2.1     </span></span>
-<span><span class="co">#&gt;  [7] pacman_0.5.1          digest_0.6.37         timechange_0.3.0     </span></span>
-<span><span class="co">#&gt; [10] estimability_1.5.1    lifecycle_1.0.4       survival_3.8-3       </span></span>
-<span><span class="co">#&gt; [13] magrittr_2.0.3        compiler_4.5.1        rlang_1.1.6          </span></span>
-<span><span class="co">#&gt; [16] tools_4.5.1           knitr_1.50            bridgesampling_1.1-2 </span></span>
-<span><span class="co">#&gt; [19] htmlwidgets_1.6.4     curl_7.0.0            pkgbuild_1.4.8       </span></span>
-<span><span class="co">#&gt; [22] RColorBrewer_1.1-3    abind_1.4-8           multcomp_1.4-28      </span></span>
-<span><span class="co">#&gt; [25] withr_3.0.2           purrr_1.1.0           grid_4.5.1           </span></span>
-<span><span class="co">#&gt; [28] stats4_4.5.1          colorspace_2.1-1      xtable_1.8-4         </span></span>
-<span><span class="co">#&gt; [31] inline_0.3.21         emmeans_1.11.2-8      scales_1.4.0         </span></span>
-<span><span class="co">#&gt; [34] MASS_7.3-65           cli_3.6.5             mvtnorm_1.3-3        </span></span>
-<span><span class="co">#&gt; [37] rmarkdown_2.29        ragg_1.5.0            generics_0.1.4       </span></span>
-<span><span class="co">#&gt; [40] RcppParallel_5.1.11-1 cachem_1.1.0          stringr_1.5.1        </span></span>
-<span><span class="co">#&gt; [43] splines_4.5.1         parallel_4.5.1        vctrs_0.6.5          </span></span>
-<span><span class="co">#&gt; [46] V8_7.0.0              Matrix_1.7-4          sandwich_3.1-1       </span></span>
-<span><span class="co">#&gt; [49] jsonlite_2.0.0        arrayhelpers_1.1-0    systemfonts_1.2.3    </span></span>
-<span><span class="co">#&gt; [52] glue_1.8.0            codetools_0.2-20      distributional_0.5.0 </span></span>
-<span><span class="co">#&gt; [55] lubridate_1.9.4       stringi_1.8.7         gtable_0.3.6         </span></span>
-<span><span class="co">#&gt; [58] QuickJSR_1.8.0        htmltools_0.5.8.1     Brobdingnag_1.2-9    </span></span>
-<span><span class="co">#&gt; [61] R6_2.6.1              textshaping_1.0.3     rprojroot_2.1.1      </span></span>
-<span><span class="co">#&gt; [64] evaluate_1.0.5        lattice_0.22-7        backports_1.5.0      </span></span>
-<span><span class="co">#&gt; [67] memoise_2.0.1         broom_1.0.9           snakecase_0.11.1     </span></span>
-<span><span class="co">#&gt; [70] rstantools_2.5.0      coda_0.19-4.1         gridExtra_2.3        </span></span>
-<span><span class="co">#&gt; [73] nlme_3.1-168          checkmate_2.3.3       xfun_0.53            </span></span>
-<span><span class="co">#&gt; [76] zoo_1.8-14            pkgconfig_2.0.3</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;  [4] S7_0.2.0              fastmap_1.2.0         TH.data_1.1-4        </span></span>
+<span><span class="co">#&gt;  [7] tensorA_0.36.2.1      pacman_0.5.1          digest_0.6.37        </span></span>
+<span><span class="co">#&gt; [10] timechange_0.3.0      estimability_1.5.1    lifecycle_1.0.4      </span></span>
+<span><span class="co">#&gt; [13] survival_3.8-3        magrittr_2.0.4        compiler_4.5.1       </span></span>
+<span><span class="co">#&gt; [16] rlang_1.1.6           tools_4.5.1           knitr_1.50           </span></span>
+<span><span class="co">#&gt; [19] bridgesampling_1.1-2  htmlwidgets_1.6.4     curl_7.0.0           </span></span>
+<span><span class="co">#&gt; [22] pkgbuild_1.4.8        RColorBrewer_1.1-3    abind_1.4-8          </span></span>
+<span><span class="co">#&gt; [25] multcomp_1.4-28       withr_3.0.2           purrr_1.1.0          </span></span>
+<span><span class="co">#&gt; [28] grid_4.5.1            stats4_4.5.1          colorspace_2.1-1     </span></span>
+<span><span class="co">#&gt; [31] xtable_1.8-4          inline_0.3.21         emmeans_1.11.2-8     </span></span>
+<span><span class="co">#&gt; [34] scales_1.4.0          MASS_7.3-65           cli_3.6.5            </span></span>
+<span><span class="co">#&gt; [37] mvtnorm_1.3-3         rmarkdown_2.29        ragg_1.5.0           </span></span>
+<span><span class="co">#&gt; [40] generics_0.1.4        RcppParallel_5.1.11-1 cachem_1.1.0         </span></span>
+<span><span class="co">#&gt; [43] stringr_1.5.2         splines_4.5.1         parallel_4.5.1       </span></span>
+<span><span class="co">#&gt; [46] vctrs_0.6.5           V8_7.0.0              Matrix_1.7-4         </span></span>
+<span><span class="co">#&gt; [49] sandwich_3.1-1        jsonlite_2.0.0        arrayhelpers_1.1-0   </span></span>
+<span><span class="co">#&gt; [52] systemfonts_1.2.3     glue_1.8.0            codetools_0.2-20     </span></span>
+<span><span class="co">#&gt; [55] distributional_0.5.0  lubridate_1.9.4       stringi_1.8.7        </span></span>
+<span><span class="co">#&gt; [58] gtable_0.3.6          QuickJSR_1.8.0        htmltools_0.5.8.1    </span></span>
+<span><span class="co">#&gt; [61] Brobdingnag_1.2-9     R6_2.6.1              textshaping_1.0.3    </span></span>
+<span><span class="co">#&gt; [64] rprojroot_2.1.1       evaluate_1.0.5        lattice_0.22-7       </span></span>
+<span><span class="co">#&gt; [67] backports_1.5.0       memoise_2.0.1         broom_1.0.10         </span></span>
+<span><span class="co">#&gt; [70] snakecase_0.11.1      rstantools_2.5.0      gridExtra_2.3        </span></span>
+<span><span class="co">#&gt; [73] coda_0.19-4.1         nlme_3.1-168          checkmate_2.3.3      </span></span>
+<span><span class="co">#&gt; [76] xfun_0.53             zoo_1.8-14            pkgconfig_2.0.3</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -1298,22 +1274,7 @@ Irizarry, R. A. (2024). <em>Introduction to Data Science: Data Wrangling and Vis
 </section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><hr>
 <ol>
 <li id="fn1"><p>Un’ottima introduzione alle regole di stile per un progetto di analisi dei dati è fornita in questo <a href="https://datamgmtinedresearch.com/style">capitolo</a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-</ol></section></main><!-- /main --><script>
-document.body.classList.add('classic-book');
-document.addEventListener('DOMContentLoaded', function() {
-  const paragraphs = document.querySelectorAll('p');
-  paragraphs.forEach(p => {
-    if (p.textContent.length > 200) {
-      p.style.hyphens = 'auto';
-      p.style.hyphenateCharacter = '-';
-    }
-  });
-  const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
-  headings.forEach(h => {
-    h.style.fontFeatureSettings = '"liga" 1, "dlig" 1, "smcp" 1';
-  });
-});
-</script><script id="quarto-html-after-body" type="application/javascript">
+</ol></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
     const anchorJS = new window.AnchorJS();
@@ -1364,13 +1325,14 @@ document.addEventListener('DOMContentLoaded', function() {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

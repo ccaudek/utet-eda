@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.34">
+<meta name="generator" content="quarto-1.8.24">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>15&nbsp; Flusso di lavoro per la pulizia dei dati – Analisi esplorativa dei dati (EDA) in psicologia</title>
 <style>
@@ -86,14 +86,15 @@ div.csl-indent {
 <link href="../../style/gauss.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-0a72236910a44089af39cd28873f322e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-9908c7b05874059c2106d454ac00f1d0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="../../site_libs/bootstrap/bootstrap-af5d064118ae80f4bafc3d843c3c3870.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -126,30 +127,7 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 </script><style>html{ scroll-behavior: smooth; }</style>
-<script>
-window.MathJax = {
-  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
-  svg: { scale: 1, mtextInheritFont: true, fontCache: 'none', minScale: 1 },
-  options: { renderActions: { addMenu: [0, '', ''] } },
-  loader: { load: ['input/tex','output/svg'] }
-};
-</script><script>
-window.MathJax = {
-  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
-  svg: { scale: 1, mtextInheritFont: true, fontCache: 'none', minScale: 1 },
-  options: { renderActions: { addMenu: [0, '', ''] } },
-  loader: { load: ['input/tex','output/svg'] }
-};
-// Suggerimento CSS: vedi sezione 3 per gli spazi attorno a display math
-</script><script>
-window.MathJax = {
-  tex: {
-    packages: {'[+]': ['boldsymbol']},
-    inlineMath: [['$', '$'], ['\\(', '\\)']]
-  },
-  svg: { fontCache: 'global' }
-};
-</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+<script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
 const typesetMath = (el) => {
   if (window.MathJax) {
     // MathJax Typeset
@@ -160,7 +138,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -174,10 +152,7 @@ const typesetMath = (el) => {
 window.Quarto = {
   typesetMath
 };
-</script><link rel="stylesheet" href="../../style/_typography-extras.css">
-<link rel="stylesheet" href="../../style/_code-extras.css">
-<link rel="stylesheet" href="../../style/_math-extras.css">
-<link rel="stylesheet" href="../../style/styles.css">
+</script>
 </head>
 <body class="nav-sidebar floating quarto-light">
 
@@ -195,7 +170,9 @@ window.Quarto = {
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../../index.html" class="sidebar-logo-link">
+      </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="../../">Analisi esplorativa dei dati (EDA) in psicologia</a> 
         <div class="sidebar-tools-main">
@@ -479,12 +456,12 @@ window.Quarto = {
 <li>Applicare regole coerenti per denominazione e codifica.</li>
 </ul>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Prerequisiti
+<span class="screen-reader-only">Consiglio</span>Prerequisiti
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -501,24 +478,24 @@ Prerequisiti
 </div>
 </div>
 <div class="callout callout-style-simple callout-caution no-icon callout-titled" title="Preparazione del Notebook">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Preparazione del Notebook
+<span class="screen-reader-only">Attenzione</span>Preparazione del Notebook
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell">
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"code"</span>, <span class="st">"_common.R"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"code"</span>, <span class="st">"_common.R"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/source.html">source</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Load packages</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">"pacman"</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"pacman"</span><span class="op">)</span></span>
-<span><span class="fu">pacman</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pacman/man/p_load.html">p_load</a></span><span class="op">(</span><span class="va">mice</span>, <span class="va">labelled</span>, <span class="va">haven</span>, <span class="va">pointblank</span>, <span class="va">mice</span>, <span class="va">purrr</span>, <span class="va">knitr</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu">pacman</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pacman/man/p_load.html">p_load</a></span><span class="op">(</span><span class="va">mice</span>, <span class="va">labelled</span>, <span class="va">haven</span>, <span class="va">pointblank</span>, <span class="va">mice</span>, <span class="va">purrr</span>, <span class="va">knitr</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -543,7 +520,7 @@ Preparazione del Notebook
 <span class="header-section-number">15.1.2.1</span> Importare e esaminare i dati</h4>
 <p>Importiamo i dati utilizzando la funzione <code>import()</code> della libreria <code>rio</code> e visualizziamo i primi valori di ciascuna colonna per verificarne la corretta importazione:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Importa i dati</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Importa i dati</span></span>
 <span><span class="va">svy</span> <span class="op">&lt;-</span> <span class="fu">rio</span><span class="fu">::</span><span class="fu"><a href="http://gesistsa.github.io/rio/reference/import.html">import</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"data"</span>, <span class="st">"w1_mathproj_stu_svy_raw.csv"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Esamina la struttura del dataset</span></span>
@@ -556,11 +533,11 @@ Preparazione del Notebook
 <span><span class="co">#&gt; $ math1       &lt;int&gt; 2, 3, 4, 3, 2, 4</span></span>
 <span><span class="co">#&gt; $ math2       &lt;chr&gt; "1", "2", "\n4", "3", "2", "1"</span></span>
 <span><span class="co">#&gt; $ math3       &lt;int&gt; 3, 2, 4, NA, 4, 3</span></span>
-<span><span class="co">#&gt; $ math4       &lt;int&gt; 3, 2, 4, NA, 2, 1</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; $ math4       &lt;int&gt; 3, 2, 4, NA, 2, 1</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Per controllare visivamente i dati, possiamo esaminare le prime e le ultime righe del <code>data frame</code>:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Visualizza le prime righe</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Visualizza le prime righe</span></span>
 <span><span class="va">svy</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   stu_id   svy_date grade_level math1 math2 math3 math4</span></span>
@@ -580,7 +557,7 @@ Preparazione del Notebook
 <span><span class="co">#&gt; 3   1377 2023-02-13           9     4   \n4     4     4</span></span>
 <span><span class="co">#&gt; 4   1387 2023-02-13          11     3     3    NA    NA</span></span>
 <span><span class="co">#&gt; 5   1347 2023-02-14           9     2     2     4     2</span></span>
-<span><span class="co">#&gt; 6   1399 2023-02-14          12     4     1     3     1</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; 6   1399 2023-02-14          12     4     1     3     1</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section><section id="individuare-e-rimuovere-i-duplicati" class="level4" data-number="15.1.2.2"><h4 data-number="15.1.2.2" class="anchored" data-anchor-id="individuare-e-rimuovere-i-duplicati">
 <span class="header-section-number">15.1.2.2</span> Individuare e rimuovere i duplicati</h4>
@@ -596,53 +573,53 @@ Preparazione del Notebook
 <em>Esamina i dati puliti</em>: controlliamo il risultato delle modifiche.</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Identifica i duplicati basati su 'stu_id'</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Identifica i duplicati basati su 'stu_id'</span></span>
 <span><span class="va">duplicates</span> <span class="op">&lt;-</span> </span>
-<span>  <span class="va">svy</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/duplicated.html">duplicated</a></span><span class="op">(</span><span class="va">svy</span><span class="op">$</span><span class="va">stu_id</span><span class="op">)</span> <span class="op">|</span> <span class="fu"><a href="https://rdrr.io/r/base/duplicated.html">duplicated</a></span><span class="op">(</span><span class="va">svy</span><span class="op">$</span><span class="va">stu_id</span>, fromLast <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="op">]</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="va">svy</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/duplicated.html">duplicated</a></span><span class="op">(</span><span class="va">svy</span><span class="op">$</span><span class="va">stu_id</span><span class="op">)</span> <span class="op">|</span> <span class="fu"><a href="https://rdrr.io/r/base/duplicated.html">duplicated</a></span><span class="op">(</span><span class="va">svy</span><span class="op">$</span><span class="va">stu_id</span>, fromLast <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="op">]</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Visualizza i duplicati trovati</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Visualizza i duplicati trovati</span></span>
 <span><span class="va">duplicates</span></span>
 <span><span class="co">#&gt;   stu_id   svy_date grade_level math1 math2 math3 math4</span></span>
 <span><span class="co">#&gt; 1   1347 2023-02-13           9     2     1     3     3</span></span>
-<span><span class="co">#&gt; 5   1347 2023-02-14           9     2     2     4     2</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; 5   1347 2023-02-14           9     2     2     4     2</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Ordina per 'svy_date' in ordine crescente</span></span>
-<span><span class="va">svy</span> <span class="op">&lt;-</span> <span class="va">svy</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="va">svy</span><span class="op">$</span><span class="va">svy_date</span><span class="op">)</span>, <span class="op">]</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Ordina per 'svy_date' in ordine crescente</span></span>
+<span><span class="va">svy</span> <span class="op">&lt;-</span> <span class="va">svy</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="va">svy</span><span class="op">$</span><span class="va">svy_date</span><span class="op">)</span>, <span class="op">]</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Rimuove i duplicati mantenendo la prima occorrenza</span></span>
-<span><span class="va">svy</span> <span class="op">&lt;-</span> <span class="va">svy</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/duplicated.html">duplicated</a></span><span class="op">(</span><span class="va">svy</span><span class="op">$</span><span class="va">stu_id</span><span class="op">)</span>, <span class="op">]</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Rimuove i duplicati mantenendo la prima occorrenza</span></span>
+<span><span class="va">svy</span> <span class="op">&lt;-</span> <span class="va">svy</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/duplicated.html">duplicated</a></span><span class="op">(</span><span class="va">svy</span><span class="op">$</span><span class="va">stu_id</span><span class="op">)</span>, <span class="op">]</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Esamina il dataset finale</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Esamina il dataset finale</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">svy</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   stu_id   svy_date grade_level math1 math2 math3 math4</span></span>
 <span><span class="co">#&gt; 1   1347 2023-02-13           9     2     1     3     3</span></span>
 <span><span class="co">#&gt; 2   1368 2023-02-13          10     3     2     2     2</span></span>
 <span><span class="co">#&gt; 3   1377 2023-02-13           9     4   \n4     4     4</span></span>
 <span><span class="co">#&gt; 4   1387 2023-02-13          11     3     3    NA    NA</span></span>
-<span><span class="co">#&gt; 6   1399 2023-02-14          12     4     1     3     1</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; 6   1399 2023-02-14          12     4     1     3     1</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Verifichiamo le dimensioni del dataset pulito per assicurarci che le operazioni siano state eseguite correttamente:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Controlla il numero di righe e colonne</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Controlla il numero di righe e colonne</span></span>
 <span><span class="va">svy</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 5 7</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [1] 5 7</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section><section id="de-identificazione-dei-dati" class="level4" data-number="15.1.2.3"><h4 data-number="15.1.2.3" class="anchored" data-anchor-id="de-identificazione-dei-dati">
 <span class="header-section-number">15.1.2.3</span> De-identificazione dei dati</h4>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Rimuovi la colonna 'svy_date'</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Rimuovi la colonna 'svy_date'</span></span>
 <span><span class="va">svy</span> <span class="op">&lt;-</span> <span class="va">svy</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">svy_date</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Mostra i nomi delle colonne rimaste</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">svy</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "stu_id"      "grade_level" "math1"       "math2"       "math3"      </span></span>
-<span><span class="co">#&gt; [6] "math4"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [6] "math4"</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section><section id="rimuovere-le-colonne-non-necessarie" class="level4" data-number="15.1.2.4"><h4 data-number="15.1.2.4" class="anchored" data-anchor-id="rimuovere-le-colonne-non-necessarie">
 <span class="header-section-number">15.1.2.4</span> Rimuovere le colonne non necessarie</h4>
@@ -742,10 +719,10 @@ x_{\text{norm}} = \frac{x - \text{min}(x)}{\text{max}(x) - \text{min}(x)} .
 <p>Nel caso presente non è necessario. Supponiamo invece di avere una colonna in un dataset psicologico che contiene punteggi di un questionario, ma i dati sono stati importati come stringhe (testo) invece che come numeri. Per eseguire calcoli statistici, sarà necessario convertire questa colonna da stringa a numerico.</p>
 <p>In <code>R</code>, si potrebbe usare il seguente codice:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Supponiamo di avere un data frame chiamato 'df' con una colonna 'punteggio' importata come carattere</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Supponiamo di avere un data frame chiamato 'df' con una colonna 'punteggio' importata come carattere</span></span>
 <span><span class="va">df</span><span class="op">$</span><span class="va">punteggio</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">punteggio</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Ora la colonna 'punteggio' è stata convertita in un tipo numerico ed è possibile eseguire calcoli su di essa</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co"># Ora la colonna 'punteggio' è stata convertita in un tipo numerico ed è possibile eseguire calcoli su di essa</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>In questo esempio, la funzione <code><a href="https://rdrr.io/r/base/numeric.html">as.numeric()</a></code> viene utilizzata per convertire la colonna <code>punteggio</code> in un formato numerico, permettendo di eseguire analisi quantitative sui dati.</p>
 <p>Un altro caso molto comune si verifica quando si importano dati da file Excel. Spesso capita che, all’interno di una cella di una colonna che dovrebbe contenere solo valori numerici, venga inserito erroneamente uno o più caratteri alfanumerici. Di conseguenza, l’intera colonna viene interpretata come di tipo alfanumerico, anche se i valori dovrebbero essere numerici. In questi casi, è fondamentale individuare la cella problematica, correggere manualmente il valore errato, e poi riconvertire l’intera colonna da alfanumerica a numerica.</p>
@@ -755,7 +732,7 @@ x_{\text{norm}} = \frac{x - \text{min}(x)}{\text{max}(x) - \text{min}(x)} .
 <p>Per esempio, consideriamo una variabile categoriale con modalità descritte da stringhe poco comprensibili, che vengono ricodificate con nomi più chiari e comprensibili.</p>
 <p>Supponiamo di avere un DataFrame chiamato <code>df</code> con una colonna <code>tipo_intervento</code> che contiene le modalità <code>"CT"</code>, <code>"BT"</code>, e <code>"MT"</code> per rappresentare rispettivamente “Terapia Cognitiva”, “Terapia Comportamentale” e “Terapia Mista”. Queste abbreviazioni potrebbero non essere immediatamente chiare a chiunque analizzi i dati, quindi decidiamo di ricodificarle con nomi più espliciti. Ecco come farlo in <code>R</code>:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Tibble chiamato 'df' con una colonna 'tipo_intervento'</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Tibble chiamato 'df' con una colonna 'tipo_intervento'</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span>tipo_intervento <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"CT"</span>, <span class="st">"BT"</span>, <span class="st">"MT"</span>, <span class="st">"CT"</span>, <span class="st">"BT"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">df</span></span>
 <span><span class="co">#&gt; # A tibble: 5 × 1</span></span>
@@ -765,10 +742,10 @@ x_{\text{norm}} = \frac{x - \text{min}(x)}{\text{max}(x) - \text{min}(x)} .
 <span><span class="co">#&gt; 2 BT             </span></span>
 <span><span class="co">#&gt; 3 MT             </span></span>
 <span><span class="co">#&gt; 4 CT             </span></span>
-<span><span class="co">#&gt; 5 BT</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; 5 BT</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Ricodifica delle modalità della variabile 'tipo_intervento' in nomi più comprensibili</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Ricodifica delle modalità della variabile 'tipo_intervento' in nomi più comprensibili</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu">mutate</span><span class="op">(</span>tipo_intervento_ricodificato <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/recode.html">recode</a></span><span class="op">(</span></span>
 <span>    <span class="va">tipo_intervento</span>,</span>
@@ -786,7 +763,7 @@ x_{\text{norm}} = \frac{x - \text{min}(x)}{\text{max}(x) - \text{min}(x)} .
 <span><span class="co">#&gt; 2 BT              Terapia Comportamentale     </span></span>
 <span><span class="co">#&gt; 3 MT              Terapia Mista               </span></span>
 <span><span class="co">#&gt; 4 CT              Terapia Cognitiva           </span></span>
-<span><span class="co">#&gt; 5 BT              Terapia Comportamentale</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; 5 BT              Terapia Comportamentale</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section><section id="aggiungere-nuove-variabili-nel-data-frame" class="level4" data-number="15.1.2.12"><h4 data-number="15.1.2.12" class="anchored" data-anchor-id="aggiungere-nuove-variabili-nel-data-frame">
 <span class="header-section-number">15.1.2.12</span> Aggiungere nuove variabili nel data frame</h4>
@@ -796,7 +773,7 @@ x_{\text{norm}} = \frac{x - \text{min}(x)}{\text{max}(x) - \text{min}(x)} .
 <p><span class="math display">\[ \text{BMI} = \frac{\text{peso in kg}}{\text{altezza in metri}^2} .\]</span></p>
 <p>Ecco come aggiungere la nuova colonna.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Supponiamo di avere un tibble chiamato 'df' con le colonne 'peso_kg' e 'altezza_m'</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Supponiamo di avere un tibble chiamato 'df' con le colonne 'peso_kg' e 'altezza_m'</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span></span>
 <span>  peso_kg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">70</span>, <span class="fl">85</span>, <span class="fl">60</span>, <span class="fl">95</span><span class="op">)</span>,</span>
 <span>  altezza_m <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1.75</span>, <span class="fl">1.80</span>, <span class="fl">1.65</span>, <span class="fl">1.90</span><span class="op">)</span></span>
@@ -808,10 +785,10 @@ x_{\text{norm}} = \frac{x - \text{min}(x)}{\text{max}(x) - \text{min}(x)} .
 <span><span class="co">#&gt; 1      70      1.75</span></span>
 <span><span class="co">#&gt; 2      85      1.8 </span></span>
 <span><span class="co">#&gt; 3      60      1.65</span></span>
-<span><span class="co">#&gt; 4      95      1.9</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; 4      95      1.9</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Calcola il BMI e aggiungilo come una nuova colonna 'BMI'</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Calcola il BMI e aggiungilo come una nuova colonna 'BMI'</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu">mutate</span><span class="op">(</span>BMI <span class="op">=</span> <span class="va">peso_kg</span> <span class="op">/</span> <span class="op">(</span><span class="va">altezza_m</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -823,7 +800,7 @@ x_{\text{norm}} = \frac{x - \text{min}(x)}{\text{max}(x) - \text{min}(x)} .
 <span><span class="co">#&gt; 1      70      1.75  22.9</span></span>
 <span><span class="co">#&gt; 2      85      1.8   26.2</span></span>
 <span><span class="co">#&gt; 3      60      1.65  22.0</span></span>
-<span><span class="co">#&gt; 4      95      1.9   26.3</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; 4      95      1.9   26.3</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section></section><section id="affrontare-il-problema-dei-dati-mancanti" class="level3" data-number="15.1.3"><h3 data-number="15.1.3" class="anchored" data-anchor-id="affrontare-il-problema-dei-dati-mancanti">
 <span class="header-section-number">15.1.3</span> Affrontare il problema dei dati mancanti</h3>
@@ -843,7 +820,7 @@ x_{\text{norm}} = \frac{x - \text{min}(x)}{\text{max}(x) - \text{min}(x)} .
 <p>Ci sono diversi modi per affrontare i dati mancanti. Vediamo prima i metodi più semplici e poi quelli più avanzati.</p>
 <p>Esaminiamo il data frame iniziale:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">svy</span> <span class="op">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">svy</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;      stu_id      grade_level       math1        math2               math3     </span></span>
 <span><span class="co">#&gt;  Min.   :1347   Min.   : 9.0   Min.   :2.0   Length:5           Min.   :2.00  </span></span>
@@ -860,25 +837,25 @@ x_{\text{norm}} = \frac{x - \text{min}(x)}{\text{max}(x) - \text{min}(x)} .
 <span><span class="co">#&gt;  Mean   :2.50  </span></span>
 <span><span class="co">#&gt;  3rd Qu.:3.25  </span></span>
 <span><span class="co">#&gt;  Max.   :4.00  </span></span>
-<span><span class="co">#&gt;  NA's   :1</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;  NA's   :1</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Si noti la presenza di dati mancanti sulle variabili <code>math3</code> e <code>math4</code>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">svy</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 5 6</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">svy</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 5 6</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <ol type="1">
 <li>
 <p><strong>Esclusione dei Casi Incompleti (Complete Case Analysis).</strong><br>
 Un approccio comune, ma spesso non ideale, è quello di analizzare solo i casi completi, eliminando tutte le righe con valori mancanti. In R, questo si può fare con il seguente comando:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">svy_comp</span> <span class="op">&lt;-</span> <span class="va">svy</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">drop_na</span><span class="op">(</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">svy_comp</span> <span class="op">&lt;-</span> <span class="va">svy</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">drop_na</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>In questo modo abbiamo escluso tutte le righe nelle quali sono presenti dei dati mancanti (in questo caso, una sola riga).</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">svy_comp</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 4 6</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">svy_comp</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 4 6</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><strong>Limite</strong>: Questo metodo può introdurre bias se i dati mancanti non sono casuali e riduce il campione, compromettendo l’affidabilità delle analisi.</p>
 </li>
@@ -907,13 +884,13 @@ Un approccio più avanzato è l’imputazione multipla, che utilizza modelli sta
 <p>Supponiamo di avere un dataset con alcune colonne numeriche che contengono valori mancanti. Possiamo utilizzare il pacchetto <code>mice</code> per imputare i dati mancanti.</p>
 <p>Selezioniamo le colonne numeriche da imputare.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">numeric_columns</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"math1"</span>, <span class="st">"math2"</span>, <span class="st">"math3"</span>, <span class="st">"math4"</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">numeric_columns</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"math1"</span>, <span class="st">"math2"</span>, <span class="st">"math3"</span>, <span class="st">"math4"</span><span class="op">)</span></span>
 <span><span class="va">svy</span> <span class="op">&lt;-</span> <span class="va">svy</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu">mutate</span><span class="op">(</span><span class="fu">across</span><span class="op">(</span><span class="fu">all_of</span><span class="op">(</span><span class="va">numeric_columns</span><span class="op">)</span>, <span class="va">as.numeric</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu">mutate</span><span class="op">(</span><span class="fu">across</span><span class="op">(</span><span class="fu">all_of</span><span class="op">(</span><span class="va">numeric_columns</span><span class="op">)</span>, <span class="va">as.numeric</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Eseguiamo l’imputazione multipla.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">imputed</span> <span class="op">&lt;-</span> <span class="fu">mice</span><span class="op">(</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">imputed</span> <span class="op">&lt;-</span> <span class="fu">mice</span><span class="op">(</span></span>
 <span>  <span class="va">svy</span><span class="op">[</span><span class="va">numeric_columns</span><span class="op">]</span>, </span>
 <span>  m <span class="op">=</span> <span class="fl">1</span>, </span>
 <span>  maxit <span class="op">=</span> <span class="fl">10</span>, </span>
@@ -931,24 +908,24 @@ Un approccio più avanzato è l’imputazione multipla, che utilizza modelli sta
 <span><span class="co">#&gt;   7   1  math3  math4</span></span>
 <span><span class="co">#&gt;   8   1  math3  math4</span></span>
 <span><span class="co">#&gt;   9   1  math3  math4</span></span>
-<span><span class="co">#&gt;   10   1  math3  math4</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;   10   1  math3  math4</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Ottieniamo il dataset con i valori imputati.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">svy_imputed</span> <span class="op">&lt;-</span> <span class="fu">complete</span><span class="op">(</span><span class="va">imputed</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">svy_imputed</span> <span class="op">&lt;-</span> <span class="fu">complete</span><span class="op">(</span><span class="va">imputed</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Arrotondiamo i valori imputati (se necessario).</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">svy_imputed</span> <span class="op">&lt;-</span> <span class="va">svy_imputed</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu">mutate</span><span class="op">(</span><span class="fu">across</span><span class="op">(</span><span class="fu">everything</span><span class="op">(</span><span class="op">)</span>, <span class="va">round</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">svy_imputed</span> <span class="op">&lt;-</span> <span class="va">svy_imputed</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu">mutate</span><span class="op">(</span><span class="fu">across</span><span class="op">(</span><span class="fu">everything</span><span class="op">(</span><span class="op">)</span>, <span class="va">round</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Sostituiamo i valori imputati nel dataset originale.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">svy</span><span class="op">[</span><span class="va">numeric_columns</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">svy_imputed</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">svy</span><span class="op">[</span><span class="va">numeric_columns</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">svy_imputed</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Esaminiamo il risultato ottenuto.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">svy</span> <span class="op">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">svy</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;      stu_id      grade_level       math1         math2         math3    </span></span>
 <span><span class="co">#&gt;  Min.   :1347   Min.   : 9.0   Min.   :2.0   Min.   :1.0   Min.   :2.0  </span></span>
@@ -963,7 +940,7 @@ Un approccio più avanzato è l’imputazione multipla, che utilizza modelli sta
 <span><span class="co">#&gt;  Median :3.0  </span></span>
 <span><span class="co">#&gt;  Mean   :2.8  </span></span>
 <span><span class="co">#&gt;  3rd Qu.:4.0  </span></span>
-<span><span class="co">#&gt;  Max.   :4.0</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;  Max.   :4.0</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section><section id="come-funziona-limputazione-multipla" class="level4" data-number="15.1.3.4"><h4 data-number="15.1.3.4" class="anchored" data-anchor-id="come-funziona-limputazione-multipla">
 <span class="header-section-number">15.1.3.4</span> Come funziona l’imputazione multipla?</h4>
@@ -988,7 +965,7 @@ Un approccio più avanzato è l’imputazione multipla, che utilizza modelli sta
 <p>Questi strumenti rendono molto facile documentare un dataset all’interno del processo di analisi, assicurando che tutte le informazioni critiche sui dati siano facilmente accessibili e ben documentate.</p>
 <p>Esaminiamo un esempio pratico. Consideriamo nuovamente il data set <code>svy</code>:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">glimpse</span><span class="op">(</span><span class="va">svy</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">glimpse</span><span class="op">(</span><span class="va">svy</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 5</span></span>
 <span><span class="co">#&gt; Columns: 6</span></span>
 <span><span class="co">#&gt; $ stu_id      &lt;int&gt; 1347, 1368, 1377, 1387, 1399</span></span>
@@ -996,11 +973,11 @@ Un approccio più avanzato è l’imputazione multipla, che utilizza modelli sta
 <span><span class="co">#&gt; $ math1       &lt;dbl&gt; 2, 3, 4, 3, 4</span></span>
 <span><span class="co">#&gt; $ math2       &lt;dbl&gt; 1, 2, 4, 3, 1</span></span>
 <span><span class="co">#&gt; $ math3       &lt;dbl&gt; 3, 2, 4, 4, 3</span></span>
-<span><span class="co">#&gt; $ math4       &lt;dbl&gt; 3, 2, 4, 4, 1</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; $ math4       &lt;dbl&gt; 3, 2, 4, 4, 1</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Si noti che la variabile <code>math2</code> contiene un valore inamissibile, probabilmente un errore di battitura. Questo fa in modo che <code>math2</code> sia di tipo <code>char</code> mentre dovrebbe essere una variabile numerica. Correggiamo.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Correzione di `math2`: Rimuovi valori non validi e converti in numerico</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Correzione di `math2`: Rimuovi valori non validi e converti in numerico</span></span>
 <span><span class="va">svy</span><span class="op">$</span><span class="va">math2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html">gsub</a></span><span class="op">(</span><span class="st">"\\n"</span>, <span class="st">""</span>, <span class="va">svy</span><span class="op">$</span><span class="va">math2</span><span class="op">)</span>  <span class="co"># Rimuovi caratteri non validi come '\n'</span></span>
 <span><span class="va">svy</span><span class="op">$</span><span class="va">math2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">svy</span><span class="op">$</span><span class="va">math2</span><span class="op">)</span>      <span class="co"># Converte la variabile in numerico</span></span>
 <span></span>
@@ -1011,11 +988,11 @@ Un approccio più avanzato è l’imputazione multipla, che utilizza modelli sta
 <span><span class="co">#&gt; 2   1368          10     3     2     2     2</span></span>
 <span><span class="co">#&gt; 3   1377           9     4     4     4     4</span></span>
 <span><span class="co">#&gt; 4   1387          11     3     3     4     4</span></span>
-<span><span class="co">#&gt; 6   1399          12     4     1     3     1</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; 6   1399          12     4     1     3     1</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Definiamo le etichette di valore per le variabili <code>math1:math4</code>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">value_labels_math</span> <span class="op">&lt;-</span> <span class="fu">set_names</span><span class="op">(</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">value_labels_math</span> <span class="op">&lt;-</span> <span class="fu">set_names</span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
 <span>    `1` <span class="op">=</span> <span class="st">"strongly disagree"</span>,</span>
 <span>    `2` <span class="op">=</span> <span class="st">"disagree"</span>,</span>
@@ -1023,27 +1000,27 @@ Un approccio più avanzato è l’imputazione multipla, che utilizza modelli sta
 <span>    `4` <span class="op">=</span> <span class="st">"strongly agree"</span></span>
 <span>  <span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"strongly disagree"</span>, <span class="st">"disagree"</span>, <span class="st">"agree"</span>, <span class="st">"strongly agree"</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Aggiungiamo le etichette di valore alle colonne <code>math1:math4</code>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">svy</span> <span class="op">&lt;-</span> <span class="va">svy</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu">mutate</span><span class="op">(</span><span class="fu">across</span><span class="op">(</span><span class="fu">starts_with</span><span class="op">(</span><span class="st">"math"</span><span class="op">)</span>, <span class="op">~</span> <span class="fu">labelled</span><span class="op">(</span><span class="va">.</span>, labels <span class="op">=</span> <span class="va">value_labels_math</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">svy</span> <span class="op">&lt;-</span> <span class="va">svy</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu">mutate</span><span class="op">(</span><span class="fu">across</span><span class="op">(</span><span class="fu">starts_with</span><span class="op">(</span><span class="st">"math"</span><span class="op">)</span>, <span class="op">~</span> <span class="fu">labelled</span><span class="op">(</span><span class="va">.</span>, labels <span class="op">=</span> <span class="va">value_labels_math</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Verifica delle etichette.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">val_labels</span><span class="op">(</span><span class="va">svy</span><span class="op">$</span><span class="va">math1</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">val_labels</span><span class="op">(</span><span class="va">svy</span><span class="op">$</span><span class="va">math1</span><span class="op">)</span></span>
 <span><span class="co">#&gt; strongly disagree          disagree             agree    strongly agree </span></span>
-<span><span class="co">#&gt;                 1                 2                 3                 4</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;                 1                 2                 3                 4</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">svy</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">svy</span></span>
 <span><span class="co">#&gt;   stu_id grade_level math1 math2 math3 math4</span></span>
 <span><span class="co">#&gt; 1   1347           9     2     1     3     3</span></span>
 <span><span class="co">#&gt; 2   1368          10     3     2     2     2</span></span>
 <span><span class="co">#&gt; 3   1377           9     4     4     4     4</span></span>
 <span><span class="co">#&gt; 4   1387          11     3     3     4     4</span></span>
-<span><span class="co">#&gt; 6   1399          12     4     1     3     1</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; 6   1399          12     4     1     3     1</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="utilizzo-delle-etichette-in-r-con-variabili-numeriche" class="level5" data-number="15.1.3.5.1"><h5 data-number="15.1.3.5.1" class="anchored" data-anchor-id="utilizzo-delle-etichette-in-r-con-variabili-numeriche">
 <span class="header-section-number">15.1.3.5.1</span> Utilizzo delle etichette in R con variabili numeriche</h5>
@@ -1082,7 +1059,7 @@ Un approccio più avanzato è l’imputazione multipla, che utilizza modelli sta
 <em>Generare report interattivi</em>: Creare un riepilogo chiaro e visivo dei controlli, evidenziando eventuali errori o anomalie.</li>
 </ul>
 <p>Con <code>pointblank</code>, è possibile integrare la validazione dei dati come parte di un workflow strutturato, garantendo la qualità dei dati in modo sistematico e ripetibile.</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">create_agent</span><span class="op">(</span><span class="va">svy</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">create_agent</span><span class="op">(</span><span class="va">svy</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu">rows_distinct</span><span class="op">(</span>columns <span class="op">=</span> <span class="fu">vars</span><span class="op">(</span><span class="va">stu_id</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu">col_vals_between</span><span class="op">(</span>columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">stu_id</span><span class="op">)</span>, </span>
 <span>                   left <span class="op">=</span> <span class="fl">1300</span>, right <span class="op">=</span> <span class="fl">1400</span>, na_pass <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
@@ -1092,7 +1069,7 @@ Un approccio più avanzato è l’imputazione multipla, che utilizza modelli sta
 <span>                  set <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="cn">NA</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu">col_vals_in_set</span><span class="op">(</span>columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">math1</span><span class="op">:</span><span class="va">math4</span><span class="op">)</span>,</span>
 <span>                  set <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="cn">NA</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu">interrogate</span><span class="op">(</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu">interrogate</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Il dataset ripulito soddisfa tutte le aspettative delineate da Crystal Lewis.</p>
 <ul>
 <li>
@@ -1151,9 +1128,9 @@ Un approccio più avanzato è l’imputazione multipla, che utilizza modelli sta
 <li>
 <em>Salvare il dizionario dei dati</em>: Il dizionario può essere salvato in un file <code>.csv</code> o <code>.xlsx</code> per una facile consultazione.</li>
 </ol>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">svy</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">svy</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Creeremo un dizionario dei dati per un dataset di esempio e lo salveremo sia in formato CSV che Excel.</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/">tibble</a></span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/">tibble</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://readr.tidyverse.org">readr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ropensci.r-universe.dev/writexl">writexl</a></span><span class="op">)</span></span>
 <span></span>
@@ -1204,18 +1181,18 @@ Un approccio più avanzato è l’imputazione multipla, che utilizza modelli sta
 <span><span class="fu"><a href="https://readr.tidyverse.org/reference/write_delim.html">write_csv</a></span><span class="op">(</span><span class="va">data_dict</span>, <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"data"</span>, <span class="st">"processed"</span>, <span class="st">"data_dictionary.csv"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Salva il Dizionario dei Dati in un file Excel</span></span>
-<span><span class="fu"><a href="https://docs.ropensci.org/writexl//reference/write_xlsx.html">write_xlsx</a></span><span class="op">(</span><span class="va">data_dict</span>, <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"data"</span>, <span class="st">"processed"</span>, <span class="st">"data_dictionary.xlsx"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://docs.ropensci.org/writexl//reference/write_xlsx.html">write_xlsx</a></span><span class="op">(</span><span class="va">data_dict</span>, <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"data"</span>, <span class="st">"processed"</span>, <span class="st">"data_dictionary.xlsx"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Output Atteso: file CSV (<code>data_dictionary.csv</code>).</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">data_dict</span> <span class="op">&lt;-</span> <span class="fu">rio</span><span class="fu">::</span><span class="fu"><a href="http://gesistsa.github.io/rio/reference/import.html">import</a></span><span class="op">(</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">data_dict</span> <span class="op">&lt;-</span> <span class="fu">rio</span><span class="fu">::</span><span class="fu"><a href="http://gesistsa.github.io/rio/reference/import.html">import</a></span><span class="op">(</span></span>
 <span>  <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"data"</span>, <span class="st">"processed"</span>, <span class="st">"data_dictionary.csv"</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">data_dict</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">data_dict</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <section id="uso-del-pacchetto-datameta" class="level4" data-number="15.3.1.1"><h4 data-number="15.3.1.1" class="anchored" data-anchor-id="uso-del-pacchetto-datameta">
 <span class="header-section-number">15.3.1.1</span> Uso del pacchetto <code>dataMeta</code>
 </h4>
 <p>Il pacchetto <code>dataMeta</code> è progettato per generare metadati e dizionari dei dati in modo strutturato.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dmrodz/dataMeta">dataMeta</a></span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dmrodz/dataMeta">dataMeta</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/">tibble</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Descrizioni delle variabili</span></span>
@@ -1243,9 +1220,9 @@ Un approccio più avanzato è l’imputazione multipla, che utilizza modelli sta
 <span>  prompt_varopts <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">kable</span><span class="op">(</span><span class="va">dict</span>, format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"Data dictionary for original dataset"</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu">kable</span><span class="op">(</span><span class="va">dict</span>, format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"Data dictionary for original dataset"</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="caption-top table table-sm table-striped small">
 <caption>Data dictionary for original dataset</caption>
 <thead><tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">variable_name</th>
@@ -1312,14 +1289,14 @@ Un approccio più avanzato è l’imputazione multipla, che utilizza modelli sta
 </h4>
 <p>Il pacchetto <code>skimr</code> è utile per generare riassunti dettagliati delle variabili, che possono essere utilizzati come base per un dizionario.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://docs.ropensci.org/skimr/">skimr</a></span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://docs.ropensci.org/skimr/">skimr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Riassunto del dataset</span></span>
 <span><span class="va">skim_dict</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/skimr/reference/skim.html">skim</a></span><span class="op">(</span><span class="va">svy</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">kable</span><span class="op">(</span><span class="va">skim_dict</span>, format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"Data dictionary for original dataset"</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu">kable</span><span class="op">(</span><span class="va">skim_dict</span>, format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"Data dictionary for original dataset"</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="caption-top table table-sm table-striped small">
 <caption>Data dictionary for original dataset</caption>
 <thead><tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">skim_type</th>
@@ -1428,12 +1405,12 @@ Un approccio più avanzato è l’imputazione multipla, che utilizza modelli sta
 <p>Nel processo di analisi dei dati, la fase di pulizia e pre-elaborazione è cruciale per garantire la qualità e l’integrità dei risultati finali. Sebbene questa fase possa sembrare meno interessante rispetto all’analisi vera e propria, essa costituisce la base su cui si costruiscono tutte le successive elaborazioni e interpretazioni. Attraverso una serie di passaggi strutturati, come quelli illustrati in questo capitolo, è possibile trasformare dati grezzi e disordinati in un dataset pulito, coerente e pronto per l’analisi. La cura nella gestione dei dati, dalla rimozione di duplicati alla creazione di un dizionario dei dati, è fondamentale per ottenere risultati affidabili e riproducibili.</p>
 </section><section id="esercizi" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="esercizi">Esercizi</h2>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled" title="Esercizio">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Esercizio
+<span class="screen-reader-only">Consiglio</span>Esercizio
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -1468,7 +1445,7 @@ Esercizio
 <pre><code>---
 title: "Assegnamento: Pulizia e Preprocessing dei Dati SWLS"
 author: "Nome Studente"
-date: "2025-09-09"
+date: "2025-09-21"
 format: html
 ---</code></pre>
 </li>
@@ -1479,29 +1456,29 @@ format: html
 </div>
 </div>
 <div class="callout callout-style-simple callout-note no-icon callout-titled" title="Informazioni sull'ambiente di sviluppo">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Informazioni sull’ambiente di sviluppo
+<span class="screen-reader-only">Nota</span>Informazioni sull’ambiente di sviluppo
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.5.1 (2025-06-13)</span></span>
 <span><span class="co">#&gt; Platform: aarch64-apple-darwin20</span></span>
-<span><span class="co">#&gt; Running under: macOS Sequoia 15.6.1</span></span>
+<span><span class="co">#&gt; Running under: macOS Tahoe 26.0</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
 <span><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRblas.0.dylib </span></span>
 <span><span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; locale:</span></span>
-<span><span class="co">#&gt; [1] C/UTF-8/C/C/C/C</span></span>
+<span><span class="co">#&gt; [1] C.UTF-8/UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; time zone: Europe/Rome</span></span>
 <span><span class="co">#&gt; tzcode source: internal</span></span>
@@ -1512,24 +1489,24 @@ Informazioni sull’ambiente di sviluppo
 <span><span class="co">#&gt; other attached packages:</span></span>
 <span><span class="co">#&gt;  [1] skimr_2.2.1           dataMeta_0.1.1        knitr_1.50           </span></span>
 <span><span class="co">#&gt;  [4] purrr_1.1.0           pointblank_0.12.2     haven_2.5.5          </span></span>
-<span><span class="co">#&gt;  [7] labelled_2.14.1       mice_3.18.0           pillar_1.11.0        </span></span>
+<span><span class="co">#&gt;  [7] labelled_2.15.0       mice_3.18.0           pillar_1.11.1        </span></span>
 <span><span class="co">#&gt; [10] tinytable_0.13.0      patchwork_1.3.2       ggdist_3.3.3         </span></span>
-<span><span class="co">#&gt; [13] tidybayes_3.0.7       bayesplot_1.14.0      ggplot2_3.5.2        </span></span>
+<span><span class="co">#&gt; [13] tidybayes_3.0.7       bayesplot_1.14.0      ggplot2_4.0.0        </span></span>
 <span><span class="co">#&gt; [16] reliabilitydiag_0.2.1 priorsense_1.1.1      posterior_1.6.1      </span></span>
 <span><span class="co">#&gt; [19] loo_2.8.0             rstan_2.32.7          StanHeaders_2.32.10  </span></span>
-<span><span class="co">#&gt; [22] brms_2.22.0           Rcpp_1.1.0            sessioninfo_1.2.3    </span></span>
+<span><span class="co">#&gt; [22] brms_2.23.0           Rcpp_1.1.0            sessioninfo_1.2.3    </span></span>
 <span><span class="co">#&gt; [25] conflicted_1.2.0      janitor_2.2.1         matrixStats_1.5.0    </span></span>
 <span><span class="co">#&gt; [28] modelr_0.1.11         tibble_3.3.0          dplyr_1.1.4          </span></span>
-<span><span class="co">#&gt; [31] tidyr_1.3.1           rio_1.2.3             here_1.0.1           </span></span>
+<span><span class="co">#&gt; [31] tidyr_1.3.1           rio_1.2.3             here_1.0.2           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span><span class="co">#&gt;   [1] RColorBrewer_1.1-3    tensorA_0.36.2.1      jsonlite_2.0.0       </span></span>
-<span><span class="co">#&gt;   [4] shape_1.4.6.1         magrittr_2.0.3        TH.data_1.1-4        </span></span>
+<span><span class="co">#&gt;   [4] shape_1.4.6.1         magrittr_2.0.4        TH.data_1.1-4        </span></span>
 <span><span class="co">#&gt;   [7] estimability_1.5.1    jomo_2.7-6            farver_2.1.2         </span></span>
 <span><span class="co">#&gt;  [10] nloptr_2.2.1          rmarkdown_2.29        ragg_1.5.0           </span></span>
 <span><span class="co">#&gt;  [13] vctrs_0.6.5           memoise_2.0.1         minqa_1.2.8          </span></span>
 <span><span class="co">#&gt;  [16] base64enc_0.1-3       htmltools_0.5.8.1     forcats_1.0.0        </span></span>
-<span><span class="co">#&gt;  [19] distributional_0.5.0  curl_7.0.0            broom_1.0.9          </span></span>
+<span><span class="co">#&gt;  [19] distributional_0.5.0  curl_7.0.0            broom_1.0.10         </span></span>
 <span><span class="co">#&gt;  [22] mitml_0.4-5           htmlwidgets_1.6.4     sandwich_3.1-1       </span></span>
 <span><span class="co">#&gt;  [25] emmeans_1.11.2-8      zoo_1.8-14            lubridate_1.9.4      </span></span>
 <span><span class="co">#&gt;  [28] cachem_1.1.0          lifecycle_1.0.4       iterators_1.0.14     </span></span>
@@ -1537,26 +1514,26 @@ Informazioni sull’ambiente di sviluppo
 <span><span class="co">#&gt;  [34] fastmap_1.2.0         rbibutils_2.3         snakecase_0.11.1     </span></span>
 <span><span class="co">#&gt;  [37] digest_0.6.37         colorspace_2.1-1      rprojroot_2.1.1      </span></span>
 <span><span class="co">#&gt;  [40] textshaping_1.0.3     timechange_0.3.0      abind_1.4-8          </span></span>
-<span><span class="co">#&gt;  [43] compiler_4.5.1        withr_3.0.2           backports_1.5.0      </span></span>
-<span><span class="co">#&gt;  [46] inline_0.3.21         QuickJSR_1.8.0        pkgbuild_1.4.8       </span></span>
-<span><span class="co">#&gt;  [49] R.utils_2.13.0        pan_1.9               MASS_7.3-65          </span></span>
-<span><span class="co">#&gt;  [52] tools_4.5.1           nnet_7.3-20           R.oo_1.27.1          </span></span>
-<span><span class="co">#&gt;  [55] glue_1.8.0            nlme_3.1-168          grid_4.5.1           </span></span>
-<span><span class="co">#&gt;  [58] checkmate_2.3.3       generics_0.1.4        gtable_0.3.6         </span></span>
-<span><span class="co">#&gt;  [61] R.methodsS3_1.8.2     data.table_1.17.8     hms_1.1.3            </span></span>
-<span><span class="co">#&gt;  [64] utf8_1.2.6            foreach_1.5.2         stringr_1.5.1        </span></span>
-<span><span class="co">#&gt;  [67] splines_4.5.1         lattice_0.22-7        survival_3.8-3       </span></span>
-<span><span class="co">#&gt;  [70] tidyselect_1.2.1      reformulas_0.4.1      arrayhelpers_1.1-0   </span></span>
-<span><span class="co">#&gt;  [73] gridExtra_2.3         V8_7.0.0              stats4_4.5.1         </span></span>
-<span><span class="co">#&gt;  [76] xfun_0.53             bridgesampling_1.1-2  stringi_1.8.7        </span></span>
-<span><span class="co">#&gt;  [79] pacman_0.5.1          boot_1.3-32           evaluate_1.0.5       </span></span>
-<span><span class="co">#&gt;  [82] codetools_0.2-20      cli_3.6.5             blastula_0.3.6       </span></span>
-<span><span class="co">#&gt;  [85] RcppParallel_5.1.11-1 rpart_4.1.24          xtable_1.8-4         </span></span>
-<span><span class="co">#&gt;  [88] systemfonts_1.2.3     Rdpack_2.6.4          repr_1.1.7           </span></span>
-<span><span class="co">#&gt;  [91] coda_0.19-4.1         svUnit_1.0.8          parallel_4.5.1       </span></span>
-<span><span class="co">#&gt;  [94] rstantools_2.5.0      Brobdingnag_1.2-9     lme4_1.1-37          </span></span>
-<span><span class="co">#&gt;  [97] glmnet_4.1-10         mvtnorm_1.3-3         scales_1.4.0         </span></span>
-<span><span class="co">#&gt; [100] rlang_1.1.6           multcomp_1.4-28</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;  [43] compiler_4.5.1        withr_3.0.2           S7_0.2.0             </span></span>
+<span><span class="co">#&gt;  [46] backports_1.5.0       inline_0.3.21         QuickJSR_1.8.0       </span></span>
+<span><span class="co">#&gt;  [49] pkgbuild_1.4.8        R.utils_2.13.0        pan_1.9              </span></span>
+<span><span class="co">#&gt;  [52] MASS_7.3-65           tools_4.5.1           nnet_7.3-20          </span></span>
+<span><span class="co">#&gt;  [55] R.oo_1.27.1           glue_1.8.0            nlme_3.1-168         </span></span>
+<span><span class="co">#&gt;  [58] grid_4.5.1            checkmate_2.3.3       generics_0.1.4       </span></span>
+<span><span class="co">#&gt;  [61] gtable_0.3.6          R.methodsS3_1.8.2     data.table_1.17.8    </span></span>
+<span><span class="co">#&gt;  [64] hms_1.1.3             utf8_1.2.6            foreach_1.5.2        </span></span>
+<span><span class="co">#&gt;  [67] stringr_1.5.2         splines_4.5.1         lattice_0.22-7       </span></span>
+<span><span class="co">#&gt;  [70] survival_3.8-3        tidyselect_1.2.1      reformulas_0.4.1     </span></span>
+<span><span class="co">#&gt;  [73] arrayhelpers_1.1-0    gridExtra_2.3         V8_7.0.0             </span></span>
+<span><span class="co">#&gt;  [76] stats4_4.5.1          xfun_0.53             bridgesampling_1.1-2 </span></span>
+<span><span class="co">#&gt;  [79] stringi_1.8.7         pacman_0.5.1          boot_1.3-32          </span></span>
+<span><span class="co">#&gt;  [82] evaluate_1.0.5        codetools_0.2-20      cli_3.6.5            </span></span>
+<span><span class="co">#&gt;  [85] blastula_0.3.6        RcppParallel_5.1.11-1 rpart_4.1.24         </span></span>
+<span><span class="co">#&gt;  [88] xtable_1.8-4          systemfonts_1.2.3     Rdpack_2.6.4         </span></span>
+<span><span class="co">#&gt;  [91] repr_1.1.7            coda_0.19-4.1         svUnit_1.0.8         </span></span>
+<span><span class="co">#&gt;  [94] parallel_4.5.1        rstantools_2.5.0      Brobdingnag_1.2-9    </span></span>
+<span><span class="co">#&gt;  [97] lme4_1.1-37           glmnet_4.1-10         mvtnorm_1.3-3        </span></span>
+<span><span class="co">#&gt; [100] scales_1.4.0          rlang_1.1.6           multcomp_1.4-28</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -1569,22 +1546,7 @@ Informazioni sull’ambiente di sviluppo
 Buchanan, E. M., Crain, S. E., Cunningham, A. L., Johnson, H. R., Stash, H., Papadatou-Pastou, M., Isager, P. M., Carlsson, R., &amp; Aczel, B. (2021). Getting started creating data dictionaries: How to create a shareable data set. <em>Advances in Methods and Practices in Psychological Science</em>, <em>4</em>(1), 2515245920928007.
 </div>
 </div>
-</section></main><!-- /main --><script>
-document.body.classList.add('classic-book');
-document.addEventListener('DOMContentLoaded', function() {
-  const paragraphs = document.querySelectorAll('p');
-  paragraphs.forEach(p => {
-    if (p.textContent.length > 200) {
-      p.style.hyphens = 'auto';
-      p.style.hyphenateCharacter = '-';
-    }
-  });
-  const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
-  headings.forEach(h => {
-    h.style.fontFeatureSettings = '"liga" 1, "dlig" 1, "smcp" 1';
-  });
-});
-</script><script id="quarto-html-after-body" type="application/javascript">
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
     const anchorJS = new window.AnchorJS();
@@ -1635,13 +1597,14 @@ document.addEventListener('DOMContentLoaded', function() {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.34">
+<meta name="generator" content="quarto-1.8.24">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>11&nbsp; Usare dplyr – Analisi esplorativa dei dati (EDA) in psicologia</title>
+<title>11&nbsp; Usare dplyr – Analisi esplorativa dei dati in psicologia</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -86,14 +86,15 @@ div.csl-indent {
 <link href="../../style/gauss.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-0a72236910a44089af39cd28873f322e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-9908c7b05874059c2106d454ac00f1d0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="../../site_libs/bootstrap/bootstrap-af5d064118ae80f4bafc3d843c3c3870.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -126,33 +127,6 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 </script><style>html{ scroll-behavior: smooth; }</style>
-<script>
-window.MathJax = {
-  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
-  svg: { scale: 1, mtextInheritFont: true, fontCache: 'none', minScale: 1 },
-  options: { renderActions: { addMenu: [0, '', ''] } },
-  loader: { load: ['input/tex','output/svg'] }
-};
-</script><script>
-window.MathJax = {
-  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
-  svg: { scale: 1, mtextInheritFont: true, fontCache: 'none', minScale: 1 },
-  options: { renderActions: { addMenu: [0, '', ''] } },
-  loader: { load: ['input/tex','output/svg'] }
-};
-// Suggerimento CSS: vedi sezione 3 per gli spazi attorno a display math
-</script><script>
-window.MathJax = {
-  tex: {
-    packages: {'[+]': ['boldsymbol']},
-    inlineMath: [['$', '$'], ['\\(', '\\)']]
-  },
-  svg: { fontCache: 'global' }
-};
-</script><link rel="stylesheet" href="../../style/_typography-extras.css">
-<link rel="stylesheet" href="../../style/_code-extras.css">
-<link rel="stylesheet" href="../../style/_math-extras.css">
-<link rel="stylesheet" href="../../style/styles.css">
 </head>
 <body class="nav-sidebar floating quarto-light">
 
@@ -170,9 +144,11 @@ window.MathJax = {
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../../index.html" class="sidebar-logo-link">
+      </a>
     <div class="sidebar-title mb-0 py-0">
-      <a href="../../">Analisi esplorativa dei dati (EDA) in psicologia</a> 
+      <a href="../../">Analisi esplorativa dei dati in psicologia</a> 
         <div class="sidebar-tools-main">
     <a href="https://github.com/ccaudek/utet-eda/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Attiva/disattiva la modalità lettore">
@@ -428,12 +404,12 @@ window.MathJax = {
 </ol>
 <p>Il pacchetto R <em>{dplyr}</em> e gli altri pacchetti del tidyverse sono progettati specificamente per lavorare con dati in formato “tidy”, permettendo agli utenti di eseguire operazioni di manipolazione e visualizzazione in modo più intuitivo ed efficiente.</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Prerequisiti
+<span class="screen-reader-only">Consiglio</span>Prerequisiti
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -450,23 +426,23 @@ Prerequisiti
 </div>
 </div>
 <div class="callout callout-style-simple callout-caution no-icon callout-titled" title="Preparazione del Notebook">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Preparazione del Notebook
+<span class="screen-reader-only">Attenzione</span>Preparazione del Notebook
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell">
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"code"</span>, <span class="st">"_common.R"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="kw"><a href="https://rdrr.io/r/base/source.html">source</a></span><span class="op">(</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"code"</span>, <span class="st">"_common.R"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="kw"><a href="https://rdrr.io/r/base/source.html">source</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Load packages</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">"pacman"</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"pacman"</span><span class="op">)</span></span>
-<span><span class="fu">pacman</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pacman/man/p_load.html">p_load</a></span><span class="op">(</span><span class="va">tidyr</span>, <span class="va">mice</span>, <span class="va">missForest</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu">pacman</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pacman/man/p_load.html">p_load</a></span><span class="op">(</span><span class="va">tidyr</span>, <span class="va">mice</span>, <span class="va">missForest</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -489,24 +465,24 @@ Preparazione del Notebook
 </ul>
 <p>Consideriamo l’esempio seguente (che anticipa l’uso della funzione <code><a href="https://rdrr.io/r/stats/filter.html">filter()</a></code> che descriveremo in seguito). Un’operazione comune è filtrare un data frame e calcolare la media di una colonna. Con il pipe, questa sequenza di operazioni diventa più leggibile:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Usando %&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Usando %&gt;%</span></span>
 <span><span class="va">iris</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Species</span> <span class="op">==</span> <span class="st">"setosa"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">summarise</span><span class="op">(</span></span>
 <span>    mean_sepal_length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">Sepal.Length</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> </span>
 <span><span class="co">#&gt;   mean_sepal_length</span></span>
-<span><span class="co">#&gt; 1              5.01</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; 1              5.01</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Usando |&gt;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Usando |&gt;</span></span>
 <span><span class="va">iris</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Species</span> <span class="op">==</span> <span class="st">"setosa"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">summarise</span><span class="op">(</span></span>
 <span>    mean_sepal_length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">Sepal.Length</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> </span>
 <span><span class="co">#&gt;   mean_sepal_length</span></span>
-<span><span class="co">#&gt; 1              5.01</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; 1              5.01</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="cosa-fa-la-pipe" class="level3" data-number="11.1.1"><h3 data-number="11.1.1" class="anchored" data-anchor-id="cosa-fa-la-pipe">
 <span class="header-section-number">11.1.1</span> Cosa Fa la Pipe?</h3>
@@ -519,7 +495,7 @@ Preparazione del Notebook
 <p>Ogni funzione applicata con la pipe riceve automaticamente l’output della funzione precedente come suo primo argomento. Ciò consente di scrivere sequenze di operazioni in un formato compatto e intuitivo.</p>
 <p>Ecco un altro esempio:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Utilizzo della pipe per trasformare un dataset</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Utilizzo della pipe per trasformare un dataset</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
 <span>  id <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,</span>
 <span>  value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span>, <span class="fl">30</span>, <span class="fl">40</span>, <span class="fl">50</span><span class="op">)</span></span>
@@ -529,15 +505,15 @@ Preparazione del Notebook
 <span><span class="va">df_clean</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">value</span> <span class="op">&gt;</span> <span class="fl">20</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">value</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">mutate</span><span class="op">(</span>squared_value <span class="op">=</span> <span class="va">value</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu">mutate</span><span class="op">(</span>squared_value <span class="op">=</span> <span class="va">value</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>In questa sequenza, il dataset originale <code>df</code> viene filtrato, le colonne desiderate vengono selezionate e viene aggiunta una nuova colonna con il valore al quadrato.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">df_clean</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">df_clean</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   id value squared_value</span></span>
 <span><span class="co">#&gt; 1  3    30           900</span></span>
 <span><span class="co">#&gt; 2  4    40          1600</span></span>
-<span><span class="co">#&gt; 3  5    50          2500</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; 3  5    50          2500</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>In sintesi, la pipe è uno strumento fondamentale per scrivere codice R moderno e leggibile, indipendentemente dal fatto che si utilizzi <code>|&gt;</code> o <code>%&gt;%</code>.</p>
 </section></section><section id="verbi" class="level2" data-number="11.2"><h2 data-number="11.2" class="anchored" data-anchor-id="verbi">
@@ -583,13 +559,13 @@ Preparazione del Notebook
 <p>Inoltre, le diverse funzioni <code>bind_</code> e <code>_joins</code> permettono di combinare più tibbles (ovvero, data frame) in uno solo.</p>
 <p>Per fare un esempio prarico, usiamo nuovamente il dataset <code>msleep</code>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">msleep</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 83 11</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [1] 83 11</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Esaminiamo i dati:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">glimpse</span><span class="op">(</span><span class="va">msleep</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">glimpse</span><span class="op">(</span><span class="va">msleep</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 83</span></span>
 <span><span class="co">#&gt; Columns: 11</span></span>
 <span><span class="co">#&gt; $ name         &lt;chr&gt; "Cheetah", "Owl monkey", "Mountain beaver", "Greater shor…</span></span>
@@ -602,7 +578,7 @@ Preparazione del Notebook
 <span><span class="co">#&gt; $ sleep_cycle  &lt;dbl&gt; NA, NA, NA, 0.133, 0.667, 0.767, 0.383, NA, 0.333, NA, NA…</span></span>
 <span><span class="co">#&gt; $ awake        &lt;dbl&gt; 11.9, 7.0, 9.6, 9.1, 20.0, 9.6, 15.3, 17.0, 13.9, 21.0, 1…</span></span>
 <span><span class="co">#&gt; $ brainwt      &lt;dbl&gt; NA, 0.01550, NA, 0.00029, 0.42300, NA, NA, NA, 0.07000, 0…</span></span>
-<span><span class="co">#&gt; $ bodywt       &lt;dbl&gt; 50.000, 0.480, 1.350, 0.019, 600.000, 3.850, 20.490, 0.04…</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; $ bodywt       &lt;dbl&gt; 50.000, 0.480, 1.350, 0.019, 600.000, 3.850, 20.490, 0.04…</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Le colonne, nell’ordine, corrispondono a quanto segue:</p>
 <table class="caption-top table">
@@ -660,7 +636,7 @@ Preparazione del Notebook
 <span class="header-section-number">11.3</span> Righe</h2>
 <p>I verbi più importanti che operano sulle righe di un dataset sono <code><a href="https://rdrr.io/r/stats/filter.html">filter()</a></code>, che seleziona le righe da includere senza modificarne l’ordine, e <code>arrange()</code>, che cambia l’ordine delle righe senza alterare la selezione delle righe presenti.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">msleep</span> <span class="op">|&gt;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">msleep</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">sleep_total</span> <span class="op">&lt;</span> <span class="fl">4</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">arrange</span><span class="op">(</span><span class="va">sleep_total</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 9 × 11</span></span>
@@ -685,11 +661,11 @@ Preparazione del Notebook
 <span><span class="co">#&gt; 6      NA            NA  20.7  5.71   6654  </span></span>
 <span><span class="co">#&gt; 7       0.4          NA  20.5 NA        86  </span></span>
 <span><span class="co">#&gt; 8       0.6          NA  20.2  0.175    55.5</span></span>
-<span><span class="co">#&gt; 9      NA            NA  20.1  4.60   2547</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; 9      NA            NA  20.1  4.60   2547</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Possiamo usare <code><a href="https://rdrr.io/r/stats/filter.html">filter()</a></code> speficicano più di una condizione logica.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">msleep</span> <span class="op">|&gt;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">msleep</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">(</span><span class="va">sleep_total</span> <span class="op">&lt;</span> <span class="fl">4</span> <span class="op">&amp;</span> <span class="va">bodywt</span> <span class="op">&gt;</span> <span class="fl">100</span><span class="op">)</span> <span class="op">|</span> <span class="va">brainwt</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">arrange</span><span class="op">(</span><span class="va">sleep_total</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 7 × 11</span></span>
@@ -710,7 +686,7 @@ Preparazione del Notebook
 <span><span class="co">#&gt; 4       0.4        NA    20.9   0.419   187 </span></span>
 <span><span class="co">#&gt; 5      NA          NA    20.7   5.71   6654 </span></span>
 <span><span class="co">#&gt; 6      NA          NA    20.1   4.60   2547 </span></span>
-<span><span class="co">#&gt; 7       1.9         1.5  16     1.32     62</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; 7       1.9         1.5  16     1.32     62</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section><section id="colonne" class="level2" data-number="11.4"><h2 data-number="11.4" class="anchored" data-anchor-id="colonne">
 <span class="header-section-number">11.4</span> Colonne</h2>
@@ -726,7 +702,7 @@ Preparazione del Notebook
 <code>mutate()</code> crea nuove colonne a partire da quelle esistenti.</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">msleep2</span> <span class="op">&lt;-</span> <span class="va">msleep</span> <span class="op">|&gt;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">msleep2</span> <span class="op">&lt;-</span> <span class="va">msleep</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">mutate</span><span class="op">(</span></span>
 <span>    rem_prop <span class="op">=</span> <span class="va">sleep_rem</span> <span class="op">/</span> <span class="va">sleep_total</span> <span class="op">*</span> <span class="fl">100</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -739,12 +715,12 @@ Preparazione del Notebook
 <span><span class="co">#&gt; $ name        &lt;chr&gt; "European hedgehog", "Thick-tailed opposum", "Giant armadi…</span></span>
 <span><span class="co">#&gt; $ vore        &lt;chr&gt; "omni", "carni", "insecti", "omni", "carni", "omni", "omni…</span></span>
 <span><span class="co">#&gt; $ rem_prop    &lt;dbl&gt; 34.7, 34.0, 33.7, 29.2, 28.7, 27.2, 26.4, 26.2, 25.6, 25.0…</span></span>
-<span><span class="co">#&gt; $ sleep_total &lt;dbl&gt; 10.1, 19.4, 18.1, 8.9, 10.1, 18.0, 9.1, 10.3, 12.5, 8.4, 1…</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; $ sleep_total &lt;dbl&gt; 10.1, 19.4, 18.1, 8.9, 10.1, 18.0, 9.1, 10.3, 12.5, 8.4, 1…</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>In questo esempio, utilizziamo <code>mutate()</code> per creare una nuova colonna <code>rem_prop</code> che rappresenta la percentuale di sonno REM sul totale del sonno. Successivamente, <code>select()</code> viene utilizzato per scegliere solo alcune colonne del dataset, e infine <code>desc(rem_prop)</code> ordina i valori di <code>rem_prop</code> in ordine decrescente, dal valore maggiore a quello minore.</p>
 <p>Per cambiare il nome di una colonna possiamo usare <code>rename()</code>. Inoltre, possiamo cambiare l’ordine delle variabili con <code>relocate()</code>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">msleep2</span> <span class="op">|&gt;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">msleep2</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">rename</span><span class="op">(</span>rem_perc <span class="op">=</span> <span class="va">rem_prop</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">relocate</span><span class="op">(</span><span class="va">rem_perc</span>, .before <span class="op">=</span> <span class="va">name</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 83 × 4</span></span>
@@ -760,14 +736,14 @@ Preparazione del Notebook
 <span><span class="co">#&gt;  8     26.2 Desert hedgehog        &lt;NA&gt;           10.3</span></span>
 <span><span class="co">#&gt;  9     25.6 Domestic cat           carni          12.5</span></span>
 <span><span class="co">#&gt; 10     25   Eastern american mole  insecti         8.4</span></span>
-<span><span class="co">#&gt; # ℹ 73 more rows</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; # ℹ 73 more rows</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section><section id="gruppi" class="level2" data-number="11.5"><h2 data-number="11.5" class="anchored" data-anchor-id="gruppi">
 <span class="header-section-number">11.5</span> Gruppi</h2>
 <p>Il verbo <code>group_by()</code> viene utilizzato per suddividere un dataset in gruppi, in base a una o più variabili, che siano rilevanti per l’analisi. Questo permette di eseguire operazioni di sintesi su ciascun gruppo separatamente, ottenendo informazioni aggregate.</p>
 <p>Ad esempio, nel codice seguente:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">msleep</span> <span class="op">|&gt;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">msleep</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">order</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">summarise</span><span class="op">(</span></span>
 <span>    avg_sleep <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">sleep_total</span><span class="op">)</span>,</span>
@@ -797,7 +773,7 @@ Preparazione del Notebook
 <span><span class="co">#&gt; 16 Artiodactyla         4.52       1.9       9.1     6</span></span>
 <span><span class="co">#&gt; 17 Cetacea              4.5        2.7       5.6     3</span></span>
 <span><span class="co">#&gt; 18 Proboscidea          3.6        3.3       3.9     2</span></span>
-<span><span class="co">#&gt; 19 Perissodactyla       3.47       2.9       4.4     3</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; 19 Perissodactyla       3.47       2.9       4.4     3</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <ol type="1">
 <li><p><code>group_by(order)</code> suddivide il dataset <code>msleep</code> in gruppi, ciascuno corrispondente a un valore distinto della variabile <code>order</code>.</p></li>
@@ -820,12 +796,12 @@ Preparazione del Notebook
 </section><section id="riflessioni-conclusive" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="riflessioni-conclusive">Riflessioni conclusive</h2>
 <p>Il <em>data wrangling</em> è una delle fasi più importanti in qualsiasi pipeline di analisi dei dati. In questo capitolo abbiamo introdotto l’uso del pacchetto <code>tidyverse</code> di R per la manipolazione dei dati e il suo utilizzo in scenari di base. Tuttavia, il tidyverse è un ecosistema ampio e qui abbiamo trattato solo gli elementi fondamentali. Per approfondire, si consiglia di consultare ulteriori risorse come quelle disponibili sul sito web del tidyverse e il libro <a href="https://r4ds.hadley.nz"><em>R for Data Science (2e)</em></a>, di cui esiste anche una <a href="https://it.r4ds.hadley.nz">traduzione italiana</a>.</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled" title="Esercizio">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Esercizio
+<span class="screen-reader-only">Consiglio</span>Esercizio
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -907,12 +883,12 @@ Esercizio
 </div>
 </div>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled" title="Soluzione">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Soluzione
+<span class="screen-reader-only">Consiglio</span>Soluzione
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -938,9 +914,9 @@ Soluzione
 <li><p>La pipe (<code>%&gt;%</code> o <code>|&gt;</code>) permette di concatenare più operazioni di manipolazione dati in modo leggibile ed efficiente.</p></li>
 <li>
 <p>Esempio:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">score</span> <span class="op">&gt;</span> <span class="fl">20</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">select</span><span class="op">(</span><span class="va">name</span>, <span class="va">score</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu">select</span><span class="op">(</span><span class="va">name</span>, <span class="va">score</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </li>
 </ul>
 </li>
@@ -967,9 +943,9 @@ Soluzione
 <li><p><code>group_by()</code> suddivide i dati in gruppi, permettendo di applicare funzioni di aggregazione con <code>summarise()</code>.</p></li>
 <li>
 <p>Esempio:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">gruppo</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">summarise</span><span class="op">(</span>media <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">score</span><span class="op">)</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">score</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu">summarise</span><span class="op">(</span>media <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">score</span><span class="op">)</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">score</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </li>
 </ul>
 </li>
@@ -978,7 +954,7 @@ Soluzione
 <ol start="5" type="1">
 <li>
 <p><strong>Caricamento dei dati SWLS</strong> Per svolgere l’esercizio, simuliamo i dati di 10 individui su 5 item (numeri casuali da 1 a 7):</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
 <span><span class="va">swls</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
 <span>  id <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,</span>
 <span>  item1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">7</span>, <span class="fl">10</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
@@ -987,57 +963,57 @@ Soluzione
 <span>  item4 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">7</span>, <span class="fl">10</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>  item5 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">7</span>, <span class="fl">10</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">swls</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">swls</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </li>
 <li>
 <p><strong>Selezione delle colonne</strong></p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">swls_selected</span> <span class="op">&lt;-</span> <span class="va">swls</span> <span class="op">|&gt;</span> <span class="fu">select</span><span class="op">(</span><span class="va">item1</span><span class="op">:</span><span class="va">item5</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">swls_selected</span> <span class="op">&lt;-</span> <span class="va">swls</span> <span class="op">|&gt;</span> <span class="fu">select</span><span class="op">(</span><span class="va">item1</span><span class="op">:</span><span class="va">item5</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </li>
 <li>
 <p><strong>Filtraggio dei dati</strong></p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">swls_filtered</span> <span class="op">&lt;-</span> <span class="va">swls</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowSums</a></span><span class="op">(</span><span class="fu">select</span><span class="op">(</span><span class="va">swls</span>, <span class="va">item1</span><span class="op">:</span><span class="va">item5</span><span class="op">)</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">20</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">swls_filtered</span> <span class="op">&lt;-</span> <span class="va">swls</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowSums</a></span><span class="op">(</span><span class="fu">select</span><span class="op">(</span><span class="va">swls</span>, <span class="va">item1</span><span class="op">:</span><span class="va">item5</span><span class="op">)</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">20</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </li>
 <li>
 <p><strong>Creazione di una nuova colonna</strong></p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">swls</span> <span class="op">&lt;-</span> <span class="va">swls</span> <span class="op">|&gt;</span> <span class="fu">mutate</span><span class="op">(</span>punteggio_totale <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowSums</a></span><span class="op">(</span><span class="fu">select</span><span class="op">(</span><span class="va">swls</span>, <span class="va">item1</span><span class="op">:</span><span class="va">item5</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">swls</span> <span class="op">&lt;-</span> <span class="va">swls</span> <span class="op">|&gt;</span> <span class="fu">mutate</span><span class="op">(</span>punteggio_totale <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowSums</a></span><span class="op">(</span><span class="fu">select</span><span class="op">(</span><span class="va">swls</span>, <span class="va">item1</span><span class="op">:</span><span class="va">item5</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </li>
 <li>
 <p><strong>Riordinamento dei dati</strong></p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">swls_sorted</span> <span class="op">&lt;-</span> <span class="va">swls</span> <span class="op">|&gt;</span> <span class="fu">arrange</span><span class="op">(</span><span class="fu">desc</span><span class="op">(</span><span class="va">punteggio_totale</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">swls_sorted</span> <span class="op">&lt;-</span> <span class="va">swls</span> <span class="op">|&gt;</span> <span class="fu">arrange</span><span class="op">(</span><span class="fu">desc</span><span class="op">(</span><span class="va">punteggio_totale</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </li>
 <li><p><strong>Raggruppamento e sintesi dei dati</strong><br></p></li>
 </ol>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">swls_summary</span> <span class="op">&lt;-</span> <span class="va">swls</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">summarise</span><span class="op">(</span>media <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">punteggio_totale</span><span class="op">)</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">punteggio_totale</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">swls_summary</span> <span class="op">&lt;-</span> <span class="va">swls</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">summarise</span><span class="op">(</span>media <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">punteggio_totale</span><span class="op">)</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">punteggio_totale</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Conclusione</strong></p>
 <p>Questi esercizi hanno mostrato come usare <code>dplyr</code> per manipolare dati in modo efficace e leggibile.</p>
 </div>
 </div>
 </div>
 <div class="callout callout-style-simple callout-note no-icon callout-titled" title="Informazioni sull'ambiente di sviluppo">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Informazioni sull’ambiente di sviluppo
+<span class="screen-reader-only">Nota</span>Informazioni sull’ambiente di sviluppo
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.5.1 (2025-06-13)</span></span>
 <span><span class="co">#&gt; Platform: aarch64-apple-darwin20</span></span>
-<span><span class="co">#&gt; Running under: macOS Sequoia 15.6.1</span></span>
+<span><span class="co">#&gt; Running under: macOS Tahoe 26.0</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
 <span><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRblas.0.dylib </span></span>
 <span><span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; locale:</span></span>
-<span><span class="co">#&gt; [1] C/UTF-8/C/C/C/C</span></span>
+<span><span class="co">#&gt; [1] C.UTF-8/UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; time zone: Europe/Rome</span></span>
 <span><span class="co">#&gt; tzcode source: internal</span></span>
@@ -1046,50 +1022,50 @@ Informazioni sull’ambiente di sviluppo
 <span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt;  [1] missForest_1.5        mice_3.18.0           pillar_1.11.0        </span></span>
+<span><span class="co">#&gt;  [1] missForest_1.5        mice_3.18.0           pillar_1.11.1        </span></span>
 <span><span class="co">#&gt;  [4] tinytable_0.13.0      patchwork_1.3.2       ggdist_3.3.3         </span></span>
-<span><span class="co">#&gt;  [7] tidybayes_3.0.7       bayesplot_1.14.0      ggplot2_3.5.2        </span></span>
+<span><span class="co">#&gt;  [7] tidybayes_3.0.7       bayesplot_1.14.0      ggplot2_4.0.0        </span></span>
 <span><span class="co">#&gt; [10] reliabilitydiag_0.2.1 priorsense_1.1.1      posterior_1.6.1      </span></span>
 <span><span class="co">#&gt; [13] loo_2.8.0             rstan_2.32.7          StanHeaders_2.32.10  </span></span>
-<span><span class="co">#&gt; [16] brms_2.22.0           Rcpp_1.1.0            sessioninfo_1.2.3    </span></span>
+<span><span class="co">#&gt; [16] brms_2.23.0           Rcpp_1.1.0            sessioninfo_1.2.3    </span></span>
 <span><span class="co">#&gt; [19] conflicted_1.2.0      janitor_2.2.1         matrixStats_1.5.0    </span></span>
 <span><span class="co">#&gt; [22] modelr_0.1.11         tibble_3.3.0          dplyr_1.1.4          </span></span>
-<span><span class="co">#&gt; [25] tidyr_1.3.1           rio_1.2.3             here_1.0.1           </span></span>
+<span><span class="co">#&gt; [25] tidyr_1.3.1           rio_1.2.3             here_1.0.2           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;  [1] Rdpack_2.6.4          gridExtra_2.3         inline_0.3.21        </span></span>
-<span><span class="co">#&gt;  [4] sandwich_3.1-1        rlang_1.1.6           magrittr_2.0.3       </span></span>
-<span><span class="co">#&gt;  [7] multcomp_1.4-28       snakecase_0.11.1      compiler_4.5.1       </span></span>
-<span><span class="co">#&gt; [10] systemfonts_1.2.3     vctrs_0.6.5           stringr_1.5.1        </span></span>
-<span><span class="co">#&gt; [13] pkgconfig_2.0.3       shape_1.4.6.1         arrayhelpers_1.1-0   </span></span>
-<span><span class="co">#&gt; [16] fastmap_1.2.0         backports_1.5.0       utf8_1.2.6           </span></span>
-<span><span class="co">#&gt; [19] rmarkdown_2.29        itertools_0.1-3       nloptr_2.2.1         </span></span>
-<span><span class="co">#&gt; [22] ragg_1.5.0            purrr_1.1.0           jomo_2.7-6           </span></span>
-<span><span class="co">#&gt; [25] xfun_0.53             glmnet_4.1-10         randomForest_4.7-1.2 </span></span>
-<span><span class="co">#&gt; [28] cachem_1.1.0          jsonlite_2.0.0        pan_1.9              </span></span>
-<span><span class="co">#&gt; [31] broom_1.0.9           parallel_4.5.1        R6_2.6.1             </span></span>
-<span><span class="co">#&gt; [34] stringi_1.8.7         RColorBrewer_1.1-3    rpart_4.1.24         </span></span>
-<span><span class="co">#&gt; [37] boot_1.3-32           lubridate_1.9.4       estimability_1.5.1   </span></span>
-<span><span class="co">#&gt; [40] iterators_1.0.14      knitr_1.50            zoo_1.8-14           </span></span>
-<span><span class="co">#&gt; [43] pacman_0.5.1          nnet_7.3-20           Matrix_1.7-4         </span></span>
-<span><span class="co">#&gt; [46] splines_4.5.1         timechange_0.3.0      tidyselect_1.2.1     </span></span>
-<span><span class="co">#&gt; [49] abind_1.4-8           codetools_0.2-20      curl_7.0.0           </span></span>
-<span><span class="co">#&gt; [52] doRNG_1.8.6.2         pkgbuild_1.4.8        lattice_0.22-7       </span></span>
-<span><span class="co">#&gt; [55] withr_3.0.2           bridgesampling_1.1-2  coda_0.19-4.1        </span></span>
-<span><span class="co">#&gt; [58] evaluate_1.0.5        survival_3.8-3        RcppParallel_5.1.11-1</span></span>
-<span><span class="co">#&gt; [61] rngtools_1.5.2        tensorA_0.36.2.1      checkmate_2.3.3      </span></span>
-<span><span class="co">#&gt; [64] foreach_1.5.2         stats4_4.5.1          reformulas_0.4.1     </span></span>
-<span><span class="co">#&gt; [67] distributional_0.5.0  generics_0.1.4        rprojroot_2.1.1      </span></span>
-<span><span class="co">#&gt; [70] rstantools_2.5.0      scales_1.4.0          minqa_1.2.8          </span></span>
-<span><span class="co">#&gt; [73] xtable_1.8-4          glue_1.8.0            emmeans_1.11.2-8     </span></span>
-<span><span class="co">#&gt; [76] tools_4.5.1           lme4_1.1-37           mvtnorm_1.3-3        </span></span>
-<span><span class="co">#&gt; [79] grid_4.5.1            rbibutils_2.3         QuickJSR_1.8.0       </span></span>
-<span><span class="co">#&gt; [82] colorspace_2.1-1      nlme_3.1-168          cli_3.6.5            </span></span>
-<span><span class="co">#&gt; [85] textshaping_1.0.3     svUnit_1.0.8          Brobdingnag_1.2-9    </span></span>
-<span><span class="co">#&gt; [88] V8_7.0.0              gtable_0.3.6          digest_0.6.37        </span></span>
-<span><span class="co">#&gt; [91] TH.data_1.1-4         htmlwidgets_1.6.4     farver_2.1.2         </span></span>
-<span><span class="co">#&gt; [94] memoise_2.0.1         htmltools_0.5.8.1     lifecycle_1.0.4      </span></span>
-<span><span class="co">#&gt; [97] mitml_0.4-5           MASS_7.3-65</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;  [1] RColorBrewer_1.1-3    tensorA_0.36.2.1      jsonlite_2.0.0       </span></span>
+<span><span class="co">#&gt;  [4] shape_1.4.6.1         magrittr_2.0.4        TH.data_1.1-4        </span></span>
+<span><span class="co">#&gt;  [7] estimability_1.5.1    jomo_2.7-6            farver_2.1.2         </span></span>
+<span><span class="co">#&gt; [10] nloptr_2.2.1          rmarkdown_2.29        ragg_1.5.0           </span></span>
+<span><span class="co">#&gt; [13] vctrs_0.6.5           memoise_2.0.1         minqa_1.2.8          </span></span>
+<span><span class="co">#&gt; [16] htmltools_0.5.8.1     itertools_0.1-3       distributional_0.5.0 </span></span>
+<span><span class="co">#&gt; [19] curl_7.0.0            broom_1.0.10          mitml_0.4-5          </span></span>
+<span><span class="co">#&gt; [22] htmlwidgets_1.6.4     sandwich_3.1-1        emmeans_1.11.2-8     </span></span>
+<span><span class="co">#&gt; [25] zoo_1.8-14            lubridate_1.9.4       cachem_1.1.0         </span></span>
+<span><span class="co">#&gt; [28] lifecycle_1.0.4       iterators_1.0.14      pkgconfig_2.0.3      </span></span>
+<span><span class="co">#&gt; [31] Matrix_1.7-4          R6_2.6.1              fastmap_1.2.0        </span></span>
+<span><span class="co">#&gt; [34] rbibutils_2.3         snakecase_0.11.1      digest_0.6.37        </span></span>
+<span><span class="co">#&gt; [37] colorspace_2.1-1      rprojroot_2.1.1       textshaping_1.0.3    </span></span>
+<span><span class="co">#&gt; [40] randomForest_4.7-1.2  timechange_0.3.0      abind_1.4-8          </span></span>
+<span><span class="co">#&gt; [43] compiler_4.5.1        rngtools_1.5.2        withr_3.0.2          </span></span>
+<span><span class="co">#&gt; [46] S7_0.2.0              backports_1.5.0       inline_0.3.21        </span></span>
+<span><span class="co">#&gt; [49] QuickJSR_1.8.0        pkgbuild_1.4.8        pan_1.9              </span></span>
+<span><span class="co">#&gt; [52] MASS_7.3-65           tools_4.5.1           nnet_7.3-20          </span></span>
+<span><span class="co">#&gt; [55] glue_1.8.0            nlme_3.1-168          grid_4.5.1           </span></span>
+<span><span class="co">#&gt; [58] checkmate_2.3.3       generics_0.1.4        gtable_0.3.6         </span></span>
+<span><span class="co">#&gt; [61] utf8_1.2.6            foreach_1.5.2         stringr_1.5.2        </span></span>
+<span><span class="co">#&gt; [64] splines_4.5.1         lattice_0.22-7        survival_3.8-3       </span></span>
+<span><span class="co">#&gt; [67] tidyselect_1.2.1      knitr_1.50            reformulas_0.4.1     </span></span>
+<span><span class="co">#&gt; [70] arrayhelpers_1.1-0    gridExtra_2.3         V8_7.0.0             </span></span>
+<span><span class="co">#&gt; [73] stats4_4.5.1          xfun_0.53             bridgesampling_1.1-2 </span></span>
+<span><span class="co">#&gt; [76] stringi_1.8.7         pacman_0.5.1          boot_1.3-32          </span></span>
+<span><span class="co">#&gt; [79] evaluate_1.0.5        codetools_0.2-20      cli_3.6.5            </span></span>
+<span><span class="co">#&gt; [82] RcppParallel_5.1.11-1 rpart_4.1.24          xtable_1.8-4         </span></span>
+<span><span class="co">#&gt; [85] systemfonts_1.2.3     Rdpack_2.6.4          coda_0.19-4.1        </span></span>
+<span><span class="co">#&gt; [88] svUnit_1.0.8          parallel_4.5.1        rstantools_2.5.0     </span></span>
+<span><span class="co">#&gt; [91] doRNG_1.8.6.2         Brobdingnag_1.2-9     lme4_1.1-37          </span></span>
+<span><span class="co">#&gt; [94] glmnet_4.1-10         mvtnorm_1.3-3         scales_1.4.0         </span></span>
+<span><span class="co">#&gt; [97] purrr_1.1.0           rlang_1.1.6           multcomp_1.4-28</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -1105,22 +1081,7 @@ Irizarry, R. A. (2024). <em>Introduction to Data Science: Data Wrangling and Vis
 </section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><hr>
 <ol>
 <li id="fn1"><p>Per comprendere meglio il concetto di “data tidying”, possiamo rifarci a una citazione tratta dal testo di riferimento <a href="https://r4ds.hadley.nz"><em>R for Data Science (2e)</em></a>: “Tidy datasets are all alike, but every messy dataset is messy in its own way.”<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-</ol></section></main><!-- /main --><script>
-document.body.classList.add('classic-book');
-document.addEventListener('DOMContentLoaded', function() {
-  const paragraphs = document.querySelectorAll('p');
-  paragraphs.forEach(p => {
-    if (p.textContent.length > 200) {
-      p.style.hyphens = 'auto';
-      p.style.hyphenateCharacter = '-';
-    }
-  });
-  const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
-  headings.forEach(h => {
-    h.style.fontFeatureSettings = '"liga" 1, "dlig" 1, "smcp" 1';
-  });
-});
-</script><script id="quarto-html-after-body" type="application/javascript">
+</ol></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
     const anchorJS = new window.AnchorJS();
@@ -1171,13 +1132,14 @@ document.addEventListener('DOMContentLoaded', function() {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

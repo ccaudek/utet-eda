@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.34">
+<meta name="generator" content="quarto-1.8.24">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>16&nbsp; Esplorare i dati qualitativi – Analisi esplorativa dei dati (EDA) in psicologia</title>
 <style>
@@ -86,14 +86,15 @@ div.csl-indent {
 <link href="../../style/gauss.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-0a72236910a44089af39cd28873f322e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-9908c7b05874059c2106d454ac00f1d0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="../../site_libs/bootstrap/bootstrap-af5d064118ae80f4bafc3d843c3c3870.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -126,33 +127,6 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 </script><style>html{ scroll-behavior: smooth; }</style>
-<script>
-window.MathJax = {
-  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
-  svg: { scale: 1, mtextInheritFont: true, fontCache: 'none', minScale: 1 },
-  options: { renderActions: { addMenu: [0, '', ''] } },
-  loader: { load: ['input/tex','output/svg'] }
-};
-</script><script>
-window.MathJax = {
-  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
-  svg: { scale: 1, mtextInheritFont: true, fontCache: 'none', minScale: 1 },
-  options: { renderActions: { addMenu: [0, '', ''] } },
-  loader: { load: ['input/tex','output/svg'] }
-};
-// Suggerimento CSS: vedi sezione 3 per gli spazi attorno a display math
-</script><script>
-window.MathJax = {
-  tex: {
-    packages: {'[+]': ['boldsymbol']},
-    inlineMath: [['$', '$'], ['\\(', '\\)']]
-  },
-  svg: { fontCache: 'global' }
-};
-</script><link rel="stylesheet" href="../../style/_typography-extras.css">
-<link rel="stylesheet" href="../../style/_code-extras.css">
-<link rel="stylesheet" href="../../style/_math-extras.css">
-<link rel="stylesheet" href="../../style/styles.css">
 </head>
 <body class="nav-sidebar floating quarto-light">
 
@@ -170,7 +144,9 @@ window.MathJax = {
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../../index.html" class="sidebar-logo-link">
+      </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="../../">Analisi esplorativa dei dati (EDA) in psicologia</a> 
         <div class="sidebar-tools-main">
@@ -433,12 +409,12 @@ window.MathJax = {
 <li>Creare visualizzazioni per esplorare le relazioni tra due o più variabili qualitative.</li>
 </ul>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Prerequisiti
+<span class="screen-reader-only">Consiglio</span>Prerequisiti
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -451,24 +427,24 @@ Prerequisiti
 </div>
 </div>
 <div class="callout callout-style-simple callout-caution no-icon callout-titled" title="Preparazione del Notebook">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Preparazione del Notebook
+<span class="screen-reader-only">Attenzione</span>Preparazione del Notebook
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell">
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"code"</span>, <span class="st">"_common.R"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"code"</span>, <span class="st">"_common.R"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/source.html">source</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Load packages</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">"pacman"</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"pacman"</span><span class="op">)</span></span>
-<span><span class="fu">pacman</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pacman/man/p_load.html">p_load</a></span><span class="op">(</span><span class="va">tidyr</span>, <span class="va">viridis</span>, <span class="va">vcd</span>, <span class="va">janitor</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu">pacman</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pacman/man/p_load.html">p_load</a></span><span class="op">(</span><span class="va">tidyr</span>, <span class="va">viridis</span>, <span class="va">vcd</span>, <span class="va">janitor</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -479,11 +455,11 @@ Preparazione del Notebook
 <p>Per fornire esempi pratici, in questo capitolo utilizzeremo il dataset <a href="https://allisonhorst.github.io/palmerpenguins/index.html">palmerpenguins</a>, messo a disposizione da <a href="https://allisonhorst.com">Allison Horst</a>. I dati sono stati raccolti e resi disponibili da <a href="https://www.uaf.edu/cfos/people/faculty/detail/kristen-gorman.php">Dr.&nbsp;Kristen Gorman</a> e dalla Palmer Station, parte del programma di ricerca ecologica a lungo termine <a href="https://lternet.edu">Long Term Ecological Research Network</a>. Il dataset contiene informazioni su 344 pinguini, appartenenti a 3 diverse specie, raccolte su 3 isole dell’arcipelago di Palmer, in Antartide. Per semplicità, i dati sono organizzati nel file <code>penguins.csv</code>.</p>
 <p>Possiamo caricare i dati grezzi dal file <code>penguins.csv</code> in un data frame con il seguente comando:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu">rio</span><span class="fu">::</span><span class="fu"><a href="http://gesistsa.github.io/rio/reference/import.html">import</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"data"</span>, <span class="st">"penguins.csv"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu">rio</span><span class="fu">::</span><span class="fu"><a href="http://gesistsa.github.io/rio/reference/import.html">import</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"data"</span>, <span class="st">"penguins.csv"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Esaminiamo i dati.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">glimpse</span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">glimpse</span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 344</span></span>
 <span><span class="co">#&gt; Columns: 8</span></span>
 <span><span class="co">#&gt; $ species           &lt;chr&gt; "Adelie", "Adelie", "Adelie", "Adelie", "Adelie", "A…</span></span>
@@ -493,12 +469,12 @@ Preparazione del Notebook
 <span><span class="co">#&gt; $ flipper_length_mm &lt;int&gt; 181, 186, 195, NA, 193, 190, 181, 195, 193, 190, 186…</span></span>
 <span><span class="co">#&gt; $ body_mass_g       &lt;int&gt; 3750, 3800, 3250, NA, 3450, 3650, 3625, 4675, 3475, …</span></span>
 <span><span class="co">#&gt; $ sex               &lt;chr&gt; "male", "female", "female", NA, "female", "male", "f…</span></span>
-<span><span class="co">#&gt; $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007…</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007…</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Per semplicità, rimuoviamo le righe con valori mancanti con la seguente istruzione:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">d</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">drop_na</span><span class="op">(</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">d</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">drop_na</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section><section id="tabelle-di-contingenza" class="level2" data-number="16.2"><h2 data-number="16.2" class="anchored" data-anchor-id="tabelle-di-contingenza">
 <span class="header-section-number">16.2</span> Tabelle di contingenza</h2>
@@ -512,14 +488,14 @@ Preparazione del Notebook
 </ul>
 <p>Con la funzione <code><a href="https://sfirke.github.io/janitor/reference/tabyl.html">tabyl()</a></code> del pacchetto <code>janitor</code> possiamo costruire una tabella che mostra quante osservazioni appartengono a ciascuna combinazione di isola e specie:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">tabyl</span><span class="op">(</span><span class="va">island</span>, <span class="va">species</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">adorn_totals</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"row"</span>, <span class="st">"col"</span><span class="op">)</span><span class="op">)</span> </span>
 <span><span class="co">#&gt;     island Adelie Chinstrap Gentoo Total</span></span>
 <span><span class="co">#&gt;     Biscoe     44         0    119   163</span></span>
 <span><span class="co">#&gt;      Dream     55        68      0   123</span></span>
 <span><span class="co">#&gt;  Torgersen     47         0      0    47</span></span>
-<span><span class="co">#&gt;      Total    146        68    119   333</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;      Total    146        68    119   333</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>La tabella risultante riporta la distribuzione di tre specie di pinguini (Adelie, Chinstrap, Gentoo) rispetto a tre isole (Biscoe, Dream, Torgersen):</p>
 <ul>
@@ -548,7 +524,7 @@ Preparazione del Notebook
 <section id="proporzioni-di-riga-specie-per-isola" class="level3" data-number="16.3.1"><h3 data-number="16.3.1" class="anchored" data-anchor-id="proporzioni-di-riga-specie-per-isola">
 <span class="header-section-number">16.3.1</span> Proporzioni di riga (specie per isola)</h3>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu">tabyl</span><span class="op">(</span><span class="va">island</span>, <span class="va">species</span><span class="op">)</span> <span class="op">%&gt;%</span>   <span class="co"># Tabella di contingenza</span></span>
 <span>  <span class="fu">adorn_percentages</span><span class="op">(</span><span class="st">"row"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co"># Proporzioni rispetto a ciascuna isola</span></span>
 <span>  <span class="fu">adorn_totals</span><span class="op">(</span><span class="st">"col"</span><span class="op">)</span> <span class="op">%&gt;%</span>      <span class="co"># Totali di riga</span></span>
@@ -556,13 +532,13 @@ Preparazione del Notebook
 <span><span class="co">#&gt;     island  Adelie Chinstrap Gentoo   Total</span></span>
 <span><span class="co">#&gt;     Biscoe  26.99%     0.00% 73.01% 100.00%</span></span>
 <span><span class="co">#&gt;      Dream  44.72%    55.28%  0.00% 100.00%</span></span>
-<span><span class="co">#&gt;  Torgersen 100.00%     0.00%  0.00% 100.00%</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;  Torgersen 100.00%     0.00%  0.00% 100.00%</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Questo output mostra, per ogni isola, la percentuale di pinguini appartenenti a ciascuna specie.</p>
 </section><section id="proporzioni-di-colonna-isole-per-specie" class="level3" data-number="16.3.2"><h3 data-number="16.3.2" class="anchored" data-anchor-id="proporzioni-di-colonna-isole-per-specie">
 <span class="header-section-number">16.3.2</span> Proporzioni di colonna (isole per specie)</h3>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">tabyl</span><span class="op">(</span><span class="va">island</span>, <span class="va">species</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">adorn_percentages</span><span class="op">(</span><span class="st">"col"</span><span class="op">)</span> <span class="op">|&gt;</span>  <span class="co"># Proporzioni rispetto a ciascuna specie</span></span>
 <span>  <span class="fu">adorn_totals</span><span class="op">(</span><span class="st">"row"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
@@ -571,7 +547,7 @@ Preparazione del Notebook
 <span><span class="co">#&gt;     Biscoe  30.14%     0.00% 100.00%</span></span>
 <span><span class="co">#&gt;      Dream  37.67%   100.00%   0.00%</span></span>
 <span><span class="co">#&gt;  Torgersen  32.19%     0.00%   0.00%</span></span>
-<span><span class="co">#&gt;      Total 100.00%   100.00% 100.00%</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;      Total 100.00%   100.00% 100.00%</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Qui vediamo, per ciascuna specie, su quali isole si distribuiscono i pinguini e con quale proporzione.</p>
 <p>In sintesi, le <em>proporzioni di riga e colonna</em> forniscono un dettaglio numerico che aiuta a interpretare meglio le relazioni tra le variabili categoriali.</p>
@@ -583,10 +559,10 @@ Preparazione del Notebook
 <p>Nel caso più semplice, un grafico a barre rappresenta una sola variabile categoriale. Le categorie sono riportate lungo un asse (di solito l’asse orizzontale) e la lunghezza o altezza delle barre è proporzionale al numero di osservazioni per ciascuna categoria.</p>
 <p>Ad esempio, per i dati sui pinguini possiamo visualizzare il numero totale di esemplari osservati in ciascuna isola:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">df</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">island</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">df</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">island</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_bar</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">xlab</span><span class="op">(</span><span class="st">"Isola"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ylab</span><span class="op">(</span><span class="st">"Numero di pinguini"</span><span class="op">)</span> </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu">ylab</span><span class="op">(</span><span class="st">"Numero di pinguini"</span><span class="op">)</span> </span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="03_exploring_qualitative_data_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
@@ -596,10 +572,10 @@ Preparazione del Notebook
 </div>
 <p>Allo stesso modo, possiamo costruire un grafico a barre che mostra la distribuzione delle specie:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">df</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">species</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">df</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">species</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_bar</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">xlab</span><span class="op">(</span><span class="st">"Specie"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ylab</span><span class="op">(</span><span class="st">"Numero di pinguini"</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu">ylab</span><span class="op">(</span><span class="st">"Numero di pinguini"</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="03_exploring_qualitative_data_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
@@ -613,11 +589,11 @@ Preparazione del Notebook
 <p>Un grafico a barre può essere esteso per visualizzare <em>simultaneamente due variabili categoriali</em>. In questo caso, una variabile viene posta sull’asse delle ascisse, mentre la seconda è distinta tramite colori diversi o barre impilate.</p>
 <p>Ad esempio, possiamo osservare come le diverse specie di pinguini si distribuiscono sulle isole:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">df</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">island</span>, fill <span class="op">=</span> <span class="va">species</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">df</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">island</span>, fill <span class="op">=</span> <span class="va">species</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_bar</span><span class="op">(</span>position <span class="op">=</span> <span class="st">"stack"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">xlab</span><span class="op">(</span><span class="st">"Isola"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ylab</span><span class="op">(</span><span class="st">"Numero di pinguini"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">labs</span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"Specie"</span><span class="op">)</span> </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu">labs</span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"Specie"</span><span class="op">)</span> </span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="03_exploring_qualitative_data_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
@@ -627,11 +603,11 @@ Preparazione del Notebook
 </div>
 <p>Oppure, invertendo i ruoli delle due variabili, possiamo rappresentare le specie sull’asse delle ascisse e distinguere le isole tramite colori:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">df</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">species</span>, fill <span class="op">=</span> <span class="va">island</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">df</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">species</span>, fill <span class="op">=</span> <span class="va">island</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_bar</span><span class="op">(</span>position <span class="op">=</span> <span class="st">"stack"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">xlab</span><span class="op">(</span><span class="st">"Specie"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ylab</span><span class="op">(</span><span class="st">"Numero di pinguini"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">labs</span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"Isola"</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu">labs</span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"Isola"</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="03_exploring_qualitative_data_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
@@ -645,11 +621,11 @@ Preparazione del Notebook
 <p>Oltre alle frequenze assolute, è spesso utile rappresentare le <em>frequenze relative</em> (cioè le proporzioni). Questo approccio elimina l’effetto del numero totale di osservazioni, rendendo più facile confrontare le distribuzioni tra gruppi di dimensioni diverse.</p>
 <p>Ad esempio, il grafico seguente mostra la composizione relativa delle specie per ogni isola:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">df</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">island</span>, fill <span class="op">=</span> <span class="va">species</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">df</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">island</span>, fill <span class="op">=</span> <span class="va">species</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_bar</span><span class="op">(</span>position <span class="op">=</span> <span class="st">"fill"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">xlab</span><span class="op">(</span><span class="st">"Isola"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ylab</span><span class="op">(</span><span class="st">"Proporzione"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">labs</span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"Specie"</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu">labs</span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"Specie"</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="03_exploring_qualitative_data_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
@@ -667,12 +643,12 @@ Preparazione del Notebook
 </ol>
 <p>In pratica, non ci dice solo <em>come</em> le categorie si suddividono all’interno dei gruppi, ma anche <em>quanto grandi</em> sono i gruppi stessi.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">mosaic</span><span class="op">(</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">mosaic</span><span class="op">(</span></span>
 <span>  <span class="op">~</span> <span class="va">species</span> <span class="op">+</span> <span class="va">island</span>, </span>
 <span>  data <span class="op">=</span> <span class="va">df</span>, </span>
 <span>  main <span class="op">=</span> <span class="st">"Mosaic Plot of Species and Island"</span>,</span>
 <span>  shade <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="03_exploring_qualitative_data_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
@@ -724,10 +700,10 @@ Preparazione del Notebook
 <span class="header-section-number">16.6.1</span> Confronto tra variabili categoriali</h3>
 <p>Per confrontare due variabili qualitative, possiamo utilizzare un grafico a barre con suddivisione per gruppi. Ad esempio, vediamo come si distribuisce il <em>genere</em> dei pinguini (maschio/femmina) all’interno delle tre specie:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">df</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">species</span>, fill <span class="op">=</span> <span class="va">sex</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">df</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">species</span>, fill <span class="op">=</span> <span class="va">sex</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_bar</span><span class="op">(</span>position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">xlab</span><span class="op">(</span><span class="st">"Specie"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ylab</span><span class="op">(</span><span class="st">"Conteggio"</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu">ylab</span><span class="op">(</span><span class="st">"Conteggio"</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="03_exploring_qualitative_data_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
@@ -740,7 +716,7 @@ Preparazione del Notebook
 <span class="header-section-number">16.6.2</span> Confronto tra variabili numeriche e categorie</h3>
 <p>Spesso è ancora più interessante osservare <em>come una variabile numerica varia tra gruppi</em>. Questo approccio ci consente di capire se gruppi diversi tendono ad avere valori simili o differenti. Prendiamo come esempio la variabile <code>body_mass_g</code> (peso corporeo in grammi), e confrontiamola in base a <em>specie</em> e <em>genere</em>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">df</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">species</span>, y <span class="op">=</span> <span class="va">body_mass_g</span>, fill <span class="op">=</span> <span class="va">sex</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">df</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">species</span>, y <span class="op">=</span> <span class="va">body_mass_g</span>, fill <span class="op">=</span> <span class="va">sex</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_violin</span><span class="op">(</span></span>
 <span>    position <span class="op">=</span> <span class="fu">position_dodge</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">0.9</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.5</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
@@ -749,7 +725,7 @@ Preparazione del Notebook
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">xlab</span><span class="op">(</span><span class="st">"Specie"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ylab</span><span class="op">(</span><span class="st">"Massa corporea (g)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">labs</span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"Genere"</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu">labs</span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"Genere"</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="03_exploring_qualitative_data_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
@@ -785,12 +761,12 @@ Preparazione del Notebook
 </ul>
 <p>In questo modo, possiamo individuare sia differenze sistematiche sia aree di variabilità comune tra i gruppi.</p>
 <div class="callout callout-style-simple callout-important no-icon callout-titled" title="Problemi">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Problemi
+<span class="screen-reader-only">Importante</span>Problemi
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -806,7 +782,7 @@ Problemi
 <p>Dovrai creare tabelle di contingenza e rappresentazioni grafiche per esplorare le relazioni tra queste variabili.</p>
 <p><strong>Importazione dei dati</strong></p>
 <p>Importa i dati da un file CSV e visualizza la loro struttura.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/sfirke/janitor">janitor</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://here.r-lib.org/">here</a></span><span class="op">)</span></span>
 <span></span>
@@ -814,43 +790,43 @@ Problemi
 <span><span class="va">swls_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"data"</span>, <span class="st">"swls_students.csv"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Esamina i dati</span></span>
-<span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">swls_data</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">swls_data</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Tabelle di Contingenza</strong></p>
 <ol type="1">
 <li>Crea una tabella di contingenza tra <code>gender</code> e <code>school_type</code>.</li>
 <li>Calcola le proporzioni di riga e colonna.</li>
 </ol>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Tabella di contingenza</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Tabella di contingenza</span></span>
 <span><span class="va">swls_data</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://sfirke.github.io/janitor/reference/tabyl.html">tabyl</a></span><span class="op">(</span><span class="va">gender</span>, <span class="va">school_type</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://sfirke.github.io/janitor/reference/adorn_totals.html">adorn_totals</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"row"</span>, <span class="st">"col"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu"><a href="https://sfirke.github.io/janitor/reference/adorn_totals.html">adorn_totals</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"row"</span>, <span class="st">"col"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Calcola ora le proporzioni relative.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Proporzioni di riga</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Proporzioni di riga</span></span>
 <span><span class="va">swls_data</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://sfirke.github.io/janitor/reference/tabyl.html">tabyl</a></span><span class="op">(</span><span class="va">gender</span>, <span class="va">school_type</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://sfirke.github.io/janitor/reference/adorn_percentages.html">adorn_percentages</a></span><span class="op">(</span><span class="st">"row"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://sfirke.github.io/janitor/reference/adorn_pct_formatting.html">adorn_pct_formatting</a></span><span class="op">(</span>digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Proporzioni di colonna</span></span>
+<span>  <span class="fu"><a href="https://sfirke.github.io/janitor/reference/adorn_pct_formatting.html">adorn_pct_formatting</a></span><span class="op">(</span>digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Proporzioni di colonna</span></span>
 <span><span class="va">swls_data</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://sfirke.github.io/janitor/reference/tabyl.html">tabyl</a></span><span class="op">(</span><span class="va">gender</span>, <span class="va">school_type</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://sfirke.github.io/janitor/reference/adorn_percentages.html">adorn_percentages</a></span><span class="op">(</span><span class="st">"col"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://sfirke.github.io/janitor/reference/adorn_pct_formatting.html">adorn_pct_formatting</a></span><span class="op">(</span>digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu"><a href="https://sfirke.github.io/janitor/reference/adorn_pct_formatting.html">adorn_pct_formatting</a></span><span class="op">(</span>digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Visualizzazione Grafica</strong></p>
 <ol type="1">
 <li>Crea un grafico a barre per visualizzare il numero di studenti per tipo di scuola.</li>
 <li>Crea un grafico a barre per la distribuzione del genere per tipo di scuola.</li>
 </ol>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">swls_data</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">school_type</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">swls_data</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">school_type</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">"Numero di studenti per tipo di scuola"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">xlab</a></span><span class="op">(</span><span class="st">"Tipo di scuola"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ylab</a></span><span class="op">(</span><span class="st">"Numero di studenti"</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">swls_data</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">school_type</span>, fill <span class="op">=</span> <span class="va">gender</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ylab</a></span><span class="op">(</span><span class="st">"Numero di studenti"</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">swls_data</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">school_type</span>, fill <span class="op">=</span> <span class="va">gender</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">"Distribuzione del genere per tipo di scuola"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">xlab</a></span><span class="op">(</span><span class="st">"Tipo di scuola"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ylab</a></span><span class="op">(</span><span class="st">"Numero di studenti"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"Genere"</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"Genere"</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Domande per la riflessione</strong></p>
 <ul>
 <li>Quale tipo di scuola ha il maggior numero di studenti?</li>
@@ -866,29 +842,29 @@ Problemi
 </div>
 </div>
 <div class="callout callout-style-simple callout-note no-icon callout-titled" title="Informazioni sull'ambiente di sviluppo">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Informazioni sull’ambiente di sviluppo
+<span class="screen-reader-only">Nota</span>Informazioni sull’ambiente di sviluppo
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.5.1 (2025-06-13)</span></span>
 <span><span class="co">#&gt; Platform: aarch64-apple-darwin20</span></span>
-<span><span class="co">#&gt; Running under: macOS Sequoia 15.6.1</span></span>
+<span><span class="co">#&gt; Running under: macOS Tahoe 26.0</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
 <span><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRblas.0.dylib </span></span>
 <span><span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; locale:</span></span>
-<span><span class="co">#&gt; [1] C/UTF-8/C/C/C/C</span></span>
+<span><span class="co">#&gt; [1] C.UTF-8/UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; time zone: Europe/Rome</span></span>
 <span><span class="co">#&gt; tzcode source: internal</span></span>
@@ -899,25 +875,25 @@ Informazioni sull’ambiente di sviluppo
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
 <span><span class="co">#&gt;  [1] vcd_1.4-13            viridis_0.6.5         viridisLite_0.4.2    </span></span>
-<span><span class="co">#&gt;  [4] pillar_1.11.0         tinytable_0.13.0      patchwork_1.3.2      </span></span>
+<span><span class="co">#&gt;  [4] pillar_1.11.1         tinytable_0.13.0      patchwork_1.3.2      </span></span>
 <span><span class="co">#&gt;  [7] ggdist_3.3.3          tidybayes_3.0.7       bayesplot_1.14.0     </span></span>
-<span><span class="co">#&gt; [10] ggplot2_3.5.2         reliabilitydiag_0.2.1 priorsense_1.1.1     </span></span>
+<span><span class="co">#&gt; [10] ggplot2_4.0.0         reliabilitydiag_0.2.1 priorsense_1.1.1     </span></span>
 <span><span class="co">#&gt; [13] posterior_1.6.1       loo_2.8.0             rstan_2.32.7         </span></span>
-<span><span class="co">#&gt; [16] StanHeaders_2.32.10   brms_2.22.0           Rcpp_1.1.0           </span></span>
+<span><span class="co">#&gt; [16] StanHeaders_2.32.10   brms_2.23.0           Rcpp_1.1.0           </span></span>
 <span><span class="co">#&gt; [19] sessioninfo_1.2.3     conflicted_1.2.0      janitor_2.2.1        </span></span>
 <span><span class="co">#&gt; [22] matrixStats_1.5.0     modelr_0.1.11         tibble_3.3.0         </span></span>
 <span><span class="co">#&gt; [25] dplyr_1.1.4           tidyr_1.3.1           rio_1.2.3            </span></span>
-<span><span class="co">#&gt; [28] here_1.0.1           </span></span>
+<span><span class="co">#&gt; [28] here_1.0.2           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span><span class="co">#&gt;  [1] gridExtra_2.3         inline_0.3.21         sandwich_3.1-1       </span></span>
-<span><span class="co">#&gt;  [4] rlang_1.1.6           magrittr_2.0.3        multcomp_1.4-28      </span></span>
+<span><span class="co">#&gt;  [4] rlang_1.1.6           magrittr_2.0.4        multcomp_1.4-28      </span></span>
 <span><span class="co">#&gt;  [7] snakecase_0.11.1      compiler_4.5.1        systemfonts_1.2.3    </span></span>
-<span><span class="co">#&gt; [10] vctrs_0.6.5           stringr_1.5.1         pkgconfig_2.0.3      </span></span>
+<span><span class="co">#&gt; [10] vctrs_0.6.5           stringr_1.5.2         pkgconfig_2.0.3      </span></span>
 <span><span class="co">#&gt; [13] arrayhelpers_1.1-0    fastmap_1.2.0         backports_1.5.0      </span></span>
 <span><span class="co">#&gt; [16] labeling_0.4.3        rmarkdown_2.29        ragg_1.5.0           </span></span>
 <span><span class="co">#&gt; [19] purrr_1.1.0           xfun_0.53             cachem_1.1.0         </span></span>
-<span><span class="co">#&gt; [22] jsonlite_2.0.0        broom_1.0.9           parallel_4.5.1       </span></span>
+<span><span class="co">#&gt; [22] jsonlite_2.0.0        broom_1.0.10          parallel_4.5.1       </span></span>
 <span><span class="co">#&gt; [25] R6_2.6.1              stringi_1.8.7         RColorBrewer_1.1-3   </span></span>
 <span><span class="co">#&gt; [28] lmtest_0.9-40         lubridate_1.9.4       estimability_1.5.1   </span></span>
 <span><span class="co">#&gt; [31] knitr_1.50            zoo_1.8-14            R.utils_2.13.0       </span></span>
@@ -925,19 +901,19 @@ Informazioni sull’ambiente di sviluppo
 <span><span class="co">#&gt; [37] timechange_0.3.0      tidyselect_1.2.1      abind_1.4-8          </span></span>
 <span><span class="co">#&gt; [40] yaml_2.3.10           codetools_0.2-20      curl_7.0.0           </span></span>
 <span><span class="co">#&gt; [43] pkgbuild_1.4.8        lattice_0.22-7        withr_3.0.2          </span></span>
-<span><span class="co">#&gt; [46] bridgesampling_1.1-2  coda_0.19-4.1         evaluate_1.0.5       </span></span>
-<span><span class="co">#&gt; [49] survival_3.8-3        RcppParallel_5.1.11-1 tensorA_0.36.2.1     </span></span>
-<span><span class="co">#&gt; [52] checkmate_2.3.3       stats4_4.5.1          distributional_0.5.0 </span></span>
-<span><span class="co">#&gt; [55] generics_0.1.4        rprojroot_2.1.1       rstantools_2.5.0     </span></span>
-<span><span class="co">#&gt; [58] scales_1.4.0          xtable_1.8-4          glue_1.8.0           </span></span>
-<span><span class="co">#&gt; [61] emmeans_1.11.2-8      tools_4.5.1           data.table_1.17.8    </span></span>
-<span><span class="co">#&gt; [64] mvtnorm_1.3-3         QuickJSR_1.8.0        colorspace_2.1-1     </span></span>
-<span><span class="co">#&gt; [67] nlme_3.1-168          cli_3.6.5             textshaping_1.0.3    </span></span>
-<span><span class="co">#&gt; [70] svUnit_1.0.8          Brobdingnag_1.2-9     V8_7.0.0             </span></span>
-<span><span class="co">#&gt; [73] gtable_0.3.6          R.methodsS3_1.8.2     digest_0.6.37        </span></span>
-<span><span class="co">#&gt; [76] TH.data_1.1-4         htmlwidgets_1.6.4     farver_2.1.2         </span></span>
-<span><span class="co">#&gt; [79] R.oo_1.27.1           memoise_2.0.1         htmltools_0.5.8.1    </span></span>
-<span><span class="co">#&gt; [82] lifecycle_1.0.4       MASS_7.3-65</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [46] bridgesampling_1.1-2  S7_0.2.0              coda_0.19-4.1        </span></span>
+<span><span class="co">#&gt; [49] evaluate_1.0.5        survival_3.8-3        RcppParallel_5.1.11-1</span></span>
+<span><span class="co">#&gt; [52] tensorA_0.36.2.1      checkmate_2.3.3       stats4_4.5.1         </span></span>
+<span><span class="co">#&gt; [55] distributional_0.5.0  generics_0.1.4        rprojroot_2.1.1      </span></span>
+<span><span class="co">#&gt; [58] rstantools_2.5.0      scales_1.4.0          xtable_1.8-4         </span></span>
+<span><span class="co">#&gt; [61] glue_1.8.0            emmeans_1.11.2-8      tools_4.5.1          </span></span>
+<span><span class="co">#&gt; [64] data.table_1.17.8     mvtnorm_1.3-3         QuickJSR_1.8.0       </span></span>
+<span><span class="co">#&gt; [67] colorspace_2.1-1      nlme_3.1-168          cli_3.6.5            </span></span>
+<span><span class="co">#&gt; [70] textshaping_1.0.3     svUnit_1.0.8          Brobdingnag_1.2-9    </span></span>
+<span><span class="co">#&gt; [73] V8_7.0.0              gtable_0.3.6          R.methodsS3_1.8.2    </span></span>
+<span><span class="co">#&gt; [76] digest_0.6.37         TH.data_1.1-4         htmlwidgets_1.6.4    </span></span>
+<span><span class="co">#&gt; [79] farver_2.1.2          R.oo_1.27.1           memoise_2.0.1        </span></span>
+<span><span class="co">#&gt; [82] htmltools_0.5.8.1     lifecycle_1.0.4       MASS_7.3-65</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -950,22 +926,7 @@ Informazioni sull’ambiente di sviluppo
 Tukey, J. W. et al. (1977). <em>Exploratory data analysis</em> (Vol. 2). Springer.
 </div>
 </div>
-</section></main><!-- /main --><script>
-document.body.classList.add('classic-book');
-document.addEventListener('DOMContentLoaded', function() {
-  const paragraphs = document.querySelectorAll('p');
-  paragraphs.forEach(p => {
-    if (p.textContent.length > 200) {
-      p.style.hyphens = 'auto';
-      p.style.hyphenateCharacter = '-';
-    }
-  });
-  const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
-  headings.forEach(h => {
-    h.style.fontFeatureSettings = '"liga" 1, "dlig" 1, "smcp" 1';
-  });
-});
-</script><script id="quarto-html-after-body" type="application/javascript">
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
     const anchorJS = new window.AnchorJS();
@@ -1016,13 +977,14 @@ document.addEventListener('DOMContentLoaded', function() {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
