@@ -32,7 +32,7 @@ here::here("code", "_common.R") |>
 
 # Load packages
 if (!requireNamespace("pacman")) install.packages("pacman")
-pacman::p_load(tidyr)
+pacman::p_load(tidyr, gt, tibble)
 ```
 :::
 
@@ -585,7 +585,7 @@ names_ord <- p.names[height_ord]
 names_ord
 ```
 
-## Operazioni vettoriali e vettorizzazione in R
+## Operazioni vettoriali e vettorializzazione in R
 
 La vettorializzazione è una delle caratteristiche più potenti di R, che consente di applicare operazioni o funzioni direttamente a tutti gli elementi di un vettore in modo simultaneo, senza dover ricorrere a cicli espliciti. Questo approccio rende il codice più conciso, leggibile ed efficiente, sfruttando al meglio le capacità intrinseche del linguaggio.
 
@@ -604,6 +604,39 @@ Se vogliamo moltiplicare ciascun elemento di `my_vec` per 5, possiamo scrivere:
 ```{r}
 my_vec * 5
 ```
+
+Il risultato è un nuovo vettore in cui ciascun elemento è stato moltiplicato per 5. La logica della vettorializzazione può essere riassunta nella tabella seguente:
+
+```{r}
+#| echo: false
+#| tbl-cap: "Tabella creata dinamicamente con R e gt."
+
+# Dati di partenza
+my_vec <- c(3, 5, 7, 1, 9, 20)
+i <- 1:length(my_vec)
+risultato <- my_vec * 5
+
+# Creazione del dataframe
+tabella_dati <- data.frame(
+  Indice = i,
+  Elemento = my_vec,
+  Operazione = paste(my_vec, "× 5"),
+  Risultato = risultato
+)
+
+# Creazione della tabella con gt
+gt(tabella_dati) |>
+  cols_align(align = "center") |> 
+  tab_header(
+    title = "Moltiplicazione degli Elementi di un Vettore"
+  ) |>
+  cols_label(
+    Indice = "Indice i",
+    Elemento = "Elemento my_vec[i]"
+  )
+```
+
+Come si vede, l’operazione viene eseguita automaticamente su ciascun elemento del vettore, senza bisogno di cicli `for`.
 
 Analogamente, possiamo effettuare altre operazioni algebriche, come divisione o elevamento a potenza:
 
@@ -633,7 +666,47 @@ my_vec + my_vec2
 
 In questo caso, il primo elemento di `my_vec` viene sommato al primo elemento di `my_vec2`, il secondo elemento al secondo, e così via.
 
-::: {#exm-}
+```{r}
+#| echo: false
+#| tbl-cap: "Somma degli elementi di due vettori."
+
+# 1. Dati di partenza
+my_vec <- c(3, 5, 7, 1, 9, 20)
+my_vec2 <- c(17, 15, 13, 19, 11, 0)
+
+# 2. Creazione del tibble (simile a un data.frame)
+dati_tabella <- tibble(
+  indice = 1:length(my_vec),
+  vec1 = my_vec,
+  vec2 = my_vec2,
+  operazione = paste(my_vec, "+", my_vec2),
+  risultato = my_vec + my_vec2
+)
+
+# 3. Creazione e formattazione della tabella con gt
+gt(dati_tabella) |>
+  tab_header(
+    title = "Operazioni di Somma tra Vettori",
+    subtitle = "Ogni elemento di my_vec viene sommato al corrispondente elemento di my_vec2."
+  ) |>
+  tab_spanner(
+    label = "Vettori di Input",
+    columns = c(vec1, vec2)
+  ) |>
+  cols_label(
+    indice = "Indice i",
+    vec1 = "my_vec[i]",
+    vec2 = "my_vec2[i]",
+    operazione = "Operazione",
+    risultato = "Risultato"
+  ) |>
+  cols_align(
+    align = "center",
+    columns = everything()
+  )
+```
+
+::: {.callout-note collapse=true title="Esempio"}
 Di seguito mostriamo come calcolare i punteggi totali per 10 individui che hanno risposto ai 5 item della *Satisfaction With Life Scale* (SWLS), utilizzando le formule e l'aritmetica vettorializzata di R. 
 
 **Step 1:** Definiamo i punteggi per ciascun item. Ogni vettore contiene i punteggi dati dai 10 individui a uno specifico item della scala:
