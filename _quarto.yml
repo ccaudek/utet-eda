@@ -24,7 +24,11 @@ book:
     right: |
       Realizzato con <a href="https://quarto.org/">Quarto</a>.
   favicon: style/gauss.png
+
+
   sidebar:
+    # style: "docked"
+    search: true
     collapse-level: 1
 
   chapters:
@@ -33,7 +37,7 @@ book:
 
     - part: chapters/key_notions/introduction_key_notions.qmd
       chapters:
-        - chapters/key_notions/01_data_analysis.qmd
+        # - chapters/key_notions/01_data_analysis.qmd
         - chapters/key_notions/02_key_notions.qmd
         - chapters/key_notions/03_design.qmd 
         - chapters/key_notions/04_measurement.qmd
@@ -63,6 +67,7 @@ book:
         - chapters/eda/09_propedeutic_causality.qmd
         - chapters/eda/10_causality.qmd
         - chapters/eda/11_outlier.qmd
+        - chapters/eda/12_gauss.qmd
 
     - part: "Epilogo"
       chapters:
@@ -81,44 +86,58 @@ link-citations: true
 
 format:
   html:
-    theme: cosmo
-    fig-format: png
-    dpi: 192
-    fig-responsive: true
-    smooth-scroll: true
-    page-layout: article
-    max-width: 70ch
-    number-sections: true
-    link-external-icon: true
-    link-external-newwindow: true
-    footnotes-hover: true
-    reader-mode: true
-    callout-appearance: minimal
-    lang: it
-    title-block-banner: false
-    toc-title: "Sommario"
-    date-format: "D MMMM YYYY"
+    code-fold: false
+    code-summary: "Code show/hide"
     code-copy: hover
     code-link: true
     code-overflow: scroll
-    code-line-numbers: false
-    code-block-bg: false
-    code-block-border-left: false
+    code-block-bg: true
+    # highlight-style: github
+    # code-block-border-left: "#6C6C6C"
+    theme: 
+      light: 
+        - cosmo
+      dark: darkly
+    mainfont: "system-ui"
+    # max-width: 74ch
+    # number-sections: true
+    lang: it
+    reader-mode: true
+    # toc: true
+    toc-title: "Sommario"
+    # toc-expand: 2
+    smooth-scroll: true
+    footnotes-hover: true
+    link-external-icon: true
+    link-external-newwindow: true
+
+  # Figure 
+    fig-align: center
+    fig-responsive: true
+    fig-cap-location: bottom
+    fig-format: png 
+  
+    # Matematica
+    html-math-method:
+      method: mathjax
+
+  # Media
+    lightbox: auto
 
 execute:
-  freeze: auto
-  echo: true
-  warning: false
-  message: false
-  fig.width: 6
-  fig.asp: 0.618
-  fig.retina: 2
-  fig.align: "center"
-  fig.show: "hold"
-  # options:
-  #   width: 120
-  #   pillar.width: Inf
-  #   tibble.width: Inf
+  freeze: auto  # Skip re-executing unchanged code chunks
+  echo: true  # Display code in the output document
+  warning: false  # Suppress warnings in output
+  message: false  # Suppress messages in output
+  fig.width: 6  # Set figure width (in inches)
+  fig.asp: 0.618  # Set figure aspect ratio (golden ratio for aesthetics)
+  fig.retina: 2  # High resolution for retina displays
+  fig.align: "center"  # Center-align all figures
+  fig.show: "hold"  # Group multiple figures from a chunk
+  options:
+    width: 120            # allarga la console virtuale
+    pillar.width: Inf      # disattiva il riassunto colonne
+    tibble.width: Inf      # idem, per sicurezza
 
 website:
   cookie-consent:

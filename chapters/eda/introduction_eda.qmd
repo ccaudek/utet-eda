@@ -1,38 +1,35 @@
 # EDA {.unnumbered}
 
-L’analisi esplorativa dei dati (*Exploratory Data Analysis*, EDA) è un processo attivo di scoperta, un dialogo critico con i dati volto a rivelare ciò che è inatteso. Più che un insieme di tecniche, è un approccio mentale: un modo per mettere alla prova il proprio modello mentale attraverso il confronto sistematico tra aspettative e realtà. Prima di procedere con qualsiasi tipo di visualizzazione, è utile esplicitare le proprie aspettative, per poi verificare se i dati confermano, contraddicono o complicano tali ipotesi preliminari. In questo senso, l’EDA è una forma di *model checking* intuitivo, in cui l’intuizione viene continuamente affinata dall’evidenza empirica.
+*Guardare i dati prima di modellarli.*
 
+# L'analisi esplorativa dei dati (EDA)
 
-## Il Ruolo Fondamentale dell’EDA
+L'analisi esplorativa dei dati (EDA, dall'inglese *Exploratory Data Analysis*) è il processo di esplorazione e familiarizzazione con un dataset prima di intraprendere qualsiasi inferenza formale. Non si riduce alla semplice creazione di grafici, ma costituisce un **dialogo critico con l'evidenza empirica**: che cosa prevede la teoria? Che cosa mostrano effettivamente i dati? Le discrepanze osservate sono errori di misura, anomalie fortuite, o indicano piuttosto che il nostro modello teorico preliminare è incompleto o errato?
 
-Una volta raccolti i dati, il primo passo dell’analisi statistica consiste nel familiarizzare con essi: esplorarne la struttura, identificarne le regolarità e le anomalie e coglierne le dinamiche sottostanti. Questo processo, formalizzato da John Tukey negli anni '70 [@tukey1977exploratory], rappresenta un antidoto alla rigidità dei modelli preconcetti. Tukey insisteva sull'importanza di "lasciar parlare i dati" prima di incasellarli in schemi teorici, perché è proprio nell'esplorazione che emergono pattern inattesi, relazioni non lineari o errori sistematici altrimenti invisibili.
+John Tukey, che formalizzò questo approccio negli anni '70, sottolineava l'importanza di **lasciare che siano i dati a parlare** prima di forzarli in strutture teoriche precostituite. È proprio durante l'esplorazione che possono emergere pattern inaspettati, relazioni non lineari ed errori sistematici: tutti quegli elementi che un'analisi puramente confermativa rischierebbe di trascurare o di non cogliere affatto.
 
-L’EDA non è in contrapposizione all’analisi confermativa (CDA), ma ne rappresenta il naturale complemento. Mentre l'analisi confermativa (CDA) testa ipotesi precise con metodi formali (ad esempio, test di ipotesi o modelli bayesiani), l'analisi esplorativa (EDA) genera tali ipotesi, verificando preliminarmente la plausibilità delle assunzioni di base. In campi come la psicologia, dove i dati sono spesso rumorosi e multidimensionali, questa fase è cruciale per evitare conclusioni fuorvianti.
+## L'EDA come controllo preliminare
 
-## Strumenti e Filosofia
+L'esplorazione dei dati non sostituisce l'inferenza, ma la prepara. Prima di stimare un modello, è fondamentale interrogare i dati: la relazione tra le variabili ha una forma lineare o presenta curvature? Ci sono osservazioni anomale che potrebbero alterare le stime? Le distribuzioni sono compatibili con le assunzioni di base del modello? Nell'approccio bayesiano, in cui è necessario specificare le distribuzioni a priori, l'EDA fornisce un'evidenza empirica fondamentale per valutare se le scelte iniziali siano plausibili.
 
-Sebbene l’EDA includa strumenti quantitativi (statistiche descrittive, misure di dispersione), la sua essenza si esprime appieno nella visualizzazione. Un grafico ben progettato, che si tratti di un boxplot, di uno scatterplot o di un semplice istogramma, può rivelare asimmetrie, outlier o cluster che una tabella numerica non riuscirebbe a mostrare. Tuttavia, come sottolineato da @hullman2021challenges, la vera forza dell’EDA non risiede nella produzione di immagini, ma nel collegare ciò che si osserva a un modello mentale del processo di generazione dei dati. Visualizzare non significa solo "vedere", ma anche "confrontare": ci si chiede se la distribuzione di una variabile corrisponda alle aspettative o se una correlazione apparente resista a un'analisi critica.
+In questo senso, l'EDA rappresenta una forma intuitiva di *model checking*, un'anticipazione della diagnostica formale che, come avviene nel *posterior predictive checking* bayesiano, confronta sistematicamente i dati osservati con quelli simulati dal modello, per verificarne l'adeguatezza.
 
-In questa prospettiva, anche il *Posterior Predictive Checking* [@gelman1995bayesian] può essere considerato una forma di EDA, in cui l'adeguatezza di un modello viene verificata attraverso confronti grafici tra dati osservati e simulati. Anche senza un modello formale, l'analista compie un esercizio simile, valutando implicitamente la coerenza tra i dati e le proprie aspettative.
+## Cosa troverai in questa sezione
 
+I capitoli che seguono sviluppano un percorso che parte dalla logica organizzativa di un progetto di analisi dati per arrivare ai concetti fondamentali che preparano l'inferenza statistica. Nello specifico, saranno trattati i seguenti argomenti:
 
-## Obiettivi di questa sezione
+- **struttura di un progetto di analisi:** organizzazione dei file, documentazione e flusso di lavoro riproducibile;
+- **pulizia e preparazione dei dati:** gestione di valori mancanti, conversione di formati e correzione di errori sistematici;
+- **variabili qualitative e quantitative:** analisi delle frequenze, esplorazione delle distribuzioni e scelta di visualizzazioni appropriate;
+- **indicatori di sintesi statistica:** misurazioni di tendenza centrale (media, mediana) e di dispersione (varianza, deviazione standard), quantili e loro rappresentazione grafica;
+- **la distribuzione normale:** proprietà fondamentali, processo di standardizzazione e ambiti di applicabilità;
+- **relazioni tra variabili:** misura della correlazione, interpretazione degli scatterplot e limiti inferenziali;
+- **causalità e associazione:** il divario tra correlazione e causalità, e i requisiti metodologici per un'inferenza causale valida;
+- **gestione di outlier e trasformazioni:** identificazione di osservazioni influenti, criteri per la trasformazione delle variabili e relative implicazioni interpretative.
 
-In questa sezione, ci proponiamo di:
+## Collegamenti
 
-* Introdurre i concetti base della statistica descrittiva (media, deviazione standard, correlazione) e le loro rappresentazioni grafiche (istogrammi, grafici a violino, matrici di scatterplot).
+L'EDA mette in pratica ciò che le altre sezioni preparano. I principi discussi nei *Fondamenti* – dalla scelta delle scale di misura alla validità degli strumenti, fino al disegno dello studio – orientano e danno significato a ciò che è opportuno calcolare e visualizzare. Parallelamente, gli strumenti introdotti nella sezione *R* – dalle funzioni base ai pacchetti specializzati, dalla sintassi alla logica della programmazione – costituiscono il mezzo operativo attraverso cui l'esplorazione prende forma.
 
-* Mostrare applicazioni pratiche in R, utilizzando dataset psicologici reali o simulati, con un focus su come tradurre domande di ricerca in visualizzazioni efficaci.
-
-* Discutere i limiti dell’approccio puramente descrittivo, enfatizzando la necessità di integrare l’EDA con modelli teorici o causalità.
-
-* Collegare esplorazione e inferenza, illustrando come l’EDA possa evolvere in un controllo modellistico esplicito, specie in contesti bayesiani dove le aspettative precedenti (prior) giocano un ruolo chiave.
-
-
-## L'EDA come atteggiamento scientifico
-
-In conclusione, l’EDA non è un semplice preludio tecnico all’analisi "seria", ma una componente essenziale del pensiero statistico. Ci spinge a formulare domande migliori, a interpretare le risposte con umiltà e a resistere alla tentazione di cercare conferme facili. Come scrisse Tukey: "È meglio rispondere in modo approssimativo a una domanda giusta, piuttosto che rispondere in modo esatto a una domanda sbagliata".
-
-
-## Bibliografia {.unnumbered}
+Trascurare questa fase per procedere direttamente alla modellazione è un errore metodologico frequente. Come ammoniva John Tukey: "È meglio rispondere in modo approssimativo a una domanda giusta, piuttosto che rispondere in modo esatto a una domanda sbagliata". L'EDA è precisamente il processo che ci aiuta a formulare, riformulare e comprendere **qual è la domanda giusta da porre ai nostri dati**.
 
