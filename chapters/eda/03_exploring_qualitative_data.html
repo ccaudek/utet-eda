@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.24">
+<meta name="generator" content="quarto-1.8.26">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>16&nbsp; Esplorare i dati qualitativi – Analisi esplorativa dei dati (EDA) in psicologia</title>
+<title>15&nbsp; Esplorare i dati qualitativi – Analisi esplorativa dei dati in psicologia</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -91,10 +91,17 @@ div.csl-indent {
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-b758ccaa5987ceb1b75504551e579abf.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-af5d064118ae80f4bafc3d843c3c3870.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="../../site_libs/bootstrap/bootstrap-88f89515ec50d56ed60c0d65bb29dbd0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-12c7548f543ff79fe76bca8cab42d0cf.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-88f89515ec50d56ed60c0d65bb29dbd0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -128,14 +135,176 @@ gtag('js', new Date());
 gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 </script><style>html{ scroll-behavior: smooth; }</style>
 </head>
-<body class="nav-sidebar floating quarto-light">
+<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/03_exploring_qualitative_data.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Esplorare i dati qualitativi</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/03_exploring_qualitative_data.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Esplorare i dati qualitativi</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Ricerca" onclick="window.quartoOpenSearch();">
@@ -144,13 +313,12 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
-      <a href="../../index.html" class="sidebar-logo-link">
-      </a>
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="../../">Analisi esplorativa dei dati (EDA) in psicologia</a> 
-        <div class="sidebar-tools-main">
+      <a href="../../">Analisi esplorativa dei dati in psicologia</a> 
+        <div class="sidebar-tools-main tools-wide">
     <a href="https://github.com/ccaudek/utet-eda/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Attiva/disattiva la modalità oscura"><i class="bi"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Attiva/disattiva la modalità lettore">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
@@ -189,32 +357,26 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/key_notions/01_data_analysis.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">La crisi di replicazione e la riforma metodologica in psicologia</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/02_key_notions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Concetti chiave</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Concetti chiave</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/03_design.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Campionamento, metodologia sperimentale e studi osservazionali</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Campionamento, metodologia sperimentale e studi osservazionali</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/04_measurement.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">La misurazione in psicologia</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">La misurazione in psicologia</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/05_cognitive_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Dalla descrizione alla spiegazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dalla descrizione alla spiegazione</span></span></a>
   </div>
 </li>
       </ul>
@@ -231,43 +393,43 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/01_r_syntax.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Un approccio moderno all’analisi dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Un approccio moderno all’analisi dei dati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/02_utility_functions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Utility functions</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Utility functions</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/03_r_programming.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Programmazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Programmazione</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/04_r_packages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Pacchetti</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Pacchetti</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/05_dplyr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Usare <code>dplyr</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Usare <code>dplyr</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/06_quarto.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Quarto</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quarto</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/07_environment.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">L’ambiente di programmazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">L’ambiente di programmazione</span></span></a>
   </div>
 </li>
       </ul>
@@ -284,61 +446,73 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/01_project_structure.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Il ciclo di vita di un progetto di analisi dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Il ciclo di vita di un progetto di analisi dei dati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/02_data_cleaning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Flusso di lavoro per la pulizia dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Flusso di lavoro per la pulizia dei dati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/03_exploring_qualitative_data.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Esplorare i dati qualitativi</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Esplorare i dati qualitativi</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/04_exploring_numeric_data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Esplorare i dati numerici</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Esplorare i dati numerici</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/05_data_visualization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Principi della visualizzazione dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Principi della visualizzazione dei dati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/06_loc_scale.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Indicatori di tendenza centrale e variabilità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Indicatori di tendenza centrale e variabilità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/07_introduction_normal_distribution.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Introduzione alla distribuzione normale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Introduzione alla distribuzione normale</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/08_correlation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Relazioni tra variabili</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Relazioni tra variabili</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/eda/09_causality.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/eda/09_propedeutic_causality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Causalità: intuizioni, controfattuali e perché l’associazione non basta</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/10_causality.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Causalità dai dati osservazionali</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/eda/10_outlier.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/eda/11_outlier.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Outlier</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/12_gauss.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Assunzione di gaussianità e trasformazioni dei dati</span></span></a>
   </div>
 </li>
       </ul>
@@ -368,17 +542,17 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Sommario</h2>
    
   <ul class="collapse">
-<li><a href="#il-dataset-penguins" id="toc-il-dataset-penguins" class="nav-link active" data-scroll-target="#il-dataset-penguins"><span class="header-section-number">16.1</span> Il dataset <code>penguins</code></a></li>
-  <li><a href="#tabelle-di-contingenza" id="toc-tabelle-di-contingenza" class="nav-link" data-scroll-target="#tabelle-di-contingenza"><span class="header-section-number">16.2</span> Tabelle di contingenza</a></li>
-  <li><a href="#proporzioni-di-riga-e-di-colonna" id="toc-proporzioni-di-riga-e-di-colonna" class="nav-link" data-scroll-target="#proporzioni-di-riga-e-di-colonna"><span class="header-section-number">16.3</span> Proporzioni di riga e di colonna</a></li>
-  <li><a href="#grafici-a-barre" id="toc-grafici-a-barre" class="nav-link" data-scroll-target="#grafici-a-barre"><span class="header-section-number">16.4</span> Grafici a barre</a></li>
-  <li><a href="#mosaic-plot" id="toc-mosaic-plot" class="nav-link" data-scroll-target="#mosaic-plot"><span class="header-section-number">16.5</span> Mosaic plot</a></li>
-  <li><a href="#confronto-tra-gruppi" id="toc-confronto-tra-gruppi" class="nav-link" data-scroll-target="#confronto-tra-gruppi"><span class="header-section-number">16.6</span> Confronto tra gruppi</a></li>
+<li><a href="#il-dataset-penguins" id="toc-il-dataset-penguins" class="nav-link active" data-scroll-target="#il-dataset-penguins"><span class="header-section-number">15.1</span> Il dataset <code>penguins</code></a></li>
+  <li><a href="#tabelle-di-contingenza" id="toc-tabelle-di-contingenza" class="nav-link" data-scroll-target="#tabelle-di-contingenza"><span class="header-section-number">15.2</span> Tabelle di contingenza</a></li>
+  <li><a href="#proporzioni-di-riga-e-di-colonna" id="toc-proporzioni-di-riga-e-di-colonna" class="nav-link" data-scroll-target="#proporzioni-di-riga-e-di-colonna"><span class="header-section-number">15.3</span> Proporzioni di riga e di colonna</a></li>
+  <li><a href="#grafici-a-barre" id="toc-grafici-a-barre" class="nav-link" data-scroll-target="#grafici-a-barre"><span class="header-section-number">15.4</span> Grafici a barre</a></li>
+  <li><a href="#mosaic-plot" id="toc-mosaic-plot" class="nav-link" data-scroll-target="#mosaic-plot"><span class="header-section-number">15.5</span> Mosaic plot</a></li>
+  <li><a href="#confronto-tra-gruppi" id="toc-confronto-tra-gruppi" class="nav-link" data-scroll-target="#confronto-tra-gruppi"><span class="header-section-number">15.6</span> Confronto tra gruppi</a></li>
   </ul><div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/eda/03_exploring_qualitative_data.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/03_exploring_qualitative_data.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Esplorare i dati qualitativi</span></a></li></ol></nav><div class="quarto-title">
-<h1 class="title"><span id="sec-eda-qualitative-data" class="quarto-section-identifier"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Esplorare i dati qualitativi</span></span></h1>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/03_exploring_qualitative_data.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Esplorare i dati qualitativi</span></a></li></ol></nav><div class="quarto-title">
+<h1 class="title"><span id="sec-eda-qualitative-data" class="quarto-section-identifier"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Esplorare i dati qualitativi</span></span></h1>
 </div>
 
 
@@ -392,26 +566,28 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
   
 
 
-</header><div class="epigraph">
-<blockquote class="blockquote">
-<p>“The greatest value of a picture is when it forces us to notice what we never expected to see.”</p>
-<p>– <strong>John W. Tukey</strong>, <em>Exploratory Data Analysis</em></p>
-</blockquote>
+</header><div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
 </div>
-<section id="introduzione" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="introduzione">Introduzione</h2>
+<div class="callout-body-container">
 <p>In questo capitolo ci concentreremo sull’analisi esplorativa dei dati (<em>Exploratory Data Analysis</em>, EDA) applicata ai dati qualitativi e categoriali <span class="citation" data-cites="tukey1977exploratory">(<a href="#ref-tukey1977exploratory" role="doc-biblioref">Tukey et al., 1977</a>)</span>. In psicologia la raccolta di dati qualitativi e categoriali è estremamente frequente: si pensi alle variabili sociodemografiche (genere, stato civile, livello di istruzione), alle risposte a item a scelta multipla nei questionari, alle diagnosi cliniche, o alle categorie di comportamento osservato in laboratorio. Prima di procedere a modelli complessi, è fondamentale <em>esplorare questi dati</em> per comprenderne la struttura, individuare pattern ricorrenti e riconoscere eventuali anomalie.</p>
 <p>L’EDA rappresenta il primo passo di ogni studio empirico. Con grafici e tabelle di frequenza possiamo farci un’idea immediata della distribuzione delle risposte, verificare se i dati sono equilibrati tra categorie, e osservare come certe caratteristiche si combinano. Ad esempio, in un’indagine clinica potremmo voler capire se i livelli di ansia riportati dai pazienti variano in base al genere o alla fascia di età; in uno studio sperimentale, se il successo in un compito dipende dalla condizione a cui il partecipante è stato assegnato.</p>
 <p>In questo capitolo impareremo dunque a <em>esplorare e visualizzare i dati qualitativi</em>, passando da strumenti descrittivi come le tabelle di frequenza e le percentuali cumulative, fino a grafici più sofisticati (barplot, mosaic plot) che consentono di cogliere a colpo d’occhio le relazioni tra più variabili. L’obiettivo non è soltanto acquisire dimestichezza con le tecniche, ma anche sviluppare un atteggiamento critico, capace di riconoscere i limiti e le potenzialità delle rappresentazioni grafiche quando applicate a dati che riflettono la complessità dell’esperienza psicologica.</p>
+</div>
+</div>
+</div>
 <section id="panoramica-del-capitolo" class="level3 unnumbered unlisted"><h3 class="unnumbered unlisted anchored" data-anchor-id="panoramica-del-capitolo">Panoramica del capitolo</h3>
 <ul>
 <li>Calcolare proporzioni e organizzare i dati in tabelle di contingenza.</li>
 <li>Costruire grafici a barre per rappresentare dati qualitativi.</li>
 <li>Creare visualizzazioni per esplorare le relazioni tra due o più variabili qualitative.</li>
 </ul>
-<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
+<i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
 <span class="screen-reader-only">Consiglio</span>Prerequisiti
@@ -426,10 +602,10 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 </div>
 </div>
 </div>
-<div class="callout callout-style-simple callout-caution no-icon callout-titled" title="Preparazione del Notebook">
+<div class="callout callout-style-default callout-caution callout-titled" title="Preparazione del Notebook">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
+<i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
 <span class="screen-reader-only">Attenzione</span>Preparazione del Notebook
@@ -449,8 +625,8 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 </div>
 </div>
 </div>
-</section></section><section id="il-dataset-penguins" class="level2" data-number="16.1"><h2 data-number="16.1" class="anchored" data-anchor-id="il-dataset-penguins">
-<span class="header-section-number">16.1</span> Il dataset <code>penguins</code>
+</section><section id="il-dataset-penguins" class="level2" data-number="15.1"><h2 data-number="15.1" class="anchored" data-anchor-id="il-dataset-penguins">
+<span class="header-section-number">15.1</span> Il dataset <code>penguins</code>
 </h2>
 <p>Per fornire esempi pratici, in questo capitolo utilizzeremo il dataset <a href="https://allisonhorst.github.io/palmerpenguins/index.html">palmerpenguins</a>, messo a disposizione da <a href="https://allisonhorst.com">Allison Horst</a>. I dati sono stati raccolti e resi disponibili da <a href="https://www.uaf.edu/cfos/people/faculty/detail/kristen-gorman.php">Dr.&nbsp;Kristen Gorman</a> e dalla Palmer Station, parte del programma di ricerca ecologica a lungo termine <a href="https://lternet.edu">Long Term Ecological Research Network</a>. Il dataset contiene informazioni su 344 pinguini, appartenenti a 3 diverse specie, raccolte su 3 isole dell’arcipelago di Palmer, in Antartide. Per semplicità, i dati sono organizzati nel file <code>penguins.csv</code>.</p>
 <p>Possiamo caricare i dati grezzi dal file <code>penguins.csv</code> in un data frame con il seguente comando:</p>
@@ -476,8 +652,8 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">d</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">drop_na</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</section><section id="tabelle-di-contingenza" class="level2" data-number="16.2"><h2 data-number="16.2" class="anchored" data-anchor-id="tabelle-di-contingenza">
-<span class="header-section-number">16.2</span> Tabelle di contingenza</h2>
+</section><section id="tabelle-di-contingenza" class="level2" data-number="15.2"><h2 data-number="15.2" class="anchored" data-anchor-id="tabelle-di-contingenza">
+<span class="header-section-number">15.2</span> Tabelle di contingenza</h2>
 <p>Una <em>tabella di contingenza</em> è uno strumento che riassume i dati di due variabili categoriali, cioè variabili qualitative che assumono valori in un numero finito di categorie. Ogni cella della tabella indica quante osservazioni ricadono in una specifica combinazione di categorie delle due variabili.</p>
 <p>Per esempio, supponiamo di avere due variabili del dataset <code>df</code>:</p>
 <ul>
@@ -513,16 +689,16 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 <li>La specie <em>Gentoo</em> si trova soltanto su Biscoe (119 esemplari).</li>
 </ol>
 <p>Questa tabella evidenzia che la distribuzione delle specie non è uniforme: alcune sono presenti solo in determinate isole, mentre altre (come gli Adelie) sono più diffuse. In termini di analisi esplorativa, le tabelle di contingenza permettono quindi di <em>individuare pattern e differenze</em> tra categorie, fornendo una prima descrizione della relazione tra due variabili qualitative.</p>
-</section><section id="proporzioni-di-riga-e-di-colonna" class="level2" data-number="16.3"><h2 data-number="16.3" class="anchored" data-anchor-id="proporzioni-di-riga-e-di-colonna">
-<span class="header-section-number">16.3</span> Proporzioni di riga e di colonna</h2>
+</section><section id="proporzioni-di-riga-e-di-colonna" class="level2" data-number="15.3"><h2 data-number="15.3" class="anchored" data-anchor-id="proporzioni-di-riga-e-di-colonna">
+<span class="header-section-number">15.3</span> Proporzioni di riga e di colonna</h2>
 <p>Finora ci siamo concentrati sui conteggi assoluti. Tuttavia, in molti casi è più informativo osservare le <em>proporzioni relative</em>.</p>
 <ul>
 <li>Le <em>proporzioni di riga</em> descrivono come si distribuiscono le categorie di una variabile all’interno di ciascun gruppo dell’altra.</li>
 <li>Le <em>proporzioni di colonna</em>, al contrario, mostrano la distribuzione di una variabile rispetto alle categorie dell’altra.</li>
 </ul>
 <p>Questi calcoli si ottengono facilmente a partire dalla tabella di contingenza.</p>
-<section id="proporzioni-di-riga-specie-per-isola" class="level3" data-number="16.3.1"><h3 data-number="16.3.1" class="anchored" data-anchor-id="proporzioni-di-riga-specie-per-isola">
-<span class="header-section-number">16.3.1</span> Proporzioni di riga (specie per isola)</h3>
+<section id="proporzioni-di-riga-specie-per-isola" class="level3" data-number="15.3.1"><h3 data-number="15.3.1" class="anchored" data-anchor-id="proporzioni-di-riga-specie-per-isola">
+<span class="header-section-number">15.3.1</span> Proporzioni di riga (specie per isola)</h3>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu">tabyl</span><span class="op">(</span><span class="va">island</span>, <span class="va">species</span><span class="op">)</span> <span class="op">%&gt;%</span>   <span class="co"># Tabella di contingenza</span></span>
@@ -535,8 +711,8 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 <span><span class="co">#&gt;  Torgersen 100.00%     0.00%  0.00% 100.00%</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Questo output mostra, per ogni isola, la percentuale di pinguini appartenenti a ciascuna specie.</p>
-</section><section id="proporzioni-di-colonna-isole-per-specie" class="level3" data-number="16.3.2"><h3 data-number="16.3.2" class="anchored" data-anchor-id="proporzioni-di-colonna-isole-per-specie">
-<span class="header-section-number">16.3.2</span> Proporzioni di colonna (isole per specie)</h3>
+</section><section id="proporzioni-di-colonna-isole-per-specie" class="level3" data-number="15.3.2"><h3 data-number="15.3.2" class="anchored" data-anchor-id="proporzioni-di-colonna-isole-per-specie">
+<span class="header-section-number">15.3.2</span> Proporzioni di colonna (isole per specie)</h3>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">tabyl</span><span class="op">(</span><span class="va">island</span>, <span class="va">species</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
@@ -551,11 +727,11 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 </div>
 <p>Qui vediamo, per ciascuna specie, su quali isole si distribuiscono i pinguini e con quale proporzione.</p>
 <p>In sintesi, le <em>proporzioni di riga e colonna</em> forniscono un dettaglio numerico che aiuta a interpretare meglio le relazioni tra le variabili categoriali.</p>
-</section></section><section id="grafici-a-barre" class="level2" data-number="16.4"><h2 data-number="16.4" class="anchored" data-anchor-id="grafici-a-barre">
-<span class="header-section-number">16.4</span> Grafici a barre</h2>
+</section></section><section id="grafici-a-barre" class="level2" data-number="15.4"><h2 data-number="15.4" class="anchored" data-anchor-id="grafici-a-barre">
+<span class="header-section-number">15.4</span> Grafici a barre</h2>
 <p>I <em>grafici a barre</em> sono uno degli strumenti più utilizzati per rappresentare visivamente i dati categoriali. Essi consentono di confrontare le frequenze delle categorie in modo immediato, mostrando chiaramente quali valori sono più comuni o più rari nel campione.</p>
-<section id="grafico-a-barre-con-una-variabile" class="level3" data-number="16.4.1"><h3 data-number="16.4.1" class="anchored" data-anchor-id="grafico-a-barre-con-una-variabile">
-<span class="header-section-number">16.4.1</span> Grafico a barre con una variabile</h3>
+<section id="grafico-a-barre-con-una-variabile" class="level3" data-number="15.4.1"><h3 data-number="15.4.1" class="anchored" data-anchor-id="grafico-a-barre-con-una-variabile">
+<span class="header-section-number">15.4.1</span> Grafico a barre con una variabile</h3>
 <p>Nel caso più semplice, un grafico a barre rappresenta una sola variabile categoriale. Le categorie sono riportate lungo un asse (di solito l’asse orizzontale) e la lunghezza o altezza delle barre è proporzionale al numero di osservazioni per ciascuna categoria.</p>
 <p>Ad esempio, per i dati sui pinguini possiamo visualizzare il numero totale di esemplari osservati in ciascuna isola:</p>
 <div class="cell" data-layout-align="center">
@@ -565,7 +741,7 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 <span>  <span class="fu">ylab</span><span class="op">(</span><span class="st">"Numero di pinguini"</span><span class="op">)</span> </span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="03_exploring_qualitative_data_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+<figure class="figure"><p><a href="03_exploring_qualitative_data_files/figure-html/unnamed-chunk-8-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="03_exploring_qualitative_data_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a></p>
 </figure>
 </div>
 </div>
@@ -578,14 +754,14 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 <span>  <span class="fu">ylab</span><span class="op">(</span><span class="st">"Numero di pinguini"</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="03_exploring_qualitative_data_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+<figure class="figure"><p><a href="03_exploring_qualitative_data_files/figure-html/unnamed-chunk-9-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="03_exploring_qualitative_data_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Questi grafici permettono di confrontare rapidamente le frequenze delle categorie, mettendo in evidenza quali specie o quali isole sono più rappresentate.</p>
-</section><section id="grafico-a-barre-con-due-variabili" class="level3" data-number="16.4.2"><h3 data-number="16.4.2" class="anchored" data-anchor-id="grafico-a-barre-con-due-variabili">
-<span class="header-section-number">16.4.2</span> Grafico a barre con due variabili</h3>
+</section><section id="grafico-a-barre-con-due-variabili" class="level3" data-number="15.4.2"><h3 data-number="15.4.2" class="anchored" data-anchor-id="grafico-a-barre-con-due-variabili">
+<span class="header-section-number">15.4.2</span> Grafico a barre con due variabili</h3>
 <p>Un grafico a barre può essere esteso per visualizzare <em>simultaneamente due variabili categoriali</em>. In questo caso, una variabile viene posta sull’asse delle ascisse, mentre la seconda è distinta tramite colori diversi o barre impilate.</p>
 <p>Ad esempio, possiamo osservare come le diverse specie di pinguini si distribuiscono sulle isole:</p>
 <div class="cell" data-layout-align="center">
@@ -596,7 +772,7 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 <span>  <span class="fu">labs</span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"Specie"</span><span class="op">)</span> </span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="03_exploring_qualitative_data_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+<figure class="figure"><p><a href="03_exploring_qualitative_data_files/figure-html/unnamed-chunk-10-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="03_exploring_qualitative_data_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a></p>
 </figure>
 </div>
 </div>
@@ -610,14 +786,14 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 <span>  <span class="fu">labs</span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"Isola"</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="03_exploring_qualitative_data_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+<figure class="figure"><p><a href="03_exploring_qualitative_data_files/figure-html/unnamed-chunk-11-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="03_exploring_qualitative_data_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Questi grafici permettono di esplorare visivamente l’associazione tra due variabili qualitative.</p>
-</section><section id="frequenze-relative" class="level3" data-number="16.4.3"><h3 data-number="16.4.3" class="anchored" data-anchor-id="frequenze-relative">
-<span class="header-section-number">16.4.3</span> Frequenze relative</h3>
+</section><section id="frequenze-relative" class="level3" data-number="15.4.3"><h3 data-number="15.4.3" class="anchored" data-anchor-id="frequenze-relative">
+<span class="header-section-number">15.4.3</span> Frequenze relative</h3>
 <p>Oltre alle frequenze assolute, è spesso utile rappresentare le <em>frequenze relative</em> (cioè le proporzioni). Questo approccio elimina l’effetto del numero totale di osservazioni, rendendo più facile confrontare le distribuzioni tra gruppi di dimensioni diverse.</p>
 <p>Ad esempio, il grafico seguente mostra la composizione relativa delle specie per ogni isola:</p>
 <div class="cell" data-layout-align="center">
@@ -628,14 +804,14 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 <span>  <span class="fu">labs</span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"Specie"</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="03_exploring_qualitative_data_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+<figure class="figure"><p><a href="03_exploring_qualitative_data_files/figure-html/unnamed-chunk-12-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="03_exploring_qualitative_data_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Qui ogni barra è normalizzata a 1: l’altezza di ciascun segmento rappresenta la proporzione di una specie all’interno dell’isola. In questo modo è più facile capire <em>quale specie prevale in ciascun contesto</em>, indipendentemente dal numero complessivo di pinguini osservati.</p>
-</section></section><section id="mosaic-plot" class="level2" data-number="16.5"><h2 data-number="16.5" class="anchored" data-anchor-id="mosaic-plot">
-<span class="header-section-number">16.5</span> Mosaic plot</h2>
+</section></section><section id="mosaic-plot" class="level2" data-number="15.5"><h2 data-number="15.5" class="anchored" data-anchor-id="mosaic-plot">
+<span class="header-section-number">15.5</span> Mosaic plot</h2>
 <p>Il <em>Mosaic plot</em> è una tecnica di visualizzazione particolarmente adatta per rappresentare le <em>tabelle di contingenza</em>. A differenza di un semplice grafico a barre impilate, questo tipo di grafico mostra contemporaneamente:</p>
 <ol type="1">
 <li>la <em>distribuzione interna</em> delle categorie di una variabile,</li>
@@ -651,7 +827,7 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 <span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="03_exploring_qualitative_data_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+<figure class="figure"><p><a href="03_exploring_qualitative_data_files/figure-html/unnamed-chunk-13-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="03_exploring_qualitative_data_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a></p>
 </figure>
 </div>
 </div>
@@ -687,8 +863,8 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 <li>i <em>Gentoo</em> solo a Biscoe.</li>
 </ul>
 <p>Il Mosaic plot è quindi utile per cogliere <em>schemi di associazione</em> tra variabili categoriali e valutare rapidamente quali combinazioni sono predominanti o assenti.</p>
-</section><section id="confronto-tra-gruppi" class="level2" data-number="16.6"><h2 data-number="16.6" class="anchored" data-anchor-id="confronto-tra-gruppi">
-<span class="header-section-number">16.6</span> Confronto tra gruppi</h2>
+</section><section id="confronto-tra-gruppi" class="level2" data-number="15.6"><h2 data-number="15.6" class="anchored" data-anchor-id="confronto-tra-gruppi">
+<span class="header-section-number">15.6</span> Confronto tra gruppi</h2>
 <p>Un aspetto centrale dell’analisi esplorativa consiste nel <em>confrontare gruppi diversi</em>. Questo ci permette di mettere in evidenza differenze e somiglianze, osservare variazioni e individuare tendenze. Il confronto può riguardare:</p>
 <ol type="1">
 <li>
@@ -696,8 +872,8 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 <li>
 <em>variabili numeriche rispetto a categorie</em> (ad esempio come varia il peso corporeo tra specie e generi).</li>
 </ol>
-<section id="confronto-tra-variabili-categoriali" class="level3" data-number="16.6.1"><h3 data-number="16.6.1" class="anchored" data-anchor-id="confronto-tra-variabili-categoriali">
-<span class="header-section-number">16.6.1</span> Confronto tra variabili categoriali</h3>
+<section id="confronto-tra-variabili-categoriali" class="level3" data-number="15.6.1"><h3 data-number="15.6.1" class="anchored" data-anchor-id="confronto-tra-variabili-categoriali">
+<span class="header-section-number">15.6.1</span> Confronto tra variabili categoriali</h3>
 <p>Per confrontare due variabili qualitative, possiamo utilizzare un grafico a barre con suddivisione per gruppi. Ad esempio, vediamo come si distribuisce il <em>genere</em> dei pinguini (maschio/femmina) all’interno delle tre specie:</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">df</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">species</span>, fill <span class="op">=</span> <span class="va">sex</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -706,14 +882,14 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 <span>  <span class="fu">ylab</span><span class="op">(</span><span class="st">"Conteggio"</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="03_exploring_qualitative_data_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+<figure class="figure"><p><a href="03_exploring_qualitative_data_files/figure-html/unnamed-chunk-14-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="03_exploring_qualitative_data_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a></p>
 </figure>
 </div>
 </div>
 </div>
 <p>In questo grafico le barre affiancate permettono di confrontare facilmente, per ciascuna specie, il numero di maschi e femmine.</p>
-</section><section id="confronto-tra-variabili-numeriche-e-categorie" class="level3" data-number="16.6.2"><h3 data-number="16.6.2" class="anchored" data-anchor-id="confronto-tra-variabili-numeriche-e-categorie">
-<span class="header-section-number">16.6.2</span> Confronto tra variabili numeriche e categorie</h3>
+</section><section id="confronto-tra-variabili-numeriche-e-categorie" class="level3" data-number="15.6.2"><h3 data-number="15.6.2" class="anchored" data-anchor-id="confronto-tra-variabili-numeriche-e-categorie">
+<span class="header-section-number">15.6.2</span> Confronto tra variabili numeriche e categorie</h3>
 <p>Spesso è ancora più interessante osservare <em>come una variabile numerica varia tra gruppi</em>. Questo approccio ci consente di capire se gruppi diversi tendono ad avere valori simili o differenti. Prendiamo come esempio la variabile <code>body_mass_g</code> (peso corporeo in grammi), e confrontiamola in base a <em>specie</em> e <em>genere</em>.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">df</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">species</span>, y <span class="op">=</span> <span class="va">body_mass_g</span>, fill <span class="op">=</span> <span class="va">sex</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -728,7 +904,7 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 <span>  <span class="fu">labs</span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"Genere"</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="03_exploring_qualitative_data_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+<figure class="figure"><p><a href="03_exploring_qualitative_data_files/figure-html/unnamed-chunk-15-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="03_exploring_qualitative_data_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a></p>
 </figure>
 </div>
 </div>
@@ -760,10 +936,10 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 <em>Sovrapposizioni</em>: se i pesi di maschi e femmine si distinguono nettamente o se i due gruppi hanno valori simili.</li>
 </ul>
 <p>In questo modo, possiamo individuare sia differenze sistematiche sia aree di variabilità comune tra i gruppi.</p>
-<div class="callout callout-style-simple callout-important no-icon callout-titled" title="Problemi">
+<div class="callout callout-style-default callout-important callout-titled" title="Problemi">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
+<i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
 <span class="screen-reader-only">Importante</span>Problemi
@@ -841,10 +1017,10 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 </div>
 </div>
 </div>
-<div class="callout callout-style-simple callout-note no-icon callout-titled" title="Informazioni sull'ambiente di sviluppo">
+<div class="callout callout-style-default callout-note callout-titled" title="Informazioni sull'ambiente di sviluppo">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
+<i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
 <span class="screen-reader-only">Nota</span>Informazioni sull’ambiente di sviluppo
@@ -855,12 +1031,12 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 <div class="callout-body-container callout-body">
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; R version 4.5.1 (2025-06-13)</span></span>
+<span><span class="co">#&gt; R version 4.5.2 (2025-10-31)</span></span>
 <span><span class="co">#&gt; Platform: aarch64-apple-darwin20</span></span>
-<span><span class="co">#&gt; Running under: macOS Tahoe 26.0</span></span>
+<span><span class="co">#&gt; Running under: macOS Tahoe 26.2</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
-<span><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRblas.0.dylib </span></span>
+<span><span class="co">#&gt; BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib </span></span>
 <span><span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; locale:</span></span>
@@ -875,45 +1051,45 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
 <span><span class="co">#&gt;  [1] vcd_1.4-13            viridis_0.6.5         viridisLite_0.4.2    </span></span>
-<span><span class="co">#&gt;  [4] pillar_1.11.1         tinytable_0.13.0      patchwork_1.3.2      </span></span>
+<span><span class="co">#&gt;  [4] pillar_1.11.1         tinytable_0.15.1      patchwork_1.3.2      </span></span>
 <span><span class="co">#&gt;  [7] ggdist_3.3.3          tidybayes_3.0.7       bayesplot_1.14.0     </span></span>
-<span><span class="co">#&gt; [10] ggplot2_4.0.0         reliabilitydiag_0.2.1 priorsense_1.1.1     </span></span>
+<span><span class="co">#&gt; [10] ggplot2_4.0.1         reliabilitydiag_0.2.1 priorsense_1.2.0     </span></span>
 <span><span class="co">#&gt; [13] posterior_1.6.1       loo_2.8.0             rstan_2.32.7         </span></span>
 <span><span class="co">#&gt; [16] StanHeaders_2.32.10   brms_2.23.0           Rcpp_1.1.0           </span></span>
 <span><span class="co">#&gt; [19] sessioninfo_1.2.3     conflicted_1.2.0      janitor_2.2.1        </span></span>
 <span><span class="co">#&gt; [22] matrixStats_1.5.0     modelr_0.1.11         tibble_3.3.0         </span></span>
-<span><span class="co">#&gt; [25] dplyr_1.1.4           tidyr_1.3.1           rio_1.2.3            </span></span>
+<span><span class="co">#&gt; [25] dplyr_1.1.4           tidyr_1.3.1           rio_1.2.4            </span></span>
 <span><span class="co">#&gt; [28] here_1.0.2           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span><span class="co">#&gt;  [1] gridExtra_2.3         inline_0.3.21         sandwich_3.1-1       </span></span>
-<span><span class="co">#&gt;  [4] rlang_1.1.6           magrittr_2.0.4        multcomp_1.4-28      </span></span>
-<span><span class="co">#&gt;  [7] snakecase_0.11.1      compiler_4.5.1        systemfonts_1.2.3    </span></span>
-<span><span class="co">#&gt; [10] vctrs_0.6.5           stringr_1.5.2         pkgconfig_2.0.3      </span></span>
+<span><span class="co">#&gt;  [4] rlang_1.1.6           magrittr_2.0.4        multcomp_1.4-29      </span></span>
+<span><span class="co">#&gt;  [7] snakecase_0.11.1      compiler_4.5.2        systemfonts_1.3.1    </span></span>
+<span><span class="co">#&gt; [10] vctrs_0.6.5           stringr_1.6.0         pkgconfig_2.0.3      </span></span>
 <span><span class="co">#&gt; [13] arrayhelpers_1.1-0    fastmap_1.2.0         backports_1.5.0      </span></span>
-<span><span class="co">#&gt; [16] labeling_0.4.3        rmarkdown_2.29        ragg_1.5.0           </span></span>
-<span><span class="co">#&gt; [19] purrr_1.1.0           xfun_0.53             cachem_1.1.0         </span></span>
-<span><span class="co">#&gt; [22] jsonlite_2.0.0        broom_1.0.10          parallel_4.5.1       </span></span>
+<span><span class="co">#&gt; [16] labeling_0.4.3        rmarkdown_2.30        ragg_1.5.0           </span></span>
+<span><span class="co">#&gt; [19] purrr_1.2.0           xfun_0.54             cachem_1.1.0         </span></span>
+<span><span class="co">#&gt; [22] jsonlite_2.0.0        broom_1.0.11          parallel_4.5.2       </span></span>
 <span><span class="co">#&gt; [25] R6_2.6.1              stringi_1.8.7         RColorBrewer_1.1-3   </span></span>
 <span><span class="co">#&gt; [28] lmtest_0.9-40         lubridate_1.9.4       estimability_1.5.1   </span></span>
 <span><span class="co">#&gt; [31] knitr_1.50            zoo_1.8-14            R.utils_2.13.0       </span></span>
-<span><span class="co">#&gt; [34] pacman_0.5.1          Matrix_1.7-4          splines_4.5.1        </span></span>
+<span><span class="co">#&gt; [34] pacman_0.5.1          Matrix_1.7-4          splines_4.5.2        </span></span>
 <span><span class="co">#&gt; [37] timechange_0.3.0      tidyselect_1.2.1      abind_1.4-8          </span></span>
-<span><span class="co">#&gt; [40] yaml_2.3.10           codetools_0.2-20      curl_7.0.0           </span></span>
+<span><span class="co">#&gt; [40] yaml_2.3.12           codetools_0.2-20      curl_7.0.0           </span></span>
 <span><span class="co">#&gt; [43] pkgbuild_1.4.8        lattice_0.22-7        withr_3.0.2          </span></span>
-<span><span class="co">#&gt; [46] bridgesampling_1.1-2  S7_0.2.0              coda_0.19-4.1        </span></span>
+<span><span class="co">#&gt; [46] bridgesampling_1.2-1  S7_0.2.1              coda_0.19-4.1        </span></span>
 <span><span class="co">#&gt; [49] evaluate_1.0.5        survival_3.8-3        RcppParallel_5.1.11-1</span></span>
-<span><span class="co">#&gt; [52] tensorA_0.36.2.1      checkmate_2.3.3       stats4_4.5.1         </span></span>
+<span><span class="co">#&gt; [52] tensorA_0.36.2.1      checkmate_2.3.3       stats4_4.5.2         </span></span>
 <span><span class="co">#&gt; [55] distributional_0.5.0  generics_0.1.4        rprojroot_2.1.1      </span></span>
 <span><span class="co">#&gt; [58] rstantools_2.5.0      scales_1.4.0          xtable_1.8-4         </span></span>
-<span><span class="co">#&gt; [61] glue_1.8.0            emmeans_1.11.2-8      tools_4.5.1          </span></span>
-<span><span class="co">#&gt; [64] data.table_1.17.8     mvtnorm_1.3-3         QuickJSR_1.8.0       </span></span>
-<span><span class="co">#&gt; [67] colorspace_2.1-1      nlme_3.1-168          cli_3.6.5            </span></span>
-<span><span class="co">#&gt; [70] textshaping_1.0.3     svUnit_1.0.8          Brobdingnag_1.2-9    </span></span>
-<span><span class="co">#&gt; [73] V8_7.0.0              gtable_0.3.6          R.methodsS3_1.8.2    </span></span>
-<span><span class="co">#&gt; [76] digest_0.6.37         TH.data_1.1-4         htmlwidgets_1.6.4    </span></span>
+<span><span class="co">#&gt; [61] glue_1.8.0            emmeans_2.0.0         tools_4.5.2          </span></span>
+<span><span class="co">#&gt; [64] data.table_1.17.8     mvtnorm_1.3-3         QuickJSR_1.8.1       </span></span>
+<span><span class="co">#&gt; [67] colorspace_2.1-2      nlme_3.1-168          cli_3.6.5            </span></span>
+<span><span class="co">#&gt; [70] textshaping_1.0.4     svUnit_1.0.8          Brobdingnag_1.2-9    </span></span>
+<span><span class="co">#&gt; [73] V8_8.0.1              gtable_0.3.6          R.methodsS3_1.8.2    </span></span>
+<span><span class="co">#&gt; [76] digest_0.6.39         TH.data_1.1-5         htmlwidgets_1.6.4    </span></span>
 <span><span class="co">#&gt; [79] farver_2.1.2          R.oo_1.27.1           memoise_2.0.1        </span></span>
-<span><span class="co">#&gt; [82] htmltools_0.5.8.1     lifecycle_1.0.4       MASS_7.3-65</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<span><span class="co">#&gt; [82] htmltools_0.5.9       lifecycle_1.0.4       MASS_7.3-65</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -928,6 +1104,19 @@ Tukey, J. W. et al. (1977). <em>Exploratory data analysis</em> (Vol. 2). Springe
 </div>
 </section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
     const icon = "";
     const anchorJS = new window.AnchorJS();
     anchorJS.options = {
@@ -1334,12 +1523,12 @@ Tukey, J. W. et al. (1977). <em>Exploratory data analysis</em> (Vol. 2). Springe
   });
   </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="../../chapters/eda/02_data_cleaning.html" class="pagination-link" aria-label="Flusso di lavoro per la pulizia dei dati">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Flusso di lavoro per la pulizia dei dati</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Flusso di lavoro per la pulizia dei dati</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../../chapters/eda/04_exploring_numeric_data.html" class="pagination-link" aria-label="Esplorare i dati numerici">
-        <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Esplorare i dati numerici</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Esplorare i dati numerici</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -1355,7 +1544,38 @@ Tukey, J. W. et al. (1977). <em>Exploratory data analysis</em> (Vol. 2). Springe
 <p>Realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
 </div>
   </div>
-</footer>
+</footer><script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 <script src="../../site_libs/quarto-html/zenscroll-min.js"></script>

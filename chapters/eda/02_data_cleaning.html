@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.24">
+<meta name="generator" content="quarto-1.8.26">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>15&nbsp; Flusso di lavoro per la pulizia dei dati – Analisi esplorativa dei dati (EDA) in psicologia</title>
+<title>14&nbsp; Flusso di lavoro per la pulizia dei dati – Analisi esplorativa dei dati in psicologia</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -91,10 +91,14 @@ div.csl-indent {
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-b758ccaa5987ceb1b75504551e579abf.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-af5d064118ae80f4bafc3d843c3c3870.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="../../site_libs/bootstrap/bootstrap-88f89515ec50d56ed60c0d65bb29dbd0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-12c7548f543ff79fe76bca8cab42d0cf.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-88f89515ec50d56ed60c0d65bb29dbd0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -154,14 +158,176 @@ window.Quarto = {
 };
 </script>
 </head>
-<body class="nav-sidebar floating quarto-light">
+<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/02_data_cleaning.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Flusso di lavoro per la pulizia dei dati</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/02_data_cleaning.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Flusso di lavoro per la pulizia dei dati</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Ricerca" onclick="window.quartoOpenSearch();">
@@ -170,13 +336,12 @@ window.Quarto = {
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
-      <a href="../../index.html" class="sidebar-logo-link">
-      </a>
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="../../">Analisi esplorativa dei dati (EDA) in psicologia</a> 
-        <div class="sidebar-tools-main">
+      <a href="../../">Analisi esplorativa dei dati in psicologia</a> 
+        <div class="sidebar-tools-main tools-wide">
     <a href="https://github.com/ccaudek/utet-eda/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Attiva/disattiva la modalità oscura"><i class="bi"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Attiva/disattiva la modalità lettore">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
@@ -215,32 +380,26 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/key_notions/01_data_analysis.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">La crisi di replicazione e la riforma metodologica in psicologia</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/02_key_notions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Concetti chiave</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Concetti chiave</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/03_design.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Campionamento, metodologia sperimentale e studi osservazionali</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Campionamento, metodologia sperimentale e studi osservazionali</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/04_measurement.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">La misurazione in psicologia</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">La misurazione in psicologia</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/05_cognitive_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Dalla descrizione alla spiegazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dalla descrizione alla spiegazione</span></span></a>
   </div>
 </li>
       </ul>
@@ -257,43 +416,43 @@ window.Quarto = {
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/01_r_syntax.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Un approccio moderno all’analisi dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Un approccio moderno all’analisi dei dati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/02_utility_functions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Utility functions</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Utility functions</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/03_r_programming.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Programmazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Programmazione</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/04_r_packages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Pacchetti</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Pacchetti</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/05_dplyr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Usare <code>dplyr</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Usare <code>dplyr</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/06_quarto.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Quarto</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quarto</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/07_environment.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">L’ambiente di programmazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">L’ambiente di programmazione</span></span></a>
   </div>
 </li>
       </ul>
@@ -310,61 +469,73 @@ window.Quarto = {
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/01_project_structure.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Il ciclo di vita di un progetto di analisi dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Il ciclo di vita di un progetto di analisi dei dati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/02_data_cleaning.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Flusso di lavoro per la pulizia dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Flusso di lavoro per la pulizia dei dati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/03_exploring_qualitative_data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Esplorare i dati qualitativi</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Esplorare i dati qualitativi</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/04_exploring_numeric_data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Esplorare i dati numerici</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Esplorare i dati numerici</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/05_data_visualization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Principi della visualizzazione dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Principi della visualizzazione dei dati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/06_loc_scale.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Indicatori di tendenza centrale e variabilità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Indicatori di tendenza centrale e variabilità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/07_introduction_normal_distribution.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Introduzione alla distribuzione normale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Introduzione alla distribuzione normale</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/08_correlation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Relazioni tra variabili</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Relazioni tra variabili</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/eda/09_causality.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/eda/09_propedeutic_causality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Causalità: intuizioni, controfattuali e perché l’associazione non basta</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/10_causality.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Causalità dai dati osservazionali</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/eda/10_outlier.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/eda/11_outlier.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Outlier</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/12_gauss.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Assunzione di gaussianità e trasformazioni dei dati</span></span></a>
   </div>
 </li>
       </ul>
@@ -394,14 +565,14 @@ window.Quarto = {
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Sommario</h2>
    
   <ul class="collapse">
-<li><a href="#tutorial" id="toc-tutorial" class="nav-link active" data-scroll-target="#tutorial"><span class="header-section-number">15.1</span> Tutorial</a></li>
-  <li><a href="#organizzazione-dei-file-e-informazioni-aggiuntive" id="toc-organizzazione-dei-file-e-informazioni-aggiuntive" class="nav-link" data-scroll-target="#organizzazione-dei-file-e-informazioni-aggiuntive"><span class="header-section-number">15.2</span> Organizzazione dei file e informazioni aggiuntive</a></li>
-  <li><a href="#dizionario-dei-dati" id="toc-dizionario-dei-dati" class="nav-link" data-scroll-target="#dizionario-dei-dati"><span class="header-section-number">15.3</span> Dizionario dei dati</a></li>
+<li><a href="#tutorial" id="toc-tutorial" class="nav-link active" data-scroll-target="#tutorial"><span class="header-section-number">14.1</span> Tutorial</a></li>
+  <li><a href="#organizzazione-dei-file-e-informazioni-aggiuntive" id="toc-organizzazione-dei-file-e-informazioni-aggiuntive" class="nav-link" data-scroll-target="#organizzazione-dei-file-e-informazioni-aggiuntive"><span class="header-section-number">14.2</span> Organizzazione dei file e informazioni aggiuntive</a></li>
+  <li><a href="#dizionario-dei-dati" id="toc-dizionario-dei-dati" class="nav-link" data-scroll-target="#dizionario-dei-dati"><span class="header-section-number">14.3</span> Dizionario dei dati</a></li>
   </ul><div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/eda/02_data_cleaning.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/02_data_cleaning.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Flusso di lavoro per la pulizia dei dati</span></a></li></ol></nav><div class="quarto-title">
-<h1 class="title"><span id="sec-data-cleaning" class="quarto-section-identifier"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Flusso di lavoro per la pulizia dei dati</span></span></h1>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/02_data_cleaning.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Flusso di lavoro per la pulizia dei dati</span></a></li></ol></nav><div class="quarto-title">
+<h1 class="title"><span id="sec-data-cleaning" class="quarto-section-identifier"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Flusso di lavoro per la pulizia dei dati</span></span></h1>
 </div>
 
 
@@ -415,15 +586,73 @@ window.Quarto = {
   
 
 
-</header><div class="epigraph">
-<blockquote class="blockquote">
-<p>“Se i dati non sono puliti, le statistiche non hanno senso.”</p>
-<p>– <strong>E.T. Jaynes</strong>, Fisico e Statistico</p>
-</blockquote>
+</header><div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
 </div>
-<section id="introduzione" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="introduzione">Introduzione</h2>
+<div class="callout-body-container">
 <p>Nonostante la fase più interessante di un progetto di analisi dei dati sia quella in cui si riesce a rispondere alla domanda che ha dato avvio all’indagine, gran parte del tempo di un analista è in realtà dedicata a una fase preliminare: la pulizia e il preprocessing dei dati, operazioni che vengono svolte ancor prima dell’analisi esplorativa.</p>
-<p>In questo capitolo, esamineremo un caso concreto di <em>data cleaning</em> e preprocessing, seguendo il tutorial di <a href="https://cghlewis.com/blog/data_clean_03/">Crystal Lewis</a>. Il problema viene presentato come segue:</p>
+<p>In questo capitolo, esamineremo un caso concreto di <em>data cleaning</em> e preprocessing, seguendo il tutorial di <a href="https://cghlewis.com/blog/data_clean_03/">Crystal Lewis</a>.</p>
+</div>
+</div>
+</div>
+<section id="panoramica-del-capitolo" class="level3 unnumbered unlisted"><h3 class="unnumbered unlisted anchored" data-anchor-id="panoramica-del-capitolo">Panoramica del capitolo</h3>
+<ul>
+<li>Verificare, pulire e trasformare i dati per l’analisi.</li>
+<li>Documentare il dataset con un dizionario e note esplicative.</li>
+<li>Assicurare validità, unicità e organizzazione dei dati.</li>
+<li>Applicare regole coerenti per denominazione e codifica.</li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Consiglio</span>Prerequisiti
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Leggere <a href="https://cghlewis.com/blog/data_clean_03/">Cleaning sample data in standardized way</a> di Crystal Lewis.</li>
+<li>Leggere <a href="https://journals.sagepub.com/doi/full/10.1177/2515245920928007">Getting Started Creating Data Dictionaries: How to Create a Shareable Data Set</a> di <span class="citation" data-cites="buchanan2021getting">Buchanan et al. (<a href="#ref-buchanan2021getting" role="doc-biblioref">2021</a>)</span>.</li>
+<li>Consultare il capitolo <a href="https://datamgmtinedresearch.com/document#document-dictionary">Documentation</a> di <em>Data Management in Large-Scale Education Research</em>.</li>
+<li>Consultare <a href="https://help.osf.io/article/217-how-to-make-a-data-dictionary">How to Make a Data Dictionary</a>.</li>
+<li>Consultare <a href="https://osf.io/ynqcu">data dictionary template</a>.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Preparazione del Notebook">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Attenzione</span>Preparazione del Notebook
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"code"</span>, <span class="st">"_common.R"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/source.html">source</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Load packages</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">"pacman"</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"pacman"</span><span class="op">)</span></span>
+<span><span class="fu">pacman</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pacman/man/p_load.html">p_load</a></span><span class="op">(</span><span class="va">mice</span>, <span class="va">labelled</span>, <span class="va">haven</span>, <span class="va">pointblank</span>, <span class="va">mice</span>, <span class="va">purrr</span>, <span class="va">knitr</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</div>
+</section><section id="tutorial" class="level2" data-number="14.1"><h2 data-number="14.1" class="anchored" data-anchor-id="tutorial">
+<span class="header-section-number">14.1</span> Tutorial</h2>
+<p>Questo tutorial segue i passaggi descritti da <a href="https://cghlewis.com/blog/data_clean_03/">Crystal Lewis</a> per illustrare le buone pratiche nella gestione e pulizia dei dati.</p>
+<p>Il problema viene presentato nel modo segue:</p>
 <blockquote class="blockquote">
 <p>I am managing data for a longitudinal randomized controlled trial (RCT) study. For this RCT, schools are randomized to either a treatment or control group. Students who are in a treatment school receive a program to boost their math self-efficacy. Data is collected on all students in two waves (wave 1 is in the fall of a school year, and wave 2 is collected in the spring). At this point in time, we have collected wave 1 of our student survey on a paper form and we set up a data entry database for staff to enter the information into. Data has been double-entered, checked for entry errors, and has been exported in a csv format (“w1_mathproj_stu_svy_raw.csv”) to a folder (called “data”) where it is waiting to be cleaned.</p>
 </blockquote>
@@ -448,63 +677,8 @@ window.Quarto = {
 <li>Salvataggio dei dati puliti.</li>
 </ol>
 <p>Sebbene l’ordine di questi passaggi sia flessibile e possa essere adattato alle esigenze specifiche, c’è un passaggio che non dovrebbe mai essere saltato: il primo, ovvero la revisione dei dati. Senza una revisione preliminare, l’analista rischia di sprecare ore a pulire i dati per poi scoprire che mancano dei partecipanti, che i dati non sono organizzati come previsto o, peggio ancora, che si sta lavorando con i dati sbagliati.</p>
-<section id="panoramica-del-capitolo" class="level3 unnumbered unlisted"><h3 class="unnumbered unlisted anchored" data-anchor-id="panoramica-del-capitolo">Panoramica del capitolo</h3>
-<ul>
-<li>Verificare, pulire e trasformare i dati per l’analisi.</li>
-<li>Documentare il dataset con un dizionario e note esplicative.</li>
-<li>Assicurare validità, unicità e organizzazione dei dati.</li>
-<li>Applicare regole coerenti per denominazione e codifica.</li>
-</ul>
-<div class="callout callout-style-simple callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Consiglio</span>Prerequisiti
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-1" class="callout-1-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<ul>
-<li>Leggere <a href="https://cghlewis.com/blog/data_clean_03/">Cleaning sample data in standardized way</a> di Crystal Lewis.</li>
-<li>Leggere <a href="https://journals.sagepub.com/doi/full/10.1177/2515245920928007">Getting Started Creating Data Dictionaries: How to Create a Shareable Data Set</a> di <span class="citation" data-cites="buchanan2021getting">Buchanan et al. (<a href="#ref-buchanan2021getting" role="doc-biblioref">2021</a>)</span>.</li>
-<li>Consultare il capitolo <a href="https://datamgmtinedresearch.com/document#document-dictionary">Documentation</a> di <em>Data Management in Large-Scale Education Research</em>.</li>
-<li>Consultare <a href="https://help.osf.io/article/217-how-to-make-a-data-dictionary">How to Make a Data Dictionary</a>.</li>
-<li>Consultare <a href="https://osf.io/ynqcu">data dictionary template</a>.</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="callout callout-style-simple callout-caution no-icon callout-titled" title="Preparazione del Notebook">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Attenzione</span>Preparazione del Notebook
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"code"</span>, <span class="st">"_common.R"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/source.html">source</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Load packages</span></span>
-<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">"pacman"</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"pacman"</span><span class="op">)</span></span>
-<span><span class="fu">pacman</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pacman/man/p_load.html">p_load</a></span><span class="op">(</span><span class="va">mice</span>, <span class="va">labelled</span>, <span class="va">haven</span>, <span class="va">pointblank</span>, <span class="va">mice</span>, <span class="va">purrr</span>, <span class="va">knitr</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</div>
-</div>
-</div>
-</section></section><section id="tutorial" class="level2" data-number="15.1"><h2 data-number="15.1" class="anchored" data-anchor-id="tutorial">
-<span class="header-section-number">15.1</span> Tutorial</h2>
-<p>Questo tutorial segue i passaggi descritti da <a href="https://cghlewis.com/blog/data_clean_03/">Crystal Lewis</a> per illustrare le buone pratiche nella gestione e pulizia dei dati.</p>
-<section id="organizzazione-dei-dati" class="level3" data-number="15.1.1"><h3 data-number="15.1.1" class="anchored" data-anchor-id="organizzazione-dei-dati">
-<span class="header-section-number">15.1.1</span> Organizzazione dei dati</h3>
+<section id="organizzazione-dei-dati" class="level3" data-number="14.1.1"><h3 data-number="14.1.1" class="anchored" data-anchor-id="organizzazione-dei-dati">
+<span class="header-section-number">14.1.1</span> Organizzazione dei dati</h3>
 <p>Un principio fondamentale nella gestione dei dati è preservare l’integrità dei dati grezzi. I dati originali <em>non devono mai essere modificati direttamente</em>. È quindi consigliabile strutturare i dati in una directory denominata <code>data</code>, suddivisa in due sottocartelle:</p>
 <ul>
 <li>
@@ -514,10 +688,10 @@ window.Quarto = {
 <code>processed</code>: destinata ai dati ripuliti e preprocessati.</li>
 </ul>
 <p>Ad esempio, per avviare il processo di pulizia, importiamo i dati da un file denominato <code>w1_mathproj_stu_svy_raw.csv</code>. Tutte le operazioni dovranno essere effettuate utilizzando percorsi relativi alla <em>home directory</em> del progetto, che definiremo come primo passo.</p>
-</section><section id="passaggi-del-tutorial" class="level3" data-number="15.1.2"><h3 data-number="15.1.2" class="anchored" data-anchor-id="passaggi-del-tutorial">
-<span class="header-section-number">15.1.2</span> Passaggi del tutorial</h3>
-<section id="importare-e-esaminare-i-dati" class="level4" data-number="15.1.2.1"><h4 data-number="15.1.2.1" class="anchored" data-anchor-id="importare-e-esaminare-i-dati">
-<span class="header-section-number">15.1.2.1</span> Importare e esaminare i dati</h4>
+</section><section id="passaggi-del-tutorial" class="level3" data-number="14.1.2"><h3 data-number="14.1.2" class="anchored" data-anchor-id="passaggi-del-tutorial">
+<span class="header-section-number">14.1.2</span> Passaggi del tutorial</h3>
+<section id="importare-e-esaminare-i-dati" class="level4" data-number="14.1.2.1"><h4 data-number="14.1.2.1" class="anchored" data-anchor-id="importare-e-esaminare-i-dati">
+<span class="header-section-number">14.1.2.1</span> Importare e esaminare i dati</h4>
 <p>Importiamo i dati utilizzando la funzione <code>import()</code> della libreria <code>rio</code> e visualizziamo i primi valori di ciascuna colonna per verificarne la corretta importazione:</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Importa i dati</span></span>
@@ -559,8 +733,8 @@ window.Quarto = {
 <span><span class="co">#&gt; 5   1347 2023-02-14           9     2     2     4     2</span></span>
 <span><span class="co">#&gt; 6   1399 2023-02-14          12     4     1     3     1</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</section><section id="individuare-e-rimuovere-i-duplicati" class="level4" data-number="15.1.2.2"><h4 data-number="15.1.2.2" class="anchored" data-anchor-id="individuare-e-rimuovere-i-duplicati">
-<span class="header-section-number">15.1.2.2</span> Individuare e rimuovere i duplicati</h4>
+</section><section id="individuare-e-rimuovere-i-duplicati" class="level4" data-number="14.1.2.2"><h4 data-number="14.1.2.2" class="anchored" data-anchor-id="individuare-e-rimuovere-i-duplicati">
+<span class="header-section-number">14.1.2.2</span> Individuare e rimuovere i duplicati</h4>
 <p>In questa fase, eseguiamo alcune modifiche necessarie al <code>data frame</code>, come rimuovere duplicati e ordinare i dati:</p>
 <ul>
 <li>
@@ -609,8 +783,8 @@ window.Quarto = {
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 5 7</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</section><section id="de-identificazione-dei-dati" class="level4" data-number="15.1.2.3"><h4 data-number="15.1.2.3" class="anchored" data-anchor-id="de-identificazione-dei-dati">
-<span class="header-section-number">15.1.2.3</span> De-identificazione dei dati</h4>
+</section><section id="de-identificazione-dei-dati" class="level4" data-number="14.1.2.3"><h4 data-number="14.1.2.3" class="anchored" data-anchor-id="de-identificazione-dei-dati">
+<span class="header-section-number">14.1.2.3</span> De-identificazione dei dati</h4>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Rimuovi la colonna 'svy_date'</span></span>
 <span><span class="va">svy</span> <span class="op">&lt;-</span> <span class="va">svy</span> <span class="op">|&gt;</span></span>
@@ -621,15 +795,15 @@ window.Quarto = {
 <span><span class="co">#&gt; [1] "stu_id"      "grade_level" "math1"       "math2"       "math3"      </span></span>
 <span><span class="co">#&gt; [6] "math4"</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</section><section id="rimuovere-le-colonne-non-necessarie" class="level4" data-number="15.1.2.4"><h4 data-number="15.1.2.4" class="anchored" data-anchor-id="rimuovere-le-colonne-non-necessarie">
-<span class="header-section-number">15.1.2.4</span> Rimuovere le colonne non necessarie</h4>
+</section><section id="rimuovere-le-colonne-non-necessarie" class="level4" data-number="14.1.2.4"><h4 data-number="14.1.2.4" class="anchored" data-anchor-id="rimuovere-le-colonne-non-necessarie">
+<span class="header-section-number">14.1.2.4</span> Rimuovere le colonne non necessarie</h4>
 <p>Nel caso presente, la rimozione di colonne non è necessaria. Tuttavia, in molti progetti di analisi dei dati, soprattutto quando i dati vengono raccolti utilizzando software di terze parti o strumenti specifici per esperimenti psicologici, è comune trovarsi con colonne che non sono pertinenti allo studio in corso.</p>
 <p>Queste colonne possono includere dati come identificatori interni, timestamp generati automaticamente, informazioni di debug, o variabili che non sono rilevanti per l’analisi che si intende condurre. Quando tali colonne sono irrilevanti per la ricerca, possono essere rimosse per semplificare il dataset e ridurre il rischio di confusione o errori durante l’analisi. Rimuovere le colonne non necessarie non solo rende il dataset più gestibile, ma aiuta anche a focalizzare l’analisi sulle variabili che realmente importano per rispondere alle domande di ricerca.</p>
-</section><section id="dividere-le-colonne-secondo-necessità" class="level4" data-number="15.1.2.5"><h4 data-number="15.1.2.5" class="anchored" data-anchor-id="dividere-le-colonne-secondo-necessità">
-<span class="header-section-number">15.1.2.5</span> Dividere le colonne secondo necessità</h4>
+</section><section id="dividere-le-colonne-secondo-necessità" class="level4" data-number="14.1.2.5"><h4 data-number="14.1.2.5" class="anchored" data-anchor-id="dividere-le-colonne-secondo-necessità">
+<span class="header-section-number">14.1.2.5</span> Dividere le colonne secondo necessità</h4>
 <p>Nel caso presente, questa operazione non è necessaria. Tuttavia, se si lavora con un dataset che include una colonna chiamata “NomeCompleto”, contenente sia il nome che il cognome di uno studente, per esempio, è buona pratica separare questa colonna in due colonne distinte, “Nome” e “Cognome”. Questa suddivisione facilita l’analisi e la manipolazione dei dati, rendendoli più organizzati e accessibili.</p>
-</section><section id="rinominare-le-colonne" class="level4" data-number="15.1.2.6"><h4 data-number="15.1.2.6" class="anchored" data-anchor-id="rinominare-le-colonne">
-<span class="header-section-number">15.1.2.6</span> Rinominare le colonne</h4>
+</section><section id="rinominare-le-colonne" class="level4" data-number="14.1.2.6"><h4 data-number="14.1.2.6" class="anchored" data-anchor-id="rinominare-le-colonne">
+<span class="header-section-number">14.1.2.6</span> Rinominare le colonne</h4>
 <p>È importante assegnare nomi chiari alle colonne del dataset. Utilizzare nomi di variabili comprensibili aiuta a rendere l’analisi dei dati più intuitiva e a ridurre il rischio di errori interpretativi.</p>
 <p>Esempi di buone pratiche:</p>
 <ul>
@@ -663,15 +837,15 @@ window.Quarto = {
 </li>
 </ul>
 </li>
-</ul></section><section id="trasformare-le-variabili" class="level4" data-number="15.1.2.7"><h4 data-number="15.1.2.7" class="anchored" data-anchor-id="trasformare-le-variabili">
-<span class="header-section-number">15.1.2.7</span> Trasformare le variabili</h4>
+</ul></section><section id="trasformare-le-variabili" class="level4" data-number="14.1.2.7"><h4 data-number="14.1.2.7" class="anchored" data-anchor-id="trasformare-le-variabili">
+<span class="header-section-number">14.1.2.7</span> Trasformare le variabili</h4>
 <p>Nel caso presente non si applica, ma è un passo importante in molte analisi dei dati.</p>
 <p>Esempi di trasformazione delle variabili:</p>
 <ul>
 <li><p><em>Logaritmo di una variabile:</em> Immaginiamo di avere una variabile che misura i tempi di reazione dei partecipanti a un esperimento. Se i tempi di reazione hanno una distribuzione fortemente asimmetrica (con alcuni valori molto elevati), potrebbe essere utile applicare una trasformazione logaritmica per rendere la distribuzione più simmetrica e migliorare l’interpretabilità dei risultati.</p></li>
 <li><p><em>Codifica delle variabili categoriche:</em> Se è presente una variabile categorica come il “tipo di intervento” con valori come “cognitivo”, “comportamentale” e “farmacologico”, potrebbe essere necessario trasformare questa variabile in variabili dummy (ad esempio, <code>intervento_cognitivo</code>, <code>intervento_comportamentale</code>, <code>intervento_farmacologico</code>), dove ogni variabile assume il valore 0 o 1 a seconda della presenza o meno di quel tipo di intervento. Questo è utile quando si utilizzano tecniche di regressione.</p></li>
-</ul></section><section id="standardizzazione-delle-variabili" class="level4" data-number="15.1.2.8"><h4 data-number="15.1.2.8" class="anchored" data-anchor-id="standardizzazione-delle-variabili">
-<span class="header-section-number">15.1.2.8</span> Standardizzazione delle variabili</h4>
+</ul></section><section id="standardizzazione-delle-variabili" class="level4" data-number="14.1.2.8"><h4 data-number="14.1.2.8" class="anchored" data-anchor-id="standardizzazione-delle-variabili">
+<span class="header-section-number">14.1.2.8</span> Standardizzazione delle variabili</h4>
 <p>La standardizzazione è utile quando si desidera rendere comparabili variabili misurate su scale diverse, ad esempio per confronti tra gruppi o per inclusione in modelli di regressione.</p>
 <p><strong>Esempio.</strong> Supponiamo di avere una variabile che misura il livello di ansia su una scala da 0 a 100. Per standardizzarla:</p>
 <ol type="1">
@@ -686,8 +860,8 @@ window.Quarto = {
 <ul>
 <li>facilita l’interpretazione dei coefficienti in un modello di regressione;</li>
 <li>permette un confronto diretto tra variabili che hanno unità di misura diverse.</li>
-</ul></section><section id="normalizzazione-delle-variabili" class="level4" data-number="15.1.2.9"><h4 data-number="15.1.2.9" class="anchored" data-anchor-id="normalizzazione-delle-variabili">
-<span class="header-section-number">15.1.2.9</span> Normalizzazione delle variabili</h4>
+</ul></section><section id="normalizzazione-delle-variabili" class="level4" data-number="14.1.2.9"><h4 data-number="14.1.2.9" class="anchored" data-anchor-id="normalizzazione-delle-variabili">
+<span class="header-section-number">14.1.2.9</span> Normalizzazione delle variabili</h4>
 <p>La normalizzazione consiste nel ridimensionare i dati su una scala predefinita, spesso compresa tra 0 e 1. Questo processo è particolarmente utile in analisi multivariate, dove variabili con scale molto diverse potrebbero influenzare in modo sproporzionato i risultati.</p>
 <p><strong>Esempio.</strong> Hai dati su:</p>
 <ul>
@@ -714,8 +888,8 @@ x_{\text{norm}} = \frac{x - \text{min}(x)}{\text{max}(x) - \text{min}(x)} .
 <em>Evitare problemi numerici nei modelli statistici</em>: Alcuni algoritmi di machine learning o tecniche di ottimizzazione richiedono che i dati siano su scale simili per funzionare correttamente.</li>
 </ol>
 <p>In conclusione, la scelta tra standardizzazione e normalizzazione dipende dal contesto dell’analisi e dagli obiettivi specifici. Entrambi i processi sono strumenti indispensabili per garantire che i dati siano trattati in modo adeguato, portando a risultati robusti e facilmente interpretabili.</p>
-</section><section id="aggiornare-i-tipi-delle-variabili" class="level4" data-number="15.1.2.10"><h4 data-number="15.1.2.10" class="anchored" data-anchor-id="aggiornare-i-tipi-delle-variabili">
-<span class="header-section-number">15.1.2.10</span> Aggiornare i tipi delle variabili</h4>
+</section><section id="aggiornare-i-tipi-delle-variabili" class="level4" data-number="14.1.2.10"><h4 data-number="14.1.2.10" class="anchored" data-anchor-id="aggiornare-i-tipi-delle-variabili">
+<span class="header-section-number">14.1.2.10</span> Aggiornare i tipi delle variabili</h4>
 <p>Nel caso presente non è necessario. Supponiamo invece di avere una colonna in un dataset psicologico che contiene punteggi di un questionario, ma i dati sono stati importati come stringhe (testo) invece che come numeri. Per eseguire calcoli statistici, sarà necessario convertire questa colonna da stringa a numerico.</p>
 <p>In <code>R</code>, si potrebbe usare il seguente codice:</p>
 <div class="cell" data-layout-align="center">
@@ -726,8 +900,8 @@ x_{\text{norm}} = \frac{x - \text{min}(x)}{\text{max}(x) - \text{min}(x)} .
 </div>
 <p>In questo esempio, la funzione <code><a href="https://rdrr.io/r/base/numeric.html">as.numeric()</a></code> viene utilizzata per convertire la colonna <code>punteggio</code> in un formato numerico, permettendo di eseguire analisi quantitative sui dati.</p>
 <p>Un altro caso molto comune si verifica quando si importano dati da file Excel. Spesso capita che, all’interno di una cella di una colonna che dovrebbe contenere solo valori numerici, venga inserito erroneamente uno o più caratteri alfanumerici. Di conseguenza, l’intera colonna viene interpretata come di tipo alfanumerico, anche se i valori dovrebbero essere numerici. In questi casi, è fondamentale individuare la cella problematica, correggere manualmente il valore errato, e poi riconvertire l’intera colonna da alfanumerica a numerica.</p>
-</section><section id="ricodificare-le-variabili" class="level4" data-number="15.1.2.11"><h4 data-number="15.1.2.11" class="anchored" data-anchor-id="ricodificare-le-variabili">
-<span class="header-section-number">15.1.2.11</span> Ricodificare le variabili</h4>
+</section><section id="ricodificare-le-variabili" class="level4" data-number="14.1.2.11"><h4 data-number="14.1.2.11" class="anchored" data-anchor-id="ricodificare-le-variabili">
+<span class="header-section-number">14.1.2.11</span> Ricodificare le variabili</h4>
 <p>Anche se in questo caso non è necessario, la ricodifica delle variabili è una pratica molto comune nelle analisi dei dati psicologici.</p>
 <p>Per esempio, consideriamo una variabile categoriale con modalità descritte da stringhe poco comprensibili, che vengono ricodificate con nomi più chiari e comprensibili.</p>
 <p>Supponiamo di avere un DataFrame chiamato <code>df</code> con una colonna <code>tipo_intervento</code> che contiene le modalità <code>"CT"</code>, <code>"BT"</code>, e <code>"MT"</code> per rappresentare rispettivamente “Terapia Cognitiva”, “Terapia Comportamentale” e “Terapia Mista”. Queste abbreviazioni potrebbero non essere immediatamente chiare a chiunque analizzi i dati, quindi decidiamo di ricodificarle con nomi più espliciti. Ecco come farlo in <code>R</code>:</p>
@@ -765,8 +939,8 @@ x_{\text{norm}} = \frac{x - \text{min}(x)}{\text{max}(x) - \text{min}(x)} .
 <span><span class="co">#&gt; 4 CT              Terapia Cognitiva           </span></span>
 <span><span class="co">#&gt; 5 BT              Terapia Comportamentale</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</section><section id="aggiungere-nuove-variabili-nel-data-frame" class="level4" data-number="15.1.2.12"><h4 data-number="15.1.2.12" class="anchored" data-anchor-id="aggiungere-nuove-variabili-nel-data-frame">
-<span class="header-section-number">15.1.2.12</span> Aggiungere nuove variabili nel data frame</h4>
+</section><section id="aggiungere-nuove-variabili-nel-data-frame" class="level4" data-number="14.1.2.12"><h4 data-number="14.1.2.12" class="anchored" data-anchor-id="aggiungere-nuove-variabili-nel-data-frame">
+<span class="header-section-number">14.1.2.12</span> Aggiungere nuove variabili nel data frame</h4>
 <p>Nel caso presente non è richiesto, ma aggiungere nuove variabili a un DataFrame è un’operazione comune durante l’analisi dei dati. Un esempio è il calcolo dell’indice di massa corporea (BMI).</p>
 <p>Supponiamo di avere un DataFrame chiamato <code>df</code> che contiene le colonne <code>peso_kg</code> (peso in chilogrammi) e <code>altezza_m</code> (altezza in metri) per ciascun partecipante a uno studio psicologico. Per arricchire il dataset, possiamo calcolare il BMI per ogni partecipante e aggiungerlo come una nuova variabile.</p>
 <p>Il BMI si calcola con la formula:</p>
@@ -802,11 +976,11 @@ x_{\text{norm}} = \frac{x - \text{min}(x)}{\text{max}(x) - \text{min}(x)} .
 <span><span class="co">#&gt; 3      60      1.65  22.0</span></span>
 <span><span class="co">#&gt; 4      95      1.9   26.3</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</section></section><section id="affrontare-il-problema-dei-dati-mancanti" class="level3" data-number="15.1.3"><h3 data-number="15.1.3" class="anchored" data-anchor-id="affrontare-il-problema-dei-dati-mancanti">
-<span class="header-section-number">15.1.3</span> Affrontare il problema dei dati mancanti</h3>
+</section></section><section id="affrontare-il-problema-dei-dati-mancanti" class="level3" data-number="14.1.3"><h3 data-number="14.1.3" class="anchored" data-anchor-id="affrontare-il-problema-dei-dati-mancanti">
+<span class="header-section-number">14.1.3</span> Affrontare il problema dei dati mancanti</h3>
 <p>I dati mancanti sono un problema comune nelle ricerche psicologiche e in molte altre discipline. Quando mancano delle informazioni in un dataset, possono verificarsi gravi problemi per l’analisi statistica, come risultati distorti, riduzione della precisione delle stime o, in alcuni casi, l’impossibilità di applicare alcuni algoritmi.</p>
-<section id="perché-i-dati-mancanti-sono-un-problema" class="level4" data-number="15.1.3.1"><h4 data-number="15.1.3.1" class="anchored" data-anchor-id="perché-i-dati-mancanti-sono-un-problema">
-<span class="header-section-number">15.1.3.1</span> Perché i dati mancanti sono un problema?</h4>
+<section id="perché-i-dati-mancanti-sono-un-problema" class="level4" data-number="14.1.3.1"><h4 data-number="14.1.3.1" class="anchored" data-anchor-id="perché-i-dati-mancanti-sono-un-problema">
+<span class="header-section-number">14.1.3.1</span> Perché i dati mancanti sono un problema?</h4>
 <p>Immagina di voler capire il rendimento medio di una classe in un test, ma alcuni studenti hanno lasciato delle risposte in bianco. Se ignoriamo le risposte mancanti o eliminiamo gli studenti con dati incompleti, rischiamo di ottenere una stima che non rappresenta correttamente la realtà. Questo succede perché:</p>
 <ul>
 <li>
@@ -815,8 +989,8 @@ x_{\text{norm}} = \frac{x - \text{min}(x)}{\text{max}(x) - \text{min}(x)} .
 <em>Riduzione della potenza statistica</em>: Eliminare dati incompleti riduce il numero totale di osservazioni, rendendo più difficile trovare risultati significativi.</li>
 <li>
 <em>Impossibilità di applicare alcuni metodi</em>: Molti algoritmi statistici richiedono dati completi e non funzionano con valori mancanti.</li>
-</ul></section><section id="come-gestire-i-dati-mancanti" class="level4" data-number="15.1.3.2"><h4 data-number="15.1.3.2" class="anchored" data-anchor-id="come-gestire-i-dati-mancanti">
-<span class="header-section-number">15.1.3.2</span> Come gestire i dati mancanti?</h4>
+</ul></section><section id="come-gestire-i-dati-mancanti" class="level4" data-number="14.1.3.2"><h4 data-number="14.1.3.2" class="anchored" data-anchor-id="come-gestire-i-dati-mancanti">
+<span class="header-section-number">14.1.3.2</span> Come gestire i dati mancanti?</h4>
 <p>Ci sono diversi modi per affrontare i dati mancanti. Vediamo prima i metodi più semplici e poi quelli più avanzati.</p>
 <p>Esaminiamo il data frame iniziale:</p>
 <div class="cell" data-layout-align="center">
@@ -879,8 +1053,8 @@ Un approccio più avanzato è l’imputazione multipla, che utilizza modelli sta
 <li>Riduce il rischio di bias rispetto ai metodi semplici.</li>
 </ul>
 </li>
-</ol></section><section id="applicazione-pratica-imputazione-multipla-con-mice-in-r" class="level4" data-number="15.1.3.3"><h4 data-number="15.1.3.3" class="anchored" data-anchor-id="applicazione-pratica-imputazione-multipla-con-mice-in-r">
-<span class="header-section-number">15.1.3.3</span> Applicazione pratica: imputazione multipla con <code>mice</code> in R</h4>
+</ol></section><section id="applicazione-pratica-imputazione-multipla-con-mice-in-r" class="level4" data-number="14.1.3.3"><h4 data-number="14.1.3.3" class="anchored" data-anchor-id="applicazione-pratica-imputazione-multipla-con-mice-in-r">
+<span class="header-section-number">14.1.3.3</span> Applicazione pratica: imputazione multipla con <code>mice</code> in R</h4>
 <p>Supponiamo di avere un dataset con alcune colonne numeriche che contengono valori mancanti. Possiamo utilizzare il pacchetto <code>mice</code> per imputare i dati mancanti.</p>
 <p>Selezioniamo le colonne numeriche da imputare.</p>
 <div class="cell" data-layout-align="center">
@@ -942,16 +1116,16 @@ Un approccio più avanzato è l’imputazione multipla, che utilizza modelli sta
 <span><span class="co">#&gt;  3rd Qu.:4.0  </span></span>
 <span><span class="co">#&gt;  Max.   :4.0</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</section><section id="come-funziona-limputazione-multipla" class="level4" data-number="15.1.3.4"><h4 data-number="15.1.3.4" class="anchored" data-anchor-id="come-funziona-limputazione-multipla">
-<span class="header-section-number">15.1.3.4</span> Come funziona l’imputazione multipla?</h4>
+</section><section id="come-funziona-limputazione-multipla" class="level4" data-number="14.1.3.4"><h4 data-number="14.1.3.4" class="anchored" data-anchor-id="come-funziona-limputazione-multipla">
+<span class="header-section-number">14.1.3.4</span> Come funziona l’imputazione multipla?</h4>
 <ol type="1">
 <li>Ogni variabile con valori mancanti viene modellata come funzione delle altre variabili.</li>
 <li>I valori mancanti vengono stimati iterativamente. In ogni iterazione, si utilizza l’output precedente come input per migliorare le stime.</li>
 <li>Dopo un numero sufficiente di iterazioni, le stime si stabilizzano (convergenza).</li>
 </ol>
 <p>In conclusione, l’imputazione multipla è una tecnica avanzata che permette di gestire i dati mancanti preservando la qualità delle analisi. Rispetto ai metodi semplici, consente di mantenere la variabilità e ridurre il rischio di bias, rendendola una scelta ideale per analisi psicologiche e di ricerca.</p>
-</section><section id="aggiungere-i-metadati" class="level4" data-number="15.1.3.5"><h4 data-number="15.1.3.5" class="anchored" data-anchor-id="aggiungere-i-metadati">
-<span class="header-section-number">15.1.3.5</span> Aggiungere i metadati</h4>
+</section><section id="aggiungere-i-metadati" class="level4" data-number="14.1.3.5"><h4 data-number="14.1.3.5" class="anchored" data-anchor-id="aggiungere-i-metadati">
+<span class="header-section-number">14.1.3.5</span> Aggiungere i metadati</h4>
 <p>I <em>metadati</em> sono informazioni che descrivono i dati stessi, come etichette di variabili, etichette di valori, informazioni sull’origine dei dati, unità di misura e altro ancora. Questi metadati sono essenziali per comprendere, documentare e condividere correttamente un dataset.</p>
 <p>In R, i metadati sono gestiti in modo molto dettagliato e strutturato attraverso pacchetti come <code>haven</code>, <code>labelled</code>, e <code>Hmisc</code>. Questi pacchetti consentono di associare etichette ai dati, come etichette di variabili e di valori, e persino di gestire i valori mancanti con etichette specifiche.</p>
 <ul>
@@ -1022,8 +1196,8 @@ Un approccio più avanzato è l’imputazione multipla, che utilizza modelli sta
 <span><span class="co">#&gt; 4   1387          11     3     3     4     4</span></span>
 <span><span class="co">#&gt; 6   1399          12     4     1     3     1</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<section id="utilizzo-delle-etichette-in-r-con-variabili-numeriche" class="level5" data-number="15.1.3.5.1"><h5 data-number="15.1.3.5.1" class="anchored" data-anchor-id="utilizzo-delle-etichette-in-r-con-variabili-numeriche">
-<span class="header-section-number">15.1.3.5.1</span> Utilizzo delle etichette in R con variabili numeriche</h5>
+<section id="utilizzo-delle-etichette-in-r-con-variabili-numeriche" class="level5" data-number="14.1.3.5.1"><h5 data-number="14.1.3.5.1" class="anchored" data-anchor-id="utilizzo-delle-etichette-in-r-con-variabili-numeriche">
+<span class="header-section-number">14.1.3.5.1</span> Utilizzo delle etichette in R con variabili numeriche</h5>
 <p>Le etichette dei valori (<em>value labels</em>) vengono utilizzate per rendere più leggibili e interpretabili le variabili numeriche, associando ad ogni valore un’etichetta descrittiva. Questo approccio è particolarmente utile in ambiti come la ricerca psicologica, dove le risposte ai questionari sono spesso codificate con numeri (ad esempio, 1 = “Strongly Disagree”, 2 = “Disagree”, ecc.) ma rappresentano concetti qualitativi.</p>
 <p><strong>Vantaggi dell’Uso delle Etichette</strong></p>
 <ol type="1">
@@ -1038,8 +1212,8 @@ Un approccio più avanzato è l’imputazione multipla, che utilizza modelli sta
 <p><strong>Manipolazione di Variabili Etichettate</strong></p>
 <p>Anche se una variabile numerica è etichettata con <code>labelled</code> (ad esempio, tramite il pacchetto <code>haven</code>), essa conserva la sua natura numerica e può essere utilizzata in calcoli, modelli statistici, e trasformazioni. Le etichette non alterano il valore sottostante, ma lo arricchiscono con informazioni aggiuntive.</p>
 <p>In conclusione, le etichette dei valori migliorano l’interpretabilità dei dati senza comprometterne la manipolabilità. Questo approccio è ideale per mantenere le variabili numeriche pienamente funzionali per analisi statistiche, mentre le etichette descrittive forniscono un contesto chiaro e leggibile.</p>
-</section></section><section id="validazione-dei-dati" class="level4" data-number="15.1.3.6"><h4 data-number="15.1.3.6" class="anchored" data-anchor-id="validazione-dei-dati">
-<span class="header-section-number">15.1.3.6</span> Validazione dei dati</h4>
+</section></section><section id="validazione-dei-dati" class="level4" data-number="14.1.3.6"><h4 data-number="14.1.3.6" class="anchored" data-anchor-id="validazione-dei-dati">
+<span class="header-section-number">14.1.3.6</span> Validazione dei dati</h4>
 <p>La validazione dei dati è un passaggio fondamentale per garantire che il dataset soddisfi i criteri previsti e sia pronto per le analisi successive. Questo processo include il controllo della coerenza e della correttezza dei dati in base a specifiche regole definite dal dizionario dei dati. Alcune verifiche comuni includono:</p>
 <ul>
 <li>
@@ -1090,17 +1264,17 @@ Un approccio più avanzato è l’imputazione multipla, che utilizza modelli sta
 <em>Analizzabile</em>: Il dataset è in un formato rettangolare (righe e colonne), leggibile dal computer e conforme alle regole di base della struttura dei dati.</li>
 </ul>
 <p>Una volta completati i 14 passaggi precedenti, è possibile esportare questo dataset ripulito nella cartella <code>processed</code> per le successive analisi statistiche.</p>
-</section><section id="unire-eo-aggiungere-dati-se-necessario" class="level4" data-number="15.1.3.7"><h4 data-number="15.1.3.7" class="anchored" data-anchor-id="unire-eo-aggiungere-dati-se-necessario">
-<span class="header-section-number">15.1.3.7</span> Unire e/o aggiungere dati se necessario</h4>
+</section><section id="unire-eo-aggiungere-dati-se-necessario" class="level4" data-number="14.1.3.7"><h4 data-number="14.1.3.7" class="anchored" data-anchor-id="unire-eo-aggiungere-dati-se-necessario">
+<span class="header-section-number">14.1.3.7</span> Unire e/o aggiungere dati se necessario</h4>
 <p>In questo passaggio, è possibile unire o aggiungere colonne o righe presenti in file diversi. È importante eseguire nuovamente i controlli di validazione dopo l’unione/aggiunta di nuovi dati.</p>
-</section><section id="trasformare-i-dati-se-necessario" class="level4" data-number="15.1.3.8"><h4 data-number="15.1.3.8" class="anchored" data-anchor-id="trasformare-i-dati-se-necessario">
-<span class="header-section-number">15.1.3.8</span> Trasformare i dati se necessario</h4>
+</section><section id="trasformare-i-dati-se-necessario" class="level4" data-number="14.1.3.8"><h4 data-number="14.1.3.8" class="anchored" data-anchor-id="trasformare-i-dati-se-necessario">
+<span class="header-section-number">14.1.3.8</span> Trasformare i dati se necessario</h4>
 <p>Esistono vari motivi per cui potrebbe essere utile memorizzare i dati in formato <code>long</code> o <code>wide</code>. In questo passaggio, è possibile ristrutturare i dati secondo le esigenze.</p>
-</section><section id="salvare-il-dataset-pulito-finale" class="level4" data-number="15.1.3.9"><h4 data-number="15.1.3.9" class="anchored" data-anchor-id="salvare-il-dataset-pulito-finale">
-<span class="header-section-number">15.1.3.9</span> Salvare il dataset pulito finale</h4>
+</section><section id="salvare-il-dataset-pulito-finale" class="level4" data-number="14.1.3.9"><h4 data-number="14.1.3.9" class="anchored" data-anchor-id="salvare-il-dataset-pulito-finale">
+<span class="header-section-number">14.1.3.9</span> Salvare il dataset pulito finale</h4>
 <p>L’ultimo passaggio del processo di pulizia consiste nell’esportare o salvare il dataset pulito. Come accennato in precedenza, può essere utile esportare/salvare il dataset in più di un formato di file (ad esempio, un file <code>.csv</code> e un file <code>.parquet</code>).</p>
-</section></section></section><section id="organizzazione-dei-file-e-informazioni-aggiuntive" class="level2" data-number="15.2"><h2 data-number="15.2" class="anchored" data-anchor-id="organizzazione-dei-file-e-informazioni-aggiuntive">
-<span class="header-section-number">15.2</span> Organizzazione dei file e informazioni aggiuntive</h2>
+</section></section></section><section id="organizzazione-dei-file-e-informazioni-aggiuntive" class="level2" data-number="14.2"><h2 data-number="14.2" class="anchored" data-anchor-id="organizzazione-dei-file-e-informazioni-aggiuntive">
+<span class="header-section-number">14.2</span> Organizzazione dei file e informazioni aggiuntive</h2>
 <p>Infine, è essenziale includere una documentazione adeguata per garantire che le informazioni siano interpretate correttamente, sia da altri utenti che da te stesso, se dovessi tornare a lavorare su questo progetto in futuro. La documentazione minima da fornire dovrebbe includere:</p>
 <ul>
 <li>
@@ -1111,13 +1285,13 @@ Un approccio più avanzato è l’imputazione multipla, che utilizza modelli sta
 <em>Dizionario dei dati</em>: Un documento che descrive tutte le variabili presenti nel dataset, inclusi i loro nomi, tipi, range di valori, categorie e qualsiasi altra informazione rilevante. Questo strumento è fondamentale per chiunque voglia comprendere o analizzare i dati.</li>
 <li>
 <em>README</em>: Un file che fornisce una panoramica rapida dei file inclusi nel progetto, spiegando cosa contengono e come sono interconnessi. Il README è spesso il primo documento consultato e serve a orientare l’utente tra i vari file e risorse del progetto. Questa documentazione non solo aiuta a mantenere il progetto organizzato, ma è anche cruciale per facilitare la collaborazione e l’archiviazione a lungo termine.</li>
-</ul></section><section id="dizionario-dei-dati" class="level2" data-number="15.3"><h2 data-number="15.3" class="anchored" data-anchor-id="dizionario-dei-dati">
-<span class="header-section-number">15.3</span> Dizionario dei dati</h2>
+</ul></section><section id="dizionario-dei-dati" class="level2" data-number="14.3"><h2 data-number="14.3" class="anchored" data-anchor-id="dizionario-dei-dati">
+<span class="header-section-number">14.3</span> Dizionario dei dati</h2>
 <p>Approfondiamo qui il problema della creazione del Dizionario dei dati.</p>
 <p>Un dizionario dei dati è un documento che descrive le caratteristiche di ciascuna variabile in un dataset. Include informazioni come il nome della variabile, il tipo di dato, il range di valori, le categorie (per le variabili categoriche), e altre informazioni rilevanti. Questo strumento è essenziale per comprendere e analizzare correttamente il dataset.</p>
 <p>Si presti particolare attenzione alle <a href="https://datamgmtinedresearch.com/style">guide di stile</a> per la denominazione delle variabili e la codifica dei valori delle risposte.</p>
-<section id="esempio-in-r" class="level3" data-number="15.3.1"><h3 data-number="15.3.1" class="anchored" data-anchor-id="esempio-in-r">
-<span class="header-section-number">15.3.1</span> Esempio in <code>R</code>
+<section id="esempio-in-r" class="level3" data-number="14.3.1"><h3 data-number="14.3.1" class="anchored" data-anchor-id="esempio-in-r">
+<span class="header-section-number">14.3.1</span> Esempio in <code>R</code>
 </h3>
 <p>Ecco come tradurre i passi per creare un dizionario dei dati in R, utilizzando il pacchetto <code>tibble</code> per creare il dizionario e <code>writexl</code> o <code>readr</code> per esportarlo in formato <code>.xlsx</code> o <code>.csv</code>.</p>
 <ol type="1">
@@ -1187,8 +1361,8 @@ Un approccio più avanzato è l’imputazione multipla, che utilizza modelli sta
 <span>  <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"data"</span>, <span class="st">"processed"</span>, <span class="st">"data_dictionary.csv"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">data_dict</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<section id="uso-del-pacchetto-datameta" class="level4" data-number="15.3.1.1"><h4 data-number="15.3.1.1" class="anchored" data-anchor-id="uso-del-pacchetto-datameta">
-<span class="header-section-number">15.3.1.1</span> Uso del pacchetto <code>dataMeta</code>
+<section id="uso-del-pacchetto-datameta" class="level4" data-number="14.3.1.1"><h4 data-number="14.3.1.1" class="anchored" data-anchor-id="uso-del-pacchetto-datameta">
+<span class="header-section-number">14.3.1.1</span> Uso del pacchetto <code>dataMeta</code>
 </h4>
 <p>Il pacchetto <code>dataMeta</code> è progettato per generare metadati e dizionari dei dati in modo strutturato.</p>
 <div class="cell" data-layout-align="center">
@@ -1284,8 +1458,8 @@ Un approccio più avanzato è l’imputazione multipla, che utilizza modelli sta
 </table>
 </div>
 </div>
-</section><section id="uso-del-pacchetto-skimr" class="level4" data-number="15.3.1.2"><h4 data-number="15.3.1.2" class="anchored" data-anchor-id="uso-del-pacchetto-skimr">
-<span class="header-section-number">15.3.1.2</span> Uso del pacchetto <code>skimr</code>
+</section><section id="uso-del-pacchetto-skimr" class="level4" data-number="14.3.1.2"><h4 data-number="14.3.1.2" class="anchored" data-anchor-id="uso-del-pacchetto-skimr">
+<span class="header-section-number">14.3.1.2</span> Uso del pacchetto <code>skimr</code>
 </h4>
 <p>Il pacchetto <code>skimr</code> è utile per generare riassunti dettagliati delle variabili, che possono essere utilizzati come base per un dizionario.</p>
 <div class="cell" data-layout-align="center">
@@ -1404,10 +1578,10 @@ Un approccio più avanzato è l’imputazione multipla, che utilizza modelli sta
 </section></section></section><section id="riflessioni-conclusive" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="riflessioni-conclusive">Riflessioni conclusive</h2>
 <p>Nel processo di analisi dei dati, la fase di pulizia e pre-elaborazione è cruciale per garantire la qualità e l’integrità dei risultati finali. Sebbene questa fase possa sembrare meno interessante rispetto all’analisi vera e propria, essa costituisce la base su cui si costruiscono tutte le successive elaborazioni e interpretazioni. Attraverso una serie di passaggi strutturati, come quelli illustrati in questo capitolo, è possibile trasformare dati grezzi e disordinati in un dataset pulito, coerente e pronto per l’analisi. La cura nella gestione dei dati, dalla rimozione di duplicati alla creazione di un dizionario dei dati, è fondamentale per ottenere risultati affidabili e riproducibili.</p>
 </section><section id="esercizi" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="esercizi">Esercizi</h2>
-<div class="callout callout-style-simple callout-tip no-icon callout-titled" title="Esercizio">
+<div class="callout callout-style-default callout-tip callout-titled" title="Esercizio">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
+<i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
 <span class="screen-reader-only">Consiglio</span>Esercizio
@@ -1445,7 +1619,7 @@ Un approccio più avanzato è l’imputazione multipla, che utilizza modelli sta
 <pre><code>---
 title: "Assegnamento: Pulizia e Preprocessing dei Dati SWLS"
 author: "Nome Studente"
-date: "2025-09-21"
+date: "2025-12-15"
 format: html
 ---</code></pre>
 </li>
@@ -1455,10 +1629,10 @@ format: html
 </div>
 </div>
 </div>
-<div class="callout callout-style-simple callout-note no-icon callout-titled" title="Informazioni sull'ambiente di sviluppo">
+<div class="callout callout-style-default callout-note callout-titled" title="Informazioni sull'ambiente di sviluppo">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
+<i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
 <span class="screen-reader-only">Nota</span>Informazioni sull’ambiente di sviluppo
@@ -1469,12 +1643,12 @@ format: html
 <div class="callout-body-container callout-body">
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; R version 4.5.1 (2025-06-13)</span></span>
+<span><span class="co">#&gt; R version 4.5.2 (2025-10-31)</span></span>
 <span><span class="co">#&gt; Platform: aarch64-apple-darwin20</span></span>
-<span><span class="co">#&gt; Running under: macOS Tahoe 26.0</span></span>
+<span><span class="co">#&gt; Running under: macOS Tahoe 26.2</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
-<span><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRblas.0.dylib </span></span>
+<span><span class="co">#&gt; BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib </span></span>
 <span><span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; locale:</span></span>
@@ -1488,52 +1662,52 @@ format: html
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
 <span><span class="co">#&gt;  [1] skimr_2.2.1           dataMeta_0.1.1        knitr_1.50           </span></span>
-<span><span class="co">#&gt;  [4] purrr_1.1.0           pointblank_0.12.2     haven_2.5.5          </span></span>
-<span><span class="co">#&gt;  [7] labelled_2.15.0       mice_3.18.0           pillar_1.11.1        </span></span>
-<span><span class="co">#&gt; [10] tinytable_0.13.0      patchwork_1.3.2       ggdist_3.3.3         </span></span>
-<span><span class="co">#&gt; [13] tidybayes_3.0.7       bayesplot_1.14.0      ggplot2_4.0.0        </span></span>
-<span><span class="co">#&gt; [16] reliabilitydiag_0.2.1 priorsense_1.1.1      posterior_1.6.1      </span></span>
+<span><span class="co">#&gt;  [4] purrr_1.2.0           pointblank_0.12.3     haven_2.5.5          </span></span>
+<span><span class="co">#&gt;  [7] labelled_2.16.0       mice_3.19.0           pillar_1.11.1        </span></span>
+<span><span class="co">#&gt; [10] tinytable_0.15.1      patchwork_1.3.2       ggdist_3.3.3         </span></span>
+<span><span class="co">#&gt; [13] tidybayes_3.0.7       bayesplot_1.14.0      ggplot2_4.0.1        </span></span>
+<span><span class="co">#&gt; [16] reliabilitydiag_0.2.1 priorsense_1.2.0      posterior_1.6.1      </span></span>
 <span><span class="co">#&gt; [19] loo_2.8.0             rstan_2.32.7          StanHeaders_2.32.10  </span></span>
 <span><span class="co">#&gt; [22] brms_2.23.0           Rcpp_1.1.0            sessioninfo_1.2.3    </span></span>
 <span><span class="co">#&gt; [25] conflicted_1.2.0      janitor_2.2.1         matrixStats_1.5.0    </span></span>
 <span><span class="co">#&gt; [28] modelr_0.1.11         tibble_3.3.0          dplyr_1.1.4          </span></span>
-<span><span class="co">#&gt; [31] tidyr_1.3.1           rio_1.2.3             here_1.0.2           </span></span>
+<span><span class="co">#&gt; [31] tidyr_1.3.1           rio_1.2.4             here_1.0.2           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span><span class="co">#&gt;   [1] RColorBrewer_1.1-3    tensorA_0.36.2.1      jsonlite_2.0.0       </span></span>
-<span><span class="co">#&gt;   [4] shape_1.4.6.1         magrittr_2.0.4        TH.data_1.1-4        </span></span>
+<span><span class="co">#&gt;   [4] shape_1.4.6.1         magrittr_2.0.4        TH.data_1.1-5        </span></span>
 <span><span class="co">#&gt;   [7] estimability_1.5.1    jomo_2.7-6            farver_2.1.2         </span></span>
-<span><span class="co">#&gt;  [10] nloptr_2.2.1          rmarkdown_2.29        ragg_1.5.0           </span></span>
+<span><span class="co">#&gt;  [10] nloptr_2.2.1          rmarkdown_2.30        ragg_1.5.0           </span></span>
 <span><span class="co">#&gt;  [13] vctrs_0.6.5           memoise_2.0.1         minqa_1.2.8          </span></span>
-<span><span class="co">#&gt;  [16] base64enc_0.1-3       htmltools_0.5.8.1     forcats_1.0.0        </span></span>
-<span><span class="co">#&gt;  [19] distributional_0.5.0  curl_7.0.0            broom_1.0.10         </span></span>
+<span><span class="co">#&gt;  [16] base64enc_0.1-3       htmltools_0.5.9       forcats_1.0.1        </span></span>
+<span><span class="co">#&gt;  [19] distributional_0.5.0  curl_7.0.0            broom_1.0.11         </span></span>
 <span><span class="co">#&gt;  [22] mitml_0.4-5           htmlwidgets_1.6.4     sandwich_3.1-1       </span></span>
-<span><span class="co">#&gt;  [25] emmeans_1.11.2-8      zoo_1.8-14            lubridate_1.9.4      </span></span>
+<span><span class="co">#&gt;  [25] emmeans_2.0.0         zoo_1.8-14            lubridate_1.9.4      </span></span>
 <span><span class="co">#&gt;  [28] cachem_1.1.0          lifecycle_1.0.4       iterators_1.0.14     </span></span>
 <span><span class="co">#&gt;  [31] pkgconfig_2.0.3       Matrix_1.7-4          R6_2.6.1             </span></span>
-<span><span class="co">#&gt;  [34] fastmap_1.2.0         rbibutils_2.3         snakecase_0.11.1     </span></span>
-<span><span class="co">#&gt;  [37] digest_0.6.37         colorspace_2.1-1      rprojroot_2.1.1      </span></span>
-<span><span class="co">#&gt;  [40] textshaping_1.0.3     timechange_0.3.0      abind_1.4-8          </span></span>
-<span><span class="co">#&gt;  [43] compiler_4.5.1        withr_3.0.2           S7_0.2.0             </span></span>
-<span><span class="co">#&gt;  [46] backports_1.5.0       inline_0.3.21         QuickJSR_1.8.0       </span></span>
+<span><span class="co">#&gt;  [34] fastmap_1.2.0         rbibutils_2.4         snakecase_0.11.1     </span></span>
+<span><span class="co">#&gt;  [37] digest_0.6.39         colorspace_2.1-2      rprojroot_2.1.1      </span></span>
+<span><span class="co">#&gt;  [40] textshaping_1.0.4     timechange_0.3.0      abind_1.4-8          </span></span>
+<span><span class="co">#&gt;  [43] compiler_4.5.2        withr_3.0.2           S7_0.2.1             </span></span>
+<span><span class="co">#&gt;  [46] backports_1.5.0       inline_0.3.21         QuickJSR_1.8.1       </span></span>
 <span><span class="co">#&gt;  [49] pkgbuild_1.4.8        R.utils_2.13.0        pan_1.9              </span></span>
-<span><span class="co">#&gt;  [52] MASS_7.3-65           tools_4.5.1           nnet_7.3-20          </span></span>
+<span><span class="co">#&gt;  [52] MASS_7.3-65           tools_4.5.2           nnet_7.3-20          </span></span>
 <span><span class="co">#&gt;  [55] R.oo_1.27.1           glue_1.8.0            nlme_3.1-168         </span></span>
-<span><span class="co">#&gt;  [58] grid_4.5.1            checkmate_2.3.3       generics_0.1.4       </span></span>
+<span><span class="co">#&gt;  [58] grid_4.5.2            checkmate_2.3.3       generics_0.1.4       </span></span>
 <span><span class="co">#&gt;  [61] gtable_0.3.6          R.methodsS3_1.8.2     data.table_1.17.8    </span></span>
-<span><span class="co">#&gt;  [64] hms_1.1.3             utf8_1.2.6            foreach_1.5.2        </span></span>
-<span><span class="co">#&gt;  [67] stringr_1.5.2         splines_4.5.1         lattice_0.22-7       </span></span>
-<span><span class="co">#&gt;  [70] survival_3.8-3        tidyselect_1.2.1      reformulas_0.4.1     </span></span>
-<span><span class="co">#&gt;  [73] arrayhelpers_1.1-0    gridExtra_2.3         V8_7.0.0             </span></span>
-<span><span class="co">#&gt;  [76] stats4_4.5.1          xfun_0.53             bridgesampling_1.1-2 </span></span>
+<span><span class="co">#&gt;  [64] hms_1.1.4             utf8_1.2.6            foreach_1.5.2        </span></span>
+<span><span class="co">#&gt;  [67] stringr_1.6.0         splines_4.5.2         lattice_0.22-7       </span></span>
+<span><span class="co">#&gt;  [70] survival_3.8-3        tidyselect_1.2.1      reformulas_0.4.2     </span></span>
+<span><span class="co">#&gt;  [73] arrayhelpers_1.1-0    gridExtra_2.3         V8_8.0.1             </span></span>
+<span><span class="co">#&gt;  [76] stats4_4.5.2          xfun_0.54             bridgesampling_1.2-1 </span></span>
 <span><span class="co">#&gt;  [79] stringi_1.8.7         pacman_0.5.1          boot_1.3-32          </span></span>
 <span><span class="co">#&gt;  [82] evaluate_1.0.5        codetools_0.2-20      cli_3.6.5            </span></span>
 <span><span class="co">#&gt;  [85] blastula_0.3.6        RcppParallel_5.1.11-1 rpart_4.1.24         </span></span>
-<span><span class="co">#&gt;  [88] xtable_1.8-4          systemfonts_1.2.3     Rdpack_2.6.4         </span></span>
+<span><span class="co">#&gt;  [88] xtable_1.8-4          systemfonts_1.3.1     Rdpack_2.6.4         </span></span>
 <span><span class="co">#&gt;  [91] repr_1.1.7            coda_0.19-4.1         svUnit_1.0.8         </span></span>
-<span><span class="co">#&gt;  [94] parallel_4.5.1        rstantools_2.5.0      Brobdingnag_1.2-9    </span></span>
-<span><span class="co">#&gt;  [97] lme4_1.1-37           glmnet_4.1-10         mvtnorm_1.3-3        </span></span>
-<span><span class="co">#&gt; [100] scales_1.4.0          rlang_1.1.6           multcomp_1.4-28</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<span><span class="co">#&gt;  [94] parallel_4.5.2        rstantools_2.5.0      Brobdingnag_1.2-9    </span></span>
+<span><span class="co">#&gt;  [97] lme4_1.1-38           glmnet_4.1-10         mvtnorm_1.3-3        </span></span>
+<span><span class="co">#&gt; [100] scales_1.4.0          rlang_1.1.6           multcomp_1.4-29</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -1548,6 +1722,19 @@ Buchanan, E. M., Crain, S. E., Cunningham, A. L., Johnson, H. R., Stash, H., Pap
 </div>
 </section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
     const icon = "";
     const anchorJS = new window.AnchorJS();
     anchorJS.options = {
@@ -1954,12 +2141,12 @@ Buchanan, E. M., Crain, S. E., Cunningham, A. L., Johnson, H. R., Stash, H., Pap
   });
   </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="../../chapters/eda/01_project_structure.html" class="pagination-link" aria-label="Il ciclo di vita di un progetto di analisi dei dati">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Il ciclo di vita di un progetto di analisi dei dati</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Il ciclo di vita di un progetto di analisi dei dati</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../../chapters/eda/03_exploring_qualitative_data.html" class="pagination-link" aria-label="Esplorare i dati qualitativi">
-        <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Esplorare i dati qualitativi</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Esplorare i dati qualitativi</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

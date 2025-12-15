@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.24">
+<meta name="generator" content="quarto-1.8.26">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>20&nbsp; Introduzione alla distribuzione normale – Analisi esplorativa dei dati (EDA) in psicologia</title>
+<title>19&nbsp; Introduzione alla distribuzione normale – Analisi esplorativa dei dati in psicologia</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -91,10 +91,17 @@ div.csl-indent {
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-b758ccaa5987ceb1b75504551e579abf.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-af5d064118ae80f4bafc3d843c3c3870.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="../../site_libs/bootstrap/bootstrap-88f89515ec50d56ed60c0d65bb29dbd0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-12c7548f543ff79fe76bca8cab42d0cf.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-88f89515ec50d56ed60c0d65bb29dbd0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -154,14 +161,176 @@ window.Quarto = {
 };
 </script>
 </head>
-<body class="nav-sidebar floating quarto-light">
+<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/07_introduction_normal_distribution.html"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Introduzione alla distribuzione normale</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/07_introduction_normal_distribution.html"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Introduzione alla distribuzione normale</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Ricerca" onclick="window.quartoOpenSearch();">
@@ -170,13 +339,12 @@ window.Quarto = {
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
-      <a href="../../index.html" class="sidebar-logo-link">
-      </a>
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="../../">Analisi esplorativa dei dati (EDA) in psicologia</a> 
-        <div class="sidebar-tools-main">
+      <a href="../../">Analisi esplorativa dei dati in psicologia</a> 
+        <div class="sidebar-tools-main tools-wide">
     <a href="https://github.com/ccaudek/utet-eda/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Attiva/disattiva la modalità oscura"><i class="bi"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Attiva/disattiva la modalità lettore">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
@@ -215,32 +383,26 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/key_notions/01_data_analysis.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">La crisi di replicazione e la riforma metodologica in psicologia</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/02_key_notions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Concetti chiave</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Concetti chiave</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/03_design.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Campionamento, metodologia sperimentale e studi osservazionali</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Campionamento, metodologia sperimentale e studi osservazionali</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/04_measurement.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">La misurazione in psicologia</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">La misurazione in psicologia</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/05_cognitive_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Dalla descrizione alla spiegazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dalla descrizione alla spiegazione</span></span></a>
   </div>
 </li>
       </ul>
@@ -257,43 +419,43 @@ window.Quarto = {
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/01_r_syntax.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Un approccio moderno all’analisi dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Un approccio moderno all’analisi dei dati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/02_utility_functions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Utility functions</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Utility functions</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/03_r_programming.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Programmazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Programmazione</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/04_r_packages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Pacchetti</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Pacchetti</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/05_dplyr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Usare <code>dplyr</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Usare <code>dplyr</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/06_quarto.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Quarto</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quarto</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/07_environment.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">L’ambiente di programmazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">L’ambiente di programmazione</span></span></a>
   </div>
 </li>
       </ul>
@@ -310,61 +472,73 @@ window.Quarto = {
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/01_project_structure.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Il ciclo di vita di un progetto di analisi dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Il ciclo di vita di un progetto di analisi dei dati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/02_data_cleaning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Flusso di lavoro per la pulizia dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Flusso di lavoro per la pulizia dei dati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/03_exploring_qualitative_data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Esplorare i dati qualitativi</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Esplorare i dati qualitativi</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/04_exploring_numeric_data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Esplorare i dati numerici</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Esplorare i dati numerici</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/05_data_visualization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Principi della visualizzazione dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Principi della visualizzazione dei dati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/06_loc_scale.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Indicatori di tendenza centrale e variabilità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Indicatori di tendenza centrale e variabilità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/07_introduction_normal_distribution.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Introduzione alla distribuzione normale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Introduzione alla distribuzione normale</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/08_correlation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Relazioni tra variabili</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Relazioni tra variabili</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/eda/09_causality.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/eda/09_propedeutic_causality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Causalità: intuizioni, controfattuali e perché l’associazione non basta</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/10_causality.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Causalità dai dati osservazionali</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/eda/10_outlier.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/eda/11_outlier.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Outlier</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/12_gauss.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Assunzione di gaussianità e trasformazioni dei dati</span></span></a>
   </div>
 </li>
       </ul>
@@ -394,15 +568,15 @@ window.Quarto = {
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Sommario</h2>
    
   <ul class="collapse">
-<li><a href="#sec-normal-distribution" id="toc-sec-normal-distribution" class="nav-link active" data-scroll-target="#sec-normal-distribution"><span class="header-section-number">20.1</span> La distribuzione normale</a></li>
-  <li><a href="#unit%C3%A0-standard" id="toc-unità-standard" class="nav-link" data-scroll-target="#unit%C3%A0-standard"><span class="header-section-number">20.2</span> Unità standard</a></li>
-  <li><a href="#grafici-quantile-quantile" id="toc-grafici-quantile-quantile" class="nav-link" data-scroll-target="#grafici-quantile-quantile"><span class="header-section-number">20.3</span> Grafici quantile-quantile</a></li>
-  <li><a href="#media-e-deviazione-standard-come-statistiche-descrittive-della-distribuzione" id="toc-media-e-deviazione-standard-come-statistiche-descrittive-della-distribuzione" class="nav-link" data-scroll-target="#media-e-deviazione-standard-come-statistiche-descrittive-della-distribuzione"><span class="header-section-number">20.4</span> Media e deviazione standard come statistiche descrittive della distribuzione</a></li>
+<li><a href="#sec-normal-distribution" id="toc-sec-normal-distribution" class="nav-link active" data-scroll-target="#sec-normal-distribution"><span class="header-section-number">19.1</span> La distribuzione normale</a></li>
+  <li><a href="#unit%C3%A0-standard" id="toc-unità-standard" class="nav-link" data-scroll-target="#unit%C3%A0-standard"><span class="header-section-number">19.2</span> Unità standard</a></li>
+  <li><a href="#grafici-quantile-quantile" id="toc-grafici-quantile-quantile" class="nav-link" data-scroll-target="#grafici-quantile-quantile"><span class="header-section-number">19.3</span> Grafici quantile-quantile</a></li>
+  <li><a href="#media-e-deviazione-standard-come-statistiche-descrittive-della-distribuzione" id="toc-media-e-deviazione-standard-come-statistiche-descrittive-della-distribuzione" class="nav-link" data-scroll-target="#media-e-deviazione-standard-come-statistiche-descrittive-della-distribuzione"><span class="header-section-number">19.4</span> Media e deviazione standard come statistiche descrittive della distribuzione</a></li>
   </ul><div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/eda/07_introduction_normal_distribution.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/07_introduction_normal_distribution.html"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Introduzione alla distribuzione normale</span></a></li></ol></nav><div class="quarto-title">
-<h1 class="title"><span id="sec-eda-intro-gauss" class="quarto-section-identifier"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Introduzione alla distribuzione normale</span></span></h1>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/07_introduction_normal_distribution.html"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Introduzione alla distribuzione normale</span></a></li></ol></nav><div class="quarto-title">
+<h1 class="title"><span id="sec-eda-intro-gauss" class="quarto-section-identifier"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Introduzione alla distribuzione normale</span></span></h1>
 </div>
 
 
@@ -416,14 +590,16 @@ window.Quarto = {
   
 
 
-</header><div class="epigraph">
-<blockquote class="blockquote">
-<p>“L’uomo normale è un’astrazione che non esiste in pratica, una finzione legale, e la curva normale è una cosa altrettanto irreale.”</p>
-<p>– <strong>Otto Neurath</strong>, Filosofo ed economista</p>
-</blockquote>
+</header><div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
 </div>
-<section id="introduzione" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="introduzione">Introduzione</h2>
+<div class="callout-body-container">
 <p>In questo capitolo forniremo un primo sguardo alla distribuzione normale, che sarà trattata in modo più approfondito nel <span class="quarto-unresolved-ref">?sec-prob-cont-prob-distr</span>. Introduciamo la distribuzione normale a questo punto poiché essa spiega in modo chiaro perché, in molte analisi, media e deviazione standard siano impiegate come principali descrittori di una distribuzione.</p>
+</div>
+</div>
+</div>
 <section id="panoramica-del-capitolo" class="level3 unnumbered unlisted"><h3 class="unnumbered unlisted anchored" data-anchor-id="panoramica-del-capitolo">Panoramica del capitolo</h3>
 <ul>
 <li>Che cos’è la distribuzione normale?</li>
@@ -431,10 +607,10 @@ window.Quarto = {
 <li>Cosa sono e come si interpretanto i diagrammi quantile-quantile.</li>
 <li>Distribuzione normale e statistiche descrittive.</li>
 </ul>
-<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
+<i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
 <span class="screen-reader-only">Consiglio</span>Prerequisiti
@@ -460,14 +636,14 @@ window.Quarto = {
 <span><span class="fu">pacman</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pacman/man/p_load.html">p_load</a></span><span class="op">(</span><span class="va">ggbeeswarm</span>, <span class="va">dslabs</span>, <span class="va">gridExtra</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>:::</p>
-</section></section><section id="sec-normal-distribution" class="level2" data-number="20.1"><h2 data-number="20.1" class="anchored" data-anchor-id="sec-normal-distribution">
-<span class="header-section-number">20.1</span> La distribuzione normale</h2>
-<p>Nel <a href="04_exploring_numeric_data.html" class="quarto-xref"><span>Capitolo 17</span></a>, abbiamo visto come gli istogrammi e i grafici di densità forniscano utili riassunti visivi di una distribuzione. In questo capitolo, ci chiediamo se sia possibile riassumere una distribuzione in modo ancora più sintetico. Spesso si fa riferimento a media e deviazione standard come statistiche riassuntive fondamentali: in sostanza, un riassunto in due numeri. Per comprendere appieno il ruolo di questi valori, dobbiamo prima capire come è definita la distribuzione normale.</p>
+</section><section id="sec-normal-distribution" class="level2" data-number="19.1"><h2 data-number="19.1" class="anchored" data-anchor-id="sec-normal-distribution">
+<span class="header-section-number">19.1</span> La distribuzione normale</h2>
+<p>Nel <a href="04_exploring_numeric_data.html" class="quarto-xref"><span>Capitolo 16</span></a>, abbiamo visto come gli istogrammi e i grafici di densità forniscano utili riassunti visivi di una distribuzione. In questo capitolo, ci chiediamo se sia possibile riassumere una distribuzione in modo ancora più sintetico. Spesso si fa riferimento a media e deviazione standard come statistiche riassuntive fondamentali: in sostanza, un riassunto in due numeri. Per comprendere appieno il ruolo di questi valori, dobbiamo prima capire come è definita la distribuzione normale.</p>
 <p>La distribuzione normale, nota anche come curva a campana o distribuzione gaussiana, è uno dei concetti matematici più conosciuti (si veda il <span class="quarto-unresolved-ref">?sec-prob-cont-prob-distr</span>). Uno dei motivi della sua fama è che numerose variabili nella realtà seguono, almeno approssimativamente, una distribuzione normale. Esempi includono le vincite nel gioco d’azzardo, l’altezza e il peso delle persone, la pressione sanguigna, i punteggi di alcuni test standardizzati e gli errori di misura negli esperimenti. I motivi matematici e probabilistici di queste approssimazioni verranno discussi in seguito; qui ci concentreremo sul come la distribuzione normale aiuti a riassumere i dati.</p>
 <p>Anziché partire da dati empirici, la distribuzione normale si definisce tramite una formula matematica. Per un intervallo generico <span class="math inline">\((a,b)\)</span>, la proporzione di valori che cade in tale intervallo si ottiene mediante:</p>
 <p><span id="eq-gaussian-density"><span class="math display">\[
 \text{Pr}(a &lt; x \leq b) \;=\; \int_a^b \frac{1}{\sqrt{2\pi}\,\sigma} \, e^{-\tfrac12\,\bigl(\tfrac{x - \mu}{\sigma}\bigr)^2}\, dx .
-\tag{20.1}\]</span></span></p>
+\tag{19.1}\]</span></span></p>
 <p>Non è necessario memorizzare o padroneggiare i dettagli di questa formula, ma è importante sapere che la distribuzione normale è completamente determinata da due soli parametri: <span class="math inline">\(\mu\)</span> e <span class="math inline">\(\sigma\)</span>. Gli altri simboli nella formula (<span class="math inline">\(\pi\)</span>, <span class="math inline">\(e\)</span>, <span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span>) rappresentano costanti matematiche o gli estremi dell’intervallo. In particolare, <span class="math inline">\(\mu\)</span> è il valore medio (o media) e <span class="math inline">\(\sigma\)</span> è la deviazione standard.</p>
 <p>Questa distribuzione è simmetrica, centrata sulla media <span class="math inline">\(\mu\)</span>, e la maggior parte dei valori (circa il 95%) si trova entro 2 deviazioni standard dalla media, cioè nell’intervallo <span class="math inline">\(\mu \pm 2\sigma\)</span>. Ecco un esempio di come appare la distribuzione normale quando <span class="math inline">\(\mu = 0\)</span> e <span class="math inline">\(\sigma = 1\)</span>:</p>
 <div class="cell" data-layout-align="center">
@@ -478,7 +654,7 @@ window.Quarto = {
 <span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">x</span>, <span class="va">density</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_line</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="07_introduction_normal_distribution_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+<figure class="figure"><p><a href="07_introduction_normal_distribution_files/figure-html/unnamed-chunk-2-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="07_introduction_normal_distribution_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a></p>
 </figure>
 </div>
 </div>
@@ -489,8 +665,8 @@ window.Quarto = {
 <p>e la deviazione standard è:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">s</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="op">(</span><span class="va">x</span> <span class="op">-</span> <span class="va">m</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <p>La deviazione standard si può interpretare come la distanza media dei valori dalla loro media.</p>
-<section id="un-esempio-pratico" class="level3" data-number="20.1.1"><h3 data-number="20.1.1" class="anchored" data-anchor-id="un-esempio-pratico">
-<span class="header-section-number">20.1.1</span> Un esempio pratico</h3>
+<section id="un-esempio-pratico" class="level3" data-number="19.1.1"><h3 data-number="19.1.1" class="anchored" data-anchor-id="un-esempio-pratico">
+<span class="header-section-number">19.1.1</span> Un esempio pratico</h3>
 <p>Per calcolare media e deviazione standard dell’altezza maschile in un dataset, ipotizziamo che il vettore <code>heights$height</code> contenga le altezze di alcuni individui, mentre <code>heights$sex</code> contenga il genere corrispondente. Se vogliamo estrarre solo i valori relativi ai maschi, possiamo scrivere:</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">index</span> <span class="op">&lt;-</span> <span class="va">heights</span><span class="op">$</span><span class="va">sex</span> <span class="op">==</span> <span class="st">"Male"</span></span>
@@ -501,14 +677,17 @@ window.Quarto = {
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="va">s</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div class="callout callout-style-simple callout-warning no-icon">
-<div class="callout-body d-flex">
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
+<i class="callout-icon"></i>
 </div>
-<div class="callout-body-container">
+<div class="callout-title-container flex-fill">
+Avviso
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <p><strong>Nota</strong>: Per motivi che verranno chiariti in seguito, la funzione <code>sd(x)</code> effettua una divisione per <span class="math inline">\(\text{length}(x) - 1\)</span> invece che per <span class="math inline">\(\text{length}(x)\)</span>. Tuttavia, se il numero di osservazioni è elevato, questa differenza è trascurabile.</p>
-</div>
 </div>
 </div>
 <p>Possiamo ora mettere a confronto la curva di densità osservata dei dati (in blu) con quella teorica (in nero) della distribuzione normale con media e deviazione standard stimate:</p>
@@ -524,14 +703,14 @@ window.Quarto = {
 <span>  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">x</span>, <span class="va">density</span><span class="op">)</span>, linewidth<span class="op">=</span><span class="fl">1.5</span>, data <span class="op">=</span> <span class="va">norm_dist</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="07_introduction_normal_distribution_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+<figure class="figure"><p><a href="07_introduction_normal_distribution_files/figure-html/unnamed-chunk-5-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="07_introduction_normal_distribution_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Come si vede, la curva normale fornisce una buona approssimazione per i dati sull’altezza maschile. Vedremo ora come verificare l’aderenza di una distribuzione ai dati, osservando le proporzioni di valori entro intervalli specifici.</p>
-</section></section><section id="unità-standard" class="level2" data-number="20.2"><h2 data-number="20.2" class="anchored" data-anchor-id="unità-standard">
-<span class="header-section-number">20.2</span> Unità standard</h2>
+</section></section><section id="unità-standard" class="level2" data-number="19.2"><h2 data-number="19.2" class="anchored" data-anchor-id="unità-standard">
+<span class="header-section-number">19.2</span> Unità standard</h2>
 <p>Per i dati che seguono (o quasi) una distribuzione normale, è molto comodo utilizzare le cosiddette unità standard (<em>Standard Units</em>). Un valore <span class="math inline">\(x\)</span> viene convertito in unità standard tramite la formula:</p>
 <p><span class="math display">\[
 z = \frac{x - m}{s} ,
@@ -549,8 +728,8 @@ z = \frac{x - m}{s} ,
 <span><span class="co">#&gt; [1] 0.95</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Vedremo, in molti casi, un valore intorno al 95%, in linea con quanto previsto dalla distribuzione normale. Per confermare la bontà dell’approssimazione, si usano spesso i grafici quantile-quantile, detti anche <em>qqplot</em>.</p>
-</section><section id="grafici-quantile-quantile" class="level2" data-number="20.3"><h2 data-number="20.3" class="anchored" data-anchor-id="grafici-quantile-quantile">
-<span class="header-section-number">20.3</span> Grafici quantile-quantile</h2>
+</section><section id="grafici-quantile-quantile" class="level2" data-number="19.3"><h2 data-number="19.3" class="anchored" data-anchor-id="grafici-quantile-quantile">
+<span class="header-section-number">19.3</span> Grafici quantile-quantile</h2>
 <p>Un modo sistematico per verificare quanto la distribuzione normale descriva bene i dati osservati consiste nel confrontare i quantili empirici con quelli teorici di una normale. Se i due insiemi di quantili sono molto simili, abbiamo un’ulteriore conferma dell’aderenza alla normalità.</p>
 <ul>
 <li>La funzione di ripartizione della distribuzione normale standard si indica spesso con <span class="math inline">\(\Phi(x)\)</span>. Ad esempio, <span class="math inline">\(\Phi(-1.96) \approx 0.025\)</span> e <span class="math inline">\(\Phi(1.96) \approx 0.975\)</span>.<br>
@@ -577,7 +756,7 @@ z = \frac{x - m}{s} ,
 <span><span class="fu">qplot</span><span class="op">(</span><span class="va">theoretical_quantiles</span>, <span class="va">sample_quantiles</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_abline</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="07_introduction_normal_distribution_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+<figure class="figure"><p><a href="07_introduction_normal_distribution_files/figure-html/unnamed-chunk-8-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="07_introduction_normal_distribution_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a></p>
 </figure>
 </div>
 </div>
@@ -589,7 +768,7 @@ z = \frac{x - m}{s} ,
 <span><span class="fu">qplot</span><span class="op">(</span><span class="va">theoretical_quantiles</span>, <span class="va">sample_quantiles</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_abline</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="07_introduction_normal_distribution_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+<figure class="figure"><p><a href="07_introduction_normal_distribution_files/figure-html/unnamed-chunk-9-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="07_introduction_normal_distribution_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a></p>
 </figure>
 </div>
 </div>
@@ -602,19 +781,19 @@ z = \frac{x - m}{s} ,
 <span>  <span class="fu">geom_abline</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="07_introduction_normal_distribution_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+<figure class="figure"><p><a href="07_introduction_normal_distribution_files/figure-html/unnamed-chunk-10-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="07_introduction_normal_distribution_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Come abbiamo sottolineato, se i punti nel qqplot si dispongono lungo una retta, significa che la distribuzione dei dati è in accordo con la distribuzione teorica considerata (in questo caso, la normale). I qqplot possono essere usati anche per confrontare qualsiasi coppia di distribuzioni, non solo dati e normale teorica.</p>
 <p>Questo indica che l’approssimazione normale è accurata per il gruppo maschile (nel nostro dataset).</p>
-</section><section id="media-e-deviazione-standard-come-statistiche-descrittive-della-distribuzione" class="level2" data-number="20.4"><h2 data-number="20.4" class="anchored" data-anchor-id="media-e-deviazione-standard-come-statistiche-descrittive-della-distribuzione">
-<span class="header-section-number">20.4</span> Media e deviazione standard come statistiche descrittive della distribuzione</h2>
+</section><section id="media-e-deviazione-standard-come-statistiche-descrittive-della-distribuzione" class="level2" data-number="19.4"><h2 data-number="19.4" class="anchored" data-anchor-id="media-e-deviazione-standard-come-statistiche-descrittive-della-distribuzione">
+<span class="header-section-number">19.4</span> Media e deviazione standard come statistiche descrittive della distribuzione</h2>
 <p>La media e la deviazione standard sono due delle statistiche più comunemente utilizzate per descrivere la distribuzione di un insieme di dati. Queste misure sono particolarmente utili quando i dati seguono una distribuzione normale. In questo caso, la media e la deviazione standard contengono tutte le informazioni necessarie per caratterizzare completamente la forma della distribuzione.</p>
-<section id="distribuzione-normale-e-statistiche-descrittive" class="level3" data-number="20.4.1"><h3 data-number="20.4.1" class="anchored" data-anchor-id="distribuzione-normale-e-statistiche-descrittive">
-<span class="header-section-number">20.4.1</span> Distribuzione normale e statistiche descrittive</h3>
-<p>La distribuzione normale è definita dalla sua media (<span class="math inline">\(\mu\)</span>) e dalla sua deviazione standard (<span class="math inline">\(\sigma\)</span>). La formula della densità di probabilità della distribuzione normale è data dall’<a href="#eq-gaussian-density" class="quarto-xref">Equazione&nbsp;<span>20.1</span></a>. Questa formula mostra che, conoscendo solo <span class="math inline">\(\mu\)</span> e <span class="math inline">\(\sigma\)</span>, possiamo ricostruire l’intera curva di densità. Pertanto, se i dati empirici sono ben approssimati da una distribuzione normale, la media e la deviazione standard sono sufficienti per descrivere la distribuzione.</p>
+<section id="distribuzione-normale-e-statistiche-descrittive" class="level3" data-number="19.4.1"><h3 data-number="19.4.1" class="anchored" data-anchor-id="distribuzione-normale-e-statistiche-descrittive">
+<span class="header-section-number">19.4.1</span> Distribuzione normale e statistiche descrittive</h3>
+<p>La distribuzione normale è definita dalla sua media (<span class="math inline">\(\mu\)</span>) e dalla sua deviazione standard (<span class="math inline">\(\sigma\)</span>). La formula della densità di probabilità della distribuzione normale è data dall’<a href="#eq-gaussian-density" class="quarto-xref">Equazione&nbsp;<span>19.1</span></a>. Questa formula mostra che, conoscendo solo <span class="math inline">\(\mu\)</span> e <span class="math inline">\(\sigma\)</span>, possiamo ricostruire l’intera curva di densità. Pertanto, se i dati empirici sono ben approssimati da una distribuzione normale, la media e la deviazione standard sono sufficienti per descrivere la distribuzione.</p>
 <p>Supponiamo di avere un dataset che segue una distribuzione normale con media 50 e deviazione standard 10. Possiamo generare dati casuali e visualizzare la curva di densità in R:</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Generiamo dati da una distribuzione normale</span></span>
@@ -636,7 +815,7 @@ z = \frac{x - m}{s} ,
 <span>  <span class="fu">annotate</span><span class="op">(</span><span class="st">"text"</span>, x <span class="op">=</span> <span class="va">media</span> <span class="op">+</span> <span class="fl">5</span>, y <span class="op">=</span> <span class="fl">0.025</span>, label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Deviazione Standard ="</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">deviazione_standard</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="07_introduction_normal_distribution_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+<figure class="figure"><p><a href="07_introduction_normal_distribution_files/figure-html/unnamed-chunk-11-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="07_introduction_normal_distribution_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a></p>
 </figure>
 </div>
 </div>
@@ -645,8 +824,8 @@ z = \frac{x - m}{s} ,
 <ul>
 <li>La curva di densità è centrata attorno alla media (<span class="math inline">\(\mu = 50\)</span>).</li>
 <li>La deviazione standard (<span class="math inline">\(\sigma = 10\)</span>) determina la dispersione dei dati attorno alla media.</li>
-</ul></section><section id="quando-media-e-deviazione-standard-non-sono-sufficienti" class="level3" data-number="20.4.2"><h3 data-number="20.4.2" class="anchored" data-anchor-id="quando-media-e-deviazione-standard-non-sono-sufficienti">
-<span class="header-section-number">20.4.2</span> Quando media e deviazione standard non sono sufficienti</h3>
+</ul></section><section id="quando-media-e-deviazione-standard-non-sono-sufficienti" class="level3" data-number="19.4.2"><h3 data-number="19.4.2" class="anchored" data-anchor-id="quando-media-e-deviazione-standard-non-sono-sufficienti">
+<span class="header-section-number">19.4.2</span> Quando media e deviazione standard non sono sufficienti</h3>
 <p>Sebbene media e deviazione standard siano strumenti estremamente utili per descrivere distribuzioni normali, non sempre bastano a cogliere tutte le caratteristiche di un insieme di dati. In particolare, ci sono situazioni in cui la forma della distribuzione rende necessario ricorrere a misure aggiuntive. Di seguito presentiamo alcuni casi tipici.</p>
 <ol type="1">
 <li>
@@ -708,7 +887,7 @@ La <strong>kurtosi</strong> descrive quanto una distribuzione sia “appuntita�
 <span>           color <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="07_introduction_normal_distribution_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+<figure class="figure"><p><a href="07_introduction_normal_distribution_files/figure-html/unnamed-chunk-12-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="07_introduction_normal_distribution_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a></p>
 </figure>
 </div>
 </div>
@@ -995,26 +1174,26 @@ z = \frac{x - \mu}{\sigma}
 <li>Se la correlazione è debole, il supporto sociale potrebbe non essere un predittore forte della soddisfazione della vita in questo campione ristretto.<br>
 :::</li>
 </ul>
-<div class="callout callout-style-simple callout-note no-icon callout-titled" title="Informazioni sull'ambiente di sviluppo">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout callout-style-default callout-note callout-titled" title="Informazioni sull'ambiente di sviluppo">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
+<i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
 <span class="screen-reader-only">Nota</span>Informazioni sull’ambiente di sviluppo
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; R version 4.5.1 (2025-06-13)</span></span>
+<span><span class="co">#&gt; R version 4.5.2 (2025-10-31)</span></span>
 <span><span class="co">#&gt; Platform: aarch64-apple-darwin20</span></span>
-<span><span class="co">#&gt; Running under: macOS Tahoe 26.0</span></span>
+<span><span class="co">#&gt; Running under: macOS Tahoe 26.2</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
-<span><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRblas.0.dylib </span></span>
+<span><span class="co">#&gt; BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib </span></span>
 <span><span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; locale:</span></span>
@@ -1027,44 +1206,44 @@ z = \frac{x - \mu}{\sigma}
 <span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt;  [1] gridExtra_2.3         dslabs_0.9.0          ggbeeswarm_0.7.2     </span></span>
-<span><span class="co">#&gt;  [4] pillar_1.11.1         tinytable_0.13.0      patchwork_1.3.2      </span></span>
+<span><span class="co">#&gt;  [1] gridExtra_2.3         dslabs_0.9.1          ggbeeswarm_0.7.3     </span></span>
+<span><span class="co">#&gt;  [4] pillar_1.11.1         tinytable_0.15.1      patchwork_1.3.2      </span></span>
 <span><span class="co">#&gt;  [7] ggdist_3.3.3          tidybayes_3.0.7       bayesplot_1.14.0     </span></span>
-<span><span class="co">#&gt; [10] ggplot2_4.0.0         reliabilitydiag_0.2.1 priorsense_1.1.1     </span></span>
+<span><span class="co">#&gt; [10] ggplot2_4.0.1         reliabilitydiag_0.2.1 priorsense_1.2.0     </span></span>
 <span><span class="co">#&gt; [13] posterior_1.6.1       loo_2.8.0             rstan_2.32.7         </span></span>
 <span><span class="co">#&gt; [16] StanHeaders_2.32.10   brms_2.23.0           Rcpp_1.1.0           </span></span>
 <span><span class="co">#&gt; [19] sessioninfo_1.2.3     conflicted_1.2.0      janitor_2.2.1        </span></span>
 <span><span class="co">#&gt; [22] matrixStats_1.5.0     modelr_0.1.11         tibble_3.3.0         </span></span>
-<span><span class="co">#&gt; [25] dplyr_1.1.4           tidyr_1.3.1           rio_1.2.3            </span></span>
+<span><span class="co">#&gt; [25] dplyr_1.1.4           tidyr_1.3.1           rio_1.2.4            </span></span>
 <span><span class="co">#&gt; [28] here_1.0.2           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span><span class="co">#&gt;  [1] inline_0.3.21         sandwich_3.1-1        rlang_1.1.6          </span></span>
-<span><span class="co">#&gt;  [4] magrittr_2.0.4        multcomp_1.4-28       snakecase_0.11.1     </span></span>
-<span><span class="co">#&gt;  [7] compiler_4.5.1        systemfonts_1.2.3     vctrs_0.6.5          </span></span>
-<span><span class="co">#&gt; [10] stringr_1.5.2         pkgconfig_2.0.3       arrayhelpers_1.1-0   </span></span>
+<span><span class="co">#&gt;  [4] magrittr_2.0.4        multcomp_1.4-29       snakecase_0.11.1     </span></span>
+<span><span class="co">#&gt;  [7] compiler_4.5.2        systemfonts_1.3.1     vctrs_0.6.5          </span></span>
+<span><span class="co">#&gt; [10] stringr_1.6.0         pkgconfig_2.0.3       arrayhelpers_1.1-0   </span></span>
 <span><span class="co">#&gt; [13] fastmap_1.2.0         backports_1.5.0       labeling_0.4.3       </span></span>
-<span><span class="co">#&gt; [16] rmarkdown_2.29        ragg_1.5.0            purrr_1.1.0          </span></span>
-<span><span class="co">#&gt; [19] xfun_0.53             cachem_1.1.0          jsonlite_2.0.0       </span></span>
-<span><span class="co">#&gt; [22] broom_1.0.10          parallel_4.5.1        R6_2.6.1             </span></span>
+<span><span class="co">#&gt; [16] rmarkdown_2.30        ragg_1.5.0            purrr_1.2.0          </span></span>
+<span><span class="co">#&gt; [19] xfun_0.54             cachem_1.1.0          jsonlite_2.0.0       </span></span>
+<span><span class="co">#&gt; [22] broom_1.0.11          parallel_4.5.2        R6_2.6.1             </span></span>
 <span><span class="co">#&gt; [25] stringi_1.8.7         RColorBrewer_1.1-3    lubridate_1.9.4      </span></span>
 <span><span class="co">#&gt; [28] estimability_1.5.1    knitr_1.50            zoo_1.8-14           </span></span>
-<span><span class="co">#&gt; [31] pacman_0.5.1          Matrix_1.7-4          splines_4.5.1        </span></span>
+<span><span class="co">#&gt; [31] pacman_0.5.1          Matrix_1.7-4          splines_4.5.2        </span></span>
 <span><span class="co">#&gt; [34] timechange_0.3.0      tidyselect_1.2.1      abind_1.4-8          </span></span>
 <span><span class="co">#&gt; [37] codetools_0.2-20      curl_7.0.0            pkgbuild_1.4.8       </span></span>
-<span><span class="co">#&gt; [40] lattice_0.22-7        withr_3.0.2           bridgesampling_1.1-2 </span></span>
-<span><span class="co">#&gt; [43] S7_0.2.0              coda_0.19-4.1         evaluate_1.0.5       </span></span>
+<span><span class="co">#&gt; [40] lattice_0.22-7        withr_3.0.2           bridgesampling_1.2-1 </span></span>
+<span><span class="co">#&gt; [43] S7_0.2.1              coda_0.19-4.1         evaluate_1.0.5       </span></span>
 <span><span class="co">#&gt; [46] survival_3.8-3        RcppParallel_5.1.11-1 tensorA_0.36.2.1     </span></span>
-<span><span class="co">#&gt; [49] checkmate_2.3.3       stats4_4.5.1          distributional_0.5.0 </span></span>
+<span><span class="co">#&gt; [49] checkmate_2.3.3       stats4_4.5.2          distributional_0.5.0 </span></span>
 <span><span class="co">#&gt; [52] generics_0.1.4        rprojroot_2.1.1       rstantools_2.5.0     </span></span>
 <span><span class="co">#&gt; [55] scales_1.4.0          xtable_1.8-4          glue_1.8.0           </span></span>
-<span><span class="co">#&gt; [58] emmeans_1.11.2-8      tools_4.5.1           mvtnorm_1.3-3        </span></span>
-<span><span class="co">#&gt; [61] grid_4.5.1            QuickJSR_1.8.0        colorspace_2.1-1     </span></span>
+<span><span class="co">#&gt; [58] emmeans_2.0.0         tools_4.5.2           mvtnorm_1.3-3        </span></span>
+<span><span class="co">#&gt; [61] grid_4.5.2            QuickJSR_1.8.1        colorspace_2.1-2     </span></span>
 <span><span class="co">#&gt; [64] nlme_3.1-168          beeswarm_0.4.0        vipor_0.4.7          </span></span>
-<span><span class="co">#&gt; [67] cli_3.6.5             textshaping_1.0.3     svUnit_1.0.8         </span></span>
-<span><span class="co">#&gt; [70] Brobdingnag_1.2-9     V8_7.0.0              gtable_0.3.6         </span></span>
-<span><span class="co">#&gt; [73] digest_0.6.37         TH.data_1.1-4         htmlwidgets_1.6.4    </span></span>
-<span><span class="co">#&gt; [76] farver_2.1.2          memoise_2.0.1         htmltools_0.5.8.1    </span></span>
+<span><span class="co">#&gt; [67] cli_3.6.5             textshaping_1.0.4     svUnit_1.0.8         </span></span>
+<span><span class="co">#&gt; [70] Brobdingnag_1.2-9     V8_8.0.1              gtable_0.3.6         </span></span>
+<span><span class="co">#&gt; [73] digest_0.6.39         TH.data_1.1-5         htmlwidgets_1.6.4    </span></span>
+<span><span class="co">#&gt; [76] farver_2.1.2          memoise_2.0.1         htmltools_0.5.9      </span></span>
 <span><span class="co">#&gt; [79] lifecycle_1.0.4       MASS_7.3-65</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
@@ -1080,6 +1259,19 @@ Irizarry, R. A. (2024). <em>Introduction to Data Science: Data Wrangling and Vis
 </div>
 </section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
     const icon = "";
     const anchorJS = new window.AnchorJS();
     anchorJS.options = {
@@ -1486,12 +1678,12 @@ Irizarry, R. A. (2024). <em>Introduction to Data Science: Data Wrangling and Vis
   });
   </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="../../chapters/eda/06_loc_scale.html" class="pagination-link" aria-label="Indicatori di tendenza centrale e variabilità">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Indicatori di tendenza centrale e variabilità</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Indicatori di tendenza centrale e variabilità</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../../chapters/eda/08_correlation.html" class="pagination-link" aria-label="Relazioni tra variabili">
-        <span class="nav-page-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Relazioni tra variabili</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Relazioni tra variabili</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -1507,7 +1699,38 @@ Irizarry, R. A. (2024). <em>Introduction to Data Science: Data Wrangling and Vis
 <p>Realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
 </div>
   </div>
-</footer>
+</footer><script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 <script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
