@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>17&nbsp; Principi della visualizzazione scientifica – Analisi esplorativa dei dati in psicologia</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../chapters/eda/06_loc_scale.html" rel="next">
+<link href="../../chapters/eda/03_exploring_univariate_data.html" rel="prev">
+<link href="../../style/gauss.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-b758ccaa5987ceb1b75504551e579abf.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-88f89515ec50d56ed60c0d65bb29dbd0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-12c7548f543ff79fe76bca8cab42d0cf.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-88f89515ec50d56ed60c0d65bb29dbd0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nessun risultato",
+    "search-matching-documents-text": "documenti trovati",
+    "search-copy-link-title": "Copiare il link nella ricerca",
+    "search-hide-matches-text": "Nascondere i risultati aggiuntivi",
+    "search-more-match-text": "ci sono altri risultati in questo documento",
+    "search-more-matches-text": "ulteriori risultati in questo documento",
+    "search-clear-button-title": "Pulire",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancellare",
+    "search-submit-button-title": "Inviare",
+    "search-label": "Ricerca"
+  }
+}</script><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-QT5S3P9D31"></script><script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
+</script><style>html{ scroll-behavior: smooth; }</style>
+<script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script><script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script><link rel="stylesheet" href="../../style/custom.css">
+</head>
+<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/05_data_visualization_principles.html"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Principi della visualizzazione scientifica</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Ricerca" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">Analisi esplorativa dei dati in psicologia</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://github.com/ccaudek/utet-eda/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Attiva/disattiva la modalità oscura"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Attiva/disattiva la modalità lettore">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Ricerca"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Analisi esplorativa dei dati in psicologia</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../prefazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefazione</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../chapters/key_notions/introduction_key_notions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Fondamenti</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/key_notions/02_key_notions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Concetti chiave</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/key_notions/03_design.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Campionamento, metodologia sperimentale e studi osservazionali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/key_notions/04_measurement.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">La misurazione in psicologia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/key_notions/05_cognitive_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dalla descrizione alla spiegazione</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../chapters/R/introduction_r_lang.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/R/01_r_syntax.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Un approccio moderno all’analisi dei dati</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/R/02_environment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">L’ambiente di programmazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/R/03_utility_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Funzioni di utilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/R/04_r_programming.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Programmazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/R/05_dplyr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Usare <code>dplyr</code></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/R/06_ggplot2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Visualizzazione dei dati con ggplot2</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/R/07_quarto.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Quarto</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/R/08_r_packages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Pacchetti</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../chapters/eda/introduction_eda.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">EDA</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/01_project_structure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Il ciclo di vita di un progetto di analisi dei dati</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/02_data_cleaning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Flusso di lavoro per la pulizia dei dati</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/03_exploring_univariate_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Esplorare distribuzioni univariate</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/05_data_visualization_principles.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Principi della visualizzazione scientifica</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/06_loc_scale.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Indicatori di tendenza centrale e variabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/07_introduction_normal_distribution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Introduzione alla distribuzione normale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/08_correlation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Relazioni tra variabili</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/11_outlier.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Outlier</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/12_gauss.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Assunzione di gaussianità e trasformazioni dei dati</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">Epilogo</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/epiloque/epiloque.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Considerazioni conclusive</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Sommario</h2>
+   
+  <ul class="collapse">
+<li><a href="#quando-i-numeri-non-bastano" id="toc-quando-i-numeri-non-bastano" class="nav-link active" data-scroll-target="#quando-i-numeri-non-bastano"><span class="header-section-number">17.1</span> Quando i numeri non bastano</a></li>
+  <li><a href="#i-tre-pilastri-tufte-cleveland-cairo" id="toc-i-tre-pilastri-tufte-cleveland-cairo" class="nav-link" data-scroll-target="#i-tre-pilastri-tufte-cleveland-cairo"><span class="header-section-number">17.2</span> I tre pilastri: Tufte, Cleveland, Cairo</a></li>
+  <li><a href="#errori-comuni-una-galleria-degli-orrori" id="toc-errori-comuni-una-galleria-degli-orrori" class="nav-link" data-scroll-target="#errori-comuni-una-galleria-degli-orrori"><span class="header-section-number">17.3</span> Errori comuni: una galleria degli orrori</a></li>
+  <li><a href="#trasformazioni-quando-ingannano-e-quando-illuminano" id="toc-trasformazioni-quando-ingannano-e-quando-illuminano" class="nav-link" data-scroll-target="#trasformazioni-quando-ingannano-e-quando-illuminano"><span class="header-section-number">17.4</span> Trasformazioni: quando ingannano e quando illuminano</a></li>
+  <li><a href="#colore-alleato-o-nemico" id="toc-colore-alleato-o-nemico" class="nav-link" data-scroll-target="#colore-alleato-o-nemico"><span class="header-section-number">17.5</span> Colore: alleato o nemico?</a></li>
+  </ul><div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/eda/05_data_visualization_principles.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/05_data_visualization_principles.html"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Principi della visualizzazione scientifica</span></a></li></ol></nav><div class="quarto-title">
+<h1 class="title">
+<span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Principi della visualizzazione scientifica</span>
+</h1>
+<p class="subtitle lead">Dall’intuizione visiva alla comunicazione rigorosa</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header><div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>Una visualizzazione ben progettata non è un ornamento che abbellisce l’analisi dei dati — è uno strumento epistemologico che trasforma numeri in intuizioni, pattern nascosti in evidenze visibili, complessità in chiarezza. In questo capitolo esploreremo i principi fondamentali che distinguono una visualizzazione efficace da una fuorviante, i criteri che guidano scelte apparentemente estetiche ma che in realtà determinano la correttezza interpretativa dei risultati, e gli errori ricorrenti che anche ricercatori esperti commettono quando confondono l’immediatezza visiva con la precisione comunicativa.</p>
+<p>Non parleremo di codice, per quello rimandiamo al <a href="../R/06_ggplot2.html" class="quarto-xref"><span>Capitolo 10</span></a>, dove la grammatica dei grafici viene introdotta sistematicamente. Qui ci concentreremo su <em>cosa</em> visualizzare, <em>perché</em> una rappresentazione funziona meglio di un’altra, e <em>come</em> riconoscere quando un grafico mente anche se tecnicamente corretto. Perché la visualizzazione, come ogni forma di comunicazione scientifica, porta con sé responsabilità etiche: ogni scelta cromatica, ogni scala, ogni geometria influenza il modo in cui i dati verranno interpretati e, potenzialmente, le decisioni che ne deriveranno.</p>
+</div>
+</div>
+</div>
+<section id="prerequisiti" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="prerequisiti">Prerequisiti</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Consiglio</span>Letture fondamentali
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Edward Tufte</strong>:</p>
+<ul>
+<li>
+<em>The Visual Display of Quantitative Information</em> (1983)</li>
+<li>
+<em>Envisioning Information</em> (1990)</li>
+</ul>
+<p><strong>William Cleveland</strong>:</p>
+<ul>
+<li>
+<em>The Elements of Graphing Data</em> (1985)</li>
+<li>
+<em>Visualizing Data</em> (1993)</li>
+</ul>
+<p><strong>Alberto Cairo</strong>:</p>
+<ul>
+<li>
+<em>The Truthful Art</em> (2016)</li>
+<li>
+<em>How Charts Lie</em> (2019)</li>
+</ul>
+<p><strong>Articoli chiave</strong>:</p>
+<ul>
+<li>
+<a href="https://doi.org/10.1146/annurev-statistics-031219-041252">Testing Statistical Charts</a> di Vanderplas, Cook &amp; Hofmann (2020)</li>
+<li>
+<a href="https://simplystatistics.org/posts/2019-02-21-dynamite-plots-must-die/">Dynamite plots must die</a> di Irizarry (2019)</li>
+<li>
+<a href="https://www.biostat.wisc.edu/~kbroman/topten_worstgraphs/">The top ten worst graphs</a> di Broman</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Preparazione del Notebook">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Attenzione</span>Preparazione del Notebook
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"code"</span>, <span class="st">"_common.R"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/source.html">source</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Load packages</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">"pacman"</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"pacman"</span><span class="op">)</span></span>
+<span><span class="fu">pacman</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pacman/man/p_load.html">p_load</a></span><span class="op">(</span><span class="va">dslabs</span>, <span class="va">ggrepel</span>, <span class="va">stringr</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</div>
+</section><section id="quando-i-numeri-non-bastano" class="level2" data-number="17.1"><h2 data-number="17.1" class="anchored" data-anchor-id="quando-i-numeri-non-bastano">
+<span class="header-section-number">17.1</span> Quando i numeri non bastano</h2>
+<p>I numeri in sé raramente raccontano una storia chiara. Prendiamo ad esempio i dati sugli omicidi commessi con armi da fuoco negli Stati Uniti. Da una semplice tabella apprendiamo che in California si sono registrati 1257 casi, in Texas 805, a New York 517. Queste cifre, tuttavia, restano isolate e poco eloquenti: quali stati hanno una popolazione più ampia? Esiste una relazione tra il numero di abitanti e gli omicidi? E il Sud è davvero più violento del Nord-Est? Senza un contesto o una visione d’insieme, i dati grezzi lasciano aperte più domande di quante ne risolvano.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">murders</span>, <span class="fl">8</span><span class="op">)</span></span>
+<span><span class="co">#&gt;         state abb    region population total</span></span>
+<span><span class="co">#&gt; 1     Alabama  AL     South    4779736   135</span></span>
+<span><span class="co">#&gt; 2      Alaska  AK      West     710231    19</span></span>
+<span><span class="co">#&gt; 3     Arizona  AZ      West    6392017   232</span></span>
+<span><span class="co">#&gt; 4    Arkansas  AR     South    2915918    93</span></span>
+<span><span class="co">#&gt; 5  California  CA      West   37253956  1257</span></span>
+<span><span class="co">#&gt; 6    Colorado  CO      West    5029196    65</span></span>
+<span><span class="co">#&gt; 7 Connecticut  CT Northeast    3574097    97</span></span>
+<span><span class="co">#&gt; 8    Delaware  DE     South     897934    38</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Un grafico, al contrario, rende queste relazioni visibili in modo immediato. L’adozione di una scala logaritmica su entrambi gli assi permette di rappresentare efficacemente tanto gli stati più popolosi, come la California, quanto quelli con un ridotto numero di abitanti, come il Wyoming, preservando nel contempo chiarezza e leggibilità dell’intera visualizzazione.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-murders-viz" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-murders-viz-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="05_data_visualization_principles_files/figure-html/fig-murders-viz-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figura&nbsp;17.1: Relazione popolazione-omicidi negli Stati Uniti"><img src="05_data_visualization_principles_files/figure-html/fig-murders-viz-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-murders-viz-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;17.1: Relazione popolazione-omicidi negli Stati Uniti
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>In pochi secondi è possibile cogliere pattern che richiederebbero lunghi minuti di analisi tabellare: la relazione pressoché lineare tra popolazione e omicidi; la tendenza degli stati del Sud a collocarsi sistematicamente sopra la tendenza centrale; la posizione del Nord-Est al di sotto di essa; la marcata variabilità delle regioni dell’Ovest. Il Distretto di Columbia (DC) emerge come un outlier drammatico — una popolazione ridotta ma un tasso di omicidi estremamente elevato.</p>
+<p><strong>È questo il potere della visualizzazione</strong>: tradurre strutture astratte e complesse in pattern spaziali che il nostro sistema visivo elabora in modo immediato e intuitivo. Tuttavia, tale potere implica una pari responsabilità: così come un grafico ben costruito può svelare verità nascoste nei dati, uno progettato in modo inadeguato o ingannevole può generare illusioni altrettanto convincenti.</p>
+</section><section id="i-tre-pilastri-tufte-cleveland-cairo" class="level2" data-number="17.2"><h2 data-number="17.2" class="anchored" data-anchor-id="i-tre-pilastri-tufte-cleveland-cairo">
+<span class="header-section-number">17.2</span> I tre pilastri: Tufte, Cleveland, Cairo</h2>
+<section id="edward-tufte-leconomia-visiva" class="level3" data-number="17.2.1"><h3 data-number="17.2.1" class="anchored" data-anchor-id="edward-tufte-leconomia-visiva">
+<span class="header-section-number">17.2.1</span> Edward Tufte: l’economia visiva</h3>
+<p>Il principio fondamentale introdotto da Edward Tufte è quello del <strong>data-ink ratio</strong> — il rapporto tra l’inchiostro utilizzato per rappresentare l’informazione vera e propria e l’inchiostro totale impiegato nel grafico:</p>
+<p><span class="math display">\[
+\text{Rapporto inchiostro-dati} = \frac{\text{inchiostro usato per i dati}}{\text{inchiostro totale del grafico}} .
+\]</span></p>
+<p>Un grafico efficace punta a <strong>massimizzare questo rapporto</strong>, eliminando senza esitazioni ogni elemento che non contribuisce in modo diretto alla comprensione dei dati. Tufte ha coniato il termine <strong>chartjunk</strong> per descrivere tutto ciò che distrae lo sguardo senza aggiungere alcuna informazione significativa.</p>
+<p><strong>Principi fondamentali secondo Tufte</strong>:</p>
+<ol type="1">
+<li>
+<strong>Prima di tutto, mostra i dati</strong> – La centralità dell’informazione deve prevalere su ogni decorazione superflua.</li>
+<li>
+<strong>Massimizza l’inchiostro per i dati</strong> – Ogni tratto, ogni punto, ogni elemento grafico deve avere una ragione informativa per essere presente.</li>
+<li>
+<strong>Elimina l’inchiostro non-dati</strong> – Rimuovi griglie eccessive, bordi decorativi, sfondi inutili e ogni altro elemento che non veicola informazione.</li>
+<li>
+<strong>Elimina le ridondanze nell’inchiostro-dati</strong> – Ogni informazione dovrebbe essere rappresentata una sola volta, in modo chiaro ed efficace.</li>
+<li>
+<strong>Rivedi e modifica</strong> – Nessun grafico è perfetto al primo tentativo; la revisione è parte essenziale del processo di comunicazione visiva.</li>
+</ol></section><section id="william-cleveland-la-gerarchia-percettiva" class="level3" data-number="17.2.2"><h3 data-number="17.2.2" class="anchored" data-anchor-id="william-cleveland-la-gerarchia-percettiva">
+<span class="header-section-number">17.2.2</span> William Cleveland: la gerarchia percettiva</h3>
+<p>Cleveland misurò sperimentalmente l’accuratezza con cui le persone interpretano diversi elementi visivi, individuando una <strong>gerarchia ben definita di efficacia percettiva</strong>:</p>
+<ol type="1">
+<li>
+<strong>Posizione su una scala condivisa</strong> – Scatter plot, grafici a linee (massima precisione)</li>
+<li>
+<strong>Posizione su scale non allineate</strong> – Grafici a pannelli (<em>small multiples</em>)</li>
+<li>
+<strong>Lunghezza</strong> – Barplot, grafici a bastoncini (<em>lollipop chart</em>)</li>
+<li>
+<strong>Direzione e Angolo</strong> – Campi vettoriali, diagrammi a raggera</li>
+<li>
+<strong>Area</strong> – <em>Bubble chart</em>, <em>treemap</em>
+</li>
+<li>
+<strong>Volume / Densità</strong> – Grafici tridimensionali, superfici</li>
+<li>
+<strong>Tonalità / Saturazione del colore</strong> – Mappe di calore (<em>heatmap</em>)</li>
+</ol>
+<p><strong>L’implicazione pratica è chiara</strong>: per confronti quantitativi precisi, è preferibile utilizzare elementi posizionali (come punti o linee) o lunghezze. Se l’obiettivo è differenziare categorie o evidenziare pattern qualitativi, il colore può essere sufficiente. Per comunicare differenze in cui la precisione assoluta non è critica, si possono impiegare efficacemente variazioni di area o di colore.</p>
+</section><section id="alberto-cairo-lonestà-visiva" class="level3" data-number="17.2.3"><h3 data-number="17.2.3" class="anchored" data-anchor-id="alberto-cairo-lonestà-visiva">
+<span class="header-section-number">17.2.3</span> Alberto Cairo: l’onestà visiva</h3>
+<p>Alberto Cairo sposta l’attenzione dall’efficienza tecnica e percettiva verso la dimensione <strong>etica della comunicazione visiva</strong>. Secondo Cairo, un grafico può essere tecnicamente impeccabile ma moralmente ingannevole se sfrutta consapevolmente i bias percettivi del lettore per suggerire conclusioni non supportate dai dati.</p>
+<p><strong>I cinque pilastri della visualizzazione etica secondo Cairo</strong>:</p>
+<ol type="1">
+<li>
+<strong>Veridicità (Truthfulness)</strong> – Il grafico rappresenta i dati in modo accurato e privo di distorsioni?</li>
+<li>
+<strong>Funzionalità (Functionality)</strong> – È efficace per lo scopo comunicativo che si prefigge?</li>
+<li>
+<strong>Bellezza (Beauty)</strong> – La sua estetica è raffinata senza essere frivola o decorativa?</li>
+<li>
+<strong>Profondità (Insightfulness)</strong> – Rivela pattern, relazioni o intuizioni non immediatamente evidenti?</li>
+<li>
+<strong>Illuminazione (Enlightenment)</strong> – Aumenta effettivamente la comprensione del lettore su un determinato fenomeno?</li>
+</ol>
+<p>Cairo sottolinea con forza che <strong>l’assenza di errori tecnici non equivale automaticamente a onestà comunicativa</strong>. Un grafico può essere costruito in modo formale corretto eppure ingannevole: ad esempio, utilizzando assi troncati per amplificare artificiosamente delle differenze, impiegando scale logaritmiche senza dichiararlo per appiattire un trend, o rappresentando quantità con aree (che il nostro occhio stima con difficoltà) anziché con lunghezze (più intuitive), distorcendo così le proporzioni reali.</p>
+</section></section><section id="errori-comuni-una-galleria-degli-orrori" class="level2" data-number="17.3"><h2 data-number="17.3" class="anchored" data-anchor-id="errori-comuni-una-galleria-degli-orrori">
+<span class="header-section-number">17.3</span> Errori comuni: una galleria degli orrori</h2>
+<section id="errore-1-i-grafici-a-dinamite-lillusione-della-precisione" class="level3" data-number="17.3.1"><h3 data-number="17.3.1" class="anchored" data-anchor-id="errore-1-i-grafici-a-dinamite-lillusione-della-precisione">
+<span class="header-section-number">17.3.1</span> Errore 1: I grafici a dinamite — l’illusione della precisione</h3>
+<p>I cosiddetti <strong>grafici a dinamite</strong> (o <em>dynamite plots</em>) — barre con errori standard — rappresentano l’equivalente visivo dei p-value: sono tecnicamente corretti e informativi, ma nella pratica spesso fuorvianti.</p>
+<p><strong>Qual è il problema?</strong> Osservando solo la media ± l’errore standard, si perde completamente la vista di: - <strong>La forma della distribuzione</strong> (è simmetrica? bimodale? asimmetrica?) - <strong>La presenza di potenziali outlier</strong> - <strong>L’effettiva sovrapposizione tra i gruppi a confronto</strong> - <strong>La dimensione del campione</strong> (un gruppo con N=5 e uno con N=500 vengono rappresentati in modo identico, nascondendo la diversa affidabilità delle stime)</p>
+<p><strong>La soluzione</strong>: Sostituire o affiancare il grafico a barre con visualizzazioni che mostrino i dati veri e propri, ad esempio tramite <em>jitter</em>, trasparenza (<em>alpha blending</em>) o sovrapponendo sintesi statistiche più robuste (come diagrammi a scatola e baffi o violino) ai singoli punti dati.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-dynamite-fix" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-dynamite-fix-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="05_data_visualization_principles_files/figure-html/fig-dynamite-fix-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figura&nbsp;17.2: Dynamite plot (sinistra) vs.&nbsp;dati completi (destra)"><img src="05_data_visualization_principles_files/figure-html/fig-dynamite-fix-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dynamite-fix-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;17.2: Dynamite plot (sinistra) vs.&nbsp;dati completi (destra)
+</figcaption></figure>
+</div>
+</div>
+</div>
+</section><section id="errore-2-i-grafici-a-torta-quando-gli-angoli-ingannano" class="level3" data-number="17.3.2"><h3 data-number="17.3.2" class="anchored" data-anchor-id="errore-2-i-grafici-a-torta-quando-gli-angoli-ingannano">
+<span class="header-section-number">17.3.2</span> Errore 2: I grafici a torta — quando gli angoli ingannano</h3>
+<p>La ricerca sperimentale di William Cleveland ha dimostrato che confrontare angoli è un’operazione visivamente faticosa e poco precisa. Quando il numero di categorie supera le tre, i grafici a torta diventano praticamente illeggibili.</p>
+<p><strong>Un ulteriore problema comune</strong>: l’ordine delle fette segue spesso l’alfabeto o una sequenza casuale, invece di essere organizzato per valori decrescenti, rendendo ancora più difficile cogliere immediatamente le proporzioni relative e il pattern dominante.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-pie-vs-bar" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-pie-vs-bar-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="05_data_visualization_principles_files/figure-html/fig-pie-vs-bar-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figura&nbsp;17.3: Pie chart (sinistra) vs.&nbsp;barplot ordinato (destra)"><img src="05_data_visualization_principles_files/figure-html/fig-pie-vs-bar-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pie-vs-bar-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;17.3: Pie chart (sinistra) vs.&nbsp;barplot ordinato (destra)
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p><strong>Verdetto</strong>: Per confronti quantitativi, usa sempre lunghezza (barplot), mai angoli (pie).</p>
+</section><section id="errore-3-grafici-a-doppio-asse-lillusione-della-correlazione" class="level3" data-number="17.3.3"><h3 data-number="17.3.3" class="anchored" data-anchor-id="errore-3-grafici-a-doppio-asse-lillusione-della-correlazione">
+<span class="header-section-number">17.3.3</span> Errore 3: Grafici a doppio asse — l’illusione della correlazione</h3>
+<p>I grafici con due assi verticali indipendenti possono creare l’ingannevole impressione di una relazione tra variabili che in realtà non esiste, semplicemente manipolando le scale delle due serie di dati.</p>
+<p><strong>Un esempio celebre</strong>: il presunto legame tra il consumo di formaggio e le morti per impigliamento nelle lenzuola, reso famoso dal progetto <em>“Spurious Correlations”</em> di Tyler Vigen. Scalando opportunamente i due assi, le curve dei dati possono essere fatte apparire quasi perfettamente sovrapposte.</p>
+<p><strong>Il problema</strong>: il lettore interpreta questa sovrapposizione visiva come prova di correlazione, senza rendersi conto che le due scale sono arbitrarie e del tutto indipendenti, rendendo ogni confronto diretto privo di significato statistico.</p>
+<p><strong>Soluzioni alternative</strong>:</p>
+<ol type="1">
+<li>
+<strong>Utilizzare un asse comune</strong> – Se le variabili condividono unità di misura comparabili.</li>
+<li>
+<strong>Normalizzare i dati</strong> – Trasformare entrambe le serie in z-score o percentuali per renderle confrontabili sulla stessa scala.</li>
+<li>
+<strong>Creare due grafici separati</strong> – Allinearli verticalmente per facilitare il confronto visivo senza confondere le scale.</li>
+<li>
+<strong>Se il doppio asse è inevitabile</strong> – Essere espliciti con un’annotazione chiara: <em>“Scale arbitrarie e non confrontabili”</em>, per avvertire il lettore.</li>
+</ol></section><section id="errore-4-confondere-area-e-volume-con-la-lunghezza" class="level3" data-number="17.3.4"><h3 data-number="17.3.4" class="anchored" data-anchor-id="errore-4-confondere-area-e-volume-con-la-lunghezza">
+<span class="header-section-number">17.3.4</span> Errore 4: Confondere area e volume con la lunghezza</h3>
+<p>Quando si rappresentano quantità numeriche tramite l’area (di cerchi, quadrati) o, peggio, il volume di forme tridimensionali, si introduce una distorsione sistematica: l’occhio percepisce differenze proporzionali al <em>quadrato</em> (per l’area) o al <em>cubo</em> (per il volume) della differenza reale.</p>
+<p><strong>Esempio pratico</strong>:<br>
+il PIL degli Stati Uniti è di circa 20 trilioni di dollari, quello della Francia di 2,7 trilioni. Il rapporto reale è circa <strong>7.4 volte</strong>.</p>
+<ul>
+<li>
+<strong>Cerchi con raggio proporzionale</strong>: l’area del cerchio degli USA sarebbe circa <strong>(7.4)² ≈ 55 volte</strong> più grande di quella della Francia — una distorsione di quasi 7.4 volte rispetto alla realtà.</li>
+<li>
+<strong>Sfere 3D con raggio proporzionale</strong>: il volume apparente degli USA diventerebbe <strong>(7.4)³ ≈ 405 volte</strong> maggiore — una distorsione di 55 volte rispetto al rapporto reale.</li>
+</ul>
+<p>Un esempio famoso di questo errore è stato commesso nel grafico utilizzato durante il <strong>Discorso sullo Stato dell’Unione del 2011</strong>.</p>
+<p><strong>Soluzione</strong>: per confronti quantitativi precisi, privilegia sempre rappresentazioni basate sulla <strong>lunghezza</strong>, come i barplot. Se si sceglie di utilizzare un <em>bubble chart</em> (per rappresentare ad esempio tre variabili), è essenziale dichiarare esplicitamente che la dimensione delle bolle è proporzionale al <em>raggio</em> (e non al diametro o all’area) della variabile rappresentata.</p>
+</section><section id="errore-5-effetti-tridimensionali-distrazione-senza-sostanza" class="level3" data-number="17.3.5"><h3 data-number="17.3.5" class="anchored" data-anchor-id="errore-5-effetti-tridimensionali-distrazione-senza-sostanza">
+<span class="header-section-number">17.3.5</span> Errore 5: Effetti tridimensionali — distrazione senza sostanza</h3>
+<p>L’aggiunta di effetti prospettici “3D” a barre, torte o grafici a linee rappresenta una delle forme più diffuse di <em>chartjunk</em>, perché:</p>
+<ul>
+<li>introduce distorsioni percettive (gli elementi in primo piano sembrano più grandi di quelli sullo sfondo);</li>
+<li>può nascondere parzialmente alcuni elementi, che risultano oscurati da altri;</li>
+<li>non codifica alcuna terza variabile reale o informativa aggiuntiva;</li>
+<li>distrae l’attenzione con effetti luminosi, ombreggiature e dettagli puramente decorativi.</li>
+</ul>
+<p><strong>Regola pratica di Tufte</strong>: Se, rimuovendo la prospettiva tridimensionale, il grafico non perde alcun dato informativo, allora quella terza dimensione era inutile e andava eliminata.</p>
+</section><section id="errore-6-ordine-alfabetico-per-categorie-naturalmente-ordinate" class="level3" data-number="17.3.6"><h3 data-number="17.3.6" class="anchored" data-anchor-id="errore-6-ordine-alfabetico-per-categorie-naturalmente-ordinate">
+<span class="header-section-number">17.3.6</span> Errore 6: Ordine alfabetico per categorie naturalmente ordinate</h3>
+<p>Quando le categorie possiedono un ordinamento intrinseco — come età, livelli di gravità o qualsiasi scala che rifletta una progressione logica o quantitativa — presentarle in ordine alfabetico annulla immediatamente questa struttura e nasconde il pattern sottostante.</p>
+<p><strong>Esempio pratico</strong>:</p>
+<ul>
+<li>
+<strong>Cattiva disposizione</strong>: <code>[Lieve] [Minima] [Moderata] [Severa]</code> (ordine alfabetico italiano)</li>
+<li>
+<strong>Disposizione corretta</strong>: <code>[Minima] [Lieve] [Moderata] [Severa]</code> (ordine crescente di gravità clinica)</li>
+</ul>
+<p><strong>Regola generale</strong>: Ordina sistematicamente le categorie in base al loro valore numerico o alla loro sequenza naturale, a meno che non esista un ordine convenzionale diverso già consolidato (ad esempio i giorni della settimana o le fasi di un trattamento).</p>
+</section><section id="errore-7-scale-non-uniformi-nei-confronti-distributivi" class="level3" data-number="17.3.7"><h3 data-number="17.3.7" class="anchored" data-anchor-id="errore-7-scale-non-uniformi-nei-confronti-distributivi">
+<span class="header-section-number">17.3.7</span> Errore 7: Scale non uniformi nei confronti distributivi</h3>
+<p>Quando si confrontano distribuzioni, ad esempio tramite istogrammi o density plot, l’uso di scale verticali diverse rende il confronto visivo impossibile e ingannevole.</p>
+<p><strong>Il problema</strong>: l’occhio interpreta naturalmente l’altezza delle barre o delle curve come un’indicazione diretta della quantità rappresentata. Se le scale degli assi Y sono diverse tra i pannelli a confronto, altezze visivamente simili corrisponderanno in realtà a quantità molto diverse.</p>
+<p><strong>La soluzione</strong>: imposta sempre le scale su valori fissi e uniformi (<code>scales = "fixed"</code>) per garantire un confronto onesto e diretto. L’opzione di scale libere (<code>scales = "free_y"</code>) dovrebbe essere usata solo in casi particolari, ad esempio quando la forma delle distribuzioni è così diversa che una scala uniforme nasconderebbe completamente la struttura di uno dei gruppi.</p>
+</section></section><section id="trasformazioni-quando-ingannano-e-quando-illuminano" class="level2" data-number="17.4"><h2 data-number="17.4" class="anchored" data-anchor-id="trasformazioni-quando-ingannano-e-quando-illuminano">
+<span class="header-section-number">17.4</span> Trasformazioni: quando ingannano e quando illuminano</h2>
+<section id="trasformazioni-logaritmiche-comprimere-intervalli-estesi" class="level3" data-number="17.4.1"><h3 data-number="17.4.1" class="anchored" data-anchor-id="trasformazioni-logaritmiche-comprimere-intervalli-estesi">
+<span class="header-section-number">17.4.1</span> Trasformazioni logaritmiche: comprimere intervalli estesi</h3>
+<p><strong>Quando utilizzarle</strong>:</p>
+<ul>
+<li>Dati che coprono <strong>tre o più ordini di grandezza</strong> (ad esempio: popolazioni che vanno da migliaia a milioni).</li>
+<li>Distribuzioni fortemente <strong>asimmetriche a destra</strong>, dominate da pochi valori estremi.</li>
+<li>Relazioni di tipo <strong>moltiplicativo</strong> tra variabili, che in scala logaritmica diventano <strong>additive</strong> e quindi lineari.</li>
+</ul>
+<p><strong>Esempio concreto</strong>: nel grafico sugli omicidi, una scala logaritmica permette di visualizzare contemporaneamente e con chiarezza sia stati piccoli come il Wyoming (~500.000 abitanti) che quelli enormi come la California (~39 milioni).</p>
+<p><strong>Importante</strong>: <strong>dichiara sempre esplicitamente</strong> l’uso di una scala trasformata. È preferibile usare etichette leggibili come “1M, 10M, 100M” piuttosto che valori logaritmici puri come “6.0, 7.0, 8.0” (log₁₀), che possono confondere il lettore.</p>
+</section><section id="altre-trasformazioni-utili" class="level3" data-number="17.4.2"><h3 data-number="17.4.2" class="anchored" data-anchor-id="altre-trasformazioni-utili">
+<span class="header-section-number">17.4.2</span> Altre trasformazioni utili</h3>
+<ul>
+<li>
+<strong>Radice quadrata</strong>: Utile per stabilizzare la varianza nei dati di conteggio (distribuzione di Poisson).</li>
+<li>
+<strong>Logit</strong>: Trasforma gli odds ratio, rendendo lineare la relazione con i predittori.</li>
+<li>
+<strong>Arcsin</strong>: Aiuta a stabilizzare la varianza nelle proporzioni (ad esempio, tassi o percentuali).</li>
+</ul>
+<p><strong>Principio guida</strong>: Una trasformazione è legittima se:</p>
+<ol type="1">
+<li>rende visibile un <strong>pattern reale</strong> che nella scala originale sarebbe nascosto;</li>
+<li>viene <strong>esplicitamente dichiarata</strong> e spiegata;</li>
+<li>ha una <strong>giustificazione teorica</strong> o metodologica solida (ad esempio, la linearizzazione di una relazione nota).</li>
+</ol></section></section><section id="colore-alleato-o-nemico" class="level2" data-number="17.5"><h2 data-number="17.5" class="anchored" data-anchor-id="colore-alleato-o-nemico">
+<span class="header-section-number">17.5</span> Colore: alleato o nemico?</h2>
+<section id="i-tre-ruoli-del-colore" class="level3" data-number="17.5.1"><h3 data-number="17.5.1" class="anchored" data-anchor-id="i-tre-ruoli-del-colore">
+<span class="header-section-number">17.5.1</span> I tre ruoli del colore</h3>
+<ol type="1">
+<li>
+<strong>Distinguere categorie</strong> (scala qualitativa): utilizzare <strong>tonalità chiaramente distinte</strong>.</li>
+<li>
+<strong>Codificare un ordine</strong> (scala sequenziale): utilizzare <strong>gradazioni di luminosità o saturazione</strong> di una stessa tonalità.</li>
+<li>
+<strong>Evidenziare divergenze</strong> (scala divergente): utilizzare <strong>due tonalità distinte che partono da un colore neutro centrale</strong>, per mostrare deviazioni positive e negative.</li>
+</ol></section><section id="palette-consigliate" class="level3" data-number="17.5.2"><h3 data-number="17.5.2" class="anchored" data-anchor-id="palette-consigliate">
+<span class="header-section-number">17.5.2</span> Palette consigliate</h3>
+<p><strong>Per categorie (qualitative)</strong>:</p>
+<ul>
+<li>
+<code><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html">viridis::viridis</a></code> (ideale fino a 5 categorie, sicura per il daltonismo)</li>
+<li>
+<code>RColorBrewer::Set2</code> (fino a 8 categorie)</li>
+</ul>
+<p><strong>Per valori ordinati (sequenziali)</strong>:</p>
+<ul>
+<li><code><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html">viridis::magma</a></code></li>
+<li><code>RColorBrewer::Blues</code></li>
+</ul>
+<p><strong>Per valori divergenti da un centro</strong>:</p>
+<ul>
+<li>
+<code>RColorBrewer::RdBu</code> (perfetta per correlazioni, es. mappe di calore)</li>
+<li><code><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html">viridis::plasma</a></code></li>
+</ul></section><section id="errori-cromatici-da-evitare" class="level3" data-number="17.5.3"><h3 data-number="17.5.3" class="anchored" data-anchor-id="errori-cromatici-da-evitare">
+<span class="header-section-number">17.5.3</span> Errori cromatici da evitare</h3>
+<p>❌ Utilizzare combinazioni <strong>rosso-verde</strong> per distinguere categorie (circa l’8% degli uomini è daltonico).<br>
+❌ Usare la palette <strong>arcobaleno</strong> per dati sequenziali (è percettivamente non uniforme).<br>
+❌ Introdurre <strong>troppe tonalità</strong> (oltre 7 diventano difficili da distinguere).<br>
+❌ Ignorare il <strong>significato culturale</strong> dei colori (es. rosso = negativo in finanza, positivo in alcune culture).</p>
+<p><strong>Test di efficacia</strong>: Se il tuo grafico comunica correttamente il messaggio anche in scala di grigi, allora la tua scelta cromatica è solida.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Checklist per l'auto-valutazione di una visualizzazione">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Consiglio</span>Checklist per l’auto-valutazione di una visualizzazione
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<section id="il-messaggio" class="level3 unnumbered unlisted"><h3 class="unnumbered unlisted anchored" data-anchor-id="il-messaggio">Il messaggio</h3>
+<ul class="task-list">
+<li><label><input type="checkbox">Il grafico risponde a una domanda analitica specifica?</label></li>
+<li><label><input type="checkbox">Il titolo comunica la <em>scoperta</em> principale, non solo descrive l’argomento?</label></li>
+<li><label><input type="checkbox">Le etichette degli assi e delle variabili sono immediatamente chiare?</label></li>
+</ul></section><section id="lefficacia-percettiva" class="level3 unnumbered unlisted"><h3 class="unnumbered unlisted anchored" data-anchor-id="lefficacia-percettiva">L’efficacia percettiva</h3>
+<ul class="task-list">
+<li><label><input type="checkbox">Per confronti quantitativi critici, si utilizzano <em>posizione</em> o <em>lunghezza</em>?</label></li>
+<li><label><input type="checkbox">Il colore è usato in modo appropriato (per categorie o per indicare un ordine)?</label></li>
+<li><label><input type="checkbox">Le scale sono oneste (es. barplot partono da zero, scale logaritmiche sono dichiarate)?</label></li>
+<li><label><input type="checkbox">Le categorie sono ordinate per il loro valore reale o per una sequenza logica?</label></li>
+</ul></section><section id="la-rappresentazione-dei-dati" class="level3 unnumbered unlisted"><h3 class="unnumbered unlisted anchored" data-anchor-id="la-rappresentazione-dei-dati">La rappresentazione dei dati</h3>
+<ul class="task-list">
+<li><label><input type="checkbox">Dove possibile, si mostrano i dati grezzi o la loro distribuzione?</label></li>
+<li><label><input type="checkbox">La variabilità e l’incertezza sono rappresentate (es. barre di errore, intervalli)?</label></li>
+<li><label><input type="checkbox">Gli outlier sono visibili e non nascosti?</label></li>
+<li><label><input type="checkbox">La dimensione del campione (N) è riportata?</label></li>
+</ul></section><section id="leconomia-visiva" class="level3 unnumbered unlisted"><h3 class="unnumbered unlisted anchored" data-anchor-id="leconomia-visiva">L’economia visiva</h3>
+<ul class="task-list">
+<li><label><input type="checkbox">Ogni elemento grafico presente è strettamente necessario (alto rapporto inchiostro-dati)?</label></li>
+<li><label><input type="checkbox">Il <em>chartjunk</em> (effetti 3D, griglie eccessive, decorazioni) è stato eliminato?</label></li>
+<li><label><input type="checkbox">Le legende sono utilizzate solo quando indispensabili?</label></li>
+<li><label><input type="checkbox">Font e spessori di linea sono leggibili (font ≥10pt, linee ≥0.5pt)?</label></li>
+</ul></section><section id="laccessibilità" class="level3 unnumbered unlisted"><h3 class="unnumbered unlisted anchored" data-anchor-id="laccessibilità">L’accessibilità</h3>
+<ul class="task-list">
+<li><label><input type="checkbox">La palette di colori è sicura per il daltonismo?</label></li>
+<li><label><input type="checkbox">Il contrasto è sufficiente (verificato convertendo il grafico in scala di grigi)?</label></li>
+<li><label><input type="checkbox">Il grafico rimane comprensibile se stampato in bianco e nero?</label></li>
+</ul></section><section id="letica-della-comunicazione" class="level3 unnumbered unlisted"><h3 class="unnumbered unlisted anchored" data-anchor-id="letica-della-comunicazione">L’etica della comunicazione</h3>
+<ul class="task-list">
+<li><label><input type="checkbox">Si evitano grafici a doppio asse con scale arbitrarie e non confrontabili?</label></li>
+<li><label><input type="checkbox">I grafici comparativi utilizzano scale uniformi?</label></li>
+<li><label><input type="checkbox">Eventuali trasformazioni dei dati o delle scale sono esplicitamente dichiarate?</label></li>
+<li><label><input type="checkbox">Si è evitato di usare artifici percettivi per esagerare artificiosamente la dimensione di un effetto?</label></li>
+</ul></section>
+</div>
+</div>
+</section></section><section id="riflessioni-conclusive" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="riflessioni-conclusive">Riflessioni conclusive</h2>
+<p>La visualizzazione dei dati è un linguaggio, ovvero un sistema di simboli dotato di una sua grammatica, semantica e pragmatica. Come ogni linguaggio, può essere usato per chiarire o per ingannare, per semplificare o per complicare. Ciò che fa la differenza non è la complessità tecnica, ma l’intenzione comunicativa e il rispetto per il destinatario del messaggio.</p>
+<p>Edward Tufte ci ha insegnato il valore dell’<strong>economia visiva</strong>: ogni elemento grafico, ogni pixel, deve giustificare la propria esistenza contribuendo alla comprensione dei dati. William Cleveland ci ha fornito una <strong>gerarchia percettiva</strong> empirica, mostrandoci che non tutti i canali visivi sono ugualmente efficaci nella comunicazione di informazioni quantitative. Alberto Cairo, invece, ci ha posto di fronte alla dimensione <strong>etica</strong>, ricordandoci che un grafico può essere tecnicamente impeccabile ma moralmente inaccettabile se deliberatamente fuorviante.</p>
+<p>In psicologia, la tentazione di semplificare eccessivamente è forte. I <em>dynamite plots</em> nascondono la complessità delle distribuzioni; i <em>pie chart</em> trasformano le proporzioni in angoli difficili da confrontare e i grafici a doppio asse possono creare illusorie correlazioni. Ogni volta che scegliamo queste rappresentazioni per mera “convenienza” o “tradizione”, rischiamo di tradire sia i dati che i fenomeni complessi che intendiamo studiare.</p>
+<p>Tuttavia, la visualizzazione non è solo una protezione contro l’inganno, ma soprattutto uno strumento per la <strong>scoperta</strong>. Un grafico ben concepito può rivelare pattern sfuggenti a ogni analisi statistica, suggerire ipotesi inaspettate che nessun modello avrebbe individuato e mettere in luce anomalie che nessun test formale avrebbe rilevato.</p>
+<p>Per questo motivo, la visualizzazione non è solo un ornamento del processo scientifico, ma una componente <strong>epistemologica</strong> fondamentale. Non è un semplice ornamento della scienza, ma la costituisce. E, come ogni strumento epistemologico, richiede rigore metodologico, onestà intellettuale e umiltà.</p>
+<p>Per visualizzare in modo efficace, è necessario rispettare tre principi fondamentali: i <strong>dati</strong> (rappresentandoli con fedeltà), il <strong>lettore</strong> (comunicando in modo chiaro) e la <strong>verità</strong> (evitando ogni tipo di manipolazione percettiva).</p>
+<p>Questa triade, ovvero fedeltà, chiarezza e onestà, non garantisce la perfezione di ogni grafico, ma assicura che la visualizzazione adempia al suo scopo più alto: essere uno strumento rigoroso e trasparente al servizio della conoscenza scientifica.</p>
+</section><section id="esercizi" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="esercizi">Esercizi</h2>
+<div class="callout callout-style-default callout-important callout-titled" title="Esercizio 1: Critica visuale">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Importante</span>Esercizio 1: Critica visuale
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Cerca “worst graphs ever” o <a href="https://www.biostat.wisc.edu/~kbroman/topten_worstgraphs/">collezione Broman</a>.</p>
+<p>Scegli 3 grafici pessimi e per ciascuno:</p>
+<ol type="1">
+<li>Identifica TUTTI gli errori (riferisci a Tufte/Cleveland/Cairo)</li>
+<li>Spiega PERCHÉ problematico (non “brutto”, ma “causa questa distorsione”)</li>
+<li>Proponi alternativa specifica (non “usa barplot”, ma “barplot ordinato per valore, assi da zero, palette viridis, N annotato”)</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled" title="Esercizio 2: Revisione iterativa">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Importante</span>Esercizio 2: Revisione iterativa
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Dataset SWLS/LSNS:</p>
+<ol type="1">
+<li>Crea grafico “naive” (prima versione)</li>
+<li>Applica 5 revisioni:
+<ul>
+<li>Rev 1: Data-ink ratio</li>
+<li>Rev 2: Gerarchia percettiva</li>
+<li>Rev 3: Onestà scale</li>
+<li>Rev 4: Accessibilità</li>
+<li>Rev 5: Messaggio</li>
+</ul>
+</li>
+<li>Documenta cosa cambi e perché</li>
+</ol>
+<p>Quale revisione ha avuto impatto maggiore?</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled" title="Esercizio 3: Smascherare l'inganno">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Importante</span>Esercizio 3: Smascherare l’inganno
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Crea INTENZIONALMENTE grafico ingannevole (SWLS):</p>
+<ul>
+<li>Dual-axis per finta correlazione</li>
+<li>O asse troncato per esagerare differenze</li>
+<li>O bubble chart con distorsione area</li>
+</ul>
+<p>Scrivi: 1. “Pitch”: Come convincere non-esperto 2. “Confessione”: Come smascherare la manipolazione</p>
+<p><strong>Obiettivo</strong>: Riconoscere manipolazioni diventando temporaneamente manipolatore.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Punti chiave da ricordare">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Consiglio</span>Punti chiave da ricordare
+</div>
+</div>
+<section id="da-ricordare" class="level2 callout-body-container callout-body" data-number="17.6"><h2 data-number="17.6" class="anchored" data-anchor-id="da-ricordare">
+<span class="header-section-number">17.6</span> 📌 Da ricordare</h2>
+<p><strong>Principi</strong>:</p>
+<ul>
+<li>
+<strong>Tufte</strong>: Data-ink ratio, elimina chartjunk</li>
+<li>
+<strong>Cleveland</strong>: Posizione/lunghezza per confronti quantitativi</li>
+<li>
+<strong>Cairo</strong>: Onestà visiva = responsabilità etica</li>
+</ul>
+<p><strong>Errori</strong>:</p>
+<ul>
+<li>❌ Dynamite plots, pie charts, dual-axis, area vs lunghezza, 3D decorativo</li>
+</ul>
+<p><strong>Best practices</strong>:</p>
+<ul>
+<li>✅ Mostra dati grezzi (jitter, trasparenza)</li>
+<li>✅ Ordina per valore</li>
+<li>✅ Barplot da zero</li>
+<li>✅ Palette colorblind-safe</li>
+<li>✅ Titolo comunica finding</li>
+<li>✅ Revisione iterativa</li>
+</ul>
+<p><strong>Collegamenti</strong>: il <a href="../R/06_ggplot2.html" class="quarto-xref"><span>Capitolo 10</span></a> per l’implementazione tecnica.</p>
+</section>
+</div>
+</section><section id="bibliografia" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="bibliografia">Bibliografia</h2>
+
+
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiato!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiato!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/ccaudek\.github\.io\/utet-eda\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+            // default icon
+            link.classList.add("external");
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="../../chapters/eda/03_exploring_univariate_data.html" class="pagination-link" aria-label="Esplorare distribuzioni univariate">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Esplorare distribuzioni univariate</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../chapters/eda/06_loc_scale.html" class="pagination-link" aria-label="Indicatori di tendenza centrale e variabilità">
+        <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Indicatori di tendenza centrale e variabilità</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
+    <div class="nav-footer-left">
+<p><strong>Analisi esplorativa dei dati (EDA)</strong> — Modulo del progetto UTET a supporto del manuale <em>Inferenza bayesiana in psicologia: Ragionare con l’incertezza</em>.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/eda/05_data_visualization_principles.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer><script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>
