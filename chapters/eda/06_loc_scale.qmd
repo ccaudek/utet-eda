@@ -7,7 +7,9 @@ La visualizzazione grafica dei dati rappresenta il pilastro fondamentale di ogni
 ### Panoramica del capitolo {.unnumbered .unlisted}
 
 - *Tendenza centrale:* Scelta della misura (media, mediana, moda) in base al tipo di dati e alla presenza di valori anomali.
-- *Variabilità:* Interpretazione di range, varianza, deviazione standard e IQR per quantificare la dispersione dei dati attorno al valore centrale
+- *Robustezza:* Confronto tra misure sensibili (media, deviazione standard) e misure robuste (mediana, trimmed mean, MAD).
+- *Simulazioni:* Dimostrazione empirica dell'effetto degli outlier attraverso esempi pratici.
+- *Variabilità:* Interpretazione di range, varianza, deviazione standard e IQR per quantificare la dispersione dei dati attorno al valore centrale.
 
 
 ::: {.callout-tip collapse=true}
@@ -79,31 +81,244 @@ x <- c(12, 44, 21, 62, 24)
 mean(x)
 ```
 
-#### Media spuntata
+### Media vs Mediana: Robustezza e Scelta della Misura {#sec-mean-vs-median}
 
-La *media spuntata*, indicata come $\bar{x}_t$ o *trimmed mean*, è un metodo di calcolo della media che prevede l'eliminazione di una determinata percentuale di dati estremi prima di effettuare la media aritmetica. Solitamente, viene eliminato il 10% dei dati, ovvero il 5% all'inizio e alla fine della distribuzione. Per ottenere la media spuntata, i dati vengono ordinati in modo crescente, $x_1 \leq x_2 \leq x_3 \leq \dots \leq x_n$, e quindi viene eliminato il primo 5% e l'ultimo 5% dei dati nella sequenza ordinata. Infine, la media spuntata è calcolata come la media aritmetica dei dati rimanenti. Questo approccio è utile quando ci sono valori anomali o quando la distribuzione è asimmetrica e la media aritmetica non rappresenta adeguatamente la tendenza centrale dei dati.
+La scelta tra media e mediana come misura di tendenza centrale dipende dalle caratteristiche della distribuzione dei dati e dall'obiettivo dell'analisi. Comprendere quando utilizzare l'una o l'altra è fondamentale per una corretta interpretazione statistica.
 
-::: {.callout-note collapse="true" title="Esempio"}
+#### Differenze concettuali
 
-Per illustrare la media spuntata, utilizzeremo i dati del Progetto Natsal, contenuti nel file `sexual-partners.csv`.
+La **media aritmetica** tiene conto di tutti i valori nella distribuzione, assegnando uguale peso a ciascuna osservazione. Questa caratteristica la rende matematicamente conveniente (ad esempio, è coinvolta nel calcolo della varianza) ma anche sensibile ai valori estremi.
 
-Negli anni '80, con la crescente preoccupazione per l'AIDS, le autorità sanitarie del Regno Unito si resero conto della mancanza di dati affidabili sui comportamenti sessuali della popolazione. In particolare, vi erano dubbi sulla frequenza con cui le persone cambiavano partner, sul numero di partner simultanei e sulle pratiche sessuali adottate. Questa conoscenza era essenziale per prevedere la diffusione delle malattie sessualmente trasmissibili nella società e per pianificare adeguatamente i servizi sanitari. Tuttavia, si faceva ancora riferimento ai dati raccolti da Alfred Kinsey negli Stati Uniti negli anni '40, che non tenevano conto della rappresentatività del campione.
+La **mediana**, invece, rappresenta il valore centrale della distribuzione ordinata e non è influenzata dall'entità dei valori estremi, ma solo dalla loro posizione. Questa proprietà la rende una misura *robusta*, particolarmente utile quando la distribuzione è asimmetrica o contiene outlier.
 
-A partire dalla fine degli anni '80, vennero dunque avviati nel Regno Unito e negli Stati Uniti ampi e rigorosi studi sui comportamenti sessuali, nonostante una forte opposizione in alcuni ambienti. Nel Regno Unito, il governo guidato da Margaret Thatcher ritirò il proprio sostegno a un'importante indagine sui comportamenti sessuali all'ultimo momento. Fortunatamente, i ricercatori riuscirono a ottenere finanziamenti da enti benefici, dando vita al *National Sexual Attitudes and Lifestyles Survey* (Natsal). Da allora, questa indagine viene condotta ogni dieci anni, a partire dal 1990. La terza rilevazione, denominata Natsal-3, è stata effettuata intorno al 2010.
+#### L'effetto degli outlier: una simulazione
 
-Poniamoci il problema di descrivere la tendenza centrale con la media spuntata per i dati contenuti nel file `sexual-partners.csv`, separatamente per maschi e femmine. Il dataset fornisce la distribuzione del *numero totale dichiarato di partner sessuali di sesso opposto* nella vita per uomini e donne di età compresa tra 35 e 44 anni. I dati provengono dal sondaggio Natsal-3 e corrispondono a un totale di 796 uomini e 1193 donne.
+Per comprendere concretamente l'impatto dei valori estremi, consideriamo una simulazione. Generiamo un campione di 100 osservazioni da una distribuzione normale e osserviamo cosa accade quando introduciamo progressivamente valori anomali.
 
-Procediamo all'importazione dei dati per iniziare l'analisi. 
+```{r}
+set.seed(123)
+
+# Campione base da distribuzione normale
+dati_base <- rnorm(100, mean = 50, sd = 10)
+
+# Creiamo versioni con numero crescente di outlier
+dati_1_outlier <- c(dati_base[1:99], 150)  # 1 outlier estremo
+dati_5_outlier <- c(dati_base[1:95], rep(150, 5))  # 5 outlier
+dati_10_outlier <- c(dati_base[1:90], rep(150, 10))  # 10 outlier
+
+# Confronto delle misure
+risultati <- data.frame(
+  Scenario = c("Nessun outlier", "1 outlier (1%)", "5 outlier (5%)", "10 outlier (10%)"),
+  Media = c(mean(dati_base), mean(dati_1_outlier), 
+            mean(dati_5_outlier), mean(dati_10_outlier)),
+  Mediana = c(median(dati_base), median(dati_1_outlier), 
+              median(dati_5_outlier), median(dati_10_outlier)),
+  Differenza = NA
+)
+
+risultati$Differenza <- risultati$Media - risultati$Mediana
+
+knitr::kable(risultati, digits = 2, 
+             caption = "Confronto tra media e mediana al variare della presenza di outlier")
+```
+
+Come si può osservare, mentre la mediana rimane sostanzialmente stabile, la media aumenta progressivamente con l'aggiunta di valori estremi. Anche un singolo outlier (solo l'1% del campione) è sufficiente per alterare notevolmente la media.
+
+Visualizziamo graficamente questo fenomeno:
+
+```{r}
+#| label: fig-outlier-effect
+#| fig-cap: "Effetto degli outlier su media e mediana"
+
+plot_data <- data.frame(
+  valore = c(dati_base, dati_1_outlier, dati_5_outlier, dati_10_outlier),
+  scenario = rep(c("Nessun outlier", "1 outlier (1%)", 
+                   "5 outlier (5%)", "10 outlier (10%)"), 
+                 each = 100)
+)
+
+# Calcolo statistiche per ogni scenario
+stats <- plot_data |>
+  group_by(scenario) |>
+  summarise(
+    media = mean(valore),
+    mediana = median(valore)
+  )
+
+ggplot(plot_data, aes(x = valore)) +
+  geom_histogram(bins = 30, fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_vline(data = stats, aes(xintercept = media), 
+             color = "red", linetype = "dashed", linewidth = 1) +
+  geom_vline(data = stats, aes(xintercept = mediana), 
+             color = "blue", linetype = "solid", linewidth = 1) +
+  facet_wrap(~scenario, ncol = 2, scales = "free") +
+  labs(title = "Confronto tra media (rosso) e mediana (blu)\nin presenza di outlier",
+       x = "Valore", y = "Frequenza") 
+```
+
+La visualizzazione mostra chiaramente come la media (linea rossa tratteggiata) si sposti verso destra in presenza di outlier, mentre la mediana (linea blu continua) rimane ancorata al centro della massa principale dei dati.
+
+#### Misure robuste: Media Spuntata e MAD
+
+Per mitigare la sensibilità della media aritmetica agli outlier, la statistica offre misure alternative più robuste.
+
+##### Media Spuntata (Trimmed Mean)
+
+La media spuntata calcola la media escludendo una percentuale simmetrica di valori estremi. Ad esempio, con un trim del 10%, vengono rimossi il 5% dei valori più bassi e il 5% dei valori più alti prima del calcolo:
+
+```{r}
+# Confronto tra media standard e trimmed mean
+data.frame(
+  Scenario = c("Nessun outlier", "1 outlier (1%)", "5 outlier (5%)", "10 outlier (10%)"),
+  Media = c(mean(dati_base), mean(dati_1_outlier), 
+            mean(dati_5_outlier), mean(dati_10_outlier)),
+  `Trimmed Mean (10%)` = c(
+    mean(dati_base, trim = 0.10),
+    mean(dati_1_outlier, trim = 0.10),
+    mean(dati_5_outlier, trim = 0.10),
+    mean(dati_10_outlier, trim = 0.10)
+  )
+) |>
+  knitr::kable(digits = 2, 
+               caption = "Confronto tra media standard e trimmed mean")
+```
+
+La media spuntata rappresenta un compromesso efficace tra la sensibilità della media aritmetica e la robustezza della mediana.
+
+##### MAD: Deviazione Mediana Assoluta
+
+Per misurare la variabilità in modo robusto, possiamo utilizzare la *deviazione mediana assoluta* (MAD), definita come:
+
+$$
+\text{MAD} = \text{mediana}(|X_i - \text{mediana}(X)|)
+$$
+
+Il MAD misura la distanza tipica dei valori dalla mediana, offrendo una misura di variabilità resistente agli outlier:
+
+```{r}
+# Confronto tra deviazione standard e MAD
+data.frame(
+  Scenario = c("Nessun outlier", "1 outlier (1%)", "5 outlier (5%)", "10 outlier (10%)"),
+  `Dev. Standard` = c(sd(dati_base), sd(dati_1_outlier), 
+                       sd(dati_5_outlier), sd(dati_10_outlier)),
+  MAD = c(mad(dati_base), mad(dati_1_outlier), 
+          mad(dati_5_outlier), mad(dati_10_outlier))
+) |>
+  knitr::kable(digits = 2, 
+               caption = "Confronto tra deviazione standard e MAD")
+```
+
+Come si evince dalla tabella, mentre la deviazione standard cresce sensibilmente in presenza di outlier, il MAD rimane sostanzialmente stabile, fornendo una misura più affidabile della variabilità "tipica" della distribuzione.
+
+#### Linee guida per la scelta
+
+La scelta della misura appropriata dipende dal contesto analitico e dagli obiettivi della ricerca:
+
+**Utilizzare la media quando:**
+
+- La distribuzione è approssimativamente simmetrica e priva di outlier
+- È importante che ogni osservazione contribuisca alla misura finale
+- Si intendono sfruttare proprietà matematiche specifiche (es. minimizzazione degli scarti quadratici)
+- Si procederà con analisi parametriche che assumono normalità
+
+**Utilizzare la mediana quando:**
+
+- La distribuzione è marcatamente asimmetrica
+- Sono presenti outlier che non si possono rimuovere
+- Si lavora con variabili ordinali
+- È importante una misura resistente a valori estremi
+- Si desidera un "valore tipico" che rappresenti il centro effettivo della distribuzione
+
+**Utilizzare la trimmed mean quando:**
+
+- Si desidera un compromesso tra sensibilità e robustezza
+- Si sospetta la presenza di alcuni outlier ma si vuole mantenere l'influenza della maggior parte dei dati
+
+**Utilizzare MAD quando:**
+
+- Si necessita di una misura di variabilità robusta
+- La distribuzione contiene outlier
+- Si sta utilizzando la mediana come misura di tendenza centrale
+
+::: {.callout-important}
+## Attenzione alla coerenza
+
+È fondamentale mantenere coerenza metodologica tra le misure di tendenza centrale e di variabilità utilizzate. Se si sceglie la mediana per la sua robustezza, è coerente utilizzare MAD come misura di variabilità, anziché la deviazione standard.
+:::
+
+#### Un caso pratico: distribuzione dei redditi
+
+Un esempio emblematico dell'utilità di mediana e MAD riguarda l'analisi dei redditi. Consideriamo un campione simulato di redditi familiari:
+
+```{r}
+set.seed(456)
+
+# Simuliamo redditi con distribuzione log-normale (tipica dei redditi reali)
+# La maggior parte delle famiglie ha redditi moderati, poche hanno redditi molto alti
+redditi <- rlnorm(1000, meanlog = 10.5, sdlog = 0.6)
+
+# Aggiungiamo alcuni redditi molto elevati (top 1%)
+redditi_completi <- c(redditi[1:990], rlnorm(10, meanlog = 12.5, sdlog = 0.3))
+
+# Confronto misure
+cat("Media dei redditi:", round(mean(redditi_completi), 0), "€\n")
+cat("Mediana dei redditi:", round(median(redditi_completi), 0), "€\n")
+cat("Trimmed mean (10%):", round(mean(redditi_completi, trim = 0.10), 0), "€\n\n")
+
+cat("Deviazione standard:", round(sd(redditi_completi), 0), "€\n")
+cat("MAD:", round(mad(redditi_completi), 0), "€\n")
+```
+
+In questo scenario, la mediana fornisce una rappresentazione più accurata del "reddito tipico", poiché non è influenzata dai redditi estremamente elevati dell'1% più ricco. La media, al contrario, sovrastima sensibilmente il reddito della maggioranza della popolazione.
+
+```{r}
+#| label: fig-redditi
+#| fig-cap: "Distribuzione dei redditi: confronto tra media e mediana"
+
+data.frame(reddito = redditi_completi) |>
+  ggplot(aes(x = reddito)) +
+  geom_histogram(bins = 50, fill = "lightgreen", color = "black", alpha = 0.7) +
+  geom_vline(xintercept = mean(redditi_completi), 
+             color = "red", linetype = "dashed", linewidth = 1) +
+  geom_vline(xintercept = median(redditi_completi), 
+             color = "blue", linetype = "solid", linewidth = 1) +
+  annotate("text", x = mean(redditi_completi) + 10000, y = 150, 
+           label = "Media", color = "red", angle = 90) +
+  annotate("text", x = median(redditi_completi) - 5000, y = 150, 
+           label = "Mediana", color = "blue", angle = 90) +
+  labs(title = "Distribuzione asimmetrica dei redditi",
+       subtitle = "La mediana rappresenta meglio il reddito 'tipico'",
+       x = "Reddito (€)", y = "Frequenza") +
+  scale_x_continuous(labels = scales::comma)
+```
+
+#### Un'applicazione concreta: il caso Natsal
+
+Come illustrato nella @sec-mean-vs-median, la *media spuntata* rappresenta un compromesso efficace tra sensibilità e robustezza. Eliminando una percentuale simmetrica di dati estremi, offre una misura più stabile della tendenza centrale.
+
+::: {.callout-note collapse="true" title="Esempio applicato: Natsal"}
+
+Per dimostrare l'applicazione pratica della media spuntata, analizziamo i dati del Progetto Natsal, contenuti nel file `sexual-partners.csv`.
+
+Negli anni '80, con l'emergere dell'AIDS, le autorità sanitarie britanniche si resero conto della mancanza di dati affidabili sui comportamenti sessuali della popolazione. In particolare, era cruciale comprendere la frequenza di cambio partner, il numero di partner simultanei e le pratiche sessuali adottate. Queste informazioni erano essenziali per prevedere la diffusione delle malattie sessualmente trasmissibili e pianificare i servizi sanitari, ma si faceva ancora riferimento ai dati di Alfred Kinsey raccolti negli Stati Uniti negli anni '40, privi di rappresentatività campionaria.
+
+A partire dalla fine degli anni '80, furono quindi avviati nel Regno Unito e negli Stati Uniti studi rigorosi sui comportamenti sessuali, nonostante forti opposizioni. In particolare, il governo di Margaret Thatcher ritirò all'ultimo momento il sostegno a un'importante indagine. I ricercatori riuscirono comunque a ottenere finanziamenti da enti benefici, dando vita al *National Sexual Attitudes and Lifestyles Survey* (Natsal). Da allora, questa indagine viene condotta ogni dieci anni, a partire dal 1990. La terza rilevazione, Natsal-3, è stata effettuata intorno al 2010.
+
+Analizziamo i dati relativi al *numero totale dichiarato di partner sessuali di sesso opposto* nella vita per uomini e donne di età compresa tra 35 e 44 anni. I dati provengono da Natsal-3 e includono 796 uomini e 1193 donne.
+
+Procediamo all'importazione dei dati:
 
 ```{r}
 sexual_partners <- rio::import(here::here("data", "sexual-partners.csv"))
 ```
-Esaminiamo alcune righe prese a caso dal data frame `sexual_partners`:
+
+Esaminiamo un campione casuale del dataset:
 
 ```{r}
 sexual_partners[sample(1:nrow(sexual_partners), size = 10, replace = FALSE), ]
 ```
-La colonna `Gender` riporta il genere del rispondente e la colonna `NumPartners` il numero di partner sessuali di sesso opposto dichiarati.
+
+La colonna `Gender` indica il genere del rispondente, mentre `NumPartners` riporta il numero di partner sessuali di sesso opposto dichiarati.
 
 Calcoliamo la media spuntata per gli uomini:
 
@@ -111,6 +326,7 @@ Calcoliamo la media spuntata per gli uomini:
 sex_partners_men <- sexual_partners[sexual_partners$Gender == "Man", "NumPartners"]
 mean(sex_partners_men, trim = 0.10, na.rm = TRUE)
 ```
+
 Calcoliamo la media spuntata per le donne:
 
 ```{r}
@@ -233,32 +449,31 @@ mean(c(TRUE, TRUE, TRUE, FALSE))
 
 La media aritmetica, tuttavia, ha alcune limitazioni: non sempre è l'indice più adeguato per descrivere accuratamente la tendenza centrale della distribuzione, specialmente quando si verificano asimmetrie o valori anomali (outlier). In queste situazioni, è più indicato utilizzare la mediana o la media spuntata (come spiegheremo successivamente).
 
-
 ::: {.callout-note collapse="true" title="Come descrivere la tendenza centrale in distribuzioni asimmetriche"}
 
-Gli indici di tendenza centrale – moda, mediana e media – assumono significati molto diversi quando la distribuzione dei dati è *asimmetrica*.  Per esempio, consideriamo i dati del Progetto Natsal (`sexual-partners.csv`), che riportano il numero di partner sessuali di sesso opposto dichiarati da uomini e donne (35–44 anni).
+Quando una distribuzione è *asimmetrica*, gli indici di tendenza centrale – moda, mediana e media – assumono valori diversi e trasmettono informazioni complementari. Per illustrare questo concetto, analizziamo i dati del Progetto Natsal (`sexual-partners.csv`), che riportano il numero di partner sessuali di sesso opposto dichiarati da uomini e donne di età compresa tra 35 e 44 anni.
 
+1. **Esplorazione iniziale dei dati**
 
-1. Esplorazione dei dati. 
-
-Estraggo dieci righe a caso:
+Estratto casuale di dieci righe dal dataset:
 
 ```{r}
 sexual_partners[sample(1:nrow(sexual_partners), 10), ]
 ```
-Il dataset contiene due colonne principali:
 
-* `Gender`: genere del rispondente,
-* `NumPartners`: numero di partner sessuali dichiarati.
+Il dataset contiene due variabili principali:
+* `Gender`: genere del rispondente
+* `NumPartners`: numero di partner sessuali dichiarati
 
-Vediamo quanti soggetti ci sono in ciascun gruppo:
+Verifichiamo la numerosità campionaria per gruppo:
 
 ```{r}
 sexual_partners |> 
   group_by(Gender) |> 
   summarise(count = n())
 ```
-Il numero massimo riportato è molto alto (oltre 500), ma per chiarezza limitiamo l’analisi a **valori ≤ 50**:
+
+Il numero massimo riportato è molto elevato (oltre 500), ma per una visualizzazione più chiara limiteremo l'analisi a **valori ≤ 50**:
 
 ```{r}
 sexual_partners |> 
@@ -266,10 +481,9 @@ sexual_partners |>
   summarise(maximum = max(NumPartners))
 ```
 
+2. **Visualizzazione delle distribuzioni**
 
-2. Visualizzazione. 
-
-Calcoliamo e rappresentiamo la distribuzione dei partner (≤50) separatamente per genere:
+Calcoliamo e rappresentiamo la distribuzione dei partner (con valori limitati a ≤50) separatamente per genere:
 
 ```{r}
 sexual_partners_truncated <- sexual_partners |> 
@@ -293,10 +507,10 @@ percentage_data |>
   labs(x = "Numero di partner sessuali dichiarati", y = "Percentuale") +
   theme(legend.position = "none")
 ```
-La distribuzione risulta *altamente asimmetrica positiva*: molti soggetti dichiarano pochi partner, pochi soggetti valori molto alti.
 
+La distribuzione risulta **fortemente asimmetrica positiva**: la maggior parte dei soggetti dichiara un numero basso di partner, mentre una coda lunga a destra rappresenta pochi individui con valori molto elevati.
 
-3. Indici di tendenza centrale.
+3. **Calcolo degli indici di tendenza centrale**
 
 Calcoliamo media, mediana e moda per ciascun genere:
 
@@ -315,22 +529,20 @@ sexual_partners_truncated |>
   )
 ```
 
-4. Interpretazione.
+4. **Interpretazione dei risultati**
 
-* *Media*: più alta di mediana e moda → influenzata dalla coda lunga a destra.
-* *Mediana*: valore centrale, meno influenzata da estremi → misura più robusta.
-* *Moda*: valore più frequente (1 partner), ma spesso poco rappresentativa in distribuzioni molto sparse.
+* **Media**: Significativamente più alta della mediana e della moda, poiché fortemente influenzata dalla coda destra della distribuzione.
+* **Mediana**: Valore centrale della distribuzione, molto meno sensibile ai valori estremi. Rappresenta una misura più robusta della tendenza centrale.
+* **Moda**: Corrisponde al valore più frequente (1 partner), ma in distribuzioni così sparse fornisce un'informazione limitata.
 
+5. **Conclusioni pratiche per l'analisi**
 
-5. Conclusioni pratiche.
-
-* In distribuzioni *asimmetriche*, la *mediana* è in genere l’indice di tendenza centrale più affidabile.
-* È utile riportare anche *media e moda* per evidenziare le differenze.
-* La descrizione numerica va sempre accompagnata da una *visualizzazione grafica* (istogrammi, boxplot) per cogliere l’asimmetria e i valori estremi.
-* Una descrizione completa richiede anche *misure di dispersione*, che vedremo nella sezione successiva.
+* In presenza di distribuzioni **asimmetriche**, la **mediana** è generalmente l'indice di tendenza centrale più affidabile e informativo.
+* È comunque utile riportare sia la **media** che la **moda** per documentare l'entità dell'asimmetria e le caratteristiche della distribuzione.
+* La descrizione numerica deve essere sempre accompagnata da una **visualizzazione grafica** (istogrammi, boxplot) che permetta di apprezzare visivamente la forma della distribuzione e la presenza di valori estremi.
+* Una descrizione completa richiede anche l'utilizzo di **misure di dispersione**, che esploreremo nella sezione successiva.
 
 :::
-
 
 #### La media come rappresentazione della psicologia umana: un'arma a doppio taglio?
 
@@ -340,7 +552,6 @@ In molte discipline scientifiche, il concetto di media è utile perché descrive
 
 Un problema centrale, sollevato da @speelman2013mean, riguarda l'implicita assunzione che ci sia un *vero valore* sottostante ai processi psicologici che possiamo stimare attraverso la media, come se il comportamento umano fosse determinato da meccanismi identici in ogni individuo, con le differenze attribuibili solo a "rumore" sperimentale. Questo approccio, tipico della psicologia sperimentale tradizionale, assume che testare un gruppo di persone e mediare i loro risultati ci permetta di rivelare la struttura comune della mente umana. Ma questa assunzione è davvero giustificata?
 
-
 #### La fallacia ergodica e l’illusione dell’universalità {#sec-eda-ergodic-fallacy}
 
 Un errore metodologico frequente nella psicologia è la cosiddetta *fallacia ergodica*, ovvero l’errata convinzione che le caratteristiche medie di un gruppo possano essere automaticamente applicate ai singoli individui che lo compongono [@speelman2024most]. Questo equivoco nasce dall’idea che la media descriva un valore "tipico" valido per tutti, senza considerare le differenze individuali o le variazioni nel tempo.
@@ -349,13 +560,11 @@ Immaginiamo di studiare la felicità di un gruppo di persone nel corso di una se
 
 Il rischio, come sottolineato da @molden2006finding, è che il nostro desiderio di trovare *universalità* nei processi cognitivi ci porti a enfatizzare somiglianze tra le persone, ignorando le variazioni individuali che possono essere altrettanto, se non più, informative. Per esempio, due studenti con lo stesso punteggio medio in un test di memoria potrebbero aver ottenuto quel risultato in modi completamente diversi: uno potrebbe aver avuto prestazioni costantemente nella media, mentre l’altro potrebbe aver avuto picchi di eccellenza alternati a difficoltà estreme.
 
-
 #### La media: uno strumento da usare con cautela
 
 Questi problemi non significano che la media sia inutile in psicologia. È un indicatore potente e spesso informativo, ma deve essere interpretato con cautela. In particolare, non può essere usata per fare inferenze sui singoli individui senza considerare altre misure, come la *varianza* e la *deviazione standard*, che ci dicono quanto i dati siano dispersi intorno alla media.
 
 In psicologia, comprendere la variabilità è tanto importante quanto individuare una tendenza centrale. Se vogliamo davvero capire il comportamento umano, dobbiamo chiederci non solo *qual è il valore medio?* ma anche *quanto variano i dati?* e *cosa ci dice questa variabilità sulle differenze individuali?* Nella prossima sezione, esamineremo questi concetti e vedremo come la varianza e la deviazione standard ci aiutano a catturare le differenze che la media, da sola, non può rivelare.
-
 
 ::: {.callout-note collapse="true" title="La scelta della misura di tendenza centrale"}
 
@@ -377,7 +586,6 @@ Per i dati categoriali (nominali), la moda è l’unica misura applicabile, a pa
 In sintesi, non esiste una misura migliore in assoluto. La media è potente per dati simmetrici, la mediana è lo strumento robusto per proteggersi dalle distorsioni, la media spuntata è un utile compromesso e la moda è essenziale per i dati categoriali. La scelta deve sempre essere guidata da una attenta valutazione preliminare della distribuzione dei dati.
 :::
 
-
 ## La variabilità nei dati psicologici  
 
 Nei fenomeni psicologici e comportamentali, *la variabilità è una caratteristica intrinseca*. Ad esempio, se misuriamo il livello di stress percepito da una persona più volte nella stessa giornata, è raro osservare lo stesso valore anche utilizzando strumenti identici. Allo stesso modo, un questionario standardizzato sull’autostima somministrato a un gruppo di studenti universitari restituirà punteggi differenti per ciascun partecipante. Anche registrando i tempi di reazione in un compito cognitivo, noteremo fluttuazioni sia tra individui diversi sia nelle prestazioni dello stesso individuo in prove ripetute.  
@@ -391,25 +599,31 @@ In questa sezione esploreremo:
 
 Comprendere la variabilità non è un esercizio tecnico, ma un passo fondamentale per interpretare fenomeni complessi come le differenze di personalità, le oscillazioni emotive o l’efficacia di una terapia. Ogni modello psicologico, infatti, deve fare i conti con questa dimensione dinamica e multideterminata dei dati.  
 
-
 ### Quantili
 
-Accanto alle misure di tendenza centrale, i *quantili* descrivono la posizione relativa di un’osservazione in una distribuzione. Se media, mediana e moda individuano un valore “tipico”, i quantili rispondono invece a una domanda diversa: qual è il valore al di sotto del quale si colloca una determinata proporzione dei dati?
+Accanto alle misure di tendenza centrale, i *quantili* descrivono la posizione relativa di un'osservazione all'interno di una distribuzione. Mentre media, mediana e moda individuano un valore "tipico", i quantili rispondono a una domanda complementare: qual è il valore al di sotto del quale ricade una determinata proporzione dei dati?
 
-#### Definizione
+#### Definizione formale
 
-Il quantile di ordine $p$ ($0 < p < 1$) è il valore $q_p = x_{(k)}$, dove $x_{(k)}$ rappresenta il $k$-esimo elemento dei dati ordinati in senso crescente e $k = \lceil p \cdot n \rceil$, con $n$ numero totale di osservazioni e $\lceil \cdot \rceil$ funzione di arrotondamento per eccesso. Questo è il cosiddetto *quantile non interpolato*. Quando $p \cdot n$ non è intero, si ricorre di norma all’interpolazione lineare tra due osservazioni consecutive: è il metodo implementato nei principali software statistici.
+Il quantile di ordine $p$ (con $0 < p < 1$) è il valore $q_p$ tale che una proporzione $p$ delle osservazioni è minore o uguale a $q_p$. Formalmente, dati $n$ valori ordinati $x_{(1)} \leq x_{(2)} \leq ... \leq x_{(n)}$, il quantile di ordine $p$ si ottiene calcolando $k = \lceil p \cdot n \rceil$, dove $\lceil \cdot \rceil$ rappresenta la funzione di arrotondamento per eccesso. Il quantile corrisponde allora a $q_p = x_{(k)}$.
 
-Per chiarire, consideriamo i dati ordinati ${15, 20, 23, 25, 28, 30, 35, 40, 45, 50}$. Il 30° percentile ($p=0.3$) si calcola come $k = \lceil 0.3 \cdot 10 \rceil = 3$, dunque $q_{0.3} = 23$.
+Quando $p \cdot n$ non è un intero, si ricorre in genere all'interpolazione lineare tra le due osservazioni più vicine, metodo implementato nella maggior parte dei software statistici.
 
-#### Percentili e quartili
+Per chiarire il calcolo, consideriamo un esempio semplice: dati ordinati {15, 20, 23, 25, 28, 30, 35, 40, 45, 50}. Il 30° percentile ($p=0.3$) si determina come $k = \lceil 0.3 \cdot 10 \rceil = 3$, dunque $q_{0.3} = 23$.
 
-Un caso particolare sono i *percentili*, che suddividono la distribuzione in cento parti uguali. Il 25° percentile (o primo quartile $Q_1$) lascia al di sotto di sé un quarto dei dati, il 50° percentile corrisponde alla mediana e il 75° percentile (terzo quartile $Q_3$) delimita i tre quarti inferiori della distribuzione.
+#### Percentili e quartili: casi particolari
 
+Un caso speciale di quantili sono i *percentili*, che suddividono la distribuzione in cento parti uguali. Tra questi, assumono particolare rilievo i *quartili*:
+
+- **Primo quartile (Q₁)**: 25° percentile
+- **Secondo quartile (Q₂)**: 50° percentile (corrisponde alla mediana)
+- **Terzo quartile (Q₃)**: 75° percentile
+
+I quartili delimitano la distribuzione in quattro segmenti di uguale numerosità, fornendo una sintesi robusta della sua posizione e dispersione.
 
 #### Esempio applicativo
 
-Per illustrare l’uso dei quantili, consideriamo la variabile `NumPartners`, distinta per genere. Calcoliamo il 10° e il 90° percentile.
+Per illustrare l'uso pratico dei quantili, consideriamo nuovamente la variabile `NumPartners`, distintamente per genere. Calcoliamo il 10° e il 90° percentile:
 
 ```{r}
 # Quantili per gli uomini
@@ -424,10 +638,13 @@ quantile(
   probs = c(0.1, 0.9)
   )
 ```
-I risultati mostrano che, tra gli uomini, il 10% ha dichiarato al massimo un partner, mentre il 10% con i valori più elevati supera i 34 partner. Tra le donne, il 10° percentile coincide ancora con un partner, ma il 90° percentile non va oltre 18.
 
-Questa differenza indica che le distribuzioni dei due gruppi condividono una base simile (molti individui con pochi partner) ma divergono nella coda superiore: negli uomini, pochi soggetti con valori estremi spingono la distribuzione verso destra, generando una maggiore asimmetria positiva.
+I risultati rivelano che:
 
+- **Tra gli uomini**, il 10% dei soggetti ha dichiarato al massimo un partner, mentre il 10% con valori più elevati supera i 34 partner.
+- **Tra le donne**, il 10° percentile corrisponde anch'esso a un partner, ma il 90° percentile non supera i 18 partner.
+
+Questa differenza evidenzia come le due distribuzioni condividano una base simile nella parte inferiore (numerosi individui con pochi partner), ma divergano significativamente nella coda superiore: negli uomini, la presenza di alcuni valori estremi allunga la distribuzione verso destra, generando una maggiore asimmetria positiva.
 
 #### Misure di dispersione basate sui quantili
 
@@ -438,6 +655,7 @@ x <- c(12, 18, 20, 22, 25, 28, 30, 35)
 range(x)
 diff(range(x))
 ```
+
 Nell’esempio l’intervallo è 23, valore che descrive l’ampiezza complessiva dei dati ma non la loro distribuzione interna.
 
 Un indicatore più robusto è la *differenza interquartile (IQR)*, che misura la distanza fra il terzo e il primo quartile, racchiudendo così il 50% centrale dei dati.
@@ -445,10 +663,10 @@ Un indicatore più robusto è la *differenza interquartile (IQR)*, che misura la
 ```{r}
 IQR(x)
 ```
+
 Se in un gruppo di studenti i quartili sono $Q_1 = 25$ e $Q_3 = 40$, l’IQR è pari a 15: significa che metà dei punteggi si colloca in un intervallo di 15 unità. Questo indice riduce l’influenza dei valori estremi, anche se non rappresenta l’intera dispersione della distribuzione.
 
 In sintesi, l’intervallo di variazione e l’IQR offrono due prospettive complementari: il primo fornisce un’idea immediata dell’ampiezza totale dei dati, il secondo descrive la variabilità tipica della parte centrale della distribuzione. Entrambi hanno limiti che rendono necessario affiancarli a misure più complete, come la varianza e la deviazione standard, di cui parleremo nella sezione successiva.
-
 
 ### La varianza
 
@@ -457,6 +675,7 @@ La *varianza* è una delle misure di dispersione più utilizzate in statistica p
 $$
 S^2 = \frac{1}{n} \sum_{i=1}^n (x_i - \bar{x})^2.
 $$ {#eq-var-descr}
+
 In altre parole, per trovare la varianza:
 
 1. calcoliamo la media di tutti i valori ($\bar{x}$),
@@ -467,7 +686,6 @@ In altre parole, per trovare la varianza:
 Maggiore è la varianza, maggiore è la variabilità (o dispersione) dei dati rispetto alla media. Al contrario, una varianza prossima allo zero indica che le osservazioni sono molto vicine tra loro e quasi coincidenti con la media.
 
 > **Nota su popolazione e campione.** Spesso, nell’analisi di dati campionari, la varianza viene calcolata usando $\frac{1}{n-1}$ al denominatore al posto di $\frac{1}{n}$. In questo modo otteniamo una stima corretta (non distorta) della varianza della popolazione. Nel contesto della formula sopra riportata, invece, stiamo calcolando la varianza *descrittiva* (o *popolazione completa*).
-
 
 ::: {.callout-caution collapse="true" title="Esempio"}
 
@@ -515,7 +733,6 @@ Nel caso dell'esempio precedente relativo alle ore di studio giornaliere, una va
 - Se la varianza (o la deviazione standard) fosse stata molto più grande, avremmo dedotto che gli studenti del campione presentano abitudini di studio molto diverse.
 - Al contrario, se la varianza fosse prossima a 0, significherebbe che quasi tutti studiano un numero di ore molto simile a 2.5.
 
-
 #### Calcolo in R
 
 Se volessimo effettuare in R i calcoli relativi all'esempio sulle ore di studio, potremmo fare così:
@@ -542,7 +759,6 @@ Osserviamo che `var(x)` dà un valore di circa 1.67 perché R, di default, calco
 
 In sintesi, la varianza fornisce un modo per quantificare quanto siano diverse tra loro le osservazioni. Nel caso dell’esempio sulle ore di studio, abbiamo visto che i valori, pur non essendo tutti identici, non mostrano una dispersione eccessiva (la varianza è 1.25). Se i comportamenti di studio fossero estremamente diversificati (per esempio, se qualcuno studiasse 0 ore al giorno e qualcun altro 10), la varianza sarebbe molto più elevata, indicando una marcata eterogeneità nel campione.
 
-
 #### Stima della varianza della popolazione
 
 Si noti il denominatore della formula della varianza. Nell'@eq-var-descr, ho utilizzato $n$ come denominatore (l'ampiezza campionaria, ovvero il numero di osservazioni nel campione). In questo modo, otteniamo la varianza come *statistica descrittiva* del campione. Tuttavia, è possibile utilizzare $n-1$ come denominatore alternativo:
@@ -550,8 +766,8 @@ Si noti il denominatore della formula della varianza. Nell'@eq-var-descr, ho uti
 $$
 s^2 = \frac{1}{n-1} \sum_{i=1}^n (x_i - \bar{x})^2 .
 $$ {#eq-var-stimatore}
-In questo secondo caso, otteniamo la varianza come *stimatore* della varianza della popolazione. Si può dimostrare che l'@eq-var-stimatore fornisce una stima corretta (ovvero, non distorta) della varianza della popolazione da cui abbiamo ottenuto il campione, mentre l'@eq-var-descr fornisce (in media) una stima troppo piccola della varianza della popolazione. Si presti attenzione alla notazione: $S^2$ rappresenta la varianza come statistica descrittiva, mentre $s^2$ rappresenta la varianza come stimatore.
 
+In questo secondo caso, otteniamo la varianza come *stimatore* della varianza della popolazione. Si può dimostrare che l'@eq-var-stimatore fornisce una stima corretta (ovvero, non distorta) della varianza della popolazione da cui abbiamo ottenuto il campione, mentre l'@eq-var-descr fornisce (in media) una stima troppo piccola della varianza della popolazione. Si presti attenzione alla notazione: $S^2$ rappresenta la varianza come statistica descrittiva, mentre $s^2$ rappresenta la varianza come stimatore.
 
 ::: {.callout-note collapse="true" title="Simulazione"}
 
@@ -583,11 +799,13 @@ set.seed(123)
 x <- rnorm(4, mean = 100, sd = 15)
 print(x)
 ```
+
 Calcoliamo la varianza usando $n$ al denominatore. Si noti che la vera varianza del quoziente di intelligenza è $15^2$ = 225.
 
 ```{r}
 var(x)
 ```
+
 Consideriamo ora 10 campioni casuali del QI, ciascuno di ampiezza 4.
 
 ```{r}
@@ -604,22 +822,26 @@ for (i in 1:niter) {
   random_samples[[i]] <- one_sample
 }
 ```
+
 Il primo campione è
 
 ```{r}
 random_samples[1]
 ```
+
 Il decimo campione è
 
 ```{r}
 random_samples[10]
 ```
+
 Stampiamo i valori di tutti i 10 campioni.
 
 ```{r}
 rs <- do.call(rbind, random_samples)
 rs
 ```
+
 Per ciascun campione (ovvero, per ciascuna riga della matrice
 precedente), calcoliamo la varianza usando la formula con $n$ al denominatore.
 Otteniamo così 10 stime della varianza della popolazione del QI.
@@ -628,6 +850,7 @@ Otteniamo così 10 stime della varianza della popolazione del QI.
 x_var <- apply(rs, 1, var)  # Applica la funzione var su ciascuna riga
 print(x_var)
 ```
+
 Notiamo due cose: 
 
 - le stime sono molto diverse tra loro; questo fenomeno è noto con il nome di *variabilità campionaria*;
@@ -652,6 +875,7 @@ for (i in 1:niter) {
 rs <- do.call(rbind, random_samples)
 x_var <- apply(rs, 1, var) * (size - 1) / size  # Adjust for population variance (ddof = 0)
 ```
+
 Esaminiamo la distribuzione dei valori ottenuti.
 
 ```{r}
@@ -668,12 +892,14 @@ ggplot(data, aes(x = x_var)) +
     y = "Frequenza"
   )
 ```
+
 La stima più verosimile della varianza del QI è dato dalla media di
 questa distribuzione. 
 
 ```{r}
 mean(x_var)
 ```
+
 Si noti che il nostro spospetto è stato confermato: il valore medio della stima della varianza ottenuta con l'@eq-var-descr è troppo piccolo rispetto al valore corretto di $15^2 = 225$. 
 
 Ripetiamo ora la simulazione usando la formula della varianza con $n-1$ al denominatore.
@@ -695,6 +921,7 @@ for (i in 1:niter) {
 rs <- do.call(rbind, random_samples)
 x_var <- apply(rs, 1, var)  # ddof = 1 is default for var in R
 ```
+
 Esaminiamo la distribuzione dei valori ottenuti.
 
 ```{r}
@@ -711,6 +938,7 @@ ggplot(data, aes(x = x_var)) +
     y = "Frequenza"
   )
 ```
+
 Nel secondo caso, se utilizziamo $n-1$ come denominatore per calcolare la stima della varianza, il valore atteso di questa stima è molto vicino al valore corretto di 225. Se il numero di campioni fosse infinito, i due valori sarebbero identici.
 
 ```{r}
@@ -723,7 +951,6 @@ In conclusione, le due formule della varianza hanno scopi diversi.
 - D'altro canto, la formula della varianza con $n-1$ al denominatore viene utilizzata come stimatore per ottenere la migliore stima della varianza della popolazione da cui quel campione è stato estratto.
 :::
 
-
 ### Deviazione standard
 
 Per interpretare la varianza in modo più intuitivo, si può calcolare la deviazione standard (o scarto quadratico medio o scarto tipo) prendendo la radice quadrata della varianza. La deviazione standard è espressa nell'unità di misura originaria dei dati, a differenza della varianza che è espressa nel quadrato dell'unità di misura dei dati. La deviazione standard fornisce una misura della dispersione dei dati attorno alla media, rendendo più facile la comprensione della variabilità dei dati.
@@ -733,6 +960,7 @@ La deviazione standard (o scarto quadratico medio, o scarto tipo) è definita co
 $$
 s^2 = \sqrt{(n-1)^{-1} \sum_{i=1}^n (x_i - \bar{x})^2}.
 $$ {#eq-sd-stimatore}
+
 Quando tutte le osservazioni sono uguali, $s = 0$, altrimenti $s > 0$.
 
 ::: {.callout-note}
@@ -754,6 +982,7 @@ x <- c(3, 1, 4, 2)
 std_x <- sqrt(var(x) * 3 / 4)
 std_x
 ```
+
 La deviazione standard calcolata è 1.12. Questo valore ci dice che, in media, ciascun punteggio si discosta di circa 1.12 ore dalla media aritmetica delle ore di studio di questo gruppo di studenti.
 
 - Valore più alto: indica maggiore dispersione dei dati intorno alla media.
@@ -796,7 +1025,6 @@ Intuitivamente:
 - la *varianza totale* (lato sinistro della formula) rappresenta la dispersione complessiva dei dati attorno alla loro media;
 - la *varianza spiegata* (primo termine a destra) indica quanto bene i valori previsti dal modello descrivono il comportamento dei dati;
 - la *varianza non spiegata* (secondo termine a destra) riflette ciò che il modello non riesce a prevedere.
-
 
 ::: {.callout-note collapse="true" title="Simulazione"}
 
@@ -879,6 +1107,7 @@ La *deviazione mediana assoluta* (MAD) è una misura robusta di dispersione basa
 $$
 \text{MAD} = \text{median} \left( |X_i - \text{median}(X)| \right) 
 $$ {#eq-mad-def}
+
 La MAD è particolarmente utile per analizzare dati contenenti outlier o distribuzioni asimmetriche, poiché è meno influenzata dai valori estremi rispetto alla deviazione standard.
 
 #### Relazione tra MAD e deviazione standard in una distribuzione normale
@@ -903,7 +1132,6 @@ $$
 $$
 Questa relazione è utile per stimare la deviazione standard in modo più robusto, specialmente quando si sospetta la presenza di outlier o si ha a che fare con campioni piccoli. Di conseguenza, molti software restituiscono il valore MAD moltiplicato per questa costante per fornire un'indicazione più intuitiva della variabilità dei dati. Tuttavia, è importante notare che questa relazione si mantiene accurata solo per le distribuzioni che sono effettivamente normali. In presenza di distribuzioni fortemente asimmetriche o con elevati outlier, la deviazione standard e la MAD possono fornire indicazioni molto diverse sulla variabilità dei dati.
 
-
 ::: {.callout-note collapse="true" title="Dimostrazione numerica"}
 
 Per verificare questo principio, usiamo un campione di dati simulati dalla distribuzione del QI:
@@ -912,6 +1140,7 @@ Per verificare questo principio, usiamo un campione di dati simulati dalla distr
 qi <- rnorm(200, 100, 15)
 1.4826 * median(abs(qi - median(qi)), na.rm = TRUE)
 ```
+
 Otteniamo un valore che è simile alla deviazione standard calcolata con:
 
 ```{r}
@@ -919,6 +1148,7 @@ sqrt(
   var(qi) * (length(qi) - 1) / length(qi)
 )
 ```
+
 Ciò conferma la relazione tra MAD e deviazione standard in distribuzioni gaussiane.
 
 Se invece usiamo dei dati non normali, l'approssimazione non è buona:
@@ -936,14 +1166,13 @@ sqrt(
 ```
 :::
 
-#### Quando usare deviazione standard e MAD
+#### Quando utilizzare deviazione standard e MAD
 
-- *Deviazione standard:*
-È la misura più appropriata per dati normalmente distribuiti e situazioni in cui l'obiettivo è descrivere la dispersione dei dati rispetto alla media. Tuttavia, è sensibile ai valori anomali (outlier).
+**Deviazione standard**
+Questa misura è ottimale quando si lavora con dati approssimativamente distribuiti in modo normale e quando si intende descrivere la dispersione dei valori attorno alla loro media aritmetica. La deviazione standard gode di proprietà matematiche utili in molti modelli statistici, ma presenta lo svantaggio di essere sensibile alla presenza di valori anomali.
 
-- *Deviazione mediana assoluta:*
-È ideale quando i dati sono non normali, asimmetrici o contengono outlier. La MAD è più robusta poiché utilizza la mediana anziché la media e non è influenzata da valori estremi.
-
+**Deviazione mediana assoluta (MAD)**
+Questa misura risulta particolarmente adatta quando i dati presentano distribuzioni non normali, marcata asimmetria o quando sono presenti outlier. Il MAD è robusto poiché si basa sulla mediana, che è già di per sé una misura resistente ai valori estremi, e non sulla media. È quindi la scelta migliore quando si desidera una stima stabile della variabilità che non sia distorta da osservazioni eccezionali.
 
 ### Indici di variabilità relativi
 
@@ -954,6 +1183,7 @@ Il più importante di questi indici è il *coefficiente di variazione* ($C_v$), 
 $$
 C_v = \frac{\sigma}{\bar{x}}.
 $$ {#eq-cv-def}
+
 Il coefficiente di variazione è un numero puro e permette di confrontare la variabilità di distribuzioni con unità di misura diverse.
 
 Un altro indice relativo di variabilità è la *differenza interquartile rapportata* a uno dei tre quartili (primo quartile, terzo quartile o mediana). Questo indice è definito come:
@@ -961,17 +1191,16 @@ Un altro indice relativo di variabilità è la *differenza interquartile rapport
 $$
 \frac{x_{0.75} - x_{0.25}}{x_{0.25}}, \qquad \frac{x_{0.75} - x_{0.25}}{x_{0.75}}, \qquad \frac{x_{0.75} - x_{0.25}}{x_{0.50}}.
 $$
-Questi indici relativi di variabilità forniscono una misura adimensionale della dispersione dei dati, rendendo possibile il confronto tra grandezze con diverse unità di misura e facilitando l'analisi delle differenze di variabilità tra i dati.
 
+Questi indici relativi di variabilità forniscono una misura adimensionale della dispersione dei dati, rendendo possibile il confronto tra grandezze con diverse unità di misura e facilitando l'analisi delle differenze di variabilità tra i dati.
 
 ## Riflessioni conclusive {.unnumbered .unlisted}
 
-Le statistiche descrittive forniscono strumenti essenziali per sintetizzare e comprendere i dati raccolti in psicologia e nelle scienze sociali. Le misure di tendenza centrale, come la media, la mediana e la moda, ci permettono di individuare un valore tipico o rappresentativo di una distribuzione, facilitando la sintesi e l'interpretazione generale dei dati raccolti. Parallelamente, gli indici di dispersione, come la deviazione standard, la varianza e l'intervallo interquartile, offrono informazioni cruciali sulla variabilità, mostrandoci quanto i singoli dati siano vicini o distanti da questa tendenza centrale.
+Le statistiche descrittive forniscono strumenti essenziali per sintetizzare e interpretare i dati nelle scienze psicologiche e sociali. Gli indici di tendenza centrale (media, mediana e moda) individuano il valore tipico di una distribuzione e forniscono un punto di riferimento essenziale per la sintesi iniziale. Gli indici di dispersione (deviazione standard, varianza e intervallo interquartile) completano questo quadro, quantificando la variabilità dei dati rispetto al valore centrale e rivelando l'eterogeneità spesso presente nel fenomeno oggetto di studio.
 
-Tuttavia, è fondamentale riflettere attentamente sulle implicazioni teoriche e metodologiche che accompagnano l'uso di queste misure. In particolare, è importante considerare il rischio della *fallacia ergodica*, ovvero l'errata convinzione che i risultati ottenuti da medie e statistiche aggregate possano automaticamente applicarsi ai singoli individui. Nella pratica psicologica, infatti, ogni persona è caratterizzata da una notevole variabilità intra- e inter-individuale, che spesso non può essere adeguatamente rappresentata da semplici indicatori aggregati.
+Tuttavia, è fondamentale riflettere sulle implicazioni teoriche e metodologiche legate all'uso di queste misure. Un aspetto cruciale da considerare è il rischio di incorrere nella fallacia ergodica, ovvero nell'erronea convinzione che le proprietà osservate a livello di gruppo possano essere automaticamente applicate al singolo individuo. Nella pratica psicologica, infatti, ci troviamo di fronte a una notevole variabilità intraindividuale e interindividuale che difficilmente può essere colta in modo adeguato da indicatori puramente aggregati.
 
-Le statistiche descrittive rappresentano quindi un primo e fondamentale passo nella comprensione dei dati psicologici, ma devono essere integrate da analisi più approfondite e attente alle differenze individuali. L'uso critico e consapevole di questi strumenti statistici ci consente di evitare generalizzazioni eccessive, fornendo una visione più accurata e realistica dei fenomeni psicologici e comportamentali che studiamo.
-
+Di conseguenza, le statistiche descrittive non devono essere considerate un punto di arrivo, ma un passaggio iniziale e necessario. La loro corretta interpretazione richiede l'integrazione con metodologie analitiche più raffinate, come i modelli longitudinali o gli approcci idiografici, che siano sensibili alla specificità del singolo caso. Solo un uso critico e consapevole di questi strumenti può evitare generalizzazioni spurie e restituire una rappresentazione più fedele e sfumata dei processi psicologici e comportamentali.
 
 ## Esercizi {.unnumbered .unlisted}
 

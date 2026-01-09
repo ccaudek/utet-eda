@@ -1,25 +1,25 @@
 # Introduzione alla distribuzione normale {#sec-eda-intro-gauss}
 
 ::: {.callout-note appearance="minimal"}
-In questo capitolo forniremo un primo sguardo alla distribuzione normale, che sarà trattata in modo più approfondito nel @sec-prob-cont-prob-distr. Introduciamo la distribuzione normale a questo punto poiché essa spiega in modo chiaro perché, in molte analisi, media e deviazione standard siano impiegate come principali descrittori di una distribuzione.
+La distribuzione normale (o gaussiana) rappresenta il ponte concettuale tra la statistica descrittiva e quella inferenziale. In questo capitolo esploreremo perché questa distribuzione è così centrale in psicologia, come riconoscerla nei dati, e perché media e deviazione standard diventano particolarmente utili quando i dati seguono approssimativamente questa forma. Questo capitolo fornisce le basi intuitive necessarie per comprendere i test statistici e gli intervalli di confidenza che studieremo nei capitoli successivi. Gli aspetti formali della distribuzione normale verranno approfonditi nel companion sulla teoria della probabilità.
 :::
 
 ### Panoramica del capitolo {.unnumbered .unlisted}
 
-- Che cos'è la distribuzione normale?
-- Come si costruisce e come si interpreta la distribuzione normale normalizzata.
-- Cosa sono e come si interpretanto i diagrammi quantile-quantile.
-- Distribuzione normale e statistiche descrittive.
+- **Perché la normale è importante in psicologia**: Collegamenti con test, questionari e fenomeni naturali.
+- **Proprietà visive fondamentali**: La regola empirica 68-95-99.7 e il suo significato pratico.
+- **Z-scores e standardizzazione**: Come confrontare valori su scale diverse.
+- **Verifica della normalità**: QQ-plots come strumento diagnostico.
+- **Ponte verso l'inferenza**: Come la normale prepara ai concetti inferenziali.
 
-
-::: {.callout-tip collapse=true}
+::: {.callout-tip collapse="true"}
 ## Prerequisiti
 
 - Leggere il capitolo [Exploring numerical data](https://openintro-ims.netlify.app/explore-numerical) di [Introduction to Modern Statistics (2e)](https://openintro-ims.netlify.app) di Mine Çetinkaya-Rundel e Johanna Hardin.
 - Leggere il capitolo *Distributions* di *Introduction to Data Science* [@irizarry2024introduction].
 :::
 
-::: {.callout-caution collapse=true ="Preparazione del Notebook"}
+::: {.callout-caution collapse="true" title="Preparazione del Notebook"}
 
 ```{r}
 here::here("code", "_common.R") |> 
@@ -27,516 +27,821 @@ here::here("code", "_common.R") |>
 
 # Load packages
 if (!requireNamespace("pacman")) install.packages("pacman")
-pacman::p_load(ggbeeswarm, dslabs, gridExtra)
+pacman::p_load(ggbeeswarm, dslabs, gridExtra, patchwork) 
 ```
 :::
 
+## Perché la distribuzione normale è fondamentale in psicologia {#sec-why-normal}
 
-## La distribuzione normale {#sec-normal-distribution}
+Prima di approfondire le proprietà matematiche della distribuzione normale, è essenziale comprenderne il ruolo centrale nella ricerca psicologica e nei test standardizzati.
 
-Nel @sec-eda-exploring-num-data, abbiamo visto come gli istogrammi e i grafici di densità forniscano utili riassunti visivi di una distribuzione. In questo capitolo, ci chiediamo se sia possibile riassumere una distribuzione in modo ancora più sintetico. Spesso si fa riferimento a media e deviazione standard come statistiche riassuntive fondamentali: in sostanza, un riassunto in due numeri. Per comprendere appieno il ruolo di questi valori, dobbiamo prima capire come è definita la distribuzione normale.
+### La distribuzione normale nella psicometria
 
-La distribuzione normale, nota anche come curva a campana o distribuzione gaussiana, è uno dei concetti matematici più conosciuti (si veda il @sec-prob-cont-prob-distr). Uno dei motivi della sua fama è che numerose variabili nella realtà seguono, almeno approssimativamente, una distribuzione normale. Esempi includono le vincite nel gioco d’azzardo, l’altezza e il peso delle persone, la pressione sanguigna, i punteggi di alcuni test standardizzati e gli errori di misura negli esperimenti. I motivi matematici e probabilistici di queste approssimazioni verranno discussi in seguito; qui ci concentreremo sul come la distribuzione normale aiuti a riassumere i dati.
+La maggior parte dei test psicologici standardizzati è progettata per produrre punteggi che, nella popolazione di riferimento, seguano approssimativamente una distribuzione normale. Esempi includono:
 
-Anziché partire da dati empirici, la distribuzione normale si definisce tramite una formula matematica. Per un intervallo generico $(a,b)$, la proporzione di valori che cade in tale intervallo si ottiene mediante:
-
-$$
-\text{Pr}(a < x \leq b) \;=\; \int_a^b \frac{1}{\sqrt{2\pi}\,\sigma} \, e^{-\tfrac12\,\bigl(\tfrac{x - \mu}{\sigma}\bigr)^2}\, dx .
-$$ {#eq-gaussian-density}
-
-Non è necessario memorizzare o padroneggiare i dettagli di questa formula, ma è importante sapere che la distribuzione normale è completamente determinata da due soli parametri: $\mu$ e $\sigma$. Gli altri simboli nella formula ($\pi$, $e$, $a$, $b$) rappresentano costanti matematiche o gli estremi dell’intervallo. In particolare, $\mu$ è il valore medio (o media) e $\sigma$ è la deviazione standard.
-
-Questa distribuzione è simmetrica, centrata sulla media $\mu$, e la maggior parte dei valori (circa il 95%) si trova entro 2 deviazioni standard dalla media, cioè nell’intervallo $\mu \pm 2\sigma$. Ecco un esempio di come appare la distribuzione normale quando $\mu = 0$ e $\sigma = 1$:
+- **Test di intelligenza** (QI): strutturati con una media di 100 e una deviazione standard di 15.
+- **Test di personalità**: come le dimensioni del Big Five, che spesso mostrano distribuzioni approssimativamente normali.
+- **Questionari clinici**: ad esempio il BDI (Beck Depression Inventory) o lo STAI (State-Trait Anxiety Inventory).
+- **Batterie neuropsicologiche**: per la valutazione di memoria, attenzione e funzioni esecutive.
 
 ```{r}
-m <- 0; s <- 1
-norm_dist <- tibble(x = seq(-4, 4, length.out = 50)*s + m) |> 
-  mutate(density = dnorm(x, m, s))
-norm_dist |> 
-  ggplot(aes(x, density)) + geom_line()
+#| label: fig-qi-distribution
+#| fig-cap: "Distribuzione teorica dei punteggi di QI nella popolazione"
+
+# Simuliamo la distribuzione del QI
+qi_data <- data.frame(
+  QI = seq(55, 145, length.out = 1000)
+) |>
+  mutate(densita = dnorm(QI, mean = 100, sd = 15))
+
+ggplot(qi_data, aes(x = QI, y = densita)) +
+  geom_line(linewidth = 1.2, color = "darkblue") +
+  geom_area(fill = "lightblue", alpha = 0.5) +
+  geom_vline(xintercept = 100, linetype = "dashed", color = "red") +
+  annotate("text", x = 100, y = 0.02, label = "Media = 100", 
+           vjust = -0.5, color = "red") +
+  labs(title = "Distribuzione dei punteggi di QI",
+       subtitle = "Media = 100, Deviazione Standard = 15",
+       x = "Punteggio QI", 
+       y = "Densità") 
 ```
 
-Il fatto che la distribuzione sia descritta da due parametri implica che, se un insieme di dati reali si approssima bene a una distribuzione normale, due soli numeri (media e deviazione standard) possono fornire un riassunto sintetico della distribuzione. Vediamo ora come si calcolano, in pratica, questi due parametri per una lista di valori arbitraria.
+### Fenomeni naturali e biologici
 
-Supponiamo di avere un vettore `x` che contiene una serie di valori numerici. Abbiamo visto come, in R, la media si trova come:
+Molte variabili biologiche e comportamentali tendono a seguire distribuzioni approssimativamente normali:
 
-```r
-m <- sum(x) / length(x)
-```
+- **Misure antropometriche**: altezza, peso, circonferenza cranica.
+- **Tempi di reazione**: in compiti cognitivi semplici.
+- **Errori di misurazione**: negli esperimenti di laboratorio.
+- **Variabilità interindividuale**: in numerosi processi psicologici di base.
 
-e la deviazione standard è:
+Questa tendenza non è accidentale: quando una variabile è influenzata da molteplici fattori indipendenti (genetici, ambientali, casuali), ciascuno con un piccolo effetto, la distribuzione risultante tende a convergere verso la forma normale. Questo principio, formalizzato nel *Teorema del Limite Centrale*, costituisce il fondamento di molte tecniche statistiche inferenziali.
 
-```r
-s <- sqrt(sum((x - m)^2) / length(x))
-```
+### La distribuzione normale come modello fondamentale nella modellazione bayesiana
 
-La deviazione standard si può interpretare come la distanza media dei valori dalla loro media.
+Anche nell'inferenza bayesiana, la distribuzione normale gioca un ruolo centrale, sebbene con prospettive e applicazioni differenti rispetto all'approccio frequentista:
 
+- **Priors e likelihood**: la normale viene spesso utilizzata come *prior* coniugato per parametri di interesse, e come *likelihood* per modellare dati continui, facilitando il calcolo analitico delle posteriori.
+- **Regolarizzazione bayesiana**: i *prior* normali (come in regressione ridge bayesiana) forniscono una naturale regolarizzazione degli effetti, prevenendo il sovradattamento.
+- **Modelli gerarchici**: la normale è fondamentale per modellare la variazione tra gruppi (effetti casuali) in strutture gerarchiche.
+- **Approssimazioni della posterior**: metodi come la Variational Bayes o la Laplace approximation spesso assumono che la distribuzione a posteriori sia approssimativamente normale.
 
-### Un esempio pratico
+Comprendere le proprietà della distribuzione normale è quindi essenziale per costruire modelli bayesiani robusti, interpretare i *prior* coniugati e implementare algoritmi di inferenza efficienti. Nel contesto bayesiano, la normale non è tanto un'"assunzione da verificare" quanto una scelta di modellazione flessibile e matematicamente conveniente.
 
-Per calcolare media e deviazione standard dell’altezza maschile in un dataset, ipotizziamo che il vettore `heights$height` contenga le altezze di alcuni individui, mentre `heights$sex` contenga il genere corrispondente. Se vogliamo estrarre solo i valori relativi ai maschi, possiamo scrivere:
+::: {.callout-important}
+## La normale come modello, non come legge assoluta
+
+È cruciale ricordare che **i dati reali raramente seguono perfettamente una distribuzione normale**. La distribuzione normale rappresenta un *modello matematico* che approssima in modo utile molti fenomeni reali. L'obiettivo non è quindi trovare dati "perfettamente normali", ma valutare se l'approssimazione normale è sufficientemente buona per gli scopi specifici della nostra analisi.
+:::
+
+## La distribuzione normale: definizione e proprietà {#sec-normal-distribution}
+
+La distribuzione normale, nota anche come distribuzione gaussiana o curva a campana, è una distribuzione di probabilità continua, perfettamente simmetrica e unimodale. È completamente caratterizzata da due parametri:
+
+- **$\mu$ (mu)**: la **media**, che definisce il centro della distribuzione;
+- **$\sigma$ (sigma)**: la **deviazione standard**, che determina la dispersione dei valori attorno alla media.
+
+### Rappresentazione visiva
+
+Ecco come appare la distribuzione normale con diversi valori di $\mu$ e $\sigma$:
 
 ```{r}
-index <- heights$sex == "Male"
-x <- heights$height[index]
+# Diverse medie, stessa sd
+p1 <- tibble(x = seq(-5, 15, 0.1)) |>
+  mutate(
+    mu0 = dnorm(x, 0, 2),
+    mu5 = dnorm(x, 5, 2),
+    mu8 = dnorm(x, 8, 2)
+  ) |>
+  pivot_longer(-x, names_to = "distribuzione", values_to = "densita") |>
+  mutate(distribuzione = factor(distribuzione, 
+                                 levels = c("mu0", "mu5", "mu8"),
+                                 labels = c("μ=0, σ=2", "μ=5, σ=2", "μ=8, σ=2"))) |>
+  ggplot(aes(x = x, y = densita, color = distribuzione)) +
+  geom_line(linewidth = 1) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
+  labs(title = "Effetto della media (μ)",
+       subtitle = "Diverse medie, stessa deviazione standard",
+       x = "x", y = "Densità",
+       color = NULL) +
+  theme(legend.position = "bottom")
+
+# Stessa media, diverse sd
+p2 <- tibble(x = seq(-10, 10, 0.1)) |>
+  mutate(
+    sd1 = dnorm(x, 0, 1),
+    sd2 = dnorm(x, 0, 2),
+    sd4 = dnorm(x, 0, 4)
+  ) |>
+  pivot_longer(-x, names_to = "distribuzione", values_to = "densita") |>
+  mutate(distribuzione = factor(distribuzione,
+                                 levels = c("sd1", "sd2", "sd4"),
+                                 labels = c("μ=0, σ=1", "μ=0, σ=2", "μ=0, σ=4"))) |>
+  ggplot(aes(x = x, y = densita, color = distribuzione)) +
+  geom_line(linewidth = 1) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
+  labs(title = "Effetto della deviazione standard (σ)",
+       subtitle = "Stessa media, diverse deviazioni standard",
+       x = "x", y = "Densità",
+       color = NULL) +
+  theme(legend.position = "bottom")
 ```
 
-Quindi usiamo le funzioni predefinite di R:
+```{r}
+p1
+```
 
 ```{r}
+#| label: fig-normal-params-1
+#| fig-cap: "Effetto dei parametri μ e σ sulla forma della distribuzione normale"
+p2
+```
+
+Come si può osservare:
+
+- **la media $\mu$** sposta la curva a destra o a sinistra lungo l'asse $x$;
+- **la deviazione standard $\sigma$** controlla quanto la curva è "allargata": 
+  - $\sigma$ piccolo → curva alta e stretta (dati concentrati vicino alla media)
+  - $\sigma$ grande → curva bassa e larga (dati più dispersi).
+
+### Proprietà fondamentali
+
+1. **Simmetria**: la distribuzione è perfettamente simmetrica rispetto alla media.
+2. **Unimodale**: ha un solo picco, corrispondente alla media.
+3. **Asintoti**: le code si estendono all'infinito senza mai toccare l'asse $x$.
+4. **Media = Mediana = Moda**: in una distribuzione normale, tutti e tre coincidono.
+
+::: {.callout-note}
+## Nota matematica
+
+La forma precisa della distribuzione normale è definita da una funzione matematica (la funzione di densità) che coinvolge $\mu$, $\sigma$, e alcune costanti matematiche (π, e). I dettagli di questa funzione e le sue proprietà formali saranno approfonditi nel companion sulla teoria della probabilità. Per ora, è sufficiente sapere che $\mu$ e $\sigma$ determinano completamente la forma della distribuzione.
+:::
+
+## La regola empirica 68-95-99.7 {#sec-empirical-rule}
+
+Una delle proprietà più utili e memorabili della distribuzione normale è la **regola empirica** (o regola 68-95-99.7), che descrive la concentrazione dei dati attorno alla media in termini di deviazioni standard.
+
+### La regola in numeri
+
+Per qualsiasi distribuzione normale, indipendentemente dai valori specifici di $\mu$ e $\sigma$:
+
+- circa **68%** dei valori si trova entro **1 deviazione standard** dalla media: $[\mu - \sigma, \mu + \sigma]$;
+- circa **95%** dei valori si trova entro **2 deviazioni standard** dalla media: $[\mu - 2\sigma, \mu + 2\sigma]$;
+- circa **99.7%** dei valori si trova entro **3 deviazioni standard** dalla media: $[\mu - 3\sigma, \mu + 3\sigma]$.
+
+```{r}
+#| label: fig-empirical-rule
+#| fig-cap: "La regola empirica 68-95-99.7 per la distribuzione normale"
+#| fig-height: 5
+
+# Creiamo una distribuzione normale standard
+x <- seq(-4, 4, length.out = 1000)
+y <- dnorm(x)
+df <- data.frame(x = x, y = y)
+
+p <- ggplot(df, aes(x = x, y = y)) +
+  geom_line(linewidth = 1.2) +
+  labs(x = "Deviazioni standard dalla media",
+       y = "Densità",
+       title = "La regola empirica 68-95-99.7",
+       subtitle = "Percentuale di dati entro 1, 2 e 3 deviazioni standard") +
+  # Aree
+  geom_area(data = subset(df, x >= -3 & x <= 3), fill = "lightblue", alpha = 0.3) +
+  geom_area(data = subset(df, x >= -2 & x <= 2), fill = "lightblue", alpha = 0.3) +
+  geom_area(data = subset(df, x >= -1 & x <= 1), fill = "lightblue", alpha = 0.4) +
+  # Linee verticali
+  geom_vline(xintercept = c(-3, -2, -1, 0, 1, 2, 3),
+             linetype = "dashed", alpha = 0.5) +
+  # Annotazioni (spostate in x per non sovrapporsi)
+  annotate("text", x = 0,  y = 0.15, label = "68%",
+           size = 5, fontface = "bold", color = "darkblue") +
+  annotate("text", x = -1.6, y = 0.06, label = "95%",
+           size = 5, fontface = "bold", color = "darkblue") +
+  annotate("text", x = 2.2, y = 0.02, label = "99.7%",
+           size = 5, fontface = "bold", color = "darkblue") +
+  scale_x_continuous(breaks = -3:3,
+                     labels = c("-3σ", "-2σ", "-1σ", "μ", "+1σ", "+2σ", "+3σ"))
+
+p
+```
+
+### Applicazione pratica: Test del QI
+
+Riprendiamo l'esempio dei punteggi di QI (media = 100, deviazione standard = 15). Applicando la regola empirica:
+
+```{r}
+mu_qi <- 100
+sd_qi <- 15
+
+# Calcoliamo gli intervalli
+intervalli <- data.frame(
+  Intervallo = c("μ ± 1σ", "μ ± 2σ", "μ ± 3σ"),
+  Limiti = c(
+    paste(mu_qi - sd_qi, "-", mu_qi + sd_qi),
+    paste(mu_qi - 2*sd_qi, "-", mu_qi + 2*sd_qi),
+    paste(mu_qi - 3*sd_qi, "-", mu_qi + 3*sd_qi)
+  ),
+  Percentuale = c("68%", "95%", "99.7%"),
+  Interpretazione = c(
+    "La maggior parte delle persone",
+    "Quasi tutte le persone",
+    "Praticamente tutta la popolazione"
+  )
+)
+
+knitr::kable(intervalli, 
+             caption = "Applicazione della regola empirica ai punteggi di QI")
+```
+
+Questo significa che:
+
+- circa il 68% della popolazione ha un QI tra 85 e 115;
+- circa il 95% della popolazione ha un QI tra 70 e 130;
+- solo circa il 2.5% ha un QI superiore a 130 (superdotati);
+- solo circa il 2.5% ha un QI inferiore a 70 (difficoltà cognitive).
+
+### Verifica empirica con dati reali
+
+Vediamo se la regola empirica si applica effettivamente a un dataset reale. Useremo ancora le altezze maschili dal dataset `heights`:
+
+```{r}
+# Estraiamo le altezze maschili
+index <- dslabs::heights$sex == "Male"
+x <- dslabs::heights$height[index]
+
+# Calcoliamo media e deviazione standard
 m <- mean(x)
 s <- sd(x)
+
+cat("Media:", round(m, 2), "cm\n")
+cat("Deviazione standard:", round(s, 2), "cm\n\n")
+
+# Verifichiamo la regola empirica
+prop_1sd <- mean(abs(x - m) <= 1*s)
+prop_2sd <- mean(abs(x - m) <= 2*s)
+prop_3sd <- mean(abs(x - m) <= 3*s)
+
+risultati_empirici <- data.frame(
+  Intervallo = c("μ ± 1σ", "μ ± 2σ", "μ ± 3σ"),
+  Teorico = c("68%", "95%", "99.7%"),
+  Osservato = paste0(round(c(prop_1sd, prop_2sd, prop_3sd) * 100, 1), "%")
+)
+
+knitr::kable(risultati_empirici,
+             caption = "Confronto tra proporzioni teoriche e osservate")
 ```
 
-::: callout-warning
-**Nota**: Per motivi che verranno chiariti in seguito, la funzione `sd(x)` effettua una divisione per $\text{length}(x) - 1$ invece che per $\text{length}(x)$. Tuttavia, se il numero di osservazioni è elevato, questa differenza è trascurabile.  
+Come si può vedere, le proporzioni osservate sono molto vicine a quelle teoriche, confermando che l'altezza maschile segue approssimativamente una distribuzione normale.
+
+::: {.callout-tip}
+## Implicazione pratica
+
+La regola empirica ci permette di interpretare rapidamente la deviazione standard: essa rappresenta approssimativamente la distanza dalla media entro cui si trova circa il 68% dei dati. Questo rende la deviazione standard molto più interpretabile di quanto possa sembrare dalla sua formula!
 :::
 
-Possiamo ora mettere a confronto la curva di densità osservata dei dati (in blu) con quella teorica (in nero) della distribuzione normale con media e deviazione standard stimate:
+## Un esempio pratico completo: altezza maschile {#sec-height-example}
+
+Mettiamo insieme tutti i concetti visti finora con un esempio pratico. Vogliamo descrivere la distribuzione delle altezze maschili usando la distribuzione normale.
+
+### Stima dei parametri
+
+Estraiamo i dati e calcoliamo media e deviazione standard:
 
 ```{r}
+index <- dslabs::heights$sex == "Male"
+x <- dslabs::heights$height[index]
+
+m <- mean(x)
+s <- sd(x)
+
+cat("Media:", round(m, 2), "cm\n")
+cat("Deviazione standard:", round(s, 2), "cm\n")
+```
+
+::: {.callout-warning}
+**Nota tecnica**: La funzione `sd(x)` effettua una divisione per $n - 1$ invece che per $n$ (dove $n$ è il numero di osservazioni). Questa correzione, chiamata *correzione di Bessel*, serve per ottenere una stima non distorta della deviazione standard della popolazione. Quando il numero di osservazioni è elevato, la differenza tra dividere per $n$ o per $n-1$ è trascurabile. Approfondiremo questo aspetto quando studieremo la stima dei parametri.
+:::
+
+### Confronto visivo
+
+Possiamo ora confrontare la distribuzione osservata (in blu) con la distribuzione normale teorica (in nero):
+
+```{r}
+#| label: fig-altezza-normale
+#| fig-cap: "Confronto tra distribuzione osservata delle altezze maschili e distribuzione normale teorica"
+
 norm_dist <- tibble(
-  x = seq(-4, 4, length.out = 50)*s + m) |> 
+  x = seq(m - 4*s, m + 4*s, length.out = 100)) |> 
   mutate(density = dnorm(x, m, s))
 
-heights |> 
+dslabs::heights |> 
   dplyr::filter(sex == "Male") |> 
   ggplot(aes(height)) +
-  geom_density(fill = "lightblue") +
-  geom_line(aes(x, density), linewidth=1.5, data = norm_dist)
+  geom_density(fill = "lightblue", alpha = 0.7) +
+  geom_line(aes(x, density), linewidth = 1.5, 
+            data = norm_dist, color = "black") +
+  labs(title = "Distribuzione delle altezze maschili",
+       subtitle = "Densità osservata (blu) vs. normale teorica (nero)",
+       x = "Altezza (cm)", 
+       y = "Densità") 
 ```
 
-Come si vede, la curva normale fornisce una buona approssimazione per i dati sull’altezza maschile. Vedremo ora come verificare l’aderenza di una distribuzione ai dati, osservando le proporzioni di valori entro intervalli specifici.
+La curva normale fornisce una buona approssimazione. Questo significa che possiamo descrivere efficacemente la distribuzione usando solo due numeri: media (`r round(m, 1)` cm) e deviazione standard (`r round(s, 1)` cm).
 
+## Z-scores: standardizzazione e confronti {#sec-z-scores}
 
-## Unità standard
+Quando si lavora con variabili misurate su scale differenti (ad esempio, altezza in centimetri e peso in chilogrammi, oppure punteggi di test diversi), confrontarle direttamente risulta problematico. I **punteggi standardizzati** (o *z-scores*) offrono una soluzione a questo problema.
 
-Per i dati che seguono (o quasi) una distribuzione normale, è molto comodo utilizzare le cosiddette unità standard (*Standard Units*). Un valore $x$ viene convertito in unità standard tramite la formula:
+### Definizione e calcolo
 
-$$
-z = \frac{x - m}{s} ,
-$$
-
-dove $m$ e $s$ sono la media e la deviazione standard della distribuzione. Questa trasformazione ci dice di quante deviazioni standard un particolare valore si discosta dalla media. Ad esempio, se $z=0$, il valore $x$ corrisponde esattamente alla media; se $z = 2$, il valore $x$ si trova a due deviazioni standard sopra la media; se $z = -2$, a due deviazioni standard sotto la media, e così via.
-
-In R, possiamo calcolare le unità standard con la funzione:
-
-```{r}
-z <- scale(x) |> as.numeric()
-head(z)
-```
-
-Se vogliamo sapere, ad esempio, quale frazione di individui si trova entro 2 deviazioni standard dalla media (cioè $|z| < 2$), basta scrivere:
-
-```{r}
-mean(abs(z) < 2)
-```
-
-Vedremo, in molti casi, un valore intorno al 95%, in linea con quanto previsto dalla distribuzione normale. Per confermare la bontà dell’approssimazione, si usano spesso i grafici quantile-quantile, detti anche *qqplot*.
-
-
-## Grafici quantile-quantile 
-
-Un modo sistematico per verificare quanto la distribuzione normale descriva bene i dati osservati consiste nel confrontare i quantili empirici con quelli teorici di una normale. Se i due insiemi di quantili sono molto simili, abbiamo un’ulteriore conferma dell’aderenza alla normalità.
-
-- La funzione di ripartizione della distribuzione normale standard si indica spesso con $\Phi(x)$. Ad esempio, $\Phi(-1.96) \approx 0.025$ e $\Phi(1.96) \approx 0.975$.  
-- L’inversa di $\Phi$, indicata come $\Phi^{-1}(p)$, ci dà il quantile corrispondente a una determinata probabilità $p$. In R, `pnorm` calcola $\Phi(x)$ e `qnorm` calcola $\Phi^{-1}(p)$. Di default, `pnorm` e `qnorm` si riferiscono alla normale standard (media 0, deviazione standard 1), ma possiamo specificare valori diversi di media e deviazione standard tramite gli argomenti `mean` e `sd`.
-
-Per ottenere il quantile empirico da un vettore di dati in R, possiamo usare la funzione `quantile`. Ad esempio, se abbiamo un vettore `x`, il quantile associato alla probabilità $p$ è il valore $q$ per il quale `mean(x <= q) = p`.
-
-Ecco lo schema logico per costruire un qqplot:
-
-1.  Definiamo un vettore di proporzioni $p_1, p_2, \dots, p_m$.  
-2.  Calcoliamo i relativi quantili empirici dei nostri dati $\{q_1, \dots, q_m\}$ usando `quantile(x, p_i)`.  
-3.  Calcoliamo i quantili teorici della normale (con la stessa media e la stessa deviazione standard dei dati) usando `qnorm(p_i, mean, sd)`.  
-4.  Rappresentiamo i punti $(\text{quantile teorico}, \text{quantile empirico})$. Se i dati sono davvero normali, tali punti si disporranno approssimativamente lungo la retta diagonale `y = x`.
-
-Esempio in R:
-
-```{r fig.asp=1}
-p <- seq(0.05, 0.95, 0.05)
-sample_quantiles <- quantile(x, p)
-theoretical_quantiles <- qnorm(p, mean = mean(x), sd = sd(x))
-
-qplot(theoretical_quantiles, sample_quantiles) + geom_abline()
-```
-
-Se però abbiamo già convertito in unità standard (quindi $\mu = 0$ e $\sigma = 1$), il confronto si semplifica:
-
-```{r fig.asp=1}
-sample_quantiles <- quantile(z, p)
-theoretical_quantiles <- qnorm(p)
-qplot(theoretical_quantiles, sample_quantiles) + geom_abline()
-```
-
-In pratica, per creare rapidamente un qqplot si usa spesso ggplot2 con la geometria `geom_qq`:
-
-```{r fig.asp=1}
-heights |> filter(sex == "Male") |>
-  ggplot(aes(sample = scale(height))) + 
-  geom_qq() +
-  geom_abline()
-```
-
-Come abbiamo sottolineato, se i punti nel qqplot si dispongono lungo una retta, significa che la distribuzione dei dati è in accordo con la distribuzione teorica considerata (in questo caso, la normale). I qqplot possono essere usati anche per confrontare qualsiasi coppia di distribuzioni, non solo dati e normale teorica.
-
-Questo indica che l’approssimazione normale è accurata per il gruppo maschile (nel nostro dataset). 
-
-## Media e deviazione standard come statistiche descrittive della distribuzione
-
-La media e la deviazione standard sono due delle statistiche più comunemente utilizzate per descrivere la distribuzione di un insieme di dati. Queste misure sono particolarmente utili quando i dati seguono una distribuzione normale. In questo caso, la media e la deviazione standard contengono tutte le informazioni necessarie per caratterizzare completamente la forma della distribuzione.
-
-### Distribuzione normale e statistiche descrittive
-
-La distribuzione normale è definita dalla sua media ($\mu$) e dalla sua deviazione standard ($\sigma$). La formula della densità di probabilità della distribuzione normale è data dall'@eq-gaussian-density. Questa formula mostra che, conoscendo solo $\mu$ e $\sigma$, possiamo ricostruire l'intera curva di densità. Pertanto, se i dati empirici sono ben approssimati da una distribuzione normale, la media e la deviazione standard sono sufficienti per descrivere la distribuzione.
-
-Supponiamo di avere un dataset che segue una distribuzione normale con media 50 e deviazione standard 10. Possiamo generare dati casuali e visualizzare la curva di densità in R:
-
-```{r}
-# Generiamo dati da una distribuzione normale
-set.seed(123)
-dati <- rnorm(1000, mean = 50, sd = 10)
-
-# Calcoliamo media e deviazione standard
-media <- mean(dati)
-deviazione_standard <- sd(dati)
-
-# Visualizziamo la curva di densità
-ggplot(data.frame(dati), aes(x = dati)) +
-  geom_density(fill = "lightblue") +
-  geom_vline(xintercept = media, color = "red", linetype = "dashed") +
-  labs(
-       x = "Valori",
-       y = "Densità") +
-  annotate("text", x = media + 5, y = 0.03, label = paste("Media =", round(media, 2)), color = "red") +
-  annotate("text", x = media + 5, y = 0.025, label = paste("Deviazione Standard =", round(deviazione_standard, 2)), color = "blue")
-```
-
-In questo esempio:
-
-- La curva di densità è centrata attorno alla media ($\mu = 50$).
-- La deviazione standard ($\sigma = 10$) determina la dispersione dei dati attorno alla media.
-
-### Quando media e deviazione standard non sono sufficienti
-
-Sebbene media e deviazione standard siano strumenti estremamente utili per descrivere distribuzioni normali, non sempre bastano a cogliere tutte le caratteristiche di un insieme di dati. In particolare, ci sono situazioni in cui la forma della distribuzione rende necessario ricorrere a misure aggiuntive. Di seguito presentiamo alcuni casi tipici.
-
-1. **Distribuzioni Asimmetriche**  
-   Una distribuzione si dice asimmetrica (o *skewed*) quando una coda è più “estesa” dell’altra.  
-   - Se la coda più lunga è a destra, la distribuzione è *asimmetrica positiva* (o a destra).  
-   - Se la coda più lunga è a sinistra, la distribuzione è *asimmetrica negativa* (o a sinistra).  
-   In queste circostanze, la media tende a spostarsi verso la coda più lunga, mentre la mediana rimane più stabile e rappresentativa del valore centrale.  
-
-2. **Distribuzioni Multimodali**  
-   Una distribuzione è multimodale quando presenta più picchi (o “modi”). Ciò significa che i dati si concentrano attorno a più di un valore, formando veri e propri sotto-gruppi. In questi casi, media e deviazione standard possono risultare poco significative, poiché non colgono la presenza di più poli di concentrazione.
-
-3. **Kurtosi**  
-   La **kurtosi** descrive quanto una distribuzione sia “appuntita” o “piatta” rispetto a una normale.  
-   - **Alta kurtosi** indica picchi molto accentuati e code più lunghe, con una maggiore probabilità di valori estremi.  
-   - **Bassa kurtosi** segnala una forma più appiattita, con code ridotte e meno outlier.  
-
-Quando le distribuzioni mostrano una di queste peculiarità, altre statistiche possono rivelarsi più informative:  
-
-- La mediana, insensibile ai valori estremi, fornisce una descrizione più robusta del centro.  
-- I quartili, e in particolare l’intervallo interquartile, danno un’idea della dispersione principale trascurando le code.  
-- L’indice di asimmetria (*skewness*) misura il grado di sbilanciamento della distribuzione.  
-- L’indice di curtosi (*kurtosis*) quantifica la “pesantezza” delle code.
-
-Nel seguente esempio, generiamo dati da una distribuzione esponenziale, notoriamente asimmetrica:
-
-```{r}
-# Generiamo dati da una distribuzione esponenziale
-set.seed(123)
-dati_esponenziali <- rexp(1000, rate = 0.5)
-
-# Calcoliamo media e deviazione standard
-media_esp <- mean(dati_esponenziali)
-deviazione_standard_esp <- sd(dati_esponenziali)
-
-# Visualizziamo la curva di densità
-ggplot(data.frame(dati_esponenziali), aes(x = dati_esponenziali)) +
-  geom_density(fill = "#F8766D", alpha = 0.6) +
-  geom_vline(xintercept = media_esp, color = "red", linetype = "dashed") +
-  labs(
-       x = "Valori",
-       y = "Densità") +
-  annotate("text", x = media_esp + 1, y = 0.2, 
-           label = paste("Media =", round(media_esp, 2)), 
-           color = "red") +
-  annotate("text", x = media_esp + 1, y = 0.18, 
-           label = paste("Deviazione Standard =", round(deviazione_standard_esp, 2)), 
-           color = "blue")
-```
-
-L’istogramma (o la densità) mostra chiaramente una coda lunga a destra, con molti valori piccoli e pochi valori grandi. In questo contesto:  
-
-- La media tende a seguire la coda, diventando meno rappresentativa del “centro”.  
-- La deviazione standard non descrive in modo efficace la variabilità, perché non considera adeguatamente la forte asimmetria.
-
-Misure alternative, come la mediana e i quartili, forniscono informazioni più affidabili:
-
-```{r}
-# Calcoliamo mediana e quartili
-mediana <- median(dati_esponenziali)
-quartili <- quantile(dati_esponenziali, probs = c(0.25, 0.75))
-
-cat("Mediana:", mediana, "\n")
-cat("Primo Quartile (Q1):", quartili[1], "\n")
-cat("Terzo Quartile (Q3):", quartili[2], "\n")
-```
-
-In conclusione, quando i dati non presentano una forma vicina alla normalità (ad esempio perché asimmetrici, multimodali o con kurtosi anomala), media e deviazione standard possono risultare fuorvianti o poco utili. In questi casi, è fondamentale adottare misure alternative o complementari (mediana, quartili, skewness, kurtosis) per ottenere una descrizione più accurata della distribuzione. 
-
-
-## Riflessioni conclusive {.unnumbered .unlisted}
-
-In questo capitolo, abbiamo esplorato alcuni concetti fondamentali per l'analisi dei dati e consolidato le basi per un'interpretazione più approfondita delle distribuzioni. In particolare, abbiamo:
-
-- **Studiato la distribuzione normale**, una delle distribuzioni più importanti in statistica, e compreso perché la media e la deviazione standard siano parametri cruciali per descriverla. Questi indicatori ci permettono di riassumere in modo efficace le caratteristiche centrali e la variabilità dei dati.
-- **Imparato a standardizzare i dati** convertendoli in unità standard (z-score), il che ci consente di confrontare variabili con scale diverse o di valutare quanto un dato specifico si discosti dalla media in termini di deviazioni standard.
-- **Introdotto il grafico quantile-quantile (QQ-plot)**, uno strumento visivo prezioso per verificare se i nostri dati seguono una distribuzione normale. Attraverso il QQ-plot, possiamo confrontare i quantili empirici dei nostri dati con quelli teorici della distribuzione normale, identificando eventuali deviazioni.
-
-Gli strumenti descritti in questo capitolo rappresentano il primo passo essenziale nell'analisi esplorativa dei dati. Essi ci aiutano a formulare ipotesi solide e a riconoscere potenziali problemi o caratteristiche peculiari dei dati prima di applicare metodi statistici più avanzati, che approfondiremo nei prossimi capitoli.  
-
-L'analisi esplorativa, combinando grafici intuitivi e statistiche descrittive appropriate, riveste quindi un ruolo fondamentale nel processo analitico. Essa non solo ci aiuta a comprendere meglio la natura dei dati, ma ci fornisce anche una base solida su cui costruire conclusioni statistiche attendibili e informate.
-
-
-## Esercizi {.unnumbered .unlisted}
-
-::: {.callout-tip ="Esercizi" collapse="true"}
-**Esercizi Teorici**  
-
-**Rispondi alle seguenti domande** per consolidare la comprensione teorica della distribuzione normale e dei suoi concetti chiave.
-
-1. **Caratteristiche della distribuzione normale**  
-   - Quali sono i due parametri principali della distribuzione normale?  
-   - Perché la distribuzione normale è utilizzata così frequentemente in statistica?  
-   - In quali situazioni reali possiamo aspettarci che una variabile segua una distribuzione normale?  
-
-2. **Media e deviazione standard**  
-   - Qual è il significato della media in una distribuzione normale?  
-   - Cosa rappresenta la deviazione standard?  
-   - In che modo la deviazione standard influenza la forma della curva normale?  
-
-3. **Z-score e standardizzazione**  
-   - Cos'è uno z-score e come si calcola?  
-   - Qual è il significato di un valore z=2? E di un valore z=-1.5?  
-   - Dopo la standardizzazione, quali saranno la media e la deviazione standard della variabile?  
-
-4. **Verifica della normalità**  
-   - Se hai un piccolo campione di dati (circa 15 osservazioni), quali metodi grafici puoi utilizzare per valutare se segue una distribuzione normale?  
-   - Quali strumenti statistici puoi impiegare per testare la normalità?  
-   - In un QQ-plot, come puoi riconoscere se i dati seguono una distribuzione normale?  
-
-**Esercizi Pratici in R**  
-
-**Obiettivo**: Analizzare i dati raccolti dagli studenti sulla **Satisfaction With Life Scale (SWLS)**, comprendere la loro distribuzione e confrontarli con una distribuzione normale teorica.  
-
-**Dati disponibili**:  
-Usa i dati della SWLS. I dati contengono anche informazioni sul genere e su un indice di rete sociale (LSNS).  
-
-**1. Esplorazione e Visualizzazione dei Dati SWLS**
-
-1. **Carica i dati raccolti dagli studenti** e verifica la struttura del dataset.  
-2. **Calcola i valori di base**: media, deviazione standard, minimo, massimo, e quantili della SWLS.  
-3. **Crea una rappresentazione visiva dei dati**:  
-   - Istogramma con sovrapposta una curva di densità.  
-   - Boxplot per identificare eventuali outlier.  
-   - Violin plot per osservare la distribuzione.  
-
-**2. Confronto con la Distribuzione Normale**
-
-1. **Sovrapponi ai dati osservati una curva normale teorica** basata su media e deviazione standard stimate dal campione.  
-2. **Confronta i quantili empirici con quelli teorici** mediante un **QQ-plot**.  
-3. **Commenta il risultato**: i dati SWLS seguono approssimativamente una normale? Se no, quali differenze noti?  
-
-**3. Standardizzazione dei Punteggi SWLS**
-
-1. **Trasforma i dati della SWLS in z-score** per analizzarli in unità standardizzate.
-2. **Verifica la nuova media e deviazione standard**: dovrebbero essere 0 e 1 rispettivamente.  
-3. **Conta quanti punteggi standardizzati si trovano entro 1, 2 e 3 deviazioni standard dalla media** e confronta i valori attesi di 68%, 95% e 99.7%.  
-
-**4. Relazione tra SWLS e Interazione Sociale (LSNS)**
-
-1. **Esplora la relazione tra SWLS e il punteggio della Scala della Rete Sociale di Lubben (LSNS-6)**.  
-2. **Costruisci un grafico a dispersione** per osservare la correlazione tra le due variabili.  
-3. **Calcola il coefficiente di correlazione di Pearson** e commenta il risultato. Esiste una relazione tra soddisfazione della vita e supporto sociale?  
-:::
-
-::: {.callout-tip ="Soluzioni" collapse="true"}
-**1. Caratteristiche della distribuzione normale**
-
-**a. Quali sono i due parametri principali della distribuzione normale?**
-
-I due parametri principali che definiscono una distribuzione normale sono:
-
-- **La media (μ)**: Indica il centro della distribuzione. Tutte le osservazioni si raggruppano attorno a questo valore.
-- **La deviazione standard (σ)**: Descrive la dispersione o la variabilità dei dati attorno alla media.
-
-**b. Perché la distribuzione normale è utilizzata così frequentemente in statistica?**
-
-La distribuzione normale è ampiamente usata per diversi motivi:
-
-1. **Teorema del limite centrale**: Afferma che, quando si sommano molte variabili casuali indipendenti, la loro distribuzione tende ad avvicinarsi a una normale, indipendentemente dalla forma originale delle singole distribuzioni.
-2. **Semplicità matematica**: La normale ha proprietà matematiche ben definite e permette di calcolare probabilità e intervalli con facilità.
-3. **Modellizzazione naturale**: Molte variabili naturali e sociali (ad esempio, altezze, pesi, punteggi standardizzati) seguono approssimativamente una distribuzione normale.
-
-**c. In quali situazioni reali possiamo aspettarci che una variabile segua una distribuzione normale?**
-
-Si può aspettare una distribuzione normale in situazioni in cui:
-
-- Le osservazioni sono influenzate da molti fattori casuali indipendenti (es. altezza di un individuo, errore di misurazione).
-- I dati derivano da fenomeni naturali o biologici (es. pressione sanguigna, peso corporeo).
-- Si analizzano medie campionarie di grandi dimensioni (grazie al teorema del limite centrale).
-
-**2. Media e deviazione standard**
-
-**a. Qual è il significato della media in una distribuzione normale?**
-
-Nella distribuzione normale, la media rappresenta il punto centrale della curva, ovvero il valore più probabile. È anche il punto di simmetria della distribuzione, dove metà delle osservazioni si trova a sinistra e l'altra metà a destra.
-
-**b. Cosa rappresenta la deviazione standard?**
-
-La deviazione standard misura quanto i dati si discostano in media dalla media. Una deviazione standard bassa indica che i dati sono raggruppati strettamente attorno alla media, mentre una deviazione standard alta indica una maggiore dispersione.
-
-**c. In che modo la deviazione standard influenza la forma della curva normale?**
-
-- Una deviazione standard piccola produce una curva alta e stretta, indicando una bassa variabilità.
-- Una deviazione standard grande produce una curva bassa e larga, indicando una maggiore variabilità.
-
-**3. Z-score e standardizzazione**
-
-**a. Cos'è uno z-score e come si calcola?**
-
-Uno z-score misura quante deviazioni standard un dato si discosta dalla media. Viene calcolato come:
+Uno z-score rappresenta il numero di deviazioni standard di cui un dato valore si discosta dalla media della distribuzione:
 
 $$
 z = \frac{x - \mu}{\sigma}
 $$
+dove:
 
-dove $x$ è il valore osservato, $\mu$ è la media e $\sigma$ è la deviazione standard.
+- $x$ è il valore osservato;
+- $\mu$ è la media della distribuzione;
+- $\sigma$ è la deviazione standard.
 
-**b. Qual è il significato di un valore z=2? E di un valore z=-1.5?**
+In R, gli z-scores possono essere calcolati facilmente utilizzando la funzione `scale()`:
 
-- Un $z = 2$ significa che il dato è posizionato a 2 deviazioni standard sopra la media.
-- Un $z = -1.5$ significa che il dato è posizionato a 1.5 deviazioni standard sotto la media.
+```{r}
+# Z-scores delle altezze maschili
+z <- scale(x) |> as.numeric()
 
-**c. Dopo la standardizzazione, quali saranno la media e la deviazione standard della variabile?**
+cat("Primi 10 z-scores:\n")
+head(z, 10) |> round(2)
 
-Dopo la standardizzazione:
+# Verifichiamo le proprietà
+cat("\nMedia degli z-scores:", round(mean(z), 10), "\n")
+cat("Deviazione standard degli z-scores:", round(sd(z), 10), "\n")
+```
 
-- La media diventa $0$.
-- La deviazione standard diventa $1$.
+**Proprietà fondamentali degli z-scores:**
 
-**4. Verifica della normalità**
+1. la media degli z-scores è sempre 0;
+2. la deviazione standard degli z-scores è sempre 1;
+3. gli z-scores preservano la forma della distribuzione originale.
 
-**a. Se hai un piccolo campione di dati (circa 15 osservazioni), quali metodi grafici puoi utilizzare per valutare se segue una distribuzione normale?**
+### Interpretazione pratica
 
-Per piccoli campioni, i metodi grafici più utili sono:
+- **z = 0**: il valore coincide con la media.
+- **z = 1**: il valore è 1 deviazione standard *sopra* la media.
+- **z = -1**: il valore è 1 deviazione standard *sotto* la media.
+- **z = 2**: il valore è 2 deviazioni standard sopra la media (nel 2.5% superiore se distribuzione normale).
+- **z = -2**: il valore è 2 deviazioni standard sotto la media (nel 2.5% inferiore se distribuzione normale).
 
-1. **QQ-plot (Quantile-Quantile plot)**: Confronta i quantili dei dati con quelli di una distribuzione normale. Se i punti seguono una retta diagonale, i dati sono normali.
-2. **Istogramma**: Mostra la distribuzione dei dati, ma con campioni piccoli può essere meno preciso.
+### Esempio: confronto tra test diversi
 
-**b. Quali strumenti statistici puoi impiegare per testare la normalità?**
+Supponiamo che uno studente abbia ottenuto:
 
-Gli strumenti statistici più comuni per verificare la normalità sono:
+- QI = 115 (media popolazione = 100, sd = 15);
+- punteggio in un test di memoria = 65 (media test = 50, sd = 10).
 
-- **Test di Shapiro-Wilk**: Ideale per piccoli campioni.
-- **Test di Kolmogorov-Smirnov**: Usato per confrontare la distribuzione empirica con una normale.
-- **Test di Anderson-Darling**: Sensibile alle code della distribuzione.
+In quale test ha performato meglio relativamente alla popolazione?
 
-**c. In un QQ-plot, come puoi riconoscere se i dati seguono una distribuzione normale?**
+```{r}
+# Calcoliamo gli z-scores
+z_qi <- (115 - 100) / 15
+z_memoria <- (65 - 50) / 10
 
-In un QQ-plot:
+cat("Z-score QI:", round(z_qi, 2), "\n")
+cat("Z-score Memoria:", round(z_memoria, 2), "\n")
 
-- Se i dati seguono una distribuzione normale, i punti si allineeranno lungo una retta diagonale.
-- Deviazioni dalla retta indicano departi dalla normalità:
-  - Code pesanti: Punti esterni alla retta suggeriscono outlier.
-  - Asimmetria: Punti curvati suggeriscono skewness (asimmetria).
+if (z_memoria > z_qi) {
+  cat("\nLo studente ha performato relativamente meglio nel test di memoria\n")
+} else {
+  cat("\nLo studente ha performato relativamente meglio nel test di QI\n")
+}
+```
 
-**Esplorazione e Visualizzazione dei Dati SWLS**
+Anche se i punteggi grezzi (115 vs 65) non sono direttamente confrontabili, gli z-scores rivelano che la performance relativa è stata migliore nel test di memoria.
 
-**Caricamento e struttura dei dati**
-```r
-library(ggplot2)
-library(dplyr)
+### La distribuzione normale standard
 
-# Supponiamo che i dati siano i seguenti
-set.seed(42)
-swls <- data.frame(
-  ID = 1:15,
-  SWLS = c(18, 22, 25, 21, 26, 19, 20, 23, 24, 17, 22, 27, 28, 21, 19),
-  Genere = c("M", "F", "F", "M", "F", "M", "M", "F", "M", "F", "M", "F", "F", "M", "M"),
-  LSNS = c(16, 20, 22, 14, 19, 18, 17, 25, 23, 12, 21, 28, 26, 19, 15)
+Quando calcoliamo gli z-scores di una distribuzione normale con media $\mu$ e deviazione standard $\sigma$, otteniamo una **distribuzione normale standard** con media 0 e deviazione standard 1. Questa è indicata come $N(0, 1)$ o semplicemente $Z$.
+
+```{r}
+#| label: fig-standardization
+#| fig-cap: "Standardizzazione: da distribuzione normale a normale standard"
+#| fig-height: 12
+
+# Dati originali e standardizzati
+plot_data <- data.frame(
+  originale = x,
+  standardizzato = z
 )
 
-str(swls)
-summary(swls$SWLS)
+p1 <- ggplot(plot_data, aes(x = originale)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 30,
+                 fill = "lightblue", alpha = 0.7) +
+  stat_function(fun = dnorm, args = list(mean = m, sd = s),
+                linewidth = 1, color = "black") +
+  labs(title = "Distribuzione originale",
+       subtitle = paste0("μ = ", round(m, 1), ", σ = ", round(s, 1)),
+       x = "Altezza (cm)", y = "Densità") +
+  theme(plot.margin = margin(t = 12, r = 5, b = 5, l = 5))
+
+p2 <- ggplot(plot_data, aes(x = standardizzato)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 30,
+                 fill = "lightgreen", alpha = 0.7) +
+  stat_function(fun = dnorm, args = list(mean = 0, sd = 1),
+                linewidth = 1, color = "black") +
+  labs(title = "Dopo standardizzazione",
+       subtitle = "μ = 0, σ = 1",
+       x = "Z-score", y = "Densità") +
+  theme(plot.margin = margin(t = 12, r = 5, b = 5, l = 5))
+
+grid.arrange(p1, p2, ncol = 2)
 ```
 
-**Visualizzazioni**
+::: {.callout-important}
+## Collegamento con l'inferenza
 
-```r
-# Istogramma con curva di densità
-ggplot(swls, aes(x = SWLS)) +
-  geom_histogram(aes(y = after_stat(density)), bins = 6, fill = "blue", alpha = 0.5) +
-  geom_density(color = "red", size = 1) +
-  gg("Distribuzione dei punteggi SWLS")
+Gli z-scores sono fondamentali per l'inferenza statistica:
 
-# Boxplot
-ggplot(swls, aes(y = SWLS)) +
-  geom_boxplot(fill = "cyan") +
-  gg("Boxplot dei punteggi SWLS")
-```
+- i test z utilizzano la distribuzione normale standard per calcolare probabilità;
+- i valori-$p$ sono spesso calcolati convertendo statistiche test in z-scores;
+- gli intervalli di confidenza si basano sulla distribuzione degli z-scores.
 
-**2. Confronto con la Distribuzione Normale**
+Comprendere gli z-scores ora faciliterà la comprensione dei concetti inferenziali successivi.
+:::
 
-```r
-# QQ-plot per valutare la normalità
-ggplot(swls, aes(sample = SWLS)) +
+## Verificare la normalità: QQ-plots {#sec-qq-plots}
+
+Un metodo sistematico per valutare se i dati seguono approssimativamente una distribuzione normale è il **QQ-plot** (*Quantile-Quantile plot*), che confronta i quantili empirici dei dati con i quantili teorici di una distribuzione normale di riferimento.
+
+### Principio di funzionamento del QQ-plot
+
+Il QQ-plot si costruisce seguendo questi passaggi:
+
+1. si ordinano i dati in senso crescente;
+2. per ogni osservazione, si calcola la sua posizione percentile empirica;
+3. si determinano i corrispondenti quantili teorici di una distribuzione normale standard;
+4. si rappresentano in un grafico i punti (quantile teorico, quantile osservato).
+
+**Se i dati seguono una distribuzione normale**, i punti si disporranno approssimativamente lungo una retta diagonale.
+
+### Creazione di un QQ-plot in R
+
+Con `ggplot2`, un QQ-plot può essere generato nel modo seguente:
+
+```{r}
+#| label: fig-qqplot-altezze
+#| fig-cap: "QQ-plot per le altezze maschili"
+
+dslabs::heights |> 
+  dplyr::filter(sex == "Male") |> 
+  ggplot(aes(sample = height)) +
   geom_qq() +
-  geom_abline() +
-  gg("QQ-plot dei punteggi SWLS") +
-  theme_minimal()
+  geom_qq_line(color = "red", linewidth = 1) +
+  labs(title = "QQ-plot: altezze maschili",
+       x = "Quantili teorici (normale)",
+       y = "Quantili osservati (dati)") 
 ```
 
-**Osservazione**:  
+In questo caso, i punti si allineano bene lungo la linea rossa, confermando che la distribuzione delle altezze maschili è approssimativamente normale.
 
-- Se i punti si allineano lungo la diagonale, i dati sono approssimativamente normali.
-- Se ci sono deviazioni marcate, la distribuzione potrebbe essere asimmetrica o presentare code pesanti.  
+### Interpretare deviazioni dalla normalità
 
-**3. Standardizzazione dei punteggi SWLS**
+Il QQ-plot rivela diversi tipi di non-normalità:
+
+```{r fig.asp=1}
+#| label: fig-qqplot-patterns
+#| fig-cap: "Patterns comuni nei QQ-plots e la loro interpretazione"
+#| fig-height: 8
+
+set.seed(123)
+
+# Generiamo diverse distribuzioni
+n <- 500
+dati_normale <- rnorm(n, 0, 1)
+dati_asim_dx <- exp(rnorm(n, 0, 0.5))  # Asimmetria positiva
+dati_asim_sx <- -exp(rnorm(n, 0, 0.5))  # Asimmetria negativa
+dati_code_pesanti <- rt(n, df = 3)  # Code pesanti (t-student)
+
+# Creiamo i QQ-plots
+p1 <- ggplot(data.frame(x = dati_normale), aes(sample = x)) +
+  geom_qq() + geom_qq_line(color = "red") +
+  labs(title = "Distribuzione normale",
+       subtitle = "Punti allineati = normalità") 
+
+p2 <- ggplot(data.frame(x = dati_asim_dx), aes(sample = x)) +
+  geom_qq() + geom_qq_line(color = "red") +
+  labs(title = "Asimmetria positiva",
+       subtitle = "Curva verso l'alto a destra") 
+
+p3 <- ggplot(data.frame(x = dati_asim_sx), aes(sample = x)) +
+  geom_qq() + geom_qq_line(color = "red") +
+  labs(title = "Asimmetria negativa",
+       subtitle = "Curva verso il basso a sinistra") 
+
+p4 <- ggplot(data.frame(x = dati_code_pesanti), aes(sample = x)) +
+  geom_qq() + geom_qq_line(color = "red") +
+  labs(title = "Code pesanti",
+       subtitle = "Punti si allontanano agli estremi") 
+
+grid.arrange(p1, p2, p3, p4, ncol = 2, nrow = 2)
+```
+
+**Come interpretare i pattern:**
+
+- **Punti sulla linea**: distribuzione normale ✓
+- **Curva a S**: asimmetria (skewness)
+- **Punti che si allontanano agli estremi**: code pesanti (più outlier del previsto)
+- **Punti che si avvicinano agli estremi**: code leggere (meno variabilità del previsto)
+
+### Test formali di normalità
+
+Oltre ai QQ-plots, esistono test statistici formali per verificare la normalità. Il più comune è il **test di Shapiro-Wilk**:
+
+```{r}
+# Test di Shapiro-Wilk
+shapiro_test <- shapiro.test(x)
+cat("Test di Shapiro-Wilk\n")
+cat("Statistica W:", round(shapiro_test$statistic, 4), "\n")
+cat("P-value:", round(shapiro_test$p.value, 4), "\n\n")
+
+if (shapiro_test$p.value > 0.05) {
+  cat("Interpretazione: I dati non mostrano deviazioni significative dalla normalità\n")
+} else {
+  cat("Interpretazione: I dati mostrano deviazioni significative dalla normalità\n")
+}
+```
+
+::: {.callout-warning}
+## Attenzione ai test di normalità
+
+I test formali di normalità (come Shapiro-Wilk) hanno due limitazioni:
+
+1. **Con campioni piccoli**: hanno poco potere, quindi anche deviazioni importanti potrebbero non essere rilevate.
+2. **Con campioni grandi**: diventano troppo sensibili, rilevando deviazioni minime che non hanno importanza pratica
+
+Per questo motivo, la valutazione visiva tramite QQ-plot è spesso più utile del test formale.
+:::
+
+## Ponte verso la modellazione bayesiana {#sec-bridge-to-inference}
+
+I concetti presentati in questo capitolo costituiscono i mattoni fondamentali per la costruzione e l’interpretazione dei modelli bayesiani che incontreremo successivamente. Riassumiamo le connessioni più rilevanti:
+
+### 1. Dalle distribuzioni ai prior coniugati
+
+Abbiamo visto come la distribuzione normale sia descritta da due parametri ($\mu$, $\sigma$). Nel Bayesianesimo:
+
+- questa stessa distribuzione può essere utilizzata come **prior** su parametri continui, come un coefficiente di regressione o un effetto di trattamento;
+- l’uso di *prior* coniugati (come una normale per un parametro di interesse, combinata con una normale/likelihood) semplifica il calcolo della **distribuzione a posteriori**, che a sua volta sarà normale;
+- i *posterior* rappresentano la nostra conoscenza aggiornata dopo aver osservato i dati, e i loro intervalli di credibilità (ad esempio, il 95% HDI) possono essere interpretati direttamente come la regione più plausibile del parametro.
+
+### 2. Dalla normalità ai modelli gerarchici
+
+La normale non è solo una distribuzione per i dati (*likelihood*), ma è uno strumento flessibile per modellare la variabilità:
+
+- nei **modelli gerarchici**, possiamo imporre un *prior* normale su effetti specifici (ad esempio, gli effetti di diversi gruppi o soggetti), che sono a loro volta vincolati da un iperparametro comune;
+- questo permette di bilanciare il *pooling* delle informazioni tra gruppi e la stima di effetti individuali, una forma di regolarizzazione nativa nell'approccio bayesiano.
+
+### 3. Standardizzazione e interpretazione degli effetti
+
+Gli z-scores forniscono un’intuizione chiave:
+
+- la standardizzazione facilita la specificazione di **prior informativi** (es. "ritengo che l'effetto sia piccolo, cioè entro ±0.5 deviazioni standard").
+- nei modelli di regressione, spesso converrà standardizzare le variabili per assegnare *prior* più interpretabili e per rendere i coefficienti confrontabili su scale comuni.
+
+### 4. Verifica dei modelli e diagnostica
+
+Il QQ-plot e la valutazione della normalità sono un primo passo verso la più ampia **diagnostica bayesiana**:
+
+- Mentre un’assunzione di normalità può essere incorporata nella *likelihood* del modello, i residui *posteriori* vanno comunque esaminati per valutare l’adeguatezza del modello.
+- La diagnostica bayesiana va oltre: useremo **posterior predictive checks** per verificare se il nostro modello, nel suo insieme (prior + likelihood), è in grado di generare dati simili a quelli osservati. In questo senso, la verifica di una distribuzione specifica (come la normale) è solo un caso particolare di una domanda più generale: il modello si adatta bene ai dati?
+
+Questi collegamenti mostrano come i concetti di distribuzione, parametro e adeguatezza del modello, introdotti in questo capitolo, non siano solo "descrittivi", ma siano il punto di partenza per una modellazione esplicita e probabilisticamente coerente dei fenomeni psicologici.
+
+## Riflessioni conclusive {.unnumbered .unlisted}
+
+In questo capitolo abbiamo utilizzato la distribuzione normale come **lente descrittiva** e come primo esempio di **modello probabilistico**: un modo compatto per riassumere dati continui e ragionare sulla loro variabilità.
+
+Abbiamo visto che:
+
+* quando la distribuzione normale è una buona approssimazione, la **media** e la **deviazione standard** diventano parametri informativi che descrivono la posizione e la dispersione dei dati e permettono confronti immediati tra gruppi e condizioni;
+* la **standardizzazione** (z-score) non è un “trucco di calcolo”, ma un passaggio concettuale utile: porta le variabili su una scala comune, rende più interpretabili i confronti e le grandezze d'effetto e prepara alla specificazione delle scelte di modellazione (ad esempio nella regressione);
+* la **valutazione della normalità** è soprattutto una questione diagnostica: il QQ-plot aiuta a riconoscere asimmetrie, code pesanti e outlier, caratteristiche che spesso suggeriscono la necessità di trasformazioni, modelli alternativi o verosimiglianze più robuste.
+
+Il punto chiave è che la distribuzione normale non deve essere considerata una "legge" dei dati, ma una **scelta di modellazione**: è utile quando funziona, ma può essere sostituita quando non descrive adeguatamente ciò che osserviamo. Questa prospettiva è centrale nell'analisi esplorativa e diventerà ancora più importante quando inizieremo a costruire modelli completi e a verificarne l'adeguatezza, confrontando ciò che il modello implica con ciò che i dati mostrano
+
+::: {.callout-tip}
+
+## Cosa ci aspetta
+
+Nei prossimi capitoli vedremo come:
+
+* il **Teorema del Limite Centrale** spiega perché, in molte situazioni, le *medie campionarie* presentano una distribuzione approssimativamente normale, anche quando i dati individuali non lo sono;
+* questa regolarità rende la distribuzione normale una descrizione utile del comportamento aggregato dei dati, soprattutto quando il campione è sufficientemente ampio;
+* la distribuzione normale emerge così come un **oggetto centrale della modellazione statistica**, sia nei metodi classici sia in quelli bayesiani, fungendo da approssimazione, modello o componente di modelli più generali.
+
+L’obiettivo non è giustificare automaticamente l’uso di test standard, ma comprendere **perché** e **in quali condizioni** la normalità diventa una rappresentazione informativa dei dati.
+:::
+
+
+## Esercizi {.unnumbered .unlisted}
+
+::: {.callout-caution collapse="true" title="Esercizi"}
+
+### Parte 1: Comprensione concettuale {.unnumbered .unlisted}
+
+**1. Perché la distribuzione normale è importante?**
+
+a. Perché la distribuzione normale è così ampiamente usata in psicologia? Fornisci almeno tre motivi specifici.
+
+b. In quali situazioni reali in psicologia possiamo aspettarci che una variabile segua approssimativamente una distribuzione normale?
+
+c. Cosa significa dire che la normale è un "modello" e non una "legge"?
+
+**2. La regola empirica**
+
+a. Spiega con parole tue la regola 68-95-99.7.
+
+b. Un test di ansia ha media 50 e deviazione standard 10 nella popolazione. Usando la regola empirica, determina:
+
+   - Entro quale intervallo cade circa il 68% dei punteggi?
+   - Quale percentuale della popolazione ha un punteggio superiore a 70?
+   - Un punteggio di 25 è considerato estremo? Perché?
+
+c. Perché la regola empirica rende la deviazione standard più interpretabile?
+
+**3. Z-scores e standardizzazione**
+
+a. Cos'è uno z-score e come si calcola?
+
+b. Uno studente ottiene QI = 110 (media = 100, sd = 15) e un punteggio di memoria = 58 (media = 50, sd = 8). In quale test ha performato relativamente meglio? Mostra i calcoli.
+
+c. Dopo la standardizzazione, quali saranno la media e la deviazione standard? Perché questo è utile?
+
+**4. QQ-plots**
+
+a. Spiega la logica di base di un QQ-plot.
+
+b. Descrivi come apparirebbe un QQ-plot per ciascuna delle seguenti situazioni:
+
+   - Dati perfettamente normali
+   - Dati con asimmetria positiva
+   - Dati con code pesanti (più outlier del previsto)
+
+c. Perché i QQ-plots sono spesso più utili dei test formali di normalità?
+
+
+### Parte 2: Applicazioni pratiche {.unnumbered .unlisted}
+
+**5. Analisi di punteggi SWLS**
+
+Considera i seguenti punteggi SWLS (Satisfaction With Life Scale):
+
+```
+18, 22, 25, 21, 26, 19, 20, 23, 24, 17, 22, 27, 28, 21, 19
+```
+
+a. Calcola media e deviazione standard manualmente (o con R).
+
+b. Usando la regola empirica, determina l'intervallo entro cui dovrebbe cadere circa il 95% dei punteggi in una popolazione normale con questi parametri.
+
+c. Calcola gli z-scores per i punteggi 17 e 28. Quale è più estremo?
+
+**6. Analisi con R**
+
+Usa il seguente codice per generare e analizzare dati:
 
 ```r
-swls$Z_SWLS <- scale(swls$SWLS)
+set.seed(42)
+# Genera dati approssimativamente normali
+dati_normali <- rnorm(100, mean = 50, sd = 10)
 
-mean(swls$Z_SWLS)  # Dovrebbe essere circa 0
-sd(swls$Z_SWLS)    # Dovrebbe essere circa 1
+# Genera dati asimmetrici
+dati_asimmetrici <- exp(rnorm(100, mean = 3, sd = 0.5))
 
-# Proporzione entro 1, 2, 3 deviazioni standard
-mean(abs(swls$Z_SWLS) < 1)  # Atteso ~68%
-mean(abs(swls$Z_SWLS) < 2)  # Atteso ~95%
-mean(abs(swls$Z_SWLS) < 3)  # Atteso ~99.7%
+# Crea QQ-plots per entrambi
+library(ggplot2)
+ggplot(data.frame(x = dati_normali), aes(sample = x)) +
+  geom_qq() + geom_qq_line() + ggtitle("Dati normali")
+
+ggplot(data.frame(x = dati_asimmetrici), aes(sample = x)) +
+  geom_qq() + geom_qq_line() + ggtitle("Dati asimmetrici")
+
+# Verifica la regola empirica per dati_normali
+mean(abs(scale(dati_normali)) <= 1)  # Dovrebbe essere ~68%
+mean(abs(scale(dati_normali)) <= 2)  # Dovrebbe essere ~95%
+
+# Test di Shapiro-Wilk
+shapiro.test(dati_normali)
+shapiro.test(dati_asimmetrici)
 ```
 
-**4. Relazione tra SWLS e LSNS**
+a. Esegui il codice e interpreta i QQ-plots: quali dati sembrano più normali?
 
+b. Le proporzioni osservate per i `dati_normali` sono vicine ai valori teorici (68%, 95%)?
+
+c. Cosa indicano i risultati dei test di Shapiro-Wilk?
+
+**7. Confronto tra test standardizzati**
+
+Una studentessa ottiene i seguenti risultati:
+
+- Test A: punteggio = 75, con media popolazione = 60 e sd = 10
+- Test B: punteggio = 115, con media popolazione = 100 e sd = 20
+
+a. Calcola gli z-scores per entrambi i test.
+
+b. In quale test la studentessa ha performato meglio relativamente agli altri?
+
+c. Se entrambi i test seguono distribuzioni normali, in quale percentile approssimativo si trova la studentessa in ciascun test? (Usa la regola empirica)
+
+
+### Parte 3: Riflessione e collegamenti {.unnumbered .unlisted}
+
+**8. Verso l'inferenza**
+
+a. Spiega come la regola empirica prepara alla costruzione di intervalli di confidenza.
+
+b. Perché gli z-scores sono importanti per i test statistici che studieremo?
+
+c. Se i dati non sono perfettamente normali, possiamo comunque usare metodi statistici basati sulla normalità? Quando sì e quando no?
+
+**9. Caso applicato: sviluppo di un test**
+
+Immagina di sviluppare un nuovo questionario per misurare l'autoefficacia accademica:
+
+a. Perché potrebbe essere desiderabile che i punteggi seguano approssimativamente una distribuzione normale?
+
+b. Come useresti QQ-plots durante lo sviluppo del test?
+
+c. Dopo aver raccolto dati su 500 studenti, il test di Shapiro-Wilk risulta significativo (p < 0.001). Cosa fai? Perché?
+
+:::
+
+::: {.callout-tip title="Soluzioni" collapse="true"}
+
+### Soluzioni Parte 1 {.unnumbered .unlisted}
+
+**1b.** Situazioni in cui aspettarci normalità in psicologia:
+
+- Punteggi di test standardizzati (QI, personalità)
+- Misure fisiche (altezza, tempo di reazione)
+- Errori di misurazione in esperimenti
+- Variabili influenzate da molti fattori indipendenti
+
+**2b.** Per media=50, sd=10:
+
+- 68% cade in 40-60
+- Solo ~2.5% sopra 70 (oltre 2 sd)
+- Un punteggio di 25 è 2.5 sd sotto la media, molto estremo (< 0.5% della popolazione)
+
+**3b.** 
+
+- Z-score QI: (110-100)/15 = 0.67
+- Z-score memoria: (58-50)/8 = 1.00
+- Performance migliore in memoria (z più alto)
+
+**3c.** Dopo standardizzazione: media=0, sd=1 sempre.
+
+### Soluzioni Parte 2 {.unnumbered .unlisted}
+
+**5.** Per i dati SWLS forniti:
 ```r
-# Grafico di dispersione
-ggplot(swls, aes(x = LSNS, y = SWLS)) +
-  geom_point(color = "blue", size = 3) +
-  geom_smooth(method = "lm", color = "red", se = FALSE) +
-  gg("Relazione tra SWLS e LSNS") 
+swls <- c(18, 22, 25, 21, 26, 19, 20, 23, 24, 17, 22, 27, 28, 21, 19)
+mean(swls)  # 22.13
+sd(swls)    # 3.42
 
-# Calcolo della correlazione
-cor(swls$SWLS, swls$LSNS)
+# 95% dovrebbe cadere in: 22.13 ± 2*3.42 = [15.29, 28.97]
+
+# Z-scores
+(17 - 22.13)/3.42  # -1.50
+(28 - 22.13)/3.42  # 1.72
+# Il punteggio 28 è leggermente più estremo (in valore assoluto)
 ```
 
-**Interpretazione**:  
+**7.**
+```r
+# Test A
+z_a <- (75 - 60) / 10  # 1.5
 
-- Un valore di correlazione positivo indica che livelli più alti di supporto sociale (LSNS) sono associati a una maggiore soddisfazione della vita (SWLS).  
-- Se la correlazione è debole, il supporto sociale potrebbe non essere un predittore forte della soddisfazione della vita in questo campione ristretto.  
+# Test B  
+z_b <- (115 - 100) / 20  # 0.75
+
+# La studentessa ha performato meglio nel Test A (z più alto)
+# Nel Test A è circa nel 93° percentile (oltre 1 sd)
+# Nel Test B è circa nell'77° percentile (tra media e +1 sd)
+```
+
+### Soluzioni Parte 3 {.unnumbered .unlisted}
+
+**8a.** La regola empirica mostra che il 95% dei valori cade entro ±2 sd dalla media. Gli intervalli di confidenza usano questo principio: se conosciamo la distribuzione campionaria di una statistica, possiamo costruire un intervallo che "cattura" il parametro il 95% delle volte.
+
+**9c.** Con n=500, il test di Shapiro-Wilk è molto sensibile e può rilevare deviazioni minime dalla normalità che non hanno importanza pratica. Azioni consigliate:
+
+1. Esaminare il QQ-plot (più informativo)
+2. Se il QQ-plot mostra solo piccole deviazioni agli estremi, non preoccuparsi
+3. Ricordare che molti metodi statistici sono robusti a piccole violazioni della normalità
+4. Se le deviazioni sono sostanziali, considerare trasformazioni o metodi non parametrici
+
 :::
 
 ::: {.callout-note collapse=true title="Informazioni sull'ambiente di sviluppo"}
@@ -546,4 +851,3 @@ sessionInfo()
 :::
 
 ## Bibliografia {.unnumbered .unlisted}
-

@@ -1,0 +1,557 @@
+# Dalla correlazione alla causalità {#sec-causality-intro}
+
+::: {.callout-note appearance="minimal"}
+Dopo aver imparato a descrivere le associazioni tra variabili attraverso correlazioni e covarianze, è naturale chiedersi: queste associazioni riflettono relazioni causali? In questo capitolo introduciamo i concetti fondamentali per distinguere tra correlazione e causalità, mostrando perché la correlazione da sola non basta per fare inferenze causali e quali strumenti concettuali possiamo usare per avvicinarci a questo obiettivo.
+:::
+
+::: {.callout-tip title="Messaggi chiave"}
+- **Controfattuali**: l'effetto causale è la differenza tra ciò che accade con il trattamento e ciò che accadrebbe senza.
+- **Confondimento**: quando una terza variabile influenza sia la causa che l'effetto, la correlazione osservata può essere fuorviante.
+- **Randomizzazione**: assegnare casualmente il trattamento rende i gruppi comparabili, permettendo di stimare effetti causali.
+- **Mediazione vs confondimento**: distinguere quando una variabile spiega il meccanismo causale da quando lo distorce.
+:::
+
+### Panoramica del capitolo {.unnumbered .unlisted}
+
+- Comprendere cosa significa "effetto causale" in termini controfattuali.
+- Distinguere tra associazione osservata e effetto causale.
+- Riconoscere il confondimento e capire perché è problematico.
+- Introdurre le simulazioni come strumento per visualizzare questi concetti.
+- Distinguere tra confondimento, mediazione e moderazione.
+
+::: {.callout-tip collapse=true}
+## Prerequisiti
+
+- Leggere l'introduzione dell'articolo "The curious case of the cross-sectional correlation" [@hamaker2024curious]
+- Leggere il primo capitolo di @hernan2023 "A Definition of Causal Effect"
+:::
+
+::: {.callout-caution collapse=true title="Preparazione del Notebook"}
+
+```{r}
+#| output: false
+here::here("code", "_common.R") |> 
+  source()
+```
+:::
+
+## Intuizioni quotidiane di causalità
+
+Tutti noi facciamo continuamente inferenze causali nella vita quotidiana, spesso senza rendercene conto. Quando uno studente si chiede: *"Se ripasso mentalmente quell'argomento prima dell'esame, riuscirò a sentirmi meno ansioso?"*, sta già formulando una domanda causale. C'è un'azione possibile — il ripasso mentale, che in gergo statistico chiameremmo *trattamento* — e c'è un esito atteso: la riduzione dell'ansia.
+
+Questa intuizione quotidiana nasconde una struttura logica precisa che la statistica ha formalizzato attraverso il concetto di **controfattuale**. L'idea è semplice ma potente: per sapere se il ripasso causa davvero una riduzione dell'ansia, dovremmo poter confrontare due scenari alternativi per lo stesso studente:
+
+1. **Scenario A**: lo studente fa il ripasso e osserviamo il suo livello di ansia.
+2. **Scenario B**: lo stesso studente, nello stesso momento, *non* fa il ripasso e osserviamo il suo livello di ansia.
+
+La differenza tra questi due livelli di ansia sarebbe l'effetto causale del ripasso. Il problema, ovviamente, è che possiamo osservare solo uno dei due scenari: o lo studente fa il ripasso oppure no. L'altro scenario rimane "contro-fattuale", cioè non realizzato.
+
+::: {.callout-note title="Il problema fondamentale dell'inferenza causale"}
+Per ogni individuo possiamo osservare solo uno dei due esiti potenziali. L'altro rimane invisibile. Questo è chiamato il *problema fondamentale dell'inferenza causale* [@holland1986statistics].
+:::
+
+## Formalizzare i controfattuali
+
+La statistica traduce questa intuizione in un linguaggio più preciso. Per ogni individuo di fronte a un possibile trattamento, possiamo immaginare due **esiti potenziali**:
+
+- $Y^{(1)}$: l'esito che osserveremmo se l'individuo ricevesse il trattamento.
+- $Y^{(0)}$: l'esito che osserveremmo se l'individuo non ricevesse il trattamento.
+
+Se indichiamo con $A$ il trattamento effettivamente ricevuto ($A=1$ se riceve il trattamento, $A=0$ altrimenti), l'esito osservato $Y$ sarà:
+
+$$
+Y = \begin{cases}
+Y^{(1)} & \text{se } A=1 \\
+Y^{(0)} & \text{se } A=0
+\end{cases}
+$$
+
+Questo è il **principio di consistenza**: l'esito osservato coincide con l'esito potenziale corrispondente al trattamento ricevuto.
+
+### Effetto causale individuale e medio
+
+A livello individuale, l'effetto causale del trattamento sarebbe:
+
+$$
+\tau_i = Y_i^{(1)} - Y_i^{(0)} .
+$$
+
+Ma siccome per ogni individuo osserviamo sempre e soltanto uno dei due valori, questo effetto individuale rimane inaccessibile. Possiamo però spostarci a un livello aggregato e chiederci quale sarebbe la differenza media in una popolazione intera. Questa differenza prende il nome di **effetto causale medio** (*Average Causal Effect*, ACE):
+
+$$
+\text{ACE} = \mathbb{E}[Y^{(1)}] - \mathbb{E}[Y^{(0)}] .
+$$
+
+In altre parole, ci chiediamo: *"In media, quale sarebbe la differenza tra il mondo in cui tutti ricevono il trattamento e quello in cui nessuno lo riceve?"*
+
+### L'assunzione SUTVA
+
+Perché questa definizione funzioni, dobbiamo assumere alcune condizioni, riassunte nell'acronimo **SUTVA** (*Stable Unit Treatment Value Assumption*):
+
+1. **Assenza di interferenza**: il trattamento ricevuto da un individuo non deve influenzare l'esito di un altro. Se Tizio fa il ripasso, questo non dovrebbe modificare il livello di ansia di Caio.
+
+2. **Versione unica del trattamento**: deve esistere una definizione chiara e univoca del trattamento. "Fare ripasso" deve significare la stessa cosa per tutti i partecipanti.
+
+Queste assunzioni possono sembrare tecniche, ma hanno implicazioni pratiche importanti. Per esempio, in uno studio su terapie di gruppo, l'assenza di interferenza potrebbe non reggere. Oppure, se diciamo che uno studente ha "fatto ripasso" senza specificare come, per quanto tempo e con quale intensità, potremmo avere diverse "versioni" del trattamento che confondono i risultati.
+
+## Causale vs associativo: perché differiscono
+
+Ora che abbiamo formalizzato cosa intendiamo per effetto causale, possiamo capire meglio perché questo differisce dall'associazione che osserviamo nei dati.
+
+### Due domande diverse
+
+Quando parliamo di effetto **causale**, ci riferiamo a un confronto ipotetico tra due mondi alternativi:
+
+$$
+\text{Effetto causale} = \mathbb{E}[Y^{(1)}] - \mathbb{E}[Y^{(0)}].
+$$ 
+
+Quando parliamo di **associazione**, invece, confrontiamo due gruppi reali: chi ha effettivamente ricevuto il trattamento e chi non lo ha ricevuto:
+
+$$
+\text{Associazione} = \mathbb{E}[Y \,|\, A=1] - \mathbb{E}[Y \,|\, A=0] .
+$$
+
+La differenza è sottile ma cruciale. Nel confronto causale stiamo immaginando la *stessa popolazione* in due scenari diversi. Nel confronto associativo, invece, confrontiamo due sottogruppi che *potrebbero avere caratteristiche molto diverse già all'inizio*.
+
+### Il problema del confondimento
+
+Immaginiamo che a ricevere il trattamento (per esempio, una tecnica di rilassamento) siano soprattutto gli studenti già più ansiosi. In questo caso, la differenza osservata tra trattati e non trattati non rifletterà solo l'effetto del trattamento, ma anche il fatto che i due gruppi non partivano dalle stesse condizioni.
+
+Questa discrepanza prende il nome di **confondimento**: si verifica quando esistono variabili che influenzano sia la probabilità di ricevere il trattamento sia l'esito. 
+
+::: {.callout-warning title="Confondimento = bias sistematico"}
+In presenza di confondimento, l'associazione osservata può:
+
+- far sembrare che il trattamento abbia un effetto quando in realtà non ce l'ha;
+- nascondere un effetto reale dietro differenze preesistenti tra i gruppi;
+- invertire addirittura il segno dell'effetto (paradosso di Simpson).
+:::
+
+## Vedere il confondimento in azione: simulazioni
+
+Per rendere concreti questi concetti astratti, usiamo delle simulazioni in R. Le simulazioni ci permettono di "vedere" cosa succede quando conosciamo il vero modello generativo dei dati, cosa che nella ricerca reale non possiamo mai fare.
+
+### Simulazione 1: Confondimento
+
+Immaginiamo una situazione in cui il trattamento, per esempio, l'uso di una strategia di *reappraisal* per ridurre l'ansia, viene scelto soprattutto da chi è già più ansioso per natura. Assumiamo che il trattamento, di per sé, **non abbia alcun effetto causale** sull'esito. Tuttavia, proprio perché chi ha ansia elevata tende a trattarsi di più, il confronto tra trattati e non trattati sarà inevitabilmente distorto.
+
+```{r}
+#| label: sim-confounding
+#| fig-cap: "Confondimento: il trattamento non ha effetto, ma l'associazione è positiva"
+#| fig-width: 7
+#| fig-height: 5
+
+set.seed(42)
+N <- 1000
+
+# Generiamo ansia di tratto (confondente)
+ansia_tratto <- rnorm(N, mean = 50, sd = 10)
+
+# Probabilità di trattamento aumenta con l'ansia di tratto
+prob_tratt <- plogis((ansia_tratto - 50)/10)
+A <- rbinom(N, 1, prob_tratt)
+
+# L'esito dipende SOLO dall'ansia di tratto (non dal trattamento!)
+# Effetto causale vero = 0
+Y <- ansia_tratto + rnorm(N, 0, 5)
+
+# Confronto osservazionale (sbagliato!)
+assoc_obs <- mean(Y[A==1]) - mean(Y[A==0])
+
+# Visualizzazione
+par(mfrow=c(1,2))
+boxplot(Y ~ A, names=c("Non trattati","Trattati"),
+        ylab="Esito (ansia)", main="Associazione osservata")
+text(1.5, max(Y)*0.95, paste("Diff =", round(assoc_obs, 2)), col="red", cex=1.2)
+
+plot(ansia_tratto, Y, col=ifelse(A==1, "red", "blue"), pch=19, alpha=0.5,
+     xlab="Ansia di tratto (confondente)", ylab="Esito (ansia)",
+     main="Struttura del confondimento")
+legend("topleft", c("Trattati","Non trattati"), col=c("red","blue"), pch=19)
+```
+
+**Cosa vediamo?** I trattati hanno un esito peggiore, ma questo non è perché il trattamento fa male! È semplicemente perché chi si è trattato partiva già con più ansia. L'associazione osservata è fuorviante.
+
+### Simulazione 2: Randomizzazione
+
+Ora ripetiamo la simulazione, ma questa volta assegniamo il trattamento **casualmente**, indipendentemente dal livello di ansia di tratto.
+
+```{r}
+#| label: sim-randomization
+#| fig-cap: "Randomizzazione: i gruppi sono bilanciati, l'associazione riflette la causalità"
+#| fig-width: 7
+#| fig-height: 5
+
+set.seed(43)
+N <- 1000
+
+# Stessa struttura di prima
+ansia_tratto <- rnorm(N, mean = 50, sd = 10)
+
+# MA ORA: trattamento assegnato casualmente!
+A <- rbinom(N, 1, 0.5)
+
+# Esito come prima: dipende solo dall'ansia di tratto
+Y <- ansia_tratto + rnorm(N, 0, 5)
+
+# Confronto osservazionale
+assoc_rand <- mean(Y[A==1]) - mean(Y[A==0])
+
+# Visualizzazione
+par(mfrow=c(1,2))
+boxplot(Y ~ A, names=c("Non trattati","Trattati"),
+        ylab="Esito (ansia)", main="Con randomizzazione")
+text(1.5, max(Y)*0.95, paste("Diff =", round(assoc_rand, 2)), col="darkgreen", cex=1.2)
+
+plot(ansia_tratto, Y, col=ifelse(A==1, "red", "blue"), pch=19, alpha=0.5,
+     xlab="Ansia di tratto", ylab="Esito (ansia)",
+     main="Randomizzazione: bilanciamento")
+legend("topleft", c("Trattati","Non trattati"), col=c("red","blue"), pch=19)
+```
+
+**Cosa vediamo ora?** Con la randomizzazione, i due gruppi hanno caratteristiche simili all'inizio. La differenza osservata è ora molto vicina a zero, riflettendo il vero effetto causale (che è nullo). La randomizzazione "rompe" il legame tra il confondente e il trattamento.
+
+::: {.callout-tip title="Il potere della randomizzazione"}
+La randomizzazione è lo strumento più potente per l'inferenza causale perché:
+
+- rende i gruppi comparabili "in media" su tutte le caratteristiche, anche quelle non osservate;
+- fa sì che l'associazione osservata rifletta l'effetto causale (in media);
+- è il gold standard degli studi sperimentali.
+:::
+
+### Simulazione 3: Il paradosso di Simpson
+
+Un esempio particolarmente sorprendente di come il confondimento possa ingannare è il *paradosso di Simpson*. Immaginiamo di avere due sottogruppi di studenti: uno con bassa ansia di tratto e uno con alta ansia di tratto. Supponiamo che:
+
+1. il trattamento abbia lo **stesso effetto negativo** in entrambi i sottogruppi (riduce l'esito di -0.3);
+2. MA la probabilità di ricevere il trattamento sia diversa nei due gruppi (70% tra gli ansiosi, 30% tra i non ansiosi);
+3. gli studenti ansiosi hanno esiti mediamente più alti.
+
+Cosa succede se ignoriamo l'appartenenza ai sottogruppi e confrontiamo semplicemente trattati vs non trattati?
+
+```{r}
+#| label: sim-simpson
+#| fig-cap: "Paradosso di Simpson: stesso effetto nei sottogruppi, ma effetto opposto nel campione totale"
+#| fig-width: 8
+#| fig-height: 5
+
+set.seed(123)
+N <- 4000
+gruppo <- rbinom(N, 1, 0.5)  # 0 = bassa ansia, 1 = alta ansia
+
+# Prevalenze diverse di trattamento
+A <- ifelse(gruppo==1, rbinom(N,1,0.7), rbinom(N,1,0.3))
+
+# Effetto causale vero = -0.3 in ENTRAMBI i gruppi
+tau <- -0.3
+mu <- ifelse(gruppo==1, 0.8, 0.2)  # baseline diversi
+Y0 <- mu + rnorm(N, 0, 1)
+Y1 <- Y0 + tau
+Y <- ifelse(A==1, Y1, Y0)
+
+# Calcolo effetti
+eff_g0 <- mean(Y[gruppo==0 & A==1]) - mean(Y[gruppo==0 & A==0])
+eff_g1 <- mean(Y[gruppo==1 & A==1]) - mean(Y[gruppo==1 & A==0])
+eff_marginale <- mean(Y[A==1]) - mean(Y[A==0])
+
+# Visualizzazione
+par(mfrow=c(1,2))
+
+# Grafico 1: effetti nei sottogruppi vs marginale
+barplot(height = c(eff_g0, eff_g1, eff_marginale),
+        names.arg = c("Bassa ansia", "Alta ansia", "Totale\n(ignorando gruppo)"),
+        ylab = "Effetto stimato", 
+        main = "Paradosso di Simpson",
+        col = c("lightblue", "lightblue", "salmon"))
+abline(h = 0, lty = 2)
+abline(h = tau, lty = 2, col = "darkgreen")
+text(2, tau + 0.15, "Vero effetto = -0.3", col = "darkgreen")
+
+# Grafico 2: struttura dei dati
+plot(jitter(gruppo), Y, col=ifelse(A==1, "red", "blue"), pch=19,
+     xlab="Gruppo (0=bassa ansia, 1=alta ansia)", ylab="Esito",
+     main="Struttura dei dati", xaxt="n")
+axis(1, at=c(0,1), labels=c("Bassa","Alta"))
+legend("topleft", c("Trattati","Non trattati"), col=c("red","blue"), pch=19)
+```
+
+**Il paradosso**: all'interno di ogni sottogruppo, il trattamento riduce l'esito di circa -0.3 (come previsto). Ma se ignoriamo i sottogruppi e confrontiamo semplicemente trattati vs non trattati nel campione totale, otteniamo un effetto *positivo*! Questo accade perché tra i trattati c'è una sovrarappresentazione di studenti ad alta ansia, che hanno esiti più alti per natura.
+
+::: {.callout-warning title="Lezione del paradosso di Simpson"}
+La stessa relazione può avere segni opposti a livello aggregato rispetto ai sottogruppi. Questo dimostra che:
+
+- non possiamo fidarci ciecamente delle associazioni osservate;
+- è essenziale identificare e controllare per i confondenti;
+- l'analisi stratificata (per sottogruppi) può rivelare la vera struttura causale.
+:::
+
+## Oltre il confondimento: mediazione e moderazione
+
+Abbiamo visto che il confondimento è problematico perché distorce la relazione tra trattamento ed esito. Ma non tutte le "terze variabili" sono confondenti. È importante distinguere tre ruoli diversi che una variabile può avere.
+
+### Variabili di confondimento
+
+Una **variabile di confondimento** influenza sia il trattamento che l'esito, creando un'associazione spuria.
+
+**Esempio**: Studiamo la relazione tra uso dei social media e depressione in adolescenti. La *solitudine* è un confondente perché:
+
+- gli adolescenti più soli tendono a usare più i social media;
+- la solitudine aumenta anche i sintomi depressivi.
+
+```
+     Solitudine
+        ↙   ↘
+Social media → Depressione?
+```
+
+Se non controlliamo per la solitudine, potremmo concludere erroneamente che i social media causano depressione, quando in realtà entrambi sono conseguenze della solitudine.
+
+::: {.callout-warning}
+**Quando c'è confondimento**: dobbiamo controllare statisticamente per il confondente (includerlo nella regressione, fare matching, stratificare) per ottenere una stima non distorta dell'effetto causale.
+:::
+
+### Variabili mediatrici
+
+Una **variabile mediatrice** è invece un "anello di passaggio" nella catena causale. Non distorce la relazione, ma la *spiega*.
+
+**Esempio**: studiamo l'effetto dello stress sul rendimento agli esami. La *qualità del sonno* è un mediatore perché:
+
+```
+Stress → Qualità del sonno → Rendimento esami
+```
+
+Lo stress peggiora il sonno, e il cattivo sonno riduce il rendimento. Il sonno è il *meccanismo* attraverso cui lo stress agisce.
+
+::: {.callout-tip}
+**Quando c'è mediazione**: NON dobbiamo controllare per il mediatore se vogliamo stimare l'effetto totale. Se lo facessimo, "bloccheremmo" il meccanismo causale. Controllare per il mediatore ha senso solo se vogliamo stimare l'effetto *diretto* (cioè la parte che non passa attraverso il mediatore).
+:::
+
+### Variabili moderatrici
+
+Una **variabile moderatrice** modifica l'intensità o la direzione dell'effetto causale, senza essere essa stessa nella catena causale.
+
+**Esempio**: Studiamo l'effetto di un intervento di mindfulness sull'ansia. Il *livello di ansia iniziale* può essere un moderatore:
+
+- nelle persone con ansia alta, l'intervento è molto efficace;
+- nelle persone con ansia bassa, l'intervento ha poco effetto (effetto soffitto).
+
+```
+Mindfulness → Ansia
+      ↑
+Ansia iniziale
+(modera l'effetto)
+```
+
+::: {.callout-tip}
+**Quando c'è moderazione**: Ha senso includere interazioni nel modello statistico (es. `mindfulness × ansia_iniziale`) per vedere se l'effetto cambia in funzione del moderatore. Questo ci aiuta a capire "per chi funziona" il trattamento.
+:::
+
+### Riepilogo grafico
+
+```{r}
+#| label: conf-med-mod
+#| echo: false
+#| fig-cap: "Tre ruoli diversi delle terze variabili"
+#| fig-width: 9
+#| fig-height: 3
+
+par(mfrow=c(1,3), mar=c(2,2,3,2))
+
+# Confondimento
+plot(0, 0, type="n", xlim=c(0,3), ylim=c(0,2), axes=FALSE, xlab="", ylab="")
+title("Confondimento", cex.main=1.3)
+# C
+text(1.5, 1.8, "C", cex=1.5, font=2)
+# X e Y
+text(0.5, 0.3, "X", cex=1.5, font=2)
+text(2.5, 0.3, "Y", cex=1.5, font=2)
+# Frecce
+arrows(1.5, 1.6, 0.7, 0.5, length=0.15, lwd=2)
+arrows(1.5, 1.6, 2.3, 0.5, length=0.15, lwd=2)
+arrows(0.7, 0.3, 2.3, 0.3, length=0.15, lwd=2, lty=2, col="red")
+text(1.5, 0.1, "associazione spuria", col="red", cex=0.9)
+
+# Mediazione
+plot(0, 0, type="n", xlim=c(0,3), ylim=c(0,2), axes=FALSE, xlab="", ylab="")
+title("Mediazione", cex.main=1.3)
+# X, M, Y
+text(0.5, 1, "X", cex=1.5, font=2)
+text(1.5, 1, "M", cex=1.5, font=2)
+text(2.5, 1, "Y", cex=1.5, font=2)
+# Frecce
+arrows(0.7, 1, 1.3, 1, length=0.15, lwd=2)
+arrows(1.7, 1, 2.3, 1, length=0.15, lwd=2)
+text(1.5, 0.5, "meccanismo causale", col="darkgreen", cex=0.9)
+
+# Moderazione
+plot(0, 0, type="n", xlim=c(0,3), ylim=c(0,2), axes=FALSE, xlab="", ylab="")
+title("Moderazione", cex.main=1.3)
+# X e Y
+text(0.5, 1, "X", cex=1.5, font=2)
+text(2.5, 1, "Y", cex=1.5, font=2)
+# Z
+text(1.5, 1.8, "Z", cex=1.5, font=2)
+# Frecce
+arrows(0.7, 1, 2.3, 1, length=0.15, lwd=2)
+arrows(1.5, 1.6, 1.5, 1.2, length=0.15, lwd=2)
+text(1.5, 0.5, "l'effetto X→Y dipende da Z", col="blue", cex=0.9)
+```
+
+## Un esempio numerico: quando l'associazione inganna
+
+Torniamo a un esempio numerico per vedere il confondimento in azione. Immaginiamo di voler stimare se lo *studio pomeridiano* ($X$) migliora il *rendimento a un test* ($Y$). Supponiamo però che esista un confondente: la *motivazione* ($U$).
+
+- Gli studenti molto motivati tendono sia a studiare più spesso nel pomeriggio sia ad avere voti più alti.
+- Se non controlliamo per la motivazione, potremmo concludere che studiare nel pomeriggio causi voti migliori.
+
+Simuliamo dei dati:
+
+```{r}
+#| label: example-confounding-numerical
+
+set.seed(123)
+n <- 200
+motivazione <- rbinom(n, 1, 0.5)  # 0 = bassa, 1 = alta
+
+# La motivazione influenza sia lo studio che il rendimento
+studio <- rbinom(n, 1, 0.3 + 0.4*motivazione)
+rendimento <- rbinom(n, 1, 0.2 + 0.5*motivazione)
+
+# Tabella di contingenza
+cat("Tabella studio × rendimento:\n")
+print(table(studio, rendimento))
+
+cat("\n\nProporzioni condizionate (per riga):\n")
+print(prop.table(table(studio, rendimento), 1))
+```
+
+**Interpretazione ingenua**: tra chi studia nel pomeriggio, circa 62% ha successo. Tra chi non studia, solo 29%. Concluderemmo che studiare nel pomeriggio raddoppia quasi la probabilità di successo.
+
+**Realtà**: lo studio *non ha alcun effetto causale* in questa simulazione! L'associazione osservata è interamente dovuta al confondimento con la motivazione. Per verificarlo, stratifichiamo per motivazione:
+
+```{r}
+#| label: stratified-analysis
+
+cat("Studenti a BASSA motivazione:\n")
+low_mot <- motivazione == 0
+print(prop.table(table(studio[low_mot], rendimento[low_mot]), 1))
+
+cat("\n\nStudenti ad ALTA motivazione:\n")
+high_mot <- motivazione == 1
+print(prop.table(table(studio[high_mot], rendimento[high_mot]), 1))
+```
+
+All'interno di ciascun livello di motivazione, l'associazione studio-rendimento scompare (o diventa molto debole). Questo conferma che l'associazione osservata nel campione totale era spuria.
+
+::: {.callout-important title="La lezione fondamentale"}
+Senza controllare per i confondenti, i dati ci ingannano. Solo stratificando per la motivazione (o includendola in una regressione) possiamo distinguere tra correlazione spuria e relazione causale reale.
+:::
+
+## Misure di effetto: scale diverse per comunicare i risultati
+
+Quando vogliamo descrivere un effetto causale, non esiste un'unica misura. La scelta dipende dalla domanda che ci poniamo e dal contesto. Vediamo le principali opzioni con un esempio.
+
+Supponiamo che in un esperimento randomizzato:
+
+- tra i trattati, 20% sviluppa un attacco d'ansia;
+- tra i controlli, 10% sviluppa un attacco d'ansia.
+
+### Differenza di rischi (Risk Difference, RD)
+
+$$
+\text{RD} = P(Y=1|A=1) - P(Y=1|A=0) = 0.20 - 0.10 = 0.10
+$$
+
+**Interpretazione**: il trattamento aumenta il rischio di 10 punti percentuali. Su 100 persone trattate, ci aspettiamo 10 casi in più rispetto a se non fossero state trattate.
+
+**Quando usarla**: quando vogliamo comunicare l'impatto assoluto, per esempio per decisioni di salute pubblica.
+
+### Rapporto di rischi (Risk Ratio, RR)
+
+$$
+\text{RR} = \frac{P(Y=1|A=1)}{P(Y=1|A=0)} = \frac{0.20}{0.10} = 2.0.
+$$
+
+**Interpretazione**: i trattati hanno il doppio del rischio rispetto ai controlli.
+
+**Quando usarla**: quando vogliamo enfatizzare l'aumento proporzionale del rischio. È intuitiva per comunicare "quante volte cresce il rischio".
+
+### Odds ratio (OR)
+
+$$
+\text{OR} = \frac{P(Y=1|A=1)/P(Y=0|A=1)}{P(Y=1|A=0)/P(Y=0|A=0)} = \frac{0.20/0.80}{0.10/0.90} \approx 2.25.
+$$
+
+**Interpretazione**: gli odds di sviluppare un attacco d'ansia sono 2.25 volte più alti tra i trattati.
+
+**Quando usarla**: è la misura naturale dei modelli logistici. È più difficile da interpretare, ma ha proprietà matematiche utili.
+
+### Confronto con simulazione
+
+```{r}
+#| label: effect-measures
+
+set.seed(7)
+n <- 10000
+p1 <- 0.20  # rischio tra trattati
+p0 <- 0.10  # rischio tra controlli
+A <- rbinom(n, 1, 0.5)
+Y <- ifelse(A==1, rbinom(n, 1, p1), rbinom(n, 1, p0))
+
+p_hat1 <- mean(Y[A==1])
+p_hat0 <- mean(Y[A==0])
+
+RD <- p_hat1 - p_hat0
+RR <- p_hat1 / p_hat0
+OR <- (p_hat1/(1-p_hat1)) / (p_hat0/(1-p_hat0))
+
+cat(sprintf("Differenza di rischi (RD) = %.3f\n", RD))
+cat(sprintf("Rapporto di rischi (RR)    = %.2f\n", RR))
+cat(sprintf("Odds ratio (OR)            = %.2f\n", OR))
+```
+
+::: {.callout-tip title="Quale misura scegliere?"}
+Non esiste una risposta universale:
+
+- **RD** per l'impatto assoluto e decisioni pratiche;
+- **RR** per enfatizzare l'aumento relativo, intuitivo;
+- **OR** quando si usano modelli logistici, più tecnico.
+
+L'importante è scegliere consapevolmente e comunicare chiaramente quale misura si sta usando.
+:::
+
+## Riflessioni conclusive: dalla correlazione all'inferenza causale
+
+In questo capitolo abbiamo visto che:
+
+1. **Correlazione ≠ causalità**: l'associazione osservata tra due variabili può essere fuorviante se non consideriamo i confondenti.
+
+2. **Controfattuali**: per pensare rigorosamente alla causalità, dobbiamo immaginare scenari alternativi (cosa sarebbe successo senza il trattamento?).
+
+3. **Confondimento**: è il nemico principale dell'inferenza causale negli studi osservazionali. Le simulazioni ci hanno mostrato come possa distorcere completamente i risultati.
+
+4. **Randomizzazione**: è lo strumento più potente perché "rompe" il legame tra confondenti e trattamento.
+
+5. **Mediazione e moderazione**: non tutte le terze variabili sono problematiche. Saper distinguere i diversi ruoli è essenziale.
+
+Questi concetti sono fondamentali per interpretare criticamente la letteratura psicologica e progettare meglio i propri studi. Nella pratica della ricerca, raramente possiamo fare esperimenti perfettamente randomizzati, quindi dobbiamo imparare a ragionare esplicitamente sui confondenti e a usare strumenti statistici appropriati.
+
+::: {.callout-note title="Per approfondire"}
+Questo capitolo ha introdotto le intuizioni di base. Per una trattazione più rigorosa degli strumenti per l'inferenza causale (DAG, backdoor criterion, propensity score, matching, pesatura, regressione in prospettiva causale), vedere i capitoli dedicati nel [manuale principale](https://ccaudek.github.io/utet-companion/).
+
+In particolare:
+
+- **Grafi aciclici diretti (DAG)**: uno strumento visuale per rappresentare ipotesi causali e identificare quali variabili controllare.
+- **Backdoor criterion**: un criterio formale per decidere quali confondenti bloccare.
+- **Metodi per dati osservazionali**: matching, pesatura per propensity score, regressione interpretata causalmente.
+- **Inferenza bayesiana**: come quantificare l'incertezza sulle stime causali.
+:::
+
+::: {.callout-tip collapse=true title="Informazioni sull'ambiente di sviluppo"}
+```{r}
+sessionInfo()
+```
+:::
+
+## Bibliografia {.unnumbered .unlisted}

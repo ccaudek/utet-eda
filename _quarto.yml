@@ -20,7 +20,7 @@ book:
   site-url: https://ccaudek.github.io/utet-eda/
   page-footer:
     left: |
-      **Analisi esplorativa dei dati (EDA)** — Modulo del progetto UTET a supporto del manuale *Metodi bayesiani in psicologia*.
+      **Analisi esplorativa dei dati (EDA)** — Modulo del progetto UTET a supporto del manuale *Inferenza bayesiana in psicologia: Ragionare con l'incertezza*.
     right: |
       Realizzato con <a href="https://quarto.org/">Quarto</a>.
   favicon: style/gauss.png
@@ -47,25 +47,25 @@ book:
       chapters:
         
         - chapters/R/01_r_syntax.qmd
-        - chapters/R/02_utility_functions.qmd
-        - chapters/R/03_r_programming.qmd
-        - chapters/R/04_r_packages.qmd
+        - chapters/R/02_environment.qmd
+        - chapters/R/03_utility_functions.qmd
+        - chapters/R/04_r_programming.qmd
         - chapters/R/05_dplyr.qmd
-        - chapters/R/06_quarto.qmd
-        - chapters/R/07_environment.qmd
+        - chapters/R/06_ggplot2.qmd
+        - chapters/R/07_quarto.qmd
+        - chapters/R/08_r_packages.qmd
+        
 
     - part: chapters/eda/introduction_eda.qmd
       chapters:
         - chapters/eda/01_project_structure.qmd
         - chapters/eda/02_data_cleaning.qmd
-        - chapters/eda/03_exploring_qualitative_data.qmd
-        - chapters/eda/04_exploring_numeric_data.qmd
-        - chapters/eda/05_data_visualization.qmd
+        - chapters/eda/03_exploring_univariate_data.qmd
+        - chapters/eda/05_data_visualization_principles.qmd
         - chapters/eda/06_loc_scale.qmd
         - chapters/eda/07_introduction_normal_distribution.qmd
         - chapters/eda/08_correlation.qmd
-        # - chapters/eda/09_propedeutic_causality.qmd
-        # - chapters/eda/10_causality.qmd
+        - chapters/eda/09_causality_intro.qmd
         - chapters/eda/11_outlier.qmd
         - chapters/eda/12_gauss.qmd
 
@@ -86,43 +86,46 @@ link-citations: true
 
 format:
   html:
+    # -------- Codice --------
     code-fold: false
-    code-summary: "Code show/hide"
+    code-summary: "Mostra/Nascondi codice"
     code-copy: hover
     code-link: true
     code-overflow: scroll
     code-block-bg: true
-    # highlight-style: github
-    # code-block-border-left: "#6C6C6C"
-    theme: 
-      light: 
-        - cosmo
+    
+    # -------- Tema --------
+    theme:
+      light: cosmo
       dark: darkly
+    css: style/custom.css
     mainfont: "system-ui"
-    # max-width: 74ch
-    # number-sections: true
     lang: it
+    
+    # -------- Navigazione --------
     reader-mode: true
-    # toc: true
+    toc: true              # TOC va qui sotto format:html:
+    toc-depth: 2           # E anche toc-depth
     toc-title: "Sommario"
-    # toc-expand: 2
     smooth-scroll: true
+    
+    # -------- Link e note --------
     footnotes-hover: true
     link-external-icon: true
     link-external-newwindow: true
-
-  # Figure 
-    fig-align: center
-    fig-responsive: true
-    fig-cap-location: bottom
-    fig-format: png 
-  
-    # Matematica
+    
+    # -------- Media --------
+    lightbox: auto
+    
+    # -------- Matematica --------
     html-math-method:
       method: mathjax
-
-  # Media
-    lightbox: auto
+      url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+      # Macro opzionali (decommentare se serve)
+      # macros:
+      #   "\\E": "\\mathbb{E}"
+      #   "\\Var": "\\mathrm{Var}"
+      #   "\\Cov": "\\mathrm{Cov}"
 
 execute:
   freeze: auto  # Skip re-executing unchanged code chunks

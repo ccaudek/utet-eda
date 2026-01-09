@@ -1,0 +1,479 @@
+---
+title: "Principi della visualizzazione scientifica"
+subtitle: "Dall'intuizione visiva alla comunicazione rigorosa"
+---
+
+::: {.callout-note appearance="minimal"}
+Una visualizzazione ben progettata non è un ornamento che abbellisce l'analisi dei dati — è uno strumento epistemologico che trasforma numeri in intuizioni, pattern nascosti in evidenze visibili, complessità in chiarezza. In questo capitolo esploreremo i principi fondamentali che distinguono una visualizzazione efficace da una fuorviante, i criteri che guidano scelte apparentemente estetiche ma che in realtà determinano la correttezza interpretativa dei risultati, e gli errori ricorrenti che anche ricercatori esperti commettono quando confondono l'immediatezza visiva con la precisione comunicativa.
+
+Non parleremo di codice, per quello rimandiamo al @sec-r-ggplot2, dove la grammatica dei grafici viene introdotta sistematicamente. Qui ci concentreremo su *cosa* visualizzare, *perché* una rappresentazione funziona meglio di un'altra, e *come* riconoscere quando un grafico mente anche se tecnicamente corretto. Perché la visualizzazione, come ogni forma di comunicazione scientifica, porta con sé responsabilità etiche: ogni scelta cromatica, ogni scala, ogni geometria influenza il modo in cui i dati verranno interpretati e, potenzialmente, le decisioni che ne deriveranno.
+:::
+
+## Prerequisiti {.unnumbered .unlisted}
+
+::: {.callout-tip collapse=true}
+## Letture fondamentali
+
+**Edward Tufte**:  
+
+- *The Visual Display of Quantitative Information* (1983)
+- *Envisioning Information* (1990)
+
+**William Cleveland**:  
+
+- *The Elements of Graphing Data* (1985)
+- *Visualizing Data* (1993)
+
+**Alberto Cairo**:  
+
+- *The Truthful Art* (2016)
+- *How Charts Lie* (2019)
+
+**Articoli chiave**:
+
+- [Testing Statistical Charts](https://doi.org/10.1146/annurev-statistics-031219-041252) di Vanderplas, Cook & Hofmann (2020)
+- [Dynamite plots must die](https://simplystatistics.org/posts/2019-02-21-dynamite-plots-must-die/) di Irizarry (2019)
+- [The top ten worst graphs](https://www.biostat.wisc.edu/~kbroman/topten_worstgraphs/) di Broman
+:::
+
+::: {.callout-caution collapse=true title="Preparazione del Notebook"}
+
+```{r}
+here::here("code", "_common.R") |>
+  source()
+
+# Load packages
+if (!requireNamespace("pacman")) install.packages("pacman")
+pacman::p_load(dslabs, ggrepel, stringr)
+```
+:::
+
+## Quando i numeri non bastano
+
+I numeri in sé raramente raccontano una storia chiara. Prendiamo ad esempio i dati sugli omicidi commessi con armi da fuoco negli Stati Uniti. Da una semplice tabella apprendiamo che in California si sono registrati 1257 casi, in Texas 805, a New York 517. Queste cifre, tuttavia, restano isolate e poco eloquenti: quali stati hanno una popolazione più ampia? Esiste una relazione tra il numero di abitanti e gli omicidi? E il Sud è davvero più violento del Nord-Est? Senza un contesto o una visione d’insieme, i dati grezzi lasciano aperte più domande di quante ne risolvano.
+
+```{r}
+#| label: data-preview
+head(murders, 8)
+```
+
+Un grafico, al contrario, rende queste relazioni visibili in modo immediato. L’adozione di una scala logaritmica su entrambi gli assi permette di rappresentare efficacemente tanto gli stati più popolosi, come la California, quanto quelli con un ridotto numero di abitanti, come il Wyoming, preservando nel contempo chiarezza e leggibilità dell’intera visualizzazione.
+
+```{r}
+#| label: fig-murders-viz
+#| echo: false
+#| fig-cap: "Relazione popolazione-omicidi negli Stati Uniti"
+#| fig-width: 8
+#| fig-height: 7
+
+national_rate <- murders |>
+  summarize(rate = sum(total) / sum(population) * 10^6) |>
+  pull(rate)
+
+murders |> 
+  ggplot(aes(x = population / 10^6, y = total, label = abb)) +
+  geom_abline(
+    intercept = log10(national_rate), 
+    slope = 1, lty = 2, col = "gray40", linewidth = 0.8
+  ) +
+  geom_point(aes(color = region), size = 3.5, alpha = 0.8) +
+  geom_text_repel(size = 3, max.overlaps = 50) +
+  scale_x_log10(breaks = c(1, 3, 10, 30)) +
+  scale_y_log10(breaks = c(10, 30, 100, 300, 1000)) +
+  scale_color_qualitative() +
+  labs(
+    x = "Popolazione (milioni, scala log)",
+    y = "Omicidi totali (scala log)",
+    color = "Regione",
+    caption = "Linea tratteggiata: tasso nazionale medio"
+  ) +
+  theme(legend.position = "bottom", panel.grid.minor = element_blank())
+```
+
+In pochi secondi è possibile cogliere pattern che richiederebbero lunghi minuti di analisi tabellare: la relazione pressoché lineare tra popolazione e omicidi; la tendenza degli stati del Sud a collocarsi sistematicamente sopra la tendenza centrale; la posizione del Nord-Est al di sotto di essa; la marcata variabilità delle regioni dell'Ovest. Il Distretto di Columbia (DC) emerge come un outlier drammatico — una popolazione ridotta ma un tasso di omicidi estremamente elevato.
+
+**È questo il potere della visualizzazione**: tradurre strutture astratte e complesse in pattern spaziali che il nostro sistema visivo elabora in modo immediato e intuitivo. Tuttavia, tale potere implica una pari responsabilità: così come un grafico ben costruito può svelare verità nascoste nei dati, uno progettato in modo inadeguato o ingannevole può generare illusioni altrettanto convincenti.
+
+## I tre pilastri: Tufte, Cleveland, Cairo
+### Edward Tufte: l'economia visiva
+
+Il principio fondamentale introdotto da Edward Tufte è quello del **data-ink ratio** — il rapporto tra l'inchiostro utilizzato per rappresentare l'informazione vera e propria e l'inchiostro totale impiegato nel grafico:
+
+$$
+\text{Rapporto inchiostro-dati} = \frac{\text{inchiostro usato per i dati}}{\text{inchiostro totale del grafico}} .
+$$
+
+Un grafico efficace punta a **massimizzare questo rapporto**, eliminando senza esitazioni ogni elemento che non contribuisce in modo diretto alla comprensione dei dati. Tufte ha coniato il termine **chartjunk** per descrivere tutto ciò che distrae lo sguardo senza aggiungere alcuna informazione significativa.
+
+**Principi fondamentali secondo Tufte**:
+
+1. **Prima di tutto, mostra i dati** – La centralità dell'informazione deve prevalere su ogni decorazione superflua.
+2. **Massimizza l'inchiostro per i dati** – Ogni tratto, ogni punto, ogni elemento grafico deve avere una ragione informativa per essere presente.
+3. **Elimina l'inchiostro non-dati** – Rimuovi griglie eccessive, bordi decorativi, sfondi inutili e ogni altro elemento che non veicola informazione.
+4. **Elimina le ridondanze nell'inchiostro-dati** – Ogni informazione dovrebbe essere rappresentata una sola volta, in modo chiaro ed efficace.
+5. **Rivedi e modifica** – Nessun grafico è perfetto al primo tentativo; la revisione è parte essenziale del processo di comunicazione visiva.
+
+### William Cleveland: la gerarchia percettiva
+
+Cleveland misurò sperimentalmente l’accuratezza con cui le persone interpretano diversi elementi visivi, individuando una **gerarchia ben definita di efficacia percettiva**:
+
+1.  **Posizione su una scala condivisa** – Scatter plot, grafici a linee (massima precisione)
+2.  **Posizione su scale non allineate** – Grafici a pannelli (*small multiples*)
+3.  **Lunghezza** – Barplot, grafici a bastoncini (*lollipop chart*)
+4.  **Direzione e Angolo** – Campi vettoriali, diagrammi a raggera
+5.  **Area** – *Bubble chart*, *treemap*
+6.  **Volume / Densità** – Grafici tridimensionali, superfici
+7.  **Tonalità / Saturazione del colore** – Mappe di calore (*heatmap*)
+
+**L’implicazione pratica è chiara**: per confronti quantitativi precisi, è preferibile utilizzare elementi posizionali (come punti o linee) o lunghezze. Se l’obiettivo è differenziare categorie o evidenziare pattern qualitativi, il colore può essere sufficiente. Per comunicare differenze in cui la precisione assoluta non è critica, si possono impiegare efficacemente variazioni di area o di colore.
+
+### Alberto Cairo: l'onestà visiva
+
+Alberto Cairo sposta l'attenzione dall’efficienza tecnica e percettiva verso la dimensione **etica della comunicazione visiva**. Secondo Cairo, un grafico può essere tecnicamente impeccabile ma moralmente ingannevole se sfrutta consapevolmente i bias percettivi del lettore per suggerire conclusioni non supportate dai dati.
+
+**I cinque pilastri della visualizzazione etica secondo Cairo**:
+
+1.  **Veridicità (Truthfulness)** – Il grafico rappresenta i dati in modo accurato e privo di distorsioni?
+2.  **Funzionalità (Functionality)** – È efficace per lo scopo comunicativo che si prefigge?
+3.  **Bellezza (Beauty)** – La sua estetica è raffinata senza essere frivola o decorativa?
+4.  **Profondità (Insightfulness)** – Rivela pattern, relazioni o intuizioni non immediatamente evidenti?
+5.  **Illuminazione (Enlightenment)** – Aumenta effettivamente la comprensione del lettore su un determinato fenomeno?
+
+Cairo sottolinea con forza che **l'assenza di errori tecnici non equivale automaticamente a onestà comunicativa**. Un grafico può essere costruito in modo formale corretto eppure ingannevole: ad esempio, utilizzando assi troncati per amplificare artificiosamente delle differenze, impiegando scale logaritmiche senza dichiararlo per appiattire un trend, o rappresentando quantità con aree (che il nostro occhio stima con difficoltà) anziché con lunghezze (più intuitive), distorcendo così le proporzioni reali.
+
+## Errori comuni: una galleria degli orrori
+
+### Errore 1: I grafici a dinamite — l'illusione della precisione
+
+I cosiddetti **grafici a dinamite** (o *dynamite plots*) — barre con errori standard — rappresentano l'equivalente visivo dei p-value: sono tecnicamente corretti e informativi, ma nella pratica spesso fuorvianti.
+
+**Qual è il problema?** Osservando solo la media ± l'errore standard, si perde completamente la vista di:
+- **La forma della distribuzione** (è simmetrica? bimodale? asimmetrica?)
+- **La presenza di potenziali outlier**
+- **L'effettiva sovrapposizione tra i gruppi a confronto**
+- **La dimensione del campione** (un gruppo con N=5 e uno con N=500 vengono rappresentati in modo identico, nascondendo la diversa affidabilità delle stime)
+
+**La soluzione**: Sostituire o affiancare il grafico a barre con visualizzazioni che mostrino i dati veri e propri, ad esempio tramite *jitter*, trasparenza (*alpha blending*) o sovrapponendo sintesi statistiche più robuste (come diagrammi a scatola e baffi o violino) ai singoli punti dati.
+
+```{r}
+#| label: fig-dynamite-fix
+#| fig-cap: "Dynamite plot (sinistra) vs. dati completi (destra)"
+#| fig-width: 10
+#| fig-height: 5
+#| echo: false
+
+set.seed(42)
+df_ex <- tibble(
+  group = rep(c("A", "B"), each = 50),
+  value = c(rnorm(50, 10, 2), c(rnorm(45, 10, 1), runif(5, 5, 15)))
+)
+
+df_sum <- df_ex |> group_by(group) |>
+  summarise(mean = mean(value), se = sd(value)/sqrt(n()))
+
+p1 <- ggplot(df_sum, aes(x = group, y = mean, fill = group)) +
+  geom_col(width = 0.6, alpha = 0.7) +
+  geom_errorbar(aes(ymin = mean - se, ymax = mean + se), width = 0.2, linewidth = 1) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
+  scale_color_qualitative() +
+  labs(title = "Dynamite plot", subtitle = "Gruppi sembrano identici", 
+       y = "Media ± SE") +
+  theme(legend.position = "none")
+
+p2 <- ggplot(df_ex, aes(x = group, y = value, color = group)) +
+  geom_jitter(width = 0.2, alpha = 0.4, size = 2) +
+  stat_summary(fun = median, geom = "crossbar", width = 0.5, 
+               linewidth = 0.8, color = "black") +
+  scale_color_qualitative() +
+  labs(title = "Dati completi", subtitle = "B ha outlier e maggiore variabilità!") +
+  theme(legend.position = "none")
+
+gridExtra::grid.arrange(p1, p2, ncol = 2)
+```
+
+### Errore 2: I grafici a torta — quando gli angoli ingannano
+
+La ricerca sperimentale di William Cleveland ha dimostrato che confrontare angoli è un'operazione visivamente faticosa e poco precisa. Quando il numero di categorie supera le tre, i grafici a torta diventano praticamente illeggibili.
+
+**Un ulteriore problema comune**: l'ordine delle fette segue spesso l'alfabeto o una sequenza casuale, invece di essere organizzato per valori decrescenti, rendendo ancora più difficile cogliere immediatamente le proporzioni relative e il pattern dominante.
+
+```{r}
+#| label: fig-pie-vs-bar
+#| fig-cap: "Pie chart (sinistra) vs. barplot ordinato (destra)"
+#| fig-width: 10
+#| fig-height: 4
+#| echo: false
+
+df_sp <- tibble(species = c("Adelie", "Gentoo", "Chinstrap"), 
+                count = c(152, 124, 68))
+
+p1 <- ggplot(df_sp, aes(x = "", y = count, fill = species)) +
+  geom_col(width = 1) + coord_polar("y") +
+  scale_color_qualitative() +
+  labs(title = "Pie chart", subtitle = "Chinstrap o Gentoo è minore?") +
+  theme_void() + 
+  theme(legend.position = "right")
+
+p2 <- ggplot(df_sp, aes(x = reorder(species, count), y = count, fill = species)) +
+  geom_col(alpha = 0.8) + coord_flip() +
+  scale_color_qualitative() +
+  labs(title = "Barplot ordinato", subtitle = "Gerarchia immediatamente chiara",
+       x = NULL, y = "Numero di osservazioni") +
+  theme(legend.position = "none")
+
+gridExtra::grid.arrange(p1, p2, ncol = 2)
+```
+
+**Verdetto**: Per confronti quantitativi, usa sempre lunghezza (barplot), mai angoli (pie).
+
+### Errore 3: Grafici a doppio asse — l’illusione della correlazione
+
+I grafici con due assi verticali indipendenti possono creare l’ingannevole impressione di una relazione tra variabili che in realtà non esiste, semplicemente manipolando le scale delle due serie di dati.
+
+**Un esempio celebre**: il presunto legame tra il consumo di formaggio e le morti per impigliamento nelle lenzuola, reso famoso dal progetto *"Spurious Correlations"* di Tyler Vigen. Scalando opportunamente i due assi, le curve dei dati possono essere fatte apparire quasi perfettamente sovrapposte.
+
+**Il problema**: il lettore interpreta questa sovrapposizione visiva come prova di correlazione, senza rendersi conto che le due scale sono arbitrarie e del tutto indipendenti, rendendo ogni confronto diretto privo di significato statistico.
+
+**Soluzioni alternative**:
+
+1.  **Utilizzare un asse comune** – Se le variabili condividono unità di misura comparabili.
+2.  **Normalizzare i dati** – Trasformare entrambe le serie in z-score o percentuali per renderle confrontabili sulla stessa scala.
+3.  **Creare due grafici separati** – Allinearli verticalmente per facilitare il confronto visivo senza confondere le scale.
+4.  **Se il doppio asse è inevitabile** – Essere espliciti con un'annotazione chiara: *"Scale arbitrarie e non confrontabili"*, per avvertire il lettore.
+
+### Errore 4: Confondere area e volume con la lunghezza
+
+Quando si rappresentano quantità numeriche tramite l'area (di cerchi, quadrati) o, peggio, il volume di forme tridimensionali, si introduce una distorsione sistematica: l'occhio percepisce differenze proporzionali al *quadrato* (per l'area) o al *cubo* (per il volume) della differenza reale.
+
+**Esempio pratico**:  
+il PIL degli Stati Uniti è di circa 20 trilioni di dollari, quello della Francia di 2,7 trilioni. Il rapporto reale è circa **7.4 volte**.
+
+- **Cerchi con raggio proporzionale**: l'area del cerchio degli USA sarebbe circa **(7.4)² ≈ 55 volte** più grande di quella della Francia — una distorsione di quasi 7.4 volte rispetto alla realtà.
+- **Sfere 3D con raggio proporzionale**: il volume apparente degli USA diventerebbe **(7.4)³ ≈ 405 volte** maggiore — una distorsione di 55 volte rispetto al rapporto reale.
+
+Un esempio famoso di questo errore è stato commesso nel grafico utilizzato durante il **Discorso sullo Stato dell'Unione del 2011**.
+
+**Soluzione**: per confronti quantitativi precisi, privilegia sempre rappresentazioni basate sulla **lunghezza**, come i barplot. Se si sceglie di utilizzare un *bubble chart* (per rappresentare ad esempio tre variabili), è essenziale dichiarare esplicitamente che la dimensione delle bolle è proporzionale al *raggio* (e non al diametro o all'area) della variabile rappresentata.
+
+### Errore 5: Effetti tridimensionali — distrazione senza sostanza
+
+L'aggiunta di effetti prospettici "3D" a barre, torte o grafici a linee rappresenta una delle forme più diffuse di *chartjunk*, perché:
+
+- introduce distorsioni percettive (gli elementi in primo piano sembrano più grandi di quelli sullo sfondo);
+- può nascondere parzialmente alcuni elementi, che risultano oscurati da altri;
+- non codifica alcuna terza variabile reale o informativa aggiuntiva;
+- distrae l'attenzione con effetti luminosi, ombreggiature e dettagli puramente decorativi.
+
+**Regola pratica di Tufte**: Se, rimuovendo la prospettiva tridimensionale, il grafico non perde alcun dato informativo, allora quella terza dimensione era inutile e andava eliminata.
+
+### Errore 6: Ordine alfabetico per categorie naturalmente ordinate
+
+Quando le categorie possiedono un ordinamento intrinseco — come età, livelli di gravità o qualsiasi scala che rifletta una progressione logica o quantitativa — presentarle in ordine alfabetico annulla immediatamente questa struttura e nasconde il pattern sottostante.
+
+**Esempio pratico**:
+
+- **Cattiva disposizione**: `[Lieve] [Minima] [Moderata] [Severa]` (ordine alfabetico italiano)
+- **Disposizione corretta**: `[Minima] [Lieve] [Moderata] [Severa]` (ordine crescente di gravità clinica)
+
+**Regola generale**: Ordina sistematicamente le categorie in base al loro valore numerico o alla loro sequenza naturale, a meno che non esista un ordine convenzionale diverso già consolidato (ad esempio i giorni della settimana o le fasi di un trattamento).
+
+### Errore 7: Scale non uniformi nei confronti distributivi
+
+Quando si confrontano distribuzioni, ad esempio tramite istogrammi o density plot, l'uso di scale verticali diverse rende il confronto visivo impossibile e ingannevole.
+
+**Il problema**: l’occhio interpreta naturalmente l’altezza delle barre o delle curve come un'indicazione diretta della quantità rappresentata. Se le scale degli assi Y sono diverse tra i pannelli a confronto, altezze visivamente simili corrisponderanno in realtà a quantità molto diverse.
+
+**La soluzione**: imposta sempre le scale su valori fissi e uniformi (`scales = "fixed"`) per garantire un confronto onesto e diretto. L’opzione di scale libere (`scales = "free_y"`) dovrebbe essere usata solo in casi particolari, ad esempio quando la forma delle distribuzioni è così diversa che una scala uniforme nasconderebbe completamente la struttura di uno dei gruppi.
+
+## Trasformazioni: quando ingannano e quando illuminano
+
+### Trasformazioni logaritmiche: comprimere intervalli estesi
+
+**Quando utilizzarle**:
+
+- Dati che coprono **tre o più ordini di grandezza** (ad esempio: popolazioni che vanno da migliaia a milioni).
+- Distribuzioni fortemente **asimmetriche a destra**, dominate da pochi valori estremi.
+- Relazioni di tipo **moltiplicativo** tra variabili, che in scala logaritmica diventano **additive** e quindi lineari.
+
+**Esempio concreto**: nel grafico sugli omicidi, una scala logaritmica permette di visualizzare contemporaneamente e con chiarezza sia stati piccoli come il Wyoming (~500.000 abitanti) che quelli enormi come la California (~39 milioni).
+
+**Importante**: **dichiara sempre esplicitamente** l’uso di una scala trasformata. È preferibile usare etichette leggibili come "1M, 10M, 100M" piuttosto che valori logaritmici puri come "6.0, 7.0, 8.0" (log₁₀), che possono confondere il lettore.
+
+### Altre trasformazioni utili
+
+- **Radice quadrata**: Utile per stabilizzare la varianza nei dati di conteggio (distribuzione di Poisson).
+- **Logit**: Trasforma gli odds ratio, rendendo lineare la relazione con i predittori.
+- **Arcsin**: Aiuta a stabilizzare la varianza nelle proporzioni (ad esempio, tassi o percentuali).
+
+**Principio guida**: Una trasformazione è legittima se:
+
+1.  rende visibile un **pattern reale** che nella scala originale sarebbe nascosto;
+2.  viene **esplicitamente dichiarata** e spiegata;
+3.  ha una **giustificazione teorica** o metodologica solida (ad esempio, la linearizzazione di una relazione nota).
+
+## Colore: alleato o nemico?
+
+### I tre ruoli del colore
+
+1.  **Distinguere categorie** (scala qualitativa): utilizzare **tonalità chiaramente distinte**.
+2.  **Codificare un ordine** (scala sequenziale): utilizzare **gradazioni di luminosità o saturazione** di una stessa tonalità.
+3.  **Evidenziare divergenze** (scala divergente): utilizzare **due tonalità distinte che partono da un colore neutro centrale**, per mostrare deviazioni positive e negative.
+
+### Palette consigliate
+
+**Per categorie (qualitative)**:
+
+-   `viridis::viridis` (ideale fino a 5 categorie, sicura per il daltonismo)
+-   `RColorBrewer::Set2` (fino a 8 categorie)
+
+**Per valori ordinati (sequenziali)**:
+
+-   `viridis::magma`
+-   `RColorBrewer::Blues`
+
+**Per valori divergenti da un centro**:
+
+-   `RColorBrewer::RdBu` (perfetta per correlazioni, es. mappe di calore)
+-   `viridis::plasma`
+
+### Errori cromatici da evitare
+
+❌ Utilizzare combinazioni **rosso-verde** per distinguere categorie (circa l'8% degli uomini è daltonico).  
+❌ Usare la palette **arcobaleno** per dati sequenziali (è percettivamente non uniforme).  
+❌ Introdurre **troppe tonalità** (oltre 7 diventano difficili da distinguere).  
+❌ Ignorare il **significato culturale** dei colori (es. rosso = negativo in finanza, positivo in alcune culture).
+
+**Test di efficacia**: Se il tuo grafico comunica correttamente il messaggio anche in scala di grigi, allora la tua scelta cromatica è solida.
+
+::: {.callout-tip title="Checklist per l\'auto-valutazione di una visualizzazione"} 
+
+### Il messaggio {.unnumbered .unlisted}
+
+- [ ] Il grafico risponde a una domanda analitica specifica?
+- [ ] Il titolo comunica la *scoperta* principale, non solo descrive l'argomento?
+- [ ] Le etichette degli assi e delle variabili sono immediatamente chiare?
+
+### L'efficacia percettiva {.unnumbered .unlisted}
+
+- [ ] Per confronti quantitativi critici, si utilizzano *posizione* o *lunghezza*?
+- [ ] Il colore è usato in modo appropriato (per categorie o per indicare un ordine)?
+- [ ] Le scale sono oneste (es. barplot partono da zero, scale logaritmiche sono dichiarate)?
+- [ ] Le categorie sono ordinate per il loro valore reale o per una sequenza logica?
+
+### La rappresentazione dei dati {.unnumbered .unlisted}
+
+- [ ] Dove possibile, si mostrano i dati grezzi o la loro distribuzione?
+- [ ] La variabilità e l'incertezza sono rappresentate (es. barre di errore, intervalli)?
+- [ ] Gli outlier sono visibili e non nascosti?
+- [ ] La dimensione del campione (N) è riportata?
+
+### L'economia visiva {.unnumbered .unlisted}
+
+- [ ] Ogni elemento grafico presente è strettamente necessario (alto rapporto inchiostro-dati)?
+- [ ] Il *chartjunk* (effetti 3D, griglie eccessive, decorazioni) è stato eliminato?
+- [ ] Le legende sono utilizzate solo quando indispensabili?
+- [ ] Font e spessori di linea sono leggibili (font ≥10pt, linee ≥0.5pt)?
+
+### L'accessibilità {.unnumbered .unlisted}
+
+- [ ] La palette di colori è sicura per il daltonismo?
+- [ ] Il contrasto è sufficiente (verificato convertendo il grafico in scala di grigi)?
+- [ ] Il grafico rimane comprensibile se stampato in bianco e nero?
+
+### L'etica della comunicazione {.unnumbered .unlisted}
+
+- [ ] Si evitano grafici a doppio asse con scale arbitrarie e non confrontabili?
+- [ ] I grafici comparativi utilizzano scale uniformi?
+- [ ] Eventuali trasformazioni dei dati o delle scale sono esplicitamente dichiarate?
+- [ ] Si è evitato di usare artifici percettivi per esagerare artificiosamente la dimensione di un effetto?
+
+:::
+
+## Riflessioni conclusive {.unnumbered .unlisted}
+
+La visualizzazione dei dati è un linguaggio, ovvero un sistema di simboli dotato di una sua grammatica, semantica e pragmatica. Come ogni linguaggio, può essere usato per chiarire o per ingannare, per semplificare o per complicare. Ciò che fa la differenza non è la complessità tecnica, ma l'intenzione comunicativa e il rispetto per il destinatario del messaggio.
+
+Edward Tufte ci ha insegnato il valore dell'**economia visiva**: ogni elemento grafico, ogni pixel, deve giustificare la propria esistenza contribuendo alla comprensione dei dati. William Cleveland ci ha fornito una **gerarchia percettiva** empirica, mostrandoci che non tutti i canali visivi sono ugualmente efficaci nella comunicazione di informazioni quantitative. Alberto Cairo, invece, ci ha posto di fronte alla dimensione **etica**, ricordandoci che un grafico può essere tecnicamente impeccabile ma moralmente inaccettabile se deliberatamente fuorviante.
+
+In psicologia, la tentazione di semplificare eccessivamente è forte. I *dynamite plots* nascondono la complessità delle distribuzioni; i *pie chart* trasformano le proporzioni in angoli difficili da confrontare e i grafici a doppio asse possono creare illusorie correlazioni. Ogni volta che scegliamo queste rappresentazioni per mera "convenienza" o "tradizione", rischiamo di tradire sia i dati che i fenomeni complessi che intendiamo studiare.
+
+Tuttavia, la visualizzazione non è solo una protezione contro l'inganno, ma soprattutto uno strumento per la **scoperta**. Un grafico ben concepito può rivelare pattern sfuggenti a ogni analisi statistica, suggerire ipotesi inaspettate che nessun modello avrebbe individuato e mettere in luce anomalie che nessun test formale avrebbe rilevato.
+
+Per questo motivo, la visualizzazione non è solo un ornamento del processo scientifico, ma una componente **epistemologica** fondamentale. Non è un semplice ornamento della scienza, ma la costituisce. E, come ogni strumento epistemologico, richiede rigore metodologico, onestà intellettuale e umiltà.
+
+Per visualizzare in modo efficace, è necessario rispettare tre principi fondamentali: i **dati** (rappresentandoli con fedeltà), il **lettore** (comunicando in modo chiaro) e la **verità** (evitando ogni tipo di manipolazione percettiva).
+
+Questa triade, ovvero fedeltà, chiarezza e onestà, non garantisce la perfezione di ogni grafico, ma assicura che la visualizzazione adempia al suo scopo più alto: essere uno strumento rigoroso e trasparente al servizio della conoscenza scientifica.
+
+
+## Esercizi {.unnumbered .unlisted}
+
+::: {.callout-important title="Esercizio 1: Critica visuale"}
+
+Cerca "worst graphs ever" o [collezione Broman](https://www.biostat.wisc.edu/~kbroman/topten_worstgraphs/).
+
+Scegli 3 grafici pessimi e per ciascuno:
+
+1. Identifica TUTTI gli errori (riferisci a Tufte/Cleveland/Cairo)
+2. Spiega PERCHÉ problematico (non "brutto", ma "causa questa distorsione")
+3. Proponi alternativa specifica (non "usa barplot", ma "barplot ordinato per valore, assi da zero, palette viridis, N annotato")
+:::
+
+::: {.callout-important title="Esercizio 2: Revisione iterativa"}
+
+Dataset SWLS/LSNS:
+
+1. Crea grafico "naive" (prima versione)
+2. Applica 5 revisioni:
+   - Rev 1: Data-ink ratio
+   - Rev 2: Gerarchia percettiva
+   - Rev 3: Onestà scale
+   - Rev 4: Accessibilità
+   - Rev 5: Messaggio
+3. Documenta cosa cambi e perché
+
+Quale revisione ha avuto impatto maggiore?
+:::
+
+::: {.callout-important title="Esercizio 3: Smascherare l'inganno"}
+
+Crea INTENZIONALMENTE grafico ingannevole (SWLS):
+
+- Dual-axis per finta correlazione
+- O asse troncato per esagerare differenze
+- O bubble chart con distorsione area
+
+Scrivi:
+1. "Pitch": Come convincere non-esperto
+2. "Confessione": Come smascherare la manipolazione
+
+**Obiettivo**: Riconoscere manipolazioni diventando temporaneamente manipolatore.
+:::
+
+
+::: {.callout-tip title="Punti chiave da ricordare" icon=false}
+## 📌 Da ricordare
+
+**Principi**:
+
+- **Tufte**: Data-ink ratio, elimina chartjunk
+- **Cleveland**: Posizione/lunghezza per confronti quantitativi
+- **Cairo**: Onestà visiva = responsabilità etica
+
+**Errori**:
+
+- ❌ Dynamite plots, pie charts, dual-axis, area vs lunghezza, 3D decorativo
+
+**Best practices**:
+
+- ✅ Mostra dati grezzi (jitter, trasparenza)
+- ✅ Ordina per valore
+- ✅ Barplot da zero
+- ✅ Palette colorblind-safe
+- ✅ Titolo comunica finding
+- ✅ Revisione iterativa
+
+**Collegamenti**: il @sec-r-ggplot2 per l'implementazione tecnica.
+:::
+
+## Bibliografia {.unnumbered .unlisted}

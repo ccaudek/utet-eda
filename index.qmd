@@ -1,25 +1,316 @@
 ---
-page-classes: homefront
+title: "Analisi esplorativa dei dati in psicologia"
+subtitle: "Modulo introduttivo"
+author: 
+  - name: "Corrado Caudek"
+    orcid: "0000-0002-1404-0420"
+date: today
 toc: false
 ---
 
-Prima di costruire modelli statistici e formulare inferenze, è essenziale consolidare le basi. Questo sito ospita le **risorse e i materiali propedeutici** al manuale "*Inferenza bayesiana in psicologia: Ragionare con l’incertezza*", pensati per fornire le fondamenta teoriche e pratiche necessarie.
+Prima di costruire modelli statistici e formulare inferenze, è essenziale consolidare le basi.
+Questo sito raccoglie le **risorse e i materiali propedeutici** al manuale *Inferenza bayesiana in psicologia: Ragionare con l’incertezza*, con l’obiettivo di fornire le fondamenta teoriche e operative necessarie per un’analisi dei dati rigorosa e consapevole.
+
+## Prerequisiti {.unnumbered .unlisted}
+
+::: {.callout-note icon=false}
+
+## 📚 Cosa è utile sapere prima di iniziare?
+
+**Nessun prerequisito formale.**
+Il materiale è progettato per chi parte da zero.
+
+✅ **Non è richiesta**:
+
+* esperienza di programmazione;
+* conoscenza di statistica avanzata;
+* formazione matematica oltre le operazioni di base.
+
+✅ **È richiesto solo**:
+
+* interesse per i dati empirici;
+* disponibilità a imparare in modo attivo;
+* un computer con R installato (le istruzioni sono fornite).
+
+**Tempo stimato**:
+
+* **Fondamenti** (cap. 1–4): ~6–8 ore.
+* **R** (cap. 5–11): ~15–20 ore.
+* **EDA** (cap. 12–21): ~20–25 ore.
+* **Totale**: ~40–50 ore (distribuibili in 6–8 settimane).
+:::
+
+## Collocazione nell’ecosistema didattico {.unnumbered .unlisted}
+
+Questo sito fa parte di un ecosistema integrato di materiali didattici. Il diagramma seguente ne illustra le relazioni principali.
+
+```{mermaid}
+%%| fig-width: 10
+flowchart LR
+    EDA["<b>utet-eda</b><br/>Fondamenti + R + EDA<br/><i>Strumenti di base</i>"]
+    PROB["<b>utet-prob</b><br/>Teoria probabilità<br/><i>Fondamenti matematici</i>"]
+    MANUALE["<b>Manuale UTET</b><br/>Inferenza bayesiana<br/><i>Teoria</i>"]
+    COMP["<b>utet-companion</b><br/>Stan/brms<br/><i>Implementazione</i>"]
+    
+    EDA -->|fornisce<br/>strumenti a| PROB
+    EDA -->|fornisce<br/>strumenti a| COMP
+    PROB -->|approfondisce| MANUALE
+    PROB -->|prerequisito<br/>formale per| COMP
+    MANUALE -->|applica<br/>con| COMP
+    
+    style EDA fill:#e8f5e9,stroke:#388e3c,stroke-width:3px
+    style PROB fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style MANUALE fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    style COMP fill:#ffebee,stroke:#c62828,stroke-width:2px
+    
+    classDef current fill:#e8f5e9,stroke:#388e3c,stroke-width:4px
+    class EDA current
+```
+
+::: {.callout-tip}
+
+## 🗺️ Due modalità di utilizzo
+
+**Percorso 1 · Propedeutico** (consigliato a chi inizia)
+
+```
+utet-eda → utet-prob → Manuale → utet-companion
+```
+
+Si acquisiscono prima le competenze di base in R ed EDA, poi i fondamenti probabilistici e infine l’inferenza bayesiana.
+
+**Percorso 2 · Consultazione mirata** (per chi ha già esperienza)
+
+```
+Manuale + utet-companion ⟷ utet-eda (quando necessario)
+```
+
+Utile per:
+
+* ripassare manipolazione dei dati (`dplyr`);
+* consultare tecniche di visualizzazione (`ggplot2`);
+* verificare workflow di pulizia ed esplorazione;
+* richiamare principi di EDA.
+
+**Approfondimento**: vedi *Come navigare l’ecosistema* nel sito *companion*.
+:::
 
 ## I tre pilastri {.unnumbered .unlisted}
 
-| | Sezione | Domanda guida |
-|:--|:--------|:--------------|
-| **Pensare** | Fondamenti | Che cosa misuriamo realmente quando quantifichiamo i fenomeni psicologici? Come si struttura una ricerca scientificamente valida? |
-| **Fare** | R | Come si implementano concretamente i disegni di ricerca e le analisi attraverso la programmazione? |
-| **Guardare** | EDA | Quali storie raccontano i dati, e quali anomalie rivelano, prima di ogni formalizzazione statistica? |
+Il sito è organizzato in tre sezioni complementari:
 
-L'obiettivo è sviluppare le competenze metodologiche per un'analisi dei dati **critica, trasparente e informata dalla teoria**.
+| Dimensione   | Sezione    | Domanda guida                                                                                        | Capitoli |
+| ------------ | ---------- | ---------------------------------------------------------------------------------------------------- | -------- |
+| **Pensare**  | Fondamenti | Che cosa misuriamo quando quantifichiamo fenomeni psicologici? Come si struttura una ricerca valida? | 1–4      |
+| **Fare**     | R          | Come implementare concretamente disegni di ricerca e analisi tramite la programmazione?              | 5–11     |
+| **Guardare** | EDA        | Quali pattern e anomalie emergono dai dati prima di ogni formalizzazione statistica?                 | 12–21    |
+
+::: {.callout-important icon=false}
+
+## 🎯 Percorso consigliato
+
+Per chi parte da zero, seguire l’ordine **sequenziale**: Fondamenti → R → EDA.
+
+Ogni sezione prepara la successiva:
+
+* **Fondamenti**: sviluppa il pensiero metodologico;
+* **R**: fornisce gli strumenti operativi;
+* **EDA**: insegna a esplorare, diagnosticare e comunicare i dati.
+
+Chi ha già esperienza può usare le sezioni come riferimento.
+:::
+
+## Obiettivo {.unnumbered .unlisted}
+
+L’obiettivo è sviluppare competenze metodologiche per un’analisi dei dati **critica, trasparente e guidata dalla teoria**.
+
+Al termine del percorso sarai in grado di:
+
+**Fondamenti**
+
+* distinguere correlazione e causalità;
+* riconoscere i limiti della misurazione psicologica;
+* progettare disegni di ricerca solidi.
+
+**R**
+
+* manipolare dati con il *tidyverse*;
+* produrre visualizzazioni efficaci con `ggplot2`;
+* scrivere analisi riproducibili con Quarto.
+
+**EDA**
+
+* esplorare distribuzioni e relazioni;
+* individuare outlier e anomalie;
+* valutare assunzioni statistiche;
+* comunicare risultati in modo chiaro.
 
 ## Come usare il sito {.unnumbered .unlisted}
 
-Il percorso suggerito è sequenziale, dai concetti agli strumenti e dall'uso degli strumenti all'esplorazione, ma i capitoli possono anche essere utilizzati come riferimento durante il lavoro pratico. Il codice è riproducibile e i dataset sono disponibili nel repository GitHub.
+### Navigazione {.unnumbered .unlisted}
+
+* **Percorso sequenziale**: seguire l’ordine dei capitoli.
+* **Consultazione rapida**: menu laterale e ricerca (🔍).
+* **Riproducibilità**: ogni esempio include codice R completo e dataset.
+
+### Materiali aggiuntivi {.unnumbered .unlisted}
+
+* **Codice sorgente**: pulsante *Mostra il codice* in ogni pagina.
+* **Dataset**: disponibili nel repository GitHub.
+* **Segnalazioni**: usare *Segnala un problema* per errori o suggerimenti.
+
+### Convenzioni {.unnumbered .unlisted}
+
+Le callout indicano il ruolo dell’informazione:
+
+* **Nota**: chiarimenti utili ma non essenziali;
+* **Suggerimento**: buone pratiche operative;
+* **Attenzione**: errori comuni da evitare;
+* **Importante**: concetti critici.
+
+## Strumenti necessari {.unnumbered .unlisted}
+
+::: {.callout-tip icon=false collapse=true title="Configurazione dell'ambiente di lavoro"}
+Prima di iniziare la sezione R, assicurati di avere:
+
+**Software**:
+
+- **R ≥ 4.5**: [Download](https://cran.r-project.org/)
+- **RStudio** o **Positron**: [RStudio](https://posit.co/download/rstudio-desktop/), [Positron](https://github.com/posit-dev/positron)
+- **Quarto**: [Download](https://quarto.org/docs/get-started/)
+
+**Pacchetti R** (installa con):
+
+```r
+install.packages(c(
+  "tidyverse",   # Suite completa per data science
+  "here",        # Gestione percorsi
+  "janitor",     # Pulizia dati
+  "skimr"        # Statistiche descrittive
+))
+```
+
+**Verifica installazione**:
+
+```r
+library(tidyverse)
+packageVersion("tidyverse")
+```
+
+Se vedi il numero di versione (es. `2.0.0`), sei pronto! ✅
+
+La sezione **Fondamenti** è concettuale e non richiede software.
+Le sezioni **R** ed **EDA** richiedono l’ambiente di lavoro configurato.
+:::
+
+## Collegamenti con altri siti {.unnumbered .unlisted}
+
+### Prima di utet-eda {.unnumbered .unlisted}
+
+Nessun prerequisito! Puoi iniziare direttamente qui.
+
+### Dopo utet-eda {.unnumbered .unlisted}
+
+Una volta completato questo materiale, sei pronto per:
+
+1. **[utet-prob](https://ccaudek.github.io/utet-prob/)**: Fondamenti matematici di probabilità
+   - Quando: Dopo aver acquisito confidenza con R
+   - Perché: Ti prepara alla teoria bayesiana del manuale
+
+2. **[Manuale UTET](https://www.utetuniversita.it/)**: *Inferenza bayesiana in psicologia*
+   - Quando: Dopo aver consolidato R e probabilità (o in parallelo)
+   - Perché: È il cuore teorico del progetto
+
+3. **[utet-companion](https://ccaudek.github.io/utet-companion/)**: Implementazioni Stan/brms
+   - Quando: Dopo il manuale (o capitoli rilevanti)
+   - Perché: Ti insegna a fare analisi bayesiane concrete
+
+4. **[utet-freq](https://ccaudek.github.io/utet-freq/)**: Approccio frequentista
+   - Quando: In parallelo o dopo il manuale
+   - Perché: Confronto critico tra paradigmi
+
+::: {.callout-tip}
+## 💡 Consiglio per studenti del corso B00028
+
+Se sei iscritto al corso *Psicometria* dell'Università degli Studi di Firenze, segui questo percorso:
+
+**Settimane 1-4**: utet-eda (Fondamenti + R base).
+**Settimane 5-8**: utet-prob (Probabilità) + Manuale (cap. 1-8). 
+**Settimane 9-12**: utet-companion (Implementazioni) + Manuale (cap. 9-15).
+
+Gli esercizi del corso sono sincronizzati con questi materiali.
+:::
+
+## Approccio didattico {.unnumbered .unlisted}
+
+### Imparare facendo {.unnumbered .unlisted}
+
+Questo sito si basa su una pedagogia **attiva ed esperienziale**:
+
+* 📖 **Leggere** i concetti attraverso esempi concreti;
+* 💻 **Eseguire** il codice sul proprio computer;
+* 🔬 **Sperimentare** modificando parametri e dati;
+* ✍️ **Esercitarsi** con attività di difficoltà crescente.
+
+La competenza non si acquisisce osservando il codice, ma **scrivendolo ed eseguendolo**.
+
+### Progressione graduale {.unnumbered .unlisted}
+
+Ogni capitolo è strutturato per favorire un apprendimento progressivo:
+
+1. introduce pochi concetti alla volta;
+2. li illustra con esempi tratti da dati psicologici;
+3. aumenta la complessità in modo incrementale;
+4. propone esercizi mirati al consolidamento.
+
+### Esempi realistici {.unnumbered .unlisted}
+
+I contenuti si basano su dataset e problemi autentici della ricerca psicologica:
+
+* questionari (BDI, Big Five, …);
+* tempi di reazione (Stroop, *flanker*, …);
+* dati longitudinali (EMA, *diary studies*, …);
+* studi sperimentali (RCT, disegni *within-subject*).
+
+Niente dataset generici come *iris* o *mtcars*: gli esempi riflettono contesti di ricerca reali.
 
 ## Licenza {.unnumbered .unlisted}
 
-Materiali distribuiti con licenza [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/deed.it).  
-Condivisione consentita con attribuzione, solo per usi non commerciali e senza modifiche.
+::: {.callout-note icon=false}
+Materiali distribuiti con licenza [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/deed.it).
+
+✅ **Permesso**: Condivisione con attribuzione, solo usi non commerciali  
+❌ **Non permesso**: Uso commerciale, creazione di opere derivate
+
+Per usi diversi, contatta l'autore.
+:::
+
+## Feedback e contributi {.unnumbered .unlisted}
+
+Questi materiali migliorano grazie al contributo degli utenti. Se riscontri:
+
+* 🐛 **Errori**: codice non funzionante, refusi o imprecisioni;
+* 💡 **Possibili miglioramenti**: esempi poco chiari, esercizi troppo semplici o eccessivamente complessi;
+* ➕ **Lacune**: argomenti rilevanti non trattati;
+
+puoi:
+
+1. aprire una [issue su GitHub](https://github.com/ccaudek/utet-eda/issues);
+2. utilizzare il pulsante *Segnala un problema* in fondo a ciascuna pagina;
+3. contattare direttamente l’autore.
+
+Ogni segnalazione è preziosa e contribuisce a migliorare l’esperienza di apprendimento. Grazie.
+
+::: {.callout-note icon=false appearance="minimal"}
+```{r}
+#| echo: false
+data_pubblicazione <- format(Sys.Date(), "%d %B %Y")
+```
+## Versione {.unnumbered .unlisted}
+**Ultimo aggiornamento**: `r data_pubblicazione`  
+**Repository**: [github.com/ccaudek/utet-eda](https://github.com/ccaudek/utet-eda)
+
+Questi materiali sono in continua evoluzione. Controlla periodicamente per aggiornamenti.
+:::
+
+**Pronto a iniziare?** 👉 Vai alla [Prefazione](prefazione.html) o direttamente ai [Fondamenti](chapters/key_notions/introduction_key_notions.html).

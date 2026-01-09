@@ -29,24 +29,19 @@ pacman::p_load(readr)
 
 ## È utile conoscere le associazioni tra variabili?
 
-Storicamente, in psicologia, l'analisi delle associazioni tra variabili è stata spesso considerata come l'obiettivo finale del processo di ricerca. Questa visione si basa sull'idea che la descrizione delle relazioni tra variabili possa fornire una spiegazione esaustiva dei fenomeni psicologici. Tale approccio affonda le sue radici nel pensiero di Karl Pearson, il quale sosteneva che la spiegazione scientifica si esaurisse una volta delineate le associazioni tra le variabili osservate. @pearson1911_grammar_part1 affermava:  
+Storicamente, in psicologia, l'analisi delle associazioni tra variabili è stata spesso considerata come l'obiettivo finale del processo di ricerca. Questa visione affonda le sue radici nel pensiero di Karl Pearson, il quale sosteneva che la spiegazione scientifica si esaurisse una volta delineate le associazioni tra le variabili osservate. @pearson1911_grammar_part1 affermava:  
 
 > "Quanto spesso, quando è stato osservato un nuovo fenomeno, sentiamo che viene posta la domanda: 'qual è la sua causa?'. Questa è una domanda a cui potrebbe essere assolutamente impossibile rispondere. Invece, può essere più facile rispondere alla domanda: 'in che misura altri fenomeni sono associati con esso?'. Dalla risposta a questa seconda domanda possono risultare molte preziose conoscenze."  
 
-Sebbene sia indubbio che rispondere alla domanda posta da Pearson sia relativamente semplice, è altrettanto evidente che la nostra comprensione di un fenomeno non può dipendere unicamente dalle informazioni fornite dalle correlazioni. Le associazioni, infatti, non implicano causalità e possono risultare fuorvianti se interpretate in modo superficiale.  
+Sebbene sia indubbio che calcolare le associazioni tra variabili sia relativamente semplice, è altrettanto evidente che la nostra comprensione di un fenomeno non può dipendere unicamente dalle correlazioni. **Le associazioni non implicano causalità** e possono risultare fuorvianti se interpretate in modo superficiale.
 
-In contrasto con questa visione tradizionale, la cosiddetta "Causal Revolution" propone un paradigma radicalmente diverso, secondo il quale le associazioni tra variabili sono considerate come epifenomeni, ovvero manifestazioni superficiali di meccanismi più profondi. L'obiettivo principale della ricerca, in questo quadro, diventa l'identificazione e la comprensione delle relazioni causali. Per comprendere veramente i fenomeni psicologici, è essenziale indagare le cause sottostanti, andando oltre la mera descrizione delle associazioni.  
+::: {.callout-warning title="Correlazione ≠ Causalità"}
+Un esempio emblematico è l'associazione tra il numero di scarpe e le abilità matematiche nei bambini: la correlazione è molto forte, ma se controlliamo per la variabile "età", l'associazione scompare completamente. Il numero di scarpe non influisce sulle abilità matematiche: è l'età il vero fattore causale sottostante.
 
-Un esempio emblematico è l'associazione tra il numero di scarpe e le abilità matematiche nei bambini. Questa correlazione è molto forte, ma se controlliamo per la variabile confondente "età", l'associazione scompare. Questo dimostra che, in psicologia così come in altri campi, trovare correlazioni molto forti tra variabili non è necessariamente informativo riguardo ai meccanismi sottostanti al fenomeno studiato. È ovvio che il numero di scarpe non influisce sulle abilità matematiche, ma senza controllare per l'età, l'associazione rimane ingannevolmente forte.  
+Questo esempio illustra un problema generale: in psicologia, trovare correlazioni forti tra variabili non è necessariamente informativo riguardo ai meccanismi causali sottostanti. Serve sempre un modello teorico che guidi l'interpretazione.
+:::
 
-Allo stesso modo, può accadere che un'associazione apparentemente forte scompaia se non si tiene conto di variabili confondenti. Consideriamo, ad esempio, la relazione tra *autostima* e *rendimento scolastico* in un campione di adolescenti. Analizzando l’intera popolazione, la correlazione tra autostima e rendimento potrebbe risultare prossima a zero. Questo apparente risultato nullo, tuttavia, potrebbe nascondere una relazione più complessa, influenzata da un fattore confondente come il *supporto familiare*.  
-
-- In presenza di un forte supporto familiare, una maggiore autostima potrebbe effettivamente favorire migliori risultati scolastici.  
-- Al contrario, in assenza di tale supporto, anche livelli elevati di autostima potrebbero non tradursi in un rendimento scolastico migliore, a causa di risorse emotive e pratiche limitate.  
-
-Quando si controlla per il supporto familiare (ad esempio analizzando separatamente i gruppi con alto e basso sostegno), emerge una relazione positiva credibile tra autostima e rendimento scolastico all’interno del gruppo con supporto elevato. Questo esempio mostra come, a livello aggregato, l’effetto di due variabili possa apparire nullo, mentre il controllo per un confondente svela una relazione causale rilevante.  
-
-In conclusione, l'analisi delle associazioni rappresenta un punto di partenza fondamentale, ma non può sostituire l'indagine delle relazioni causali. Per progredire nella comprensione dei fenomeni psicologici, è necessario integrare l'analisi dei dati con modelli teorici robusti e un approccio critico volto a identificare e controllare i fattori confondenti. Solo così possiamo passare dalla semplice descrizione delle relazioni alla vera comprensione dei meccanismi causali che le governano.
+In questo capitolo ci concentreremo sugli *strumenti statistici* per descrivere e quantificare le associazioni lineari tra variabili: covarianza, correlazione di Pearson, correlazione di Spearman. Nel @sec-causality-intro affronteremo invece la questione più profonda: come distinguere tra correlazione spuria e relazione causale, e quali strumenti concettuali (controfattuali, confondimento, randomizzazione) ci aiutano a fare inferenza causale anche quando non possiamo condurre esperimenti.
 
 ## Terminologia
 
@@ -60,7 +55,7 @@ Nel linguaggio comune, termini come "dipendenza", "associazione" e "correlazione
 
 È cruciale comprendere che non tutte le associazioni sono correlazioni e, soprattutto, che la correlazione non implica necessariamente causalità. Questa distinzione è fondamentale per interpretare correttamente i dati e evitare conclusioni errate sulle relazioni tra variabili.
 
-In questo capitolo, esamineremo due misure statistiche fondamentali per valutare la relazione lineare tra due variabili: la covarianza e la correlazione. Questi indici ci permettono di descrivere il grado e la direzione dell'associazione lineare tra variabili, quantificando come queste variano congiuntamente.
+In questo capitolo, esamineremo due misure statistiche fondamentali per valutare la relazione lineare tra due variabili: la covarianza e la correlazione. Questi indici ci permettono di descrivere il grado e la direzione dell'**associazione lineare** tra variabili, quantificando come queste variano congiuntamente.
 
 
 ## Analisi della relazione tra due misure della depressione
