@@ -6,11 +6,11 @@ La distribuzione normale (o gaussiana) rappresenta il ponte concettuale tra la s
 
 ### Panoramica del capitolo {.unnumbered .unlisted}
 
-- **Perché la normale è importante in psicologia**: Collegamenti con test, questionari e fenomeni naturali.
-- **Proprietà visive fondamentali**: La regola empirica 68-95-99.7 e il suo significato pratico.
-- **Z-scores e standardizzazione**: Come confrontare valori su scale diverse.
+- **Perché la distribuzione normale è importante in psicologia**: collegamenti con test, questionari e fenomeni naturali.
+- **Proprietà visive fondamentali**: la regola empirica 68-95-99.7 e il suo significato pratico.
+- **Z-scores e standardizzazione**: come confrontare valori su scale diverse.
 - **Verifica della normalità**: QQ-plots come strumento diagnostico.
-- **Ponte verso l'inferenza**: Come la normale prepara ai concetti inferenziali.
+- **Ponte verso l'inferenza**: come la normale prepara ai concetti inferenziali.
 
 ::: {.callout-tip collapse="true"}
 ## Prerequisiti
@@ -33,16 +33,20 @@ pacman::p_load(ggbeeswarm, dslabs, gridExtra, patchwork)
 
 ## Perché la distribuzione normale è fondamentale in psicologia {#sec-why-normal}
 
-Prima di approfondire le proprietà matematiche della distribuzione normale, è essenziale comprenderne il ruolo centrale nella ricerca psicologica e nei test standardizzati.
+Prima di analizzarne le proprietà matematiche, è importante comprendere **perché la distribuzione normale occupi una posizione centrale nella ricerca psicologica**, in particolare nell’ambito della psicometria e della valutazione standardizzata.
 
 ### La distribuzione normale nella psicometria
 
-La maggior parte dei test psicologici standardizzati è progettata per produrre punteggi che, nella popolazione di riferimento, seguano approssimativamente una distribuzione normale. Esempi includono:
+Gran parte dei test psicologici standardizzati è progettata in modo tale che i punteggi, all’interno della popolazione di riferimento, seguano **approssimativamente una distribuzione normale**. Questa scelta non è casuale, ma risponde a precise esigenze teoriche e pratiche.
 
-- **Test di intelligenza** (QI): strutturati con una media di 100 e una deviazione standard di 15.
-- **Test di personalità**: come le dimensioni del Big Five, che spesso mostrano distribuzioni approssimativamente normali.
-- **Questionari clinici**: ad esempio il BDI (Beck Depression Inventory) o lo STAI (State-Trait Anxiety Inventory).
-- **Batterie neuropsicologiche**: per la valutazione di memoria, attenzione e funzioni esecutive.
+Esempi rilevanti includono:
+
+* **Test di intelligenza (QI)**, calibrati per avere una media pari a 100 e una deviazione standard di 15, così da facilitare il confronto tra individui e gruppi;
+* **Misure di personalità**, come le dimensioni del modello dei Big Five, che in popolazioni non cliniche tendono a distribuirsi in modo simmetrico intorno a un valore centrale;
+* **Questionari clinici**, quali il *Beck Depression Inventory* (BDI) o lo *State-Trait Anxiety Inventory* (STAI), ampiamente utilizzati per la valutazione dei sintomi affettivi;
+* **Batterie neuropsicologiche**, impiegate per misurare funzioni cognitive come memoria, attenzione e funzioni esecutive, spesso normalizzate su campioni rappresentativi.
+
+In tutti questi casi, l’assunzione di normalità consente di **interpretare i punteggi individuali in termini relativi**, collocandoli rispetto alla popolazione di riferimento mediante percentili, punteggi $z$ o punteggi standardizzati. Questo rende possibile un confronto informativo e clinicamente rilevante tra soggetti, contesti e momenti di valutazione diversi.
 
 ```{r}
 #| label: fig-qi-distribution
@@ -68,25 +72,27 @@ ggplot(qi_data, aes(x = QI, y = densita)) +
 
 ### Fenomeni naturali e biologici
 
-Molte variabili biologiche e comportamentali tendono a seguire distribuzioni approssimativamente normali:
+Numerose variabili biologiche e comportamentali mostrano una **distribuzione approssimativamente normale** quando osservate in popolazioni sufficientemente ampie. Tra gli esempi più comuni rientrano:
 
-- **Misure antropometriche**: altezza, peso, circonferenza cranica.
-- **Tempi di reazione**: in compiti cognitivi semplici.
-- **Errori di misurazione**: negli esperimenti di laboratorio.
-- **Variabilità interindividuale**: in numerosi processi psicologici di base.
+* **Misure antropometriche**, come altezza, peso o circonferenza cranica;
+* **Tempi di reazione**, in particolare in compiti cognitivi semplici e ben controllati;
+* **Errori di misurazione**, tipici degli esperimenti di laboratorio;
+* **Variabilità interindividuale** in molti processi psicologici di base, quali velocità di elaborazione, attenzione o memoria di lavoro.
 
-Questa tendenza non è accidentale: quando una variabile è influenzata da molteplici fattori indipendenti (genetici, ambientali, casuali), ciascuno con un piccolo effetto, la distribuzione risultante tende a convergere verso la forma normale. Questo principio, formalizzato nel *Teorema del Limite Centrale*, costituisce il fondamento di molte tecniche statistiche inferenziali.
+Questa regolarità non è casuale. Quando una variabile osservata è il risultato dell’azione combinata di **numerosi fattori in larga parte indipendenti** — genetici, ambientali e casuali — ciascuno dei quali contribuisce con un effetto relativamente piccolo, la distribuzione complessiva tende a convergere verso la forma normale. Questo principio, formalizzato nel **Teorema del Limite Centrale**, rappresenta uno dei pilastri teorici della statistica moderna e costituisce il fondamento di molte tecniche di inferenza utilizzate in psicologia.
 
 ### La distribuzione normale come modello fondamentale nella modellazione bayesiana
 
-Anche nell'inferenza bayesiana, la distribuzione normale gioca un ruolo centrale, sebbene con prospettive e applicazioni differenti rispetto all'approccio frequentista:
+Anche nell’ambito dell’**inferenza bayesiana**, la distribuzione normale occupa una posizione centrale, sebbene con ruoli e interpretazioni in parte differenti rispetto all’approccio frequentista. La sua importanza deriva sia da considerazioni matematiche sia da esigenze di modellazione pratica.
 
-- **Priors e likelihood**: la normale viene spesso utilizzata come *prior* coniugato per parametri di interesse, e come *likelihood* per modellare dati continui, facilitando il calcolo analitico delle posteriori.
-- **Regolarizzazione bayesiana**: i *prior* normali (come in regressione ridge bayesiana) forniscono una naturale regolarizzazione degli effetti, prevenendo il sovradattamento.
-- **Modelli gerarchici**: la normale è fondamentale per modellare la variazione tra gruppi (effetti casuali) in strutture gerarchiche.
-- **Approssimazioni della posterior**: metodi come la Variational Bayes o la Laplace approximation spesso assumono che la distribuzione a posteriori sia approssimativamente normale.
+In particolare:
 
-Comprendere le proprietà della distribuzione normale è quindi essenziale per costruire modelli bayesiani robusti, interpretare i *prior* coniugati e implementare algoritmi di inferenza efficienti. Nel contesto bayesiano, la normale non è tanto un'"assunzione da verificare" quanto una scelta di modellazione flessibile e matematicamente conveniente.
+* **Priors e likelihood**: la distribuzione normale è spesso impiegata come *prior coniugato* per molti parametri di interesse e come *likelihood* per dati continui. Questa scelta consente, in numerosi casi, di ottenere posteriori in forma chiusa o comunque facilmente trattabili dal punto di vista analitico.
+* **Regolarizzazione bayesiana**: l’uso di *prior* normali (ad esempio nella regressione ridge bayesiana) introduce una forma naturale di regolarizzazione, che riduce la varianza delle stime e contribuisce a prevenire il sovradattamento.
+* **Modelli gerarchici**: la distribuzione normale è fondamentale per modellare la variabilità tra gruppi attraverso effetti casuali, costituendo il nucleo di molte strutture gerarchiche e multilevel.
+* **Approssimazioni della distribuzione a posteriori**: numerosi metodi di inferenza approssimata, come la *Laplace approximation* o la *Variational Bayes*, assumono che la distribuzione a posteriori sia ben approssimabile da una normale, sfruttandone le proprietà di concentrazione e simmetria.
+
+Comprendere a fondo le proprietà della distribuzione normale è quindi essenziale per costruire **modelli bayesiani robusti**, interpretare correttamente i *prior* coniugati e implementare algoritmi di inferenza efficienti. Nel contesto bayesiano, la normale non rappresenta tanto un’“assunzione da verificare”, quanto piuttosto una **scelta di modellazione flessibile e matematicamente conveniente**, da adottare consapevolmente in funzione del problema di ricerca.
 
 ::: {.callout-important}
 ## La normale come modello, non come legge assoluta
@@ -96,10 +102,14 @@ Comprendere le proprietà della distribuzione normale è quindi essenziale per c
 
 ## La distribuzione normale: definizione e proprietà {#sec-normal-distribution}
 
-La distribuzione normale, nota anche come distribuzione gaussiana o curva a campana, è una distribuzione di probabilità continua, perfettamente simmetrica e unimodale. È completamente caratterizzata da due parametri:
+La **distribuzione normale**, detta anche **distribuzione gaussiana** o **curva a campana**, è una distribuzione di probabilità continua caratterizzata da una forma **unimodale**, **perfettamente simmetrica** e definita su tutto l’insieme dei numeri reali. Essa riveste un ruolo centrale nella statistica teorica e applicata, nonché nelle scienze psicologiche e comportamentali.
 
-- **$\mu$ (mu)**: la **media**, che definisce il centro della distribuzione;
-- **$\sigma$ (sigma)**: la **deviazione standard**, che determina la dispersione dei valori attorno alla media.
+La distribuzione normale è completamente determinata da due parametri:
+
+* **$\mu$ (mu)**: la **media** della distribuzione, che ne individua il centro e coincide con il valore di massima densità;
+* **$\sigma$ (sigma)**: la **deviazione standard**, che misura la dispersione dei valori intorno alla media e controlla l’ampiezza della distribuzione.
+
+Questi due parametri sono sufficienti a descrivere sia la posizione sia la variabilità della distribuzione, rendendo la normale un modello matematico particolarmente semplice e al tempo stesso estremamente versatile.
 
 ### Rappresentazione visiva
 
@@ -166,10 +176,14 @@ Come si può osservare:
 
 ### Proprietà fondamentali
 
-1. **Simmetria**: la distribuzione è perfettamente simmetrica rispetto alla media.
-2. **Unimodale**: ha un solo picco, corrispondente alla media.
-3. **Asintoti**: le code si estendono all'infinito senza mai toccare l'asse $x$.
-4. **Media = Mediana = Moda**: in una distribuzione normale, tutti e tre coincidono.
+La distribuzione normale presenta alcune proprietà strutturali fondamentali che ne definiscono il comportamento e ne giustificano l’uso diffuso come modello di riferimento:
+
+1. **Simmetria**: la distribuzione è perfettamente simmetrica rispetto alla media $\mu$; per ogni valore a distanza $d$ dalla media esiste un valore equiprobabile a distanza $-d$.
+2. **Unimodalità**: la distribuzione presenta un unico massimo (moda), che coincide con il punto di massima densità.
+3. **Asintoticità**: le code della distribuzione si estendono indefinitamente verso $+\infty$ e $-\infty$ senza mai intersecare l’asse delle ascisse.
+4. **Coincidenza degli indici di posizione**: in una distribuzione normale, **media, mediana e moda coincidono**, riflettendo l’equilibrio perfetto della distribuzione.
+
+Queste proprietà rendono la distribuzione normale un riferimento ideale per descrivere fenomeni continui caratterizzati da variabilità simmetrica attorno a un valore centrale.
 
 ::: {.callout-note}
 ## Nota matematica
@@ -177,17 +191,24 @@ Come si può osservare:
 La forma precisa della distribuzione normale è definita da una funzione matematica (la funzione di densità) che coinvolge $\mu$, $\sigma$, e alcune costanti matematiche (π, e). I dettagli di questa funzione e le sue proprietà formali saranno approfonditi nel companion sulla teoria della probabilità. Per ora, è sufficiente sapere che $\mu$ e $\sigma$ determinano completamente la forma della distribuzione.
 :::
 
-## La regola empirica 68-95-99.7 {#sec-empirical-rule}
+## La regola empirica 68–95–99.7 {#sec-empirical-rule}
 
-Una delle proprietà più utili e memorabili della distribuzione normale è la **regola empirica** (o regola 68-95-99.7), che descrive la concentrazione dei dati attorno alla media in termini di deviazioni standard.
+Una delle proprietà più note e utili della distribuzione normale è la **regola empirica** (o regola *68–95–99.7*), che fornisce una descrizione intuitiva di come i valori si distribuiscono attorno alla media in funzione della **deviazione standard**.
+
+Questa regola permette di comprendere rapidamente quanta parte dei dati ci si aspetta di osservare vicino al valore centrale, senza ricorrere a calcoli complessi o a tabelle di probabilità.
 
 ### La regola in numeri
 
-Per qualsiasi distribuzione normale, indipendentemente dai valori specifici di $\mu$ e $\sigma$:
+Per **qualsiasi distribuzione normale**, indipendentemente dai valori specifici della media $\mu$ e della deviazione standard $\sigma$:
 
-- circa **68%** dei valori si trova entro **1 deviazione standard** dalla media: $[\mu - \sigma, \mu + \sigma]$;
-- circa **95%** dei valori si trova entro **2 deviazioni standard** dalla media: $[\mu - 2\sigma, \mu + 2\sigma]$;
-- circa **99.7%** dei valori si trova entro **3 deviazioni standard** dalla media: $[\mu - 3\sigma, \mu + 3\sigma]$.
+* circa il **68%** delle osservazioni ricade entro **una deviazione standard** dalla media, nell’intervallo
+  $[\mu - \sigma, \mu + \sigma]$;
+* circa il **95%** delle osservazioni si trova entro **due deviazioni standard** dalla media, nell’intervallo
+  $[\mu - 2\sigma, \mu + 2\sigma]$;
+* circa il **99.7%** delle osservazioni cade entro **tre deviazioni standard** dalla media, nell’intervallo
+  $[\mu - 3\sigma, \mu + 3\sigma]$.
+
+Queste proporzioni forniscono una guida pratica per interpretare la variabilità dei dati e per valutare quanto un’osservazione sia tipica o estrema rispetto alla distribuzione di riferimento.
 
 ```{r}
 #| label: fig-empirical-rule
@@ -296,12 +317,12 @@ Come si può vedere, le proporzioni osservate sono molto vicine a quelle teorich
 ::: {.callout-tip}
 ## Implicazione pratica
 
-La regola empirica ci permette di interpretare rapidamente la deviazione standard: essa rappresenta approssimativamente la distanza dalla media entro cui si trova circa il 68% dei dati. Questo rende la deviazione standard molto più interpretabile di quanto possa sembrare dalla sua formula!
+La regola empirica consente di attribuire un significato immediato alla **deviazione standard**: essa rappresenta, in modo approssimato, la distanza dalla media entro cui si colloca circa il **68% delle osservazioni**. In questo modo, un parametro che appare inizialmente astratto nella sua formulazione matematica acquisisce un’interpretazione concreta e intuitiva, rendendo la deviazione standard uno strumento descrittivo molto più informativo di quanto possa sembrare a prima vista.
 :::
 
 ## Un esempio pratico completo: altezza maschile {#sec-height-example}
 
-Mettiamo insieme tutti i concetti visti finora con un esempio pratico. Vogliamo descrivere la distribuzione delle altezze maschili usando la distribuzione normale.
+Integriamo i concetti presentati finora con un esempio pratico. Consideriamo il problema di descrivere la distribuzione delle altezze nella popolazione maschile adulta, modellizzabile tramite una distribuzione normale.
 
 ### Stima dei parametri
 
@@ -350,22 +371,24 @@ La curva normale fornisce una buona approssimazione. Questo significa che possia
 
 ## Z-scores: standardizzazione e confronti {#sec-z-scores}
 
-Quando si lavora con variabili misurate su scale differenti (ad esempio, altezza in centimetri e peso in chilogrammi, oppure punteggi di test diversi), confrontarle direttamente risulta problematico. I **punteggi standardizzati** (o *z-scores*) offrono una soluzione a questo problema.
+Quando si analizzano variabili misurate su **scale diverse** — ad esempio altezza in centimetri e peso in chilogrammi, oppure punteggi provenienti da test differenti — il confronto diretto dei valori grezzi risulta poco informativo o addirittura fuorviante. I **punteggi standardizzati**, comunemente noti come *z-scores*, forniscono una soluzione elegante a questo problema, consentendo di esprimere i dati su una **scala comune**.
 
 ### Definizione e calcolo
 
-Uno z-score rappresenta il numero di deviazioni standard di cui un dato valore si discosta dalla media della distribuzione:
+Uno *z-score* indica di quante **deviazioni standard** un valore osservato si discosta dalla media della distribuzione di riferimento. Formalmente:
 
 $$
-z = \frac{x - \mu}{\sigma}
+z = \frac{x - \mu}{\sigma},
 $$
 dove:
 
-- $x$ è il valore osservato;
-- $\mu$ è la media della distribuzione;
-- $\sigma$ è la deviazione standard.
+* $x$ è il valore osservato;
+* $\mu$ è la media della distribuzione;
+* $\sigma$ è la deviazione standard.
 
-In R, gli z-scores possono essere calcolati facilmente utilizzando la funzione `scale()`:
+Attraverso questa trasformazione, ogni osservazione viene ricollocata rispetto al centro e alla dispersione della distribuzione, rendendo i valori direttamente confrontabili.
+
+In **R**, gli z-scores possono essere calcolati in modo semplice utilizzando la funzione `scale()`:
 
 ```{r}
 # Z-scores delle altezze maschili
@@ -375,35 +398,47 @@ cat("Primi 10 z-scores:\n")
 head(z, 10) |> round(2)
 
 # Verifichiamo le proprietà
+
 cat("\nMedia degli z-scores:", round(mean(z), 10), "\n")
 cat("Deviazione standard degli z-scores:", round(sd(z), 10), "\n")
 ```
 
-**Proprietà fondamentali degli z-scores:**
+### Proprietà fondamentali degli z-scores
 
-1. la media degli z-scores è sempre 0;
-2. la deviazione standard degli z-scores è sempre 1;
-3. gli z-scores preservano la forma della distribuzione originale.
+La standardizzazione presenta alcune proprietà chiave:
+
+1. la **media** degli z-scores è sempre pari a 0;
+2. la **deviazione standard** degli z-scores è sempre pari a 1;
+3. la trasformazione preserva la **forma della distribuzione originale**, limitandosi a ricentrarla e riscalarla.
+
+Queste caratteristiche rendono gli z-scores particolarmente utili per confronti trasversali tra variabili diverse e per l’interpretazione relativa delle osservazioni.
 
 ### Interpretazione pratica
 
-- **z = 0**: il valore coincide con la media.
-- **z = 1**: il valore è 1 deviazione standard *sopra* la media.
-- **z = -1**: il valore è 1 deviazione standard *sotto* la media.
-- **z = 2**: il valore è 2 deviazioni standard sopra la media (nel 2.5% superiore se distribuzione normale).
-- **z = -2**: il valore è 2 deviazioni standard sotto la media (nel 2.5% inferiore se distribuzione normale).
+Nel contesto di una distribuzione approssimativamente normale, gli z-scores possono essere interpretati in modo immediato:
+
+* **z = 0**: il valore coincide con la media;
+* **z = 1**: il valore è una deviazione standard *sopra* la media;
+* **z = -1**: il valore è una deviazione standard *sotto* la media;
+* **z = 2**: il valore è due deviazioni standard sopra la media (circa nel **2.5% superiore** della distribuzione);
+* **z = -2**: il valore è due deviazioni standard sotto la media (circa nel **2.5% inferiore** della distribuzione).
+
+In questo modo, gli z-scores permettono di tradurre valori grezzi in **posizioni relative** all’interno della distribuzione, facilitando l’interpretazione e il confronto tra individui, variabili e contesti di misurazione diversi.
 
 ### Esempio: confronto tra test diversi
 
-Supponiamo che uno studente abbia ottenuto:
+Supponiamo che uno studente abbia ottenuto i seguenti risultati:
 
-- QI = 115 (media popolazione = 100, sd = 15);
-- punteggio in un test di memoria = 65 (media test = 50, sd = 10).
+* **QI = 115**, in un test con media di popolazione pari a 100 e deviazione standard di 15;
+* **Punteggio di memoria = 65**, in un test con media pari a 50 e deviazione standard di 10.
 
-In quale test ha performato meglio relativamente alla popolazione?
+La domanda è: **in quale dei due test lo studente ha performato meglio in termini relativi rispetto alla popolazione di riferimento?**
+
+Per rispondere, trasformiamo entrambi i punteggi in **z-scores**:
 
 ```{r}
-# Calcoliamo gli z-scores
+# Calcolo degli z-scores
+
 z_qi <- (115 - 100) / 15
 z_memoria <- (65 - 50) / 10
 
@@ -411,17 +446,23 @@ cat("Z-score QI:", round(z_qi, 2), "\n")
 cat("Z-score Memoria:", round(z_memoria, 2), "\n")
 
 if (z_memoria > z_qi) {
-  cat("\nLo studente ha performato relativamente meglio nel test di memoria\n")
+cat("\nLo studente ha performato relativamente meglio nel test di memoria\n")
 } else {
-  cat("\nLo studente ha performato relativamente meglio nel test di QI\n")
+cat("\nLo studente ha performato relativamente meglio nel test di QI\n")
 }
 ```
 
-Anche se i punteggi grezzi (115 vs 65) non sono direttamente confrontabili, gli z-scores rivelano che la performance relativa è stata migliore nel test di memoria.
+Il punteggio di **QI** corrisponde a uno z-score pari a **1.00**, mentre il punteggio nel test di **memoria** corrisponde a uno z-score pari a **1.50**.
+
+Sebbene i valori grezzi (115 e 65) non siano direttamente confrontabili a causa delle diverse scale di misura, gli z-scores consentono di esprimere entrambe le prestazioni sulla **stessa scala standardizzata**. In questo caso, lo studente ha ottenuto una performance **relativamente migliore nel test di memoria**, collocandosi più lontano dalla media della popolazione di riferimento.
 
 ### La distribuzione normale standard
 
-Quando calcoliamo gli z-scores di una distribuzione normale con media $\mu$ e deviazione standard $\sigma$, otteniamo una **distribuzione normale standard** con media 0 e deviazione standard 1. Questa è indicata come $N(0, 1)$ o semplicemente $Z$.
+Quando si standardizza una variabile che segue una distribuzione normale con media $\mu$ e deviazione standard $\sigma$, i corrispondenti **z-scores** seguono una **distribuzione normale standard**, caratterizzata da media pari a 0 e deviazione standard pari a 1. Questa distribuzione viene indicata come $N(0, 1)$ oppure, più sinteticamente, come **$Z$**.
+
+La standardizzazione non altera la forma della distribuzione: essa si limita a **ricentrare** i dati sulla media zero e a **riscalarli** in unità di deviazione standard. In questo modo, qualsiasi distribuzione normale può essere ricondotta a un’unica distribuzione di riferimento, rendendo possibili confronti diretti e calcoli probabilistici uniformi.
+
+La figura seguente illustra visivamente questo processo, mostrando una distribuzione normale originale e la corrispondente distribuzione dopo la standardizzazione.
 
 ```{r}
 #| label: fig-standardization
@@ -429,44 +470,46 @@ Quando calcoliamo gli z-scores di una distribuzione normale con media $\mu$ e de
 #| fig-height: 12
 
 # Dati originali e standardizzati
+
 plot_data <- data.frame(
-  originale = x,
-  standardizzato = z
+originale = x,
+standardizzato = z
 )
 
 p1 <- ggplot(plot_data, aes(x = originale)) +
-  geom_histogram(aes(y = after_stat(density)), bins = 30,
-                 fill = "lightblue", alpha = 0.7) +
-  stat_function(fun = dnorm, args = list(mean = m, sd = s),
-                linewidth = 1, color = "black") +
-  labs(title = "Distribuzione originale",
-       subtitle = paste0("μ = ", round(m, 1), ", σ = ", round(s, 1)),
-       x = "Altezza (cm)", y = "Densità") +
-  theme(plot.margin = margin(t = 12, r = 5, b = 5, l = 5))
+geom_histogram(aes(y = after_stat(density)), bins = 30,
+fill = "lightblue", alpha = 0.7) +
+stat_function(fun = dnorm, args = list(mean = m, sd = s),
+linewidth = 1, color = "black") +
+labs(title = "Distribuzione originale",
+subtitle = paste0("μ = ", round(m, 1), ", σ = ", round(s, 1)),
+x = "Altezza (cm)", y = "Densità") +
+theme(plot.margin = margin(t = 12, r = 5, b = 5, l = 5))
 
 p2 <- ggplot(plot_data, aes(x = standardizzato)) +
-  geom_histogram(aes(y = after_stat(density)), bins = 30,
-                 fill = "lightgreen", alpha = 0.7) +
-  stat_function(fun = dnorm, args = list(mean = 0, sd = 1),
-                linewidth = 1, color = "black") +
-  labs(title = "Dopo standardizzazione",
-       subtitle = "μ = 0, σ = 1",
-       x = "Z-score", y = "Densità") +
-  theme(plot.margin = margin(t = 12, r = 5, b = 5, l = 5))
+geom_histogram(aes(y = after_stat(density)), bins = 30,
+fill = "lightgreen", alpha = 0.7) +
+stat_function(fun = dnorm, args = list(mean = 0, sd = 1),
+linewidth = 1, color = "black") +
+labs(title = "Dopo standardizzazione",
+subtitle = "μ = 0, σ = 1",
+x = "Z-score", y = "Densità") +
+theme(plot.margin = margin(t = 12, r = 5, b = 5, l = 5))
 
 grid.arrange(p1, p2, ncol = 2)
 ```
 
 ::: {.callout-important}
-## Collegamento con l'inferenza
 
-Gli z-scores sono fondamentali per l'inferenza statistica:
+## Collegamento con l’inferenza statistica
 
-- i test z utilizzano la distribuzione normale standard per calcolare probabilità;
-- i valori-$p$ sono spesso calcolati convertendo statistiche test in z-scores;
-- gli intervalli di confidenza si basano sulla distribuzione degli z-scores.
+Gli z-scores costituiscono un elemento fondamentale dell’inferenza statistica:
 
-Comprendere gli z-scores ora faciliterà la comprensione dei concetti inferenziali successivi.
+* i **test z** utilizzano direttamente la distribuzione normale standard per il calcolo delle probabilità;
+* i **valori-$p$** sono spesso ottenuti convertendo una statistica test in uno z-score;
+* gli **intervalli di confidenza** si basano sulla distribuzione degli z-scores e sui relativi quantili.
+
+Una comprensione solida della distribuzione normale standard e degli z-scores fornisce quindi le basi concettuali necessarie per affrontare con maggiore consapevolezza i metodi inferenziali che verranno introdotti nei capitoli successivi.
 :::
 
 ## Verificare la normalità: QQ-plots {#sec-qq-plots}
@@ -584,50 +627,57 @@ Per questo motivo, la valutazione visiva tramite QQ-plot è spesso più utile de
 
 ## Ponte verso la modellazione bayesiana {#sec-bridge-to-inference}
 
-I concetti presentati in questo capitolo costituiscono i mattoni fondamentali per la costruzione e l’interpretazione dei modelli bayesiani che incontreremo successivamente. Riassumiamo le connessioni più rilevanti:
+I concetti introdotti in questo capitolo costituiscono i **mattoni concettuali fondamentali** per la costruzione, la comprensione e l’interpretazione dei modelli bayesiani che verranno sviluppati nei capitoli successivi. Lontani dall’essere nozioni puramente descrittive, essi anticipano direttamente le scelte di modellazione, di specificazione dei *prior* e di valutazione dei modelli. Riassumiamo di seguito le connessioni più rilevanti.
 
 ### 1. Dalle distribuzioni ai prior coniugati
 
-Abbiamo visto come la distribuzione normale sia descritta da due parametri ($\mu$, $\sigma$). Nel Bayesianesimo:
+Abbiamo visto come la distribuzione normale sia completamente descritta da due parametri, $\mu$ e $\sigma$. Nel contesto bayesiano:
 
-- questa stessa distribuzione può essere utilizzata come **prior** su parametri continui, come un coefficiente di regressione o un effetto di trattamento;
-- l’uso di *prior* coniugati (come una normale per un parametro di interesse, combinata con una normale/likelihood) semplifica il calcolo della **distribuzione a posteriori**, che a sua volta sarà normale;
-- i *posterior* rappresentano la nostra conoscenza aggiornata dopo aver osservato i dati, e i loro intervalli di credibilità (ad esempio, il 95% HDI) possono essere interpretati direttamente come la regione più plausibile del parametro.
+* la distribuzione normale può essere utilizzata come **prior** su parametri continui, quali coefficienti di regressione, effetti di trattamento o differenze tra gruppi;
+* l’uso di *prior* **coniugati** (ad esempio, una normale come *prior* combinata con una *likelihood* normale) consente di ottenere una **distribuzione a posteriori** della stessa famiglia, semplificando l’analisi e l’interpretazione;
+* i *posterior* rappresentano una **conoscenza aggiornata** alla luce dei dati osservati, e i relativi intervalli di credibilità (come il 95% HDI) possono essere interpretati direttamente come regioni di plausibilità del parametro.
+
+In questo senso, la distribuzione normale diventa uno strumento naturale per formalizzare l’incertezza sui parametri.
 
 ### 2. Dalla normalità ai modelli gerarchici
 
-La normale non è solo una distribuzione per i dati (*likelihood*), ma è uno strumento flessibile per modellare la variabilità:
+La distribuzione normale non svolge un ruolo centrale solo come *likelihood* per i dati osservati, ma anche come **meccanismo di modellazione della variabilità**:
 
-- nei **modelli gerarchici**, possiamo imporre un *prior* normale su effetti specifici (ad esempio, gli effetti di diversi gruppi o soggetti), che sono a loro volta vincolati da un iperparametro comune;
-- questo permette di bilanciare il *pooling* delle informazioni tra gruppi e la stima di effetti individuali, una forma di regolarizzazione nativa nell'approccio bayesiano.
+* nei **modelli gerarchici**, è comune assumere che gli effetti specifici di gruppi, soggetti o condizioni siano distribuiti normalmente attorno a un valore medio comune;
+* questi effetti sono governati da **iperparametri**, che regolano il grado di variabilità tra unità e determinano quanto le stime individuali vengano “attratte” verso la media di gruppo.
+
+Questo approccio realizza in modo naturale un compromesso tra *pooling* completo e stima completamente separata degli effetti, introducendo una forma di **regolarizzazione intrinseca** tipica della modellazione bayesiana.
 
 ### 3. Standardizzazione e interpretazione degli effetti
 
-Gli z-scores forniscono un’intuizione chiave:
+Gli z-scores forniscono un’intuizione cruciale che si riflette direttamente nella pratica bayesiana:
 
-- la standardizzazione facilita la specificazione di **prior informativi** (es. "ritengo che l'effetto sia piccolo, cioè entro ±0.5 deviazioni standard").
-- nei modelli di regressione, spesso converrà standardizzare le variabili per assegnare *prior* più interpretabili e per rendere i coefficienti confrontabili su scale comuni.
+* la standardizzazione delle variabili facilita la specificazione di **prior informativi deboli**, ad esempio esprimendo convinzioni del tipo: “mi aspetto effetti piccoli, entro ±0.5 deviazioni standard”;
+* nei modelli di regressione, lavorare su scale standardizzate rende i coefficienti **direttamente confrontabili** e i *prior* più facilmente interpretabili;
+* ciò riduce il rischio di *prior* implicitamente troppo informativi o incoerenti con la scala dei dati.
 
 ### 4. Verifica dei modelli e diagnostica
 
-Il QQ-plot e la valutazione della normalità sono un primo passo verso la più ampia **diagnostica bayesiana**:
+Strumenti come il QQ-plot e la valutazione della normalità rappresentano un primo passo verso una più ampia prospettiva di **diagnostica bayesiana**:
 
-- Mentre un’assunzione di normalità può essere incorporata nella *likelihood* del modello, i residui *posteriori* vanno comunque esaminati per valutare l’adeguatezza del modello.
-- La diagnostica bayesiana va oltre: useremo **posterior predictive checks** per verificare se il nostro modello, nel suo insieme (prior + likelihood), è in grado di generare dati simili a quelli osservati. In questo senso, la verifica di una distribuzione specifica (come la normale) è solo un caso particolare di una domanda più generale: il modello si adatta bene ai dati?
+* anche quando una distribuzione normale è assunta nella *likelihood*, è necessario esaminare i **residui posteriori** per valutare l’adeguatezza del modello;
+* tuttavia, l’approccio bayesiano va oltre la verifica di singole assunzioni: mediante i **posterior predictive checks**, si valuta se l’intero modello (prior + likelihood) è in grado di generare dati compatibili con quelli osservati.
 
-Questi collegamenti mostrano come i concetti di distribuzione, parametro e adeguatezza del modello, introdotti in questo capitolo, non siano solo "descrittivi", ma siano il punto di partenza per una modellazione esplicita e probabilisticamente coerente dei fenomeni psicologici.
+In questo quadro, la normalità non è un dogma da accettare o rifiutare, ma una **ipotesi modellistica** da valutare nel contesto più ampio della capacità del modello di descrivere i dati.
+
+Nel loro insieme, questi collegamenti mostrano come i concetti di distribuzione, parametro e adeguatezza del modello introdotti in questo capitolo non siano meri strumenti descrittivi, ma costituiscano il **punto di partenza per una modellazione esplicita, probabilistica e coerente** dei fenomeni psicologici. È su queste basi che la modellazione bayesiana può essere intesa non solo come una tecnica statistica, ma come un vero e proprio **quadro concettuale per l’inferenza scientifica**.
 
 ## Riflessioni conclusive {.unnumbered .unlisted}
 
-In questo capitolo abbiamo utilizzato la distribuzione normale come **lente descrittiva** e come primo esempio di **modello probabilistico**: un modo compatto per riassumere dati continui e ragionare sulla loro variabilità.
+In questo capitolo abbiamo utilizzato la **distribuzione normale** come una *lente descrittiva* e come primo esempio di **modello probabilistico**: uno strumento compatto per riassumere dati continui e per ragionare in modo strutturato sulla loro variabilità.
 
 Abbiamo visto che:
 
-* quando la distribuzione normale è una buona approssimazione, la **media** e la **deviazione standard** diventano parametri informativi che descrivono la posizione e la dispersione dei dati e permettono confronti immediati tra gruppi e condizioni;
-* la **standardizzazione** (z-score) non è un “trucco di calcolo”, ma un passaggio concettuale utile: porta le variabili su una scala comune, rende più interpretabili i confronti e le grandezze d'effetto e prepara alla specificazione delle scelte di modellazione (ad esempio nella regressione);
-* la **valutazione della normalità** è soprattutto una questione diagnostica: il QQ-plot aiuta a riconoscere asimmetrie, code pesanti e outlier, caratteristiche che spesso suggeriscono la necessità di trasformazioni, modelli alternativi o verosimiglianze più robuste.
+* quando la distribuzione normale fornisce una buona approssimazione dei dati, **media** e **deviazione standard** assumono un significato informativo preciso, descrivendo rispettivamente la posizione centrale e la dispersione, e consentendo confronti immediati tra gruppi, condizioni e contesti diversi;
+* la **standardizzazione** tramite z-score non è un mero artificio computazionale, ma un passaggio concettuale rilevante: porta variabili eterogenee su una scala comune, rende più interpretabili i confronti e le dimensioni d’effetto e prepara il terreno a scelte di modellazione più consapevoli, ad esempio nell’ambito della regressione;
+* la **valutazione della normalità** va intesa principalmente come un’attività diagnostica: strumenti come il QQ-plot permettono di individuare asimmetrie, code pesanti e valori anomali, segnali che spesso suggeriscono la necessità di trasformazioni, di modelli alternativi o di verosimiglianze più robuste.
 
-Il punto chiave è che la distribuzione normale non deve essere considerata una "legge" dei dati, ma una **scelta di modellazione**: è utile quando funziona, ma può essere sostituita quando non descrive adeguatamente ciò che osserviamo. Questa prospettiva è centrale nell'analisi esplorativa e diventerà ancora più importante quando inizieremo a costruire modelli completi e a verificarne l'adeguatezza, confrontando ciò che il modello implica con ciò che i dati mostrano
+Il punto centrale è che la distribuzione normale non deve essere trattata come una “legge dei dati”, ma come una **ipotesi di modellazione**. È uno strumento potente quando descrive adeguatamente ciò che osserviamo, ma deve poter essere messo in discussione e sostituito quando non lo fa. Questa prospettiva è fondamentale nell’analisi esplorativa dei dati e diventerà ancora più cruciale nei capitoli successivi, quando inizieremo a costruire modelli completi e a valutarne l’adeguatezza confrontando sistematicamente **ciò che il modello implica** con **ciò che i dati mostrano**.
 
 ::: {.callout-tip}
 

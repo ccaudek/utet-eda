@@ -4,13 +4,12 @@
 La visualizzazione grafica dei dati rappresenta il pilastro fondamentale di ogni analisi quantitativa. Grazie alle rappresentazioni grafiche adeguate, è possibile individuare importanti caratteristiche di una distribuzione, quali la simmetria o l'asimmetria, nonché la presenza di una o più mode. Successivamente, al fine di descrivere sinteticamente le principali caratteristiche dei dati, si rende necessario l'utilizzo di specifici indici numerici. In questo capitolo, verranno presentati i principali indicatori della statistica descrittiva.
 :::
 
-### Panoramica del capitolo {.unnumbered .unlisted}
+## Panoramica del capitolo {.unnumbered .unlisted}
 
-- *Tendenza centrale:* Scelta della misura (media, mediana, moda) in base al tipo di dati e alla presenza di valori anomali.
-- *Robustezza:* Confronto tra misure sensibili (media, deviazione standard) e misure robuste (mediana, trimmed mean, MAD).
-- *Simulazioni:* Dimostrazione empirica dell'effetto degli outlier attraverso esempi pratici.
-- *Variabilità:* Interpretazione di range, varianza, deviazione standard e IQR per quantificare la dispersione dei dati attorno al valore centrale.
-
+- *Tendenza centrale:* scelta della misura (media, mediana, moda) in base al tipo di dati e alla presenza di valori anomali.
+- *Robustezza:* confronto tra misure sensibili (media, deviazione standard) e misure robuste (mediana, trimmed mean, MAD).
+- *Simulazioni:* dimostrazione empirica dell'effetto degli outlier attraverso esempi pratici.
+- *Variabilità:* interpretazione di range, varianza, deviazione standard e IQR per quantificare la dispersione dei dati attorno al valore centrale.
 
 ::: {.callout-tip collapse=true}
 ## Prerequisiti
@@ -31,17 +30,15 @@ pacman::p_load(tidyr, viridis, vcd)
 ```
 :::
 
-
 ## Indici di tendenza centrale
 
 Gli indici di tendenza centrale sono misure statistiche che cercano di rappresentare un valore tipico o centrale all'interno di un insieme di dati. Sono utilizzati per ottenere una comprensione immediata della distribuzione dei dati senza dover analizzare l'intero insieme. Gli indici di tendenza centrale sono fondamentali nell'analisi statistica, in quanto forniscono una sintesi semplice e comprensibile delle caratteristiche principali di un insieme di dati. I principali indici di tendenza centrale sono:
 
-1. *Media*: La media è la somma di tutti i valori divisa per il numero totale di valori. È spesso utilizzata come misura generale di tendenza centrale, ma è sensibile agli estremi (valori molto alti o molto bassi).
-2. *Mediana*: La mediana è il valore che divide l'insieme di dati in due parti uguali. A differenza della media, non è influenzata da valori estremi ed è quindi più robusta in presenza di outlier.
-3. *Moda*: La moda è il valore che appare più frequentemente in un insieme di dati. In alcuni casi, può non essere presente o esserci più di una moda.
+1. *Media*: la media è la somma di tutti i valori divisa per il numero totale di valori. È spesso utilizzata come misura generale di tendenza centrale, ma è sensibile agli estremi (valori molto alti o molto bassi).
+2. *Mediana*: la mediana è il valore che divide l'insieme di dati in due parti uguali. A differenza della media, non è influenzata da valori estremi ed è quindi più robusta in presenza di outlier.
+3. *Moda*: la moda è il valore che appare più frequentemente in un insieme di dati. In alcuni casi, può non essere presente o esserci più di una moda.
 
 La scelta dell'indice di tendenza centrale appropriato dipende dalla natura dei dati e dall'obiettivo dell'analisi. Ad esempio, la mediana potrebbe essere preferita alla media se l'insieme di dati contiene valori anomali che potrebbero distorcere la rappresentazione centrale. La conoscenza e l'applicazione corretta di questi indici possono fornire una preziosa intuizione sulle caratteristiche centrali di una distribuzione di dati.
-
 
 ### Moda
 
@@ -50,11 +47,9 @@ La *moda* ($\text{Mo}$) rappresenta il valore della variabile che *compare con m
 - Nelle *distribuzioni unimodali*, esiste una sola moda, che coincide con il valore centrale della distribuzione più frequente.  
 - Tuttavia, in alcune distribuzioni, possono emergere *più di una moda*, rendendole *multimodali*. In questi casi, la moda perde il suo significato di indicatore unico di tendenza centrale, poiché la presenza di più valori con frequenze elevate rende difficile individuare un singolo punto di riferimento.  
 
-
 ### Mediana
 
 La *mediana* ($\tilde{x}$) corrisponde al valore che divide il campione in due metà: il 50% dei dati è inferiore o uguale alla mediana e il restante 50% è superiore o uguale. A differenza della media, la mediana è meno influenzata dai valori estremi, rendendola una misura particolarmente robusta in presenza di dati asimmetrici o outlier.
-
 
 ### Media
 
@@ -65,8 +60,7 @@ $$
 $$ {#eq-mean}
 dove $x_i$ rappresenta i valori nell'insieme, $n$ è il numero totale di valori, e $\sum$ indica la sommatoria.
 
-
-#### Calcolo della media con `R`
+### Calcolo della media con `R`
 
 Per calcolare la media di un piccolo numero di valori in R, possiamo utilizzare la somma di questi valori e dividerla per il numero totale di elementi. Consideriamo ad esempio i valori 12, 44, 21, 62, 24:
 
@@ -81,17 +75,17 @@ x <- c(12, 44, 21, 62, 24)
 mean(x)
 ```
 
-### Media vs Mediana: Robustezza e Scelta della Misura {#sec-mean-vs-median}
+### Media vs mediana: robustezza e scelta della misura {#sec-mean-vs-median}
 
 La scelta tra media e mediana come misura di tendenza centrale dipende dalle caratteristiche della distribuzione dei dati e dall'obiettivo dell'analisi. Comprendere quando utilizzare l'una o l'altra è fondamentale per una corretta interpretazione statistica.
 
-#### Differenze concettuali
+### Differenze concettuali
 
 La **media aritmetica** tiene conto di tutti i valori nella distribuzione, assegnando uguale peso a ciascuna osservazione. Questa caratteristica la rende matematicamente conveniente (ad esempio, è coinvolta nel calcolo della varianza) ma anche sensibile ai valori estremi.
 
 La **mediana**, invece, rappresenta il valore centrale della distribuzione ordinata e non è influenzata dall'entità dei valori estremi, ma solo dalla loro posizione. Questa proprietà la rende una misura *robusta*, particolarmente utile quando la distribuzione è asimmetrica o contiene outlier.
 
-#### L'effetto degli outlier: una simulazione
+### L'effetto degli outlier: una simulazione
 
 Per comprendere concretamente l'impatto dei valori estremi, consideriamo una simulazione. Generiamo un campione di 100 osservazioni da una distribuzione normale e osserviamo cosa accade quando introduciamo progressivamente valori anomali.
 
@@ -158,11 +152,11 @@ ggplot(plot_data, aes(x = valore)) +
 
 La visualizzazione mostra chiaramente come la media (linea rossa tratteggiata) si sposti verso destra in presenza di outlier, mentre la mediana (linea blu continua) rimane ancorata al centro della massa principale dei dati.
 
-#### Misure robuste: Media Spuntata e MAD
+### Misure robuste: media spuntata e MAD
 
 Per mitigare la sensibilità della media aritmetica agli outlier, la statistica offre misure alternative più robuste.
 
-##### Media Spuntata (Trimmed Mean)
+### Media spuntata (*trimmed mean*)
 
 La media spuntata calcola la media escludendo una percentuale simmetrica di valori estremi. Ad esempio, con un trim del 10%, vengono rimossi il 5% dei valori più bassi e il 5% dei valori più alti prima del calcolo:
 
@@ -185,7 +179,7 @@ data.frame(
 
 La media spuntata rappresenta un compromesso efficace tra la sensibilità della media aritmetica e la robustezza della mediana.
 
-##### MAD: Deviazione Mediana Assoluta
+### Deviazione Mediana Assoluta
 
 Per misurare la variabilità in modo robusto, possiamo utilizzare la *deviazione mediana assoluta* (MAD), definita come:
 
@@ -210,43 +204,42 @@ data.frame(
 
 Come si evince dalla tabella, mentre la deviazione standard cresce sensibilmente in presenza di outlier, il MAD rimane sostanzialmente stabile, fornendo una misura più affidabile della variabilità "tipica" della distribuzione.
 
-#### Linee guida per la scelta
+### Linee guida per la scelta
 
 La scelta della misura appropriata dipende dal contesto analitico e dagli obiettivi della ricerca:
 
 **Utilizzare la media quando:**
 
-- La distribuzione è approssimativamente simmetrica e priva di outlier
-- È importante che ogni osservazione contribuisca alla misura finale
-- Si intendono sfruttare proprietà matematiche specifiche (es. minimizzazione degli scarti quadratici)
-- Si procederà con analisi parametriche che assumono normalità
+- la distribuzione è approssimativamente simmetrica e priva di outlier;
+- è importante che ogni osservazione contribuisca alla misura finale;
+- si intendono sfruttare proprietà matematiche specifiche (es. minimizzazione degli scarti quadratici);
+- si procederà con analisi parametriche che assumono normalità.
 
 **Utilizzare la mediana quando:**
 
-- La distribuzione è marcatamente asimmetrica
-- Sono presenti outlier che non si possono rimuovere
-- Si lavora con variabili ordinali
-- È importante una misura resistente a valori estremi
-- Si desidera un "valore tipico" che rappresenti il centro effettivo della distribuzione
+- la distribuzione è marcatamente asimmetrica;
+- sono presenti outlier che non si possono rimuovere;
+- si lavora con variabili ordinali;
+- è importante una misura resistente a valori estremi;
+- si desidera un "valore tipico" che rappresenti il centro effettivo della distribuzione.
 
 **Utilizzare la trimmed mean quando:**
 
-- Si desidera un compromesso tra sensibilità e robustezza
-- Si sospetta la presenza di alcuni outlier ma si vuole mantenere l'influenza della maggior parte dei dati
+- si desidera un compromesso tra sensibilità e robustezza;
+- si sospetta la presenza di alcuni outlier ma si vuole mantenere l'influenza della maggior parte dei dati.
 
 **Utilizzare MAD quando:**
 
-- Si necessita di una misura di variabilità robusta
-- La distribuzione contiene outlier
-- Si sta utilizzando la mediana come misura di tendenza centrale
+- si necessita di una misura di variabilità robusta;
+- la distribuzione contiene outlier;
+- si sta utilizzando la mediana come misura di tendenza centrale.
 
-::: {.callout-important}
-## Attenzione alla coerenza
+::: {.callout-important title="Attenzione alla coerenza"}
 
 È fondamentale mantenere coerenza metodologica tra le misure di tendenza centrale e di variabilità utilizzate. Se si sceglie la mediana per la sua robustezza, è coerente utilizzare MAD come misura di variabilità, anziché la deviazione standard.
 :::
 
-#### Un caso pratico: distribuzione dei redditi
+### Un caso pratico: distribuzione dei redditi
 
 Un esempio emblematico dell'utilità di mediana e MAD riguarda l'analisi dei redditi. Consideriamo un campione simulato di redditi familiari:
 
@@ -292,7 +285,7 @@ data.frame(reddito = redditi_completi) |>
   scale_x_continuous(labels = scales::comma)
 ```
 
-#### Un'applicazione concreta: il caso Natsal
+### Un'applicazione concreta: il caso Natsal
 
 Come illustrato nella @sec-mean-vs-median, la *media spuntata* rappresenta un compromesso efficace tra sensibilità e robustezza. Eliminando una percentuale simmetrica di dati estremi, offre una misura più stabile della tendenza centrale.
 
@@ -335,14 +328,14 @@ mean(sex_partners_women, trim = 0.10, na.rm = TRUE)
 ```
 :::
 
-
-#### Proprietà della media
+### Proprietà della media
 
 Una proprietà fondamentale della media è che la somma degli scarti di ciascun valore dalla media è zero:
 
 $$
 \sum_{i=1}^n (x_i - \bar{x}) = 0.\notag
 $$ {#eq-diffmeansumzero}
+
 Infatti,
 
 $$
@@ -374,12 +367,11 @@ Lo standard *IEEE 754 a doppia precisione* (64 bit), ampiamente utilizzato, sudd
 Grazie a questa struttura, è possibile rappresentare numeri con una precisione di circa *15-17 cifre decimali*. Tuttavia, qualsiasi valore non esprimibile in formato binario entro questi limiti subisce un troncamento o un arrotondamento, generando piccole discrepanze rispetto al risultato teorico.
 :::
 
-#### La media come centro di gravità dell'istogramma
+### La media come centro di gravità dell'istogramma
 
 La media aritmetica può essere interpretata come il centro di gravità o il punto di equilibrio della distribuzione dei dati. In termini fisici, il centro di gravità è il punto in cui la massa di un sistema è equilibrata o concentrata.
 
 In termini statistici, possiamo considerare la media come il punto in cui la distribuzione dei dati è in equilibrio. Ogni valore dell'insieme di dati può essere visto come un punto materiale con una massa proporzionale al suo valore. Se immaginiamo questi punti disposti su una linea, con valori più grandi a destra e più piccoli a sinistra, la media corrisponderà esattamente al punto in cui la distribuzione sarebbe in equilibrio.
-
 
 ::: {.callout-note collapse="true" title="Principio dei minimi quadrati"}
 
@@ -429,8 +421,7 @@ mean(x)
 Osserviamo che il valore di `M` che minimizza la somma dei quadrati degli scarti coincide con la media dei dati, confermando il principio dei minimi quadrati.
 :::
 
-
-#### Le proporzioni sono medie
+### Le proporzioni sono medie
 
 Se una collezione consiste solo di uni e zeri, allora la somma della collezione è il numero di uni in essa, e la media della collezione è la proporzione di uni.
 
@@ -445,7 +436,7 @@ result
 mean(c(TRUE, TRUE, TRUE, FALSE))
 ```
 
-#### Limiti della media aritmetica
+### Limiti della media aritmetica
 
 La media aritmetica, tuttavia, ha alcune limitazioni: non sempre è l'indice più adeguato per descrivere accuratamente la tendenza centrale della distribuzione, specialmente quando si verificano asimmetrie o valori anomali (outlier). In queste situazioni, è più indicato utilizzare la mediana o la media spuntata (come spiegheremo successivamente).
 
@@ -531,9 +522,9 @@ sexual_partners_truncated |>
 
 4. **Interpretazione dei risultati**
 
-* **Media**: Significativamente più alta della mediana e della moda, poiché fortemente influenzata dalla coda destra della distribuzione.
-* **Mediana**: Valore centrale della distribuzione, molto meno sensibile ai valori estremi. Rappresenta una misura più robusta della tendenza centrale.
-* **Moda**: Corrisponde al valore più frequente (1 partner), ma in distribuzioni così sparse fornisce un'informazione limitata.
+* **Media**: notevolmente più alta della mediana e della moda, poiché fortemente influenzata dalla coda destra della distribuzione.
+* **Mediana**: valore centrale della distribuzione, molto meno sensibile ai valori estremi. Rappresenta una misura più robusta della tendenza centrale.
+* **Moda**: corrisponde al valore più frequente (1 partner), ma in distribuzioni così sparse fornisce un'informazione limitata.
 
 5. **Conclusioni pratiche per l'analisi**
 
@@ -544,7 +535,7 @@ sexual_partners_truncated |>
 
 :::
 
-#### La media come rappresentazione della psicologia umana: un'arma a doppio taglio?
+### La media come rappresentazione della psicologia umana: un'arma a doppio taglio?
 
 La media è uno degli strumenti statistici più semplici e intuitivi che i ricercatori utilizzano per sintetizzare i dati. È un indice di tendenza centrale familiare e intuitivo: se chiediamo a un gruppo di persone la loro età e calcoliamo la media, otteniamo un valore che sintetizza in un'unica cifra l'informazione disponibile. Ma cosa significa, in realtà, "riassumere" i dati con la media? E soprattutto, questa operazione ha senso quando si studiano i processi psicologici e il comportamento umano?
 
@@ -552,7 +543,7 @@ In molte discipline scientifiche, il concetto di media è utile perché descrive
 
 Un problema centrale, sollevato da @speelman2013mean, riguarda l'implicita assunzione che ci sia un *vero valore* sottostante ai processi psicologici che possiamo stimare attraverso la media, come se il comportamento umano fosse determinato da meccanismi identici in ogni individuo, con le differenze attribuibili solo a "rumore" sperimentale. Questo approccio, tipico della psicologia sperimentale tradizionale, assume che testare un gruppo di persone e mediare i loro risultati ci permetta di rivelare la struttura comune della mente umana. Ma questa assunzione è davvero giustificata?
 
-#### La fallacia ergodica e l’illusione dell’universalità {#sec-eda-ergodic-fallacy}
+### La fallacia ergodica e l’illusione dell’universalità {#sec-eda-ergodic-fallacy}
 
 Un errore metodologico frequente nella psicologia è la cosiddetta *fallacia ergodica*, ovvero l’errata convinzione che le caratteristiche medie di un gruppo possano essere automaticamente applicate ai singoli individui che lo compongono [@speelman2024most]. Questo equivoco nasce dall’idea che la media descriva un valore "tipico" valido per tutti, senza considerare le differenze individuali o le variazioni nel tempo.
 
@@ -560,7 +551,7 @@ Immaginiamo di studiare la felicità di un gruppo di persone nel corso di una se
 
 Il rischio, come sottolineato da @molden2006finding, è che il nostro desiderio di trovare *universalità* nei processi cognitivi ci porti a enfatizzare somiglianze tra le persone, ignorando le variazioni individuali che possono essere altrettanto, se non più, informative. Per esempio, due studenti con lo stesso punteggio medio in un test di memoria potrebbero aver ottenuto quel risultato in modi completamente diversi: uno potrebbe aver avuto prestazioni costantemente nella media, mentre l’altro potrebbe aver avuto picchi di eccellenza alternati a difficoltà estreme.
 
-#### La media: uno strumento da usare con cautela
+### La media: uno strumento da usare con cautela
 
 Questi problemi non significano che la media sia inutile in psicologia. È un indicatore potente e spesso informativo, ma deve essere interpretato con cautela. In particolare, non può essere usata per fare inferenze sui singoli individui senza considerare altre misure, come la *varianza* e la *deviazione standard*, che ci dicono quanto i dati siano dispersi intorno alla media.
 
@@ -570,13 +561,13 @@ In psicologia, comprendere la variabilità è tanto importante quanto individuar
 
 La selezione della misura di tendenza centrale più adeguata è un aspetto fondamentale dell'analisi statistica. Tale scelta deve basarsi sulla natura dei dati a disposizione, sulla loro distribuzione e sulla potenziale presenza di valori anomali o asimmetrie. Comprendere le caratteristiche distintive di ciascun indicatore è cruciale per una rappresentazione corretta e significativa dell’informazione.
 
-**La Moda** trova la sua principale applicazione nei dati di tipo categoriale o nominale, dove rappresenta l'unica misura di tendenza centrale calcolabile. La sua utilità è massima nelle distribuzioni unimodali, ovvero quelle in cui un unico valore emerge con frequenza predominante. Al contrario, in presenza di distribuzioni multimodali, caratterizzate da più picchi di frequenza, la moda perde di significatività, poiché l’identificazione di un singolo valore rappresentativo diventa impossibile. Nei dati continui, infine, la moda può spesso non essere definita o risultare poco informativa.
+**La moda** trova la sua principale applicazione nei dati di tipo categoriale o nominale, dove rappresenta l'unica misura di tendenza centrale calcolabile. La sua utilità è massima nelle distribuzioni unimodali, ovvero quelle in cui un unico valore emerge con frequenza predominante. Al contrario, in presenza di distribuzioni multimodali, caratterizzate da più picchi di frequenza, la moda perde di significatività, poiché l’identificazione di un singolo valore rappresentativo diventa impossibile. Nei dati continui, infine, la moda può spesso non essere definita o risultare poco informativa.
 
-**La Media Aritmetica** è l’indicatore più comune e fornisce una stima eccellente della tendenza centrale per distribuzioni simmetriche e prive di valori anomali. Tuttavia, la media presenta una critica debolezza: la sua estrema sensibilità ai valori estremi. In distribuzioni asimmetriche o contaminata da outlier, la media subisce uno spostamento marcato verso la coda della distribuzione, finendo per non rappresentare più fedelmente la maggior parte dei dati.
+**La media aritmetica** è l’indicatore più comune e fornisce una stima eccellente della tendenza centrale per distribuzioni simmetriche e prive di valori anomali. Tuttavia, la media presenta una critica debolezza: la sua estrema sensibilità ai valori estremi. In distribuzioni asimmetriche o contaminata da outlier, la media subisce uno spostamento marcato verso la coda della distribuzione, finendo per non rappresentare più fedelmente la maggior parte dei dati.
 
 **La Media Spuntata** si propone come una valida alternativa alla media tradizionale quando si sospetta la presenza di valori anomali. Questo indicatore, calcolato escludendo una certa percentuale dei valori più estremi (ad esempio, il 5% per ogni coda), offre un compromesso vantaggioso. Rispetto alla media, è molto più robusta agli outlier; rispetto alla mediana, tiene conto di un maggior numero di osservazioni, preservando parte dell'informazione contenuta nei dati.
 
-**La Mediana**, essendo definita come il valore centrale di una distribuzione ordinata, possiede una robustezza intrinseca ai valori anomali. La sua natura posizionale fa sì che essa non venga influenzata dall’entità numerica dei dati, ma solo dal loro rango. Questo la rende la misura d’elezione per distribuzioni fortemente asimmetriche o con outlier. Inoltre, è l’indicatore preferibile per i dati ordinali, dove le distanze tra le categorie non sono definite numericamente.
+**La mediana**, essendo definita come il valore centrale di una distribuzione ordinata, possiede una robustezza intrinseca ai valori anomali. La sua natura posizionale fa sì che essa non venga influenzata dall’entità numerica dei dati, ma solo dal loro rango. Questo la rende la misura d’elezione per distribuzioni fortemente asimmetriche o con outlier. Inoltre, è l’indicatore preferibile per i dati ordinali, dove le distanze tra le categorie non sono definite numericamente.
 
 **Linee guida per una scelta consapevole.**
 
@@ -594,8 +585,8 @@ Questa *dispersione sistematica* non è un “rumore” da ignorare, ma un eleme
 
 In questa sezione esploreremo:  
 
-1. *La scomposizione della variabilità* in componenti spiegate (attribuibili a fattori noti, come un intervento sperimentale) e non spiegate (legate a elementi casuali o non controllati).  
-2. *Strumenti per descriverla*, sia attraverso rappresentazioni grafiche (boxplot, istogrammi) sia mediante indici numerici (differenza interquartile, varianza, deviazione standard).  
+1. *la scomposizione della variabilità* in componenti spiegate (attribuibili a fattori noti, come un intervento sperimentale) e non spiegate (legate a elementi casuali o non controllati).  
+2. *strumenti per descriverla*, sia attraverso rappresentazioni grafiche (boxplot, istogrammi) sia mediante indici numerici (differenza interquartile, varianza, deviazione standard).  
 
 Comprendere la variabilità non è un esercizio tecnico, ma un passo fondamentale per interpretare fenomeni complessi come le differenze di personalità, le oscillazioni emotive o l’efficacia di una terapia. Ogni modello psicologico, infatti, deve fare i conti con questa dimensione dinamica e multideterminata dei dati.  
 
@@ -603,7 +594,7 @@ Comprendere la variabilità non è un esercizio tecnico, ma un passo fondamental
 
 Accanto alle misure di tendenza centrale, i *quantili* descrivono la posizione relativa di un'osservazione all'interno di una distribuzione. Mentre media, mediana e moda individuano un valore "tipico", i quantili rispondono a una domanda complementare: qual è il valore al di sotto del quale ricade una determinata proporzione dei dati?
 
-#### Definizione formale
+### Definizione formale
 
 Il quantile di ordine $p$ (con $0 < p < 1$) è il valore $q_p$ tale che una proporzione $p$ delle osservazioni è minore o uguale a $q_p$. Formalmente, dati $n$ valori ordinati $x_{(1)} \leq x_{(2)} \leq ... \leq x_{(n)}$, il quantile di ordine $p$ si ottiene calcolando $k = \lceil p \cdot n \rceil$, dove $\lceil \cdot \rceil$ rappresenta la funzione di arrotondamento per eccesso. Il quantile corrisponde allora a $q_p = x_{(k)}$.
 
@@ -611,17 +602,17 @@ Quando $p \cdot n$ non è un intero, si ricorre in genere all'interpolazione lin
 
 Per chiarire il calcolo, consideriamo un esempio semplice: dati ordinati {15, 20, 23, 25, 28, 30, 35, 40, 45, 50}. Il 30° percentile ($p=0.3$) si determina come $k = \lceil 0.3 \cdot 10 \rceil = 3$, dunque $q_{0.3} = 23$.
 
-#### Percentili e quartili: casi particolari
+### Percentili e quartili: casi particolari
 
 Un caso speciale di quantili sono i *percentili*, che suddividono la distribuzione in cento parti uguali. Tra questi, assumono particolare rilievo i *quartili*:
 
-- **Primo quartile (Q₁)**: 25° percentile
-- **Secondo quartile (Q₂)**: 50° percentile (corrisponde alla mediana)
-- **Terzo quartile (Q₃)**: 75° percentile
+- **primo quartile (Q₁)**: 25° percentile;
+- **secondo quartile (Q₂)**: 50° percentile (corrisponde alla mediana);
+- **terzo quartile (Q₃)**: 75° percentile.
 
 I quartili delimitano la distribuzione in quattro segmenti di uguale numerosità, fornendo una sintesi robusta della sua posizione e dispersione.
 
-#### Esempio applicativo
+### Esempio applicativo
 
 Per illustrare l'uso pratico dei quantili, consideriamo nuovamente la variabile `NumPartners`, distintamente per genere. Calcoliamo il 10° e il 90° percentile:
 
@@ -641,12 +632,12 @@ quantile(
 
 I risultati rivelano che:
 
-- **Tra gli uomini**, il 10% dei soggetti ha dichiarato al massimo un partner, mentre il 10% con valori più elevati supera i 34 partner.
-- **Tra le donne**, il 10° percentile corrisponde anch'esso a un partner, ma il 90° percentile non supera i 18 partner.
+- **tra gli uomini**, il 10% dei soggetti ha dichiarato al massimo un partner, mentre il 10% con valori più elevati supera i 34 partner;
+- **tra le donne**, il 10° percentile corrisponde anch'esso a un partner, ma il 90° percentile non supera i 18 partner.
 
 Questa differenza evidenzia come le due distribuzioni condividano una base simile nella parte inferiore (numerosi individui con pochi partner), ma divergano significativamente nella coda superiore: negli uomini, la presenza di alcuni valori estremi allunga la distribuzione verso destra, generando una maggiore asimmetria positiva.
 
-#### Misure di dispersione basate sui quantili
+### Misure di dispersione basate sui quantili
 
 I quantili possono essere utilizzati anche per costruire indici di variabilità che non fanno ipotesi sulla forma della distribuzione. La misura più semplice è l’*intervallo di variazione*, pari alla differenza tra valore massimo e minimo. Questo indice è immediato da calcolare, ma dipende esclusivamente dagli estremi e risulta quindi molto sensibile agli outlier.
 
@@ -703,17 +694,17 @@ $$
 
 Passo 2: Scarti dalla media
 
-- Per il primo valore ($x_1 = 3$): $3 - 2.5 = 0.5$
-- Per il secondo valore ($x_2 = 1$): $1 - 2.5 = -1.5$
-- Per il terzo valore ($x_3 = 4$): $4 - 2.5 = 1.5$
-- Per il quarto valore ($x_4 = 2$): $2 - 2.5 = -0.5$
+- Per il primo valore ($x_1 = 3$): $3 - 2.5 = 0.5$.
+- Per il secondo valore ($x_2 = 1$): $1 - 2.5 = -1.5$.
+- Per il terzo valore ($x_3 = 4$): $4 - 2.5 = 1.5$.
+- Per il quarto valore ($x_4 = 2$): $2 - 2.5 = -0.5$.
 
 Passo 3: Quadrati degli scarti
 
-- $(0.5)^2 = 0.25$
-- $(-1.5)^2 = 2.25$
-- $(1.5)^2 = 2.25$
-- $(-0.5)^2 = 0.25$
+- $(0.5)^2 = 0.25$.
+- $(-1.5)^2 = 2.25$.
+- $(1.5)^2 = 2.25$.
+- $(-0.5)^2 = 0.25$.
 
 Passo 4: Calcolo della varianza
 
@@ -726,14 +717,14 @@ $$
 Dunque la varianza è 1.25.
 :::
 
-#### Interpretazione
+### Interpretazione
 
 Nel caso dell'esempio precedente relativo alle ore di studio giornaliere, una varianza pari a 1.25 indica che le ore di studio giornaliere si discostano, in media, di 1.25 unità quadrate dalla media di 2.5 ore. Per comprendere meglio l’ordine di grandezza di questa dispersione, solitamente si fa riferimento alla *deviazione standard*, che è la radice quadrata della varianza. In questo caso, $\sqrt{1.25} \approx 1.12$ ore.
 
 - Se la varianza (o la deviazione standard) fosse stata molto più grande, avremmo dedotto che gli studenti del campione presentano abitudini di studio molto diverse.
 - Al contrario, se la varianza fosse prossima a 0, significherebbe che quasi tutti studiano un numero di ore molto simile a 2.5.
 
-#### Calcolo in R
+### Calcolo in R
 
 Se volessimo effettuare in R i calcoli relativi all'esempio sulle ore di studio, potremmo fare così:
 
@@ -759,7 +750,7 @@ Osserviamo che `var(x)` dà un valore di circa 1.67 perché R, di default, calco
 
 In sintesi, la varianza fornisce un modo per quantificare quanto siano diverse tra loro le osservazioni. Nel caso dell’esempio sulle ore di studio, abbiamo visto che i valori, pur non essendo tutti identici, non mostrano una dispersione eccessiva (la varianza è 1.25). Se i comportamenti di studio fossero estremamente diversificati (per esempio, se qualcuno studiasse 0 ore al giorno e qualcun altro 10), la varianza sarebbe molto più elevata, indicando una marcata eterogeneità nel campione.
 
-#### Stima della varianza della popolazione
+### Stima della varianza della popolazione
 
 Si noti il denominatore della formula della varianza. Nell'@eq-var-descr, ho utilizzato $n$ come denominatore (l'ampiezza campionaria, ovvero il numero di osservazioni nel campione). In questo modo, otteniamo la varianza come *statistica descrittiva* del campione. Tuttavia, è possibile utilizzare $n-1$ come denominatore alternativo:
 
@@ -969,7 +960,7 @@ Il termine *standard deviation* è stato introdotto in statistica da Pearson nel
 
 La deviazione standard $s$ dovrebbe essere utilizzata solo quando la media è una misura appropriata per descrivere il centro della distribuzione, ad esempio nel caso di distribuzioni simmetriche. Tuttavia, è importante tener conto che, come la media $\bar{x}$, anche la deviazione standard è fortemente influenzata dalla presenza di dati anomali, ovvero pochi valori che si discostano notevolmente dalla media rispetto agli altri dati della distribuzione. In presenza di dati anomali, la deviazione standard può risultare ingannevole e non rappresentare accuratamente la variabilità complessiva della distribuzione. Pertanto, è fondamentale considerare attentamente il contesto e le caratteristiche dei dati prima di utilizzare la deviazione standard come misura di dispersione. In alcune situazioni, potrebbe essere più appropriato ricorrere a misure di dispersione robuste o ad altre statistiche descrittive per caratterizzare la variabilità dei dati in modo più accurato e affidabile.
 
-#### Interpretazione
+### Interpretazione
 
 La deviazione standard misura la dispersione dei dati rispetto alla media aritmetica. In termini semplici, indica quanto, in media, ciascun valore osservato si discosta dalla media del campione. Anche se è simile allo scarto semplice medio campionario (la media dei valori assoluti degli scarti rispetto alla media), la deviazione standard utilizza lo scarto quadratico medio e produce un valore leggermente diverso.
 
@@ -997,12 +988,11 @@ mean(abs(x - mean(x)))
 I due valori (deviazione standard e scarto semplice medio) sono simili ma non identici, a causa delle diverse definizioni matematiche.
 :::
 
-
 ### Varianza spiegata e non spiegata
 
 La varianza, come abbiamo visto, misura quanto i dati si disperdono attorno alla media. Un concetto fondamentale nei *modelli statistici lineari* è la distinzione tra *varianza spiegata* e *varianza non spiegata*, che ci permette di valutare quanto bene un modello teorico riesca a chiarire la variabilità osservata nei dati.
 
-#### Decomposizione della varianza
+### Decomposizione della varianza
 
 Quando osserviamo un fenomeno (ad esempio i risultati di un test), troviamo inevitabilmente differenze tra individui. Queste differenze possono essere suddivise in due componenti principali:
 
@@ -1099,7 +1089,6 @@ Questa proporzione è sempre compresa tra 0 e 1:
 Questa decomposizione della varianza è uno strumento cruciale per valutare l'efficacia delle teorie e dei modelli statistici. Approfondiremo ulteriormente questi aspetti nel capitolo dedicato ai *modelli di regressione* (v.  @sec-linear-models-biv-model-frequentist).
 :::
 
-
 ### Deviazione mediana assoluta
 
 La *deviazione mediana assoluta* (MAD) è una misura robusta di dispersione basata sulla mediana. È definita come la mediana dei valori assoluti delle deviazioni dei dati rispetto alla mediana:
@@ -1110,7 +1099,7 @@ $$ {#eq-mad-def}
 
 La MAD è particolarmente utile per analizzare dati contenenti outlier o distribuzioni asimmetriche, poiché è meno influenzata dai valori estremi rispetto alla deviazione standard.
 
-#### Relazione tra MAD e deviazione standard in una distribuzione normale
+### Relazione tra MAD e deviazione standard in una distribuzione normale
 
 Quando i dati seguono una distribuzione normale (gaussiana), esiste una relazione approssimativa tra MAD e deviazione standard. La MAD può essere convertita in una stima della deviazione standard moltiplicandola per una costante di 1.4826:
 
@@ -1128,7 +1117,7 @@ Questa costante deriva dalla proprietà della distribuzione normale, in cui circ
 La formula completa per convertire la MAD in una stima della deviazione standard in una distribuzione normale è:
 
 $$ 
-\sigma \approx 1.4826 \times \text{MAD} 
+\sigma \approx 1.4826 \times \text{MAD} .
 $$
 Questa relazione è utile per stimare la deviazione standard in modo più robusto, specialmente quando si sospetta la presenza di outlier o si ha a che fare con campioni piccoli. Di conseguenza, molti software restituiscono il valore MAD moltiplicato per questa costante per fornire un'indicazione più intuitiva della variabilità dei dati. Tuttavia, è importante notare che questa relazione si mantiene accurata solo per le distribuzioni che sono effettivamente normali. In presenza di distribuzioni fortemente asimmetriche o con elevati outlier, la deviazione standard e la MAD possono fornire indicazioni molto diverse sulla variabilità dei dati.
 
@@ -1166,7 +1155,7 @@ sqrt(
 ```
 :::
 
-#### Quando utilizzare deviazione standard e MAD
+### Quando utilizzare deviazione standard e MAD
 
 **Deviazione standard**
 Questa misura è ottimale quando si lavora con dati approssimativamente distribuiti in modo normale e quando si intende descrivere la dispersione dei valori attorno alla loro media aritmetica. La deviazione standard gode di proprietà matematiche utili in molti modelli statistici, ma presenta lo svantaggio di essere sensibile alla presenza di valori anomali.
@@ -1198,9 +1187,9 @@ Questi indici relativi di variabilità forniscono una misura adimensionale della
 
 Le statistiche descrittive forniscono strumenti essenziali per sintetizzare e interpretare i dati nelle scienze psicologiche e sociali. Gli indici di tendenza centrale (media, mediana e moda) individuano il valore tipico di una distribuzione e forniscono un punto di riferimento essenziale per la sintesi iniziale. Gli indici di dispersione (deviazione standard, varianza e intervallo interquartile) completano questo quadro, quantificando la variabilità dei dati rispetto al valore centrale e rivelando l'eterogeneità spesso presente nel fenomeno oggetto di studio.
 
-Tuttavia, è fondamentale riflettere sulle implicazioni teoriche e metodologiche legate all'uso di queste misure. Un aspetto cruciale da considerare è il rischio di incorrere nella fallacia ergodica, ovvero nell'erronea convinzione che le proprietà osservate a livello di gruppo possano essere automaticamente applicate al singolo individuo. Nella pratica psicologica, infatti, ci troviamo di fronte a una notevole variabilità intraindividuale e interindividuale che difficilmente può essere colta in modo adeguato da indicatori puramente aggregati.
+Tuttavia, è essenziale considerare con attenzione le implicazioni teoriche e metodologiche associate all’uso di queste misure. Un nodo cruciale è rappresentato dal rischio della **fallacia ergodica**, ossia dall’erronea assunzione che le proprietà osservate a livello di gruppo possano essere trasferite automaticamente al livello del singolo individuo. In psicologia, infatti, i fenomeni di interesse sono caratterizzati da una marcata **variabilità intraindividuale e interindividuale**, che difficilmente può essere catturata in modo adeguato da indicatori puramente aggregati.
 
-Di conseguenza, le statistiche descrittive non devono essere considerate un punto di arrivo, ma un passaggio iniziale e necessario. La loro corretta interpretazione richiede l'integrazione con metodologie analitiche più raffinate, come i modelli longitudinali o gli approcci idiografici, che siano sensibili alla specificità del singolo caso. Solo un uso critico e consapevole di questi strumenti può evitare generalizzazioni spurie e restituire una rappresentazione più fedele e sfumata dei processi psicologici e comportamentali.
+Di conseguenza, le statistiche descrittive non dovrebbero essere intese come un punto di arrivo, ma piuttosto come una **fase preliminare dell’analisi**. La loro interpretazione acquista significato solo se integrata con approcci metodologici più sofisticati, quali i **modelli longitudinali** o le **analisi idiografiche**, capaci di rispettare la specificità dei singoli casi. Solo un impiego critico e consapevole di questi strumenti consente di evitare generalizzazioni spurie e di restituire una rappresentazione più accurata e sfumata dei processi psicologici e comportamentali.
 
 ## Esercizi {.unnumbered .unlisted}
 
