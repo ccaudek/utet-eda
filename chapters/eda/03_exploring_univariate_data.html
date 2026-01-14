@@ -81,7 +81,7 @@ div.csl-indent {
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../chapters/eda/05_data_visualization.html" rel="next">
+<link href="../../chapters/eda/05_data_visualization_principles.html" rel="next">
 <link href="../../chapters/eda/02_data_cleaning.html" rel="prev">
 <link href="../../style/gauss.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
@@ -495,8 +495,8 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/eda/05_data_visualization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Principi della visualizzazione dei dati</span></span></a>
+  <a href="../../chapters/eda/05_data_visualization_principles.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Principi della visualizzazione scientifica</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -519,14 +519,20 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/09_causality_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Dalla correlazione alla causalità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/11_outlier.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Outlier</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Outlier</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/12_gauss.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Assunzione di gaussianità e trasformazioni dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Assunzione di gaussianità e trasformazioni dei dati</span></span></a>
   </div>
 </li>
       </ul>
@@ -557,8 +563,8 @@ window.Quarto = {
    
   <ul class="collapse">
 <li><a href="#due-nature-del-dato-psicologico" id="toc-due-nature-del-dato-psicologico" class="nav-link active" data-scroll-target="#due-nature-del-dato-psicologico"><span class="header-section-number">16.1</span> Due nature del dato psicologico</a></li>
-  <li><a href="#sec-categorical-data" id="toc-sec-categorical-data" class="nav-link" data-scroll-target="#sec-categorical-data"><span class="header-section-number">16.2</span> Parte I: Quando i dati appartengono a categorie</a></li>
-  <li><a href="#sec-numerical-data" id="toc-sec-numerical-data" class="nav-link" data-scroll-target="#sec-numerical-data"><span class="header-section-number">16.3</span> Parte II: Quando i dati si distribuiscono su continuità</a></li>
+  <li><a href="#sec-categorical-data" id="toc-sec-categorical-data" class="nav-link" data-scroll-target="#sec-categorical-data"><span class="header-section-number">16.2</span> Parte I: quando i dati appartengono a categorie</a></li>
+  <li><a href="#sec-numerical-data" id="toc-sec-numerical-data" class="nav-link" data-scroll-target="#sec-numerical-data"><span class="header-section-number">16.3</span> Parte II: quando i dati si distribuiscono su continuità</a></li>
   <li><a href="#ponti-tra-categorie-e-numeri" id="toc-ponti-tra-categorie-e-numeri" class="nav-link" data-scroll-target="#ponti-tra-categorie-e-numeri"><span class="header-section-number">16.4</span> Ponti tra categorie e numeri</a></li>
   </ul><div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/eda/03_exploring_univariate_data.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
     </div>
@@ -645,7 +651,7 @@ window.Quarto = {
 <p>Questa fondamentale distinzione richiede strumenti analitici diversi. Non ha senso calcolare la media del genere, così come sarebbe riduttivo considerare un punteggio BDI come una semplice categoria. Eppure, entrambe le nature dei dati richiedono lo stesso rigore esplorativo: dobbiamo capire come si distribuiscono le osservazioni, dove si concentrano, quali combinazioni sono frequenti o rare e quali pattern emergono quando le stratifichiamo per gruppi.</p>
 <p>Inizieremo esplorando le variabili categoriali, per poi passare a quelle numeriche, scoprendo che le domande fondamentali rimangono invariate anche quando cambiano gli strumenti per rispondere.</p>
 </section><section id="sec-categorical-data" class="level2" data-number="16.2"><h2 data-number="16.2" class="anchored" data-anchor-id="sec-categorical-data">
-<span class="header-section-number">16.2</span> Parte I: Quando i dati appartengono a categorie</h2>
+<span class="header-section-number">16.2</span> Parte I: quando i dati appartengono a categorie</h2>
 <section id="i-pinguini-di-palmer" class="level3" data-number="16.2.1"><h3 data-number="16.2.1" class="anchored" data-anchor-id="i-pinguini-di-palmer">
 <span class="header-section-number">16.2.1</span> I pinguini di Palmer</h3>
 <p>Per esplorare i dati categoriali useremo il dataset <a href="https://allisonhorst.github.io/palmerpenguins/">palmerpenguins</a>, raccolto da <a href="https://www.uaf.edu/cfos/people/faculty/detail/kristen-gorman.php">Kristen Gorman</a> presso la Palmer Station in Antartide. Questo dataset documenta 344 pinguini appartenenti a tre specie (<em>Adelie</em>, <em>Chinstrap</em>, <em>Gentoo</em>), osservati su tre isole dell’arcipelago di Palmer. Oltre alle variabili categoriali come specie, isola e genere, il dataset include misure morfometriche che esploreremo nella seconda parte del capitolo.</p>
@@ -823,7 +829,7 @@ window.Quarto = {
 </div>
 <p>Le barre affiancate (<code>position = "dodge"</code>) facilitano il confronto diretto dei conteggi per genere all’interno di ciascuna specie. Il campione appare ragionevolmente bilanciato, sebbene presenti lievi asimmetrie, probabilmente dovute alla casualità del campionamento o a differenze comportamentali che influenzano la probabilità di cattura.</p>
 </section></section><section id="sec-numerical-data" class="level2" data-number="16.3"><h2 data-number="16.3" class="anchored" data-anchor-id="sec-numerical-data">
-<span class="header-section-number">16.3</span> Parte II: Quando i dati si distribuiscono su continuità</h2>
+<span class="header-section-number">16.3</span> Parte II: quando i dati si distribuiscono su continuità</h2>
 <section id="dalle-categorie-alle-quantità" class="level3" data-number="16.3.1"><h3 data-number="16.3.1" class="anchored" data-anchor-id="dalle-categorie-alle-quantità">
 <span class="header-section-number">16.3.1</span> Dalle categorie alle quantità</h3>
 <p>Passiamo ora a esaminare variabili <em>numeriche</em>, quelle che misurano quantità su scale continue piuttosto che appartenenze a classi discrete. In psicologia clinica, per esempio, i punteggi ottenuti con questionari standardizzati come il Beck Depression Inventory (BDI-II) collocano ogni individuo su un continuum di gravità dei sintomi. A differenza delle categorie diagnostiche (“depresso” vs.&nbsp;“non depresso”), questi punteggi catturano le sfumature e le gradazioni.</p>
@@ -975,7 +981,7 @@ window.Quarto = {
 <span><span class="va">base_plot</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_density</span><span class="op">(</span>adjust <span class="op">=</span> <span class="fl">2</span>, linewidth <span class="op">=</span> <span class="fl">1</span>, color <span class="op">=</span> <span class="st">"darkred"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">labs</span><span class="op">(</span>subtitle <span class="op">=</span> <span class="st">"adjust = 2"</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell quarto-layout-panel" data-layout-align="center" data-layout-ncol="3">
+<div class="cell quarto-layout-panel" data-layout-ncol="3" data-layout-align="center">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
@@ -1709,8 +1715,8 @@ Zetsche, U., Buerkner, P.-C., &amp; Renneberg, B. (2019). Future expectations in
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../chapters/eda/05_data_visualization.html" class="pagination-link" aria-label="Principi della visualizzazione dei dati">
-        <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Principi della visualizzazione dei dati</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../chapters/eda/05_data_visualization_principles.html" class="pagination-link" aria-label="Principi della visualizzazione scientifica">
+        <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Principi della visualizzazione scientifica</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

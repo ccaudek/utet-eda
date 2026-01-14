@@ -132,6 +132,7 @@ gtag('js', new Date());
 gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 </script><style>html{ scroll-behavior: smooth; }</style>
 <script src="../../site_libs/quarto-diagram/mermaid.min.js"></script><script src="../../site_libs/quarto-diagram/mermaid-init.js"></script><link href="../../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
+<link rel="stylesheet" href="../../style/custom.css">
 </head>
 <body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
@@ -467,8 +468,8 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/eda/05_data_visualization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Principi della visualizzazione dei dati</span></span></a>
+  <a href="../../chapters/eda/05_data_visualization_principles.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Principi della visualizzazione scientifica</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -491,14 +492,20 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/09_causality_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Dalla correlazione alla causalità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/11_outlier.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Outlier</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Outlier</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/12_gauss.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Assunzione di gaussianità e trasformazioni dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Assunzione di gaussianità e trasformazioni dei dati</span></span></a>
   </div>
 </li>
       </ul>
@@ -560,7 +567,7 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 <div class="callout-body-container">
 <p>Nella ricerca psicologica i dati sono il legame concreto tra le teorie e la loro verifica empirica. Gestirli con rigore non significa soltanto tenerli in ordine: è la condizione che rende le analisi affidabili, le conclusioni sensate e i risultati riproducibili.</p>
 <p>Un dataset solido deve avere tre caratteristiche: <em>integrità</em> (i dati non devono essere alterati senza traccia), <em>chiarezza semantica</em> (ogni variabile deve avere un significato esplicito), e <em>tracciabilità</em> (ogni trasformazione deve poter essere ricostruita). Ad esempio: se rinomini un item da <code>Q5</code> a <code>Ansia_Sociale</code>, questa modifica deve comparire in uno script, non solo nella memoria di chi analizza. Senza questa trasparenza, anche l’analisi più sofisticata perde credibilità e diventa irriproducibile.</p>
-<p>La <em>riproducibilità</em>, cardine della scienza aperta (<em>Open Science</em>), non è facoltativa. Documentare accuratamente dati e processi permette alla comunità scientifica — e al proprio gruppo di ricerca nel tempo — di riesaminare, validare, criticare o estendere il lavoro. La gestione dei dati non è quindi un compito tecnico secondario, ma un atto scientifico con implicazioni etiche e metodologiche profonde.</p>
+<p>La <em>riproducibilità</em>, cardine della scienza aperta (<em>Open Science</em>), non è facoltativa. Documentare accuratamente dati e processi permette alla comunità scientifica, e al proprio gruppo di ricerca nel tempo, di riesaminare, validare, criticare o estendere il lavoro. La gestione dei dati non è quindi un compito tecnico secondario, ma un atto scientifico con implicazioni etiche e metodologiche profonde.</p>
 <p>I dati psicologici sono oggi sempre più complessi: possono essere longitudinali (misure ripetute nel tempo), multimodali (questionari, dati EMA da app, registrazioni digitali), e provenire da fonti eterogenee. Ogni dataset riflette scelte teoriche e tecniche: rendere queste scelte esplicite, tracciabili e accessibili significa trasformare una semplice elaborazione in un processo analitico trasparente e criticabile.</p>
 <p>In questo capitolo vedremo principi e pratiche per costruire un progetto di analisi dati che abbia fin dalle fondamenta chiarezza, rigore e tracciabilità. L’obiettivo non è solo operativo, ma epistemologico: creare un ponte solido tra l’osservazione empirica e l’inferenza scientifica, attraverso strumenti concreti e replicabili.</p>
 </div>
@@ -637,14 +644,14 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 </div>
 </section><section id="limportanza-della-pianificazione-iniziale" class="level2" data-number="14.1"><h2 data-number="14.1" class="anchored" data-anchor-id="limportanza-della-pianificazione-iniziale">
 <span class="header-section-number">14.1</span> L’importanza della pianificazione iniziale</h2>
-<p>Affrontare un progetto di analisi senza una pianificazione accurata è come condurre un esperimento psicologico senza ipotesi: si procede in modo confuso, con errori, ripensamenti e soluzioni improvvisate che rendono il lavoro inefficiente e difficile da mantenere nel tempo. Scrivere codice, contrariamente a quanto si crede, è solo una piccola parte del processo. La maggior parte dello sforzo riguarda la definizione degli obiettivi, la scelta degli strumenti appropriati, la costruzione di un percorso coerente e la prevenzione dei cosiddetti <em>debiti tecnici</em> — scorciatoie temporanee che in seguito diventano ostacoli complessi da risolvere.</p>
+<p>Affrontare un progetto di analisi senza una pianificazione accurata è come condurre un esperimento psicologico senza ipotesi: si procede in modo confuso, con errori, ripensamenti e soluzioni improvvisate che rendono il lavoro inefficiente e difficile da mantenere nel tempo. Scrivere codice, contrariamente a quanto si crede, è solo una piccola parte del processo. La maggior parte dello sforzo riguarda la definizione degli obiettivi, la scelta degli strumenti appropriati, la costruzione di un percorso coerente e la prevenzione dei cosiddetti <em>debiti tecnici</em>, ovvero scorciatoie temporanee che in seguito diventano ostacoli complessi da risolvere.</p>
 <p>Un approccio non strutturato può portare, ad esempio, a importare i dati in modo disordinato, a confondere i file originali con versioni intermedie o a trascurare la documentazione delle trasformazioni. In queste condizioni, anche l’analisi più brillante diventa fragile e poco trasparente, fino a compromettere la possibilità di replicare i risultati.</p>
 <section id="costruire-un-flusso-di-lavoro-efficace" class="level3" data-number="14.1.1"><h3 data-number="14.1.1" class="anchored" data-anchor-id="costruire-un-flusso-di-lavoro-efficace">
 <span class="header-section-number">14.1.1</span> Costruire un flusso di lavoro efficace</h3>
 <p>Un progetto ben strutturato nasce da una fase di progettazione concettuale: chiarire le domande di ricerca, identificare le variabili chiave e ipotizzare i passaggi fondamentali dell’analisi. Anche uno schema molto semplice, disegnato su carta, può aiutare a visualizzare l’intero percorso: dalla pulizia dei dati all’inferenza statistica, fino alla comunicazione dei risultati. Questa rappresentazione preliminare diventa una bussola per mantenere coerenza ed evitare deviazioni inutili.</p>
 <p>È altrettanto importante suddividere il lavoro in unità gestibili, stimando in modo realistico il tempo necessario per ciascuna e formulando obiettivi specifici. Dire “fare un’analisi preliminare” è troppo vago; meglio stabilire: <em>“esplorare la distribuzione dei punteggi tra il gruppo sperimentale e quello di controllo e produrre un grafico documentato e interpretabile”</em>. Questo livello di precisione facilita il monitoraggio dei progressi e la divisione dei compiti nei progetti collaborativi.</p>
 <p>La scelta degli strumenti merita attenzione sin dall’inizio: dedicare tempo a selezionare pacchetti R affidabili evita soluzioni improvvisate poco sostenibili. Ad esempio, <code>janitor</code> semplifica la pulizia dei dati e <code>report</code> produce automaticamente output in stile APA. Tuttavia, lo strumento più importante resta la documentazione quotidiana: annotare le motivazioni delle scelte nel codice, descrivere chiaramente le trasformazioni e integrare testo, codice ed evidenze in un documento Quarto crea un archivio trasparente e facilmente condivisibile.</p>
-<p>Infine, la riproducibilità è la chiave per garantire solidità nel tempo. Una struttura di progetto ordinata, con cartelle distinte per dati, script, output e report, facilita l’orientamento e la collaborazione. Anche i dettagli apparentemente minori — nomi chiari per le variabili, coerenza nell’indentazione, commenti sintetici ma informativi — contribuiscono a rendere l’analisi più leggibile, robusta e sostenibile.</p>
+<p>Infine, la riproducibilità è la chiave per garantire solidità nel tempo. Una struttura di progetto ordinata, con cartelle distinte per dati, script, output e report, facilita l’orientamento e la collaborazione. Anche i dettagli apparentemente minori, ovvero nomi chiari per le variabili, coerenza nell’indentazione, commenti sintetici ma informativi, contribuiscono a rendere l’analisi più leggibile, robusta e sostenibile.</p>
 </section><section id="prevenire-e-gestire-il-debito-tecnico" class="level3" data-number="14.1.2"><h3 data-number="14.1.2" class="anchored" data-anchor-id="prevenire-e-gestire-il-debito-tecnico">
 <span class="header-section-number">14.1.2</span> Prevenire e gestire il debito tecnico</h3>
 <p>Con l’avanzare del progetto, è naturale accumulare complessità e dover affrontare problemi di manutenzione del codice. Per evitarne l’escalation, conviene ritagliarsi momenti periodici di revisione: semplificare strutture ridondanti, dividere gli script troppo lunghi in moduli più chiari e trasformare blocchi ripetitivi in funzioni riutilizzabili. Un codice pulito riduce il rischio di errori, rende più semplice collaborare e garantisce la possibilità di estendere il progetto senza doverlo riscrivere da capo.</p>
@@ -658,7 +665,7 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 <p>In definitiva, pianificare un flusso di lavoro in R non significa complicarsi la vita: significa creare le condizioni per analisi più chiare, durature e scientificamente robuste. L’organizzazione del progetto, la cura del codice e l’adozione di buone pratiche non sono accessori, ma il fondamento di un approccio che mira a <em>comprendere</em> e non solo a <em>calcolare</em>.</p>
 </section></section><section id="capacità-di-gestione-dei-dati-in-r" class="level2" data-number="14.2"><h2 data-number="14.2" class="anchored" data-anchor-id="capacità-di-gestione-dei-dati-in-r">
 <span class="header-section-number">14.2</span> Capacità di gestione dei dati in R</h2>
-<p>Una volta compresa l’importanza di pianificare il lavoro, il passo successivo è dotarsi di strumenti affidabili per gestire, analizzare e documentare i dati. In questo contesto, R si rivela un alleato prezioso. È un ambiente di programmazione pensato per accompagnare l’intero ciclo di vita dei dati: dall’importazione e trasformazione, all’analisi statistica, fino alla produzione di report riproducibili. La sua versatilità lo rende centrale in qualsiasi flusso di lavoro orientato alla qualità e alla trasparenza — qualità indispensabili soprattutto in psicologia, dove i dataset sono spesso complessi e richiedono al tempo stesso flessibilità e rigore.</p>
+<p>Una volta compresa l’importanza di pianificare il lavoro, il passo successivo è dotarsi di strumenti affidabili per gestire, analizzare e documentare i dati. In questo contesto, R si rivela un alleato prezioso. È un ambiente di programmazione pensato per accompagnare l’intero ciclo di vita dei dati: dall’importazione e trasformazione, all’analisi statistica, fino alla produzione di report riproducibili. La sua versatilità lo rende centrale in qualsiasi flusso di lavoro orientato alla qualità e alla trasparenza, qualità indispensabili soprattutto in psicologia, dove i dataset sono spesso complessi e richiedono al tempo stesso flessibilità e rigore.</p>
 <p>R permette innanzitutto di <em>importare ed esportare dati</em> in molti formati. Pacchetti come <code>readr</code> e <code>rio</code> semplificano l’interazione con file CSV, database o persino fonti web. Una volta acquisiti, i dati possono essere <em>puliti e trasformati</em> in modo rapido ed elegante grazie a strumenti come <code>dplyr</code>, <code>tidyr</code> e <code>stringr</code>, che offrono un linguaggio espressivo per filtrare osservazioni, ristrutturare tabelle e modificare stringhe. La fase di esplorazione può poi contare su <code>ggplot2</code>, che consente di visualizzare pattern e riassumere indicatori descrittivi con grafici chiari e informativi.</p>
 <p>La vera forza di R, tuttavia, emerge quando si tratta di <em>documentare l’intero processo analitico</em>. Con R Markdown e Quarto è possibile integrare codice, testo esplicativo, tabelle e grafici in un unico documento dinamico: un report che mostra non solo i risultati finali, ma anche come sono stati ottenuti, garantendo così riproducibilità e trasparenza. A questo si aggiunge la possibilità di usare <em>Git</em>, integrato in RStudio, per tracciare le modifiche, collaborare in modo strutturato e mantenere un archivio verificabile del lavoro.</p>
 <p>L’integrazione tra strategia progettuale e strumenti tecnici rende R una piattaforma ideale per chi vuole lavorare in modo <em>affidabile, efficiente e scientificamente solido</em>. Nei progetti con dati complessi, questa combinazione rappresenta una garanzia di qualità e sostenibilità analitica.</p>
@@ -721,11 +728,11 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 <p>Tre principi fondamentali:</p>
 <ul>
 <li>
-<em>Modularità</em>: ogni passaggio (pulizia, scoring, analisi, report) è uno script autonomo.</li>
+<em>modularità</em>: ogni passaggio (pulizia, scoring, analisi, report) è uno script autonomo;</li>
 <li>
-<em>Dichiaratività</em>: il Makefile descrive <em>cosa</em> dipende da cosa, non <em>come</em> eseguirlo manualmente.</li>
+<em>dichiaratività</em>: il Makefile descrive <em>cosa</em> dipende da cosa, non <em>come</em> eseguirlo manualmente;</li>
 <li>
-<em>Efficienza</em>: <code>make all</code> ricostruisce l’intero progetto, <code>make clean</code> lo riporta allo stato iniziale.</li>
+<em>efficienza</em>: <code>make all</code> ricostruisce l’intero progetto, <code>make clean</code> lo riporta allo stato iniziale.</li>
 </ul></section><section id="struttura-del-progetto" class="level3" data-number="14.6.2"><h3 data-number="14.6.2" class="anchored" data-anchor-id="struttura-del-progetto">
 <span class="header-section-number">14.6.2</span> Struttura del progetto</h3>
 <pre><code>make-tutorial/
@@ -749,11 +756,11 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
     comando</code></pre>
 <ol type="1">
 <li>
-<em>Target</em>: il file che vuoi costruire (ad esempio, un dataset pulito, un grafico, un report HTML).</li>
+<em>target</em>: il file che vuoi costruire (ad esempio, un dataset pulito, un grafico, un report HTML).</li>
 <li>
-<em>Prerequisiti</em>: i file di cui il target ha bisogno per essere costruito (ad esempio, gli script R e i dati grezzi). Sono le dipendenze del target.</li>
+<em>prerequisiti</em>: i file di cui il target ha bisogno per essere costruito (ad esempio, gli script R e i dati grezzi). Sono le dipendenze del target.</li>
 <li>
-<em>Comando</em>: la ricetta, ossia la riga di comando che, eseguita, trasforma i prerequisiti nel target. <em>È fondamentale che questa riga inizi con un carattere di tabulazione (TAB)</em>, non con spazi.</li>
+<em>comando</em>: la ricetta, ossia la riga di comando che, eseguita, trasforma i prerequisiti nel target. <em>È fondamentale che questa riga inizi con un carattere di tabulazione (TAB)</em>, non con spazi.</li>
 </ol>
 <p><strong>Come funziona Make?</strong> Quando gli chiedi di costruire un target (ad esempio, <code>make report.html</code>), Make fa questo:</p>
 <ol type="1">
@@ -861,7 +868,7 @@ clean:
 <li>
 <code>clean</code>: Questo target ha un comando molto importante: <em>elimina tutti i file generati</em>. È utile per ricominciare da zero con una pulizia profonda. Nota la continuazione di riga con il carattere <code>\</code>.</li>
 </ul></section><section id="riepilogo-delle-variabili-automatiche" class="level4" data-number="14.6.3.3"><h4 data-number="14.6.3.3" class="anchored" data-anchor-id="riepilogo-delle-variabili-automatiche">
-<span class="header-section-number">14.6.3.3</span> Riepilogo delle Variabili Automatiche</h4>
+<span class="header-section-number">14.6.3.3</span> Riepilogo delle variabili automatiche</h4>
 <ul>
 <li>
 <code>$&lt;</code>: Il nome del <em>primo prerequisito</em>.</li>
@@ -885,7 +892,7 @@ clean:
 <p>Il Makefile contenuto nel repository <a href="https://github.com/ccaudek/make-tutorial"><code>ccaudek/make-tutorial</code></a> trasforma il progetto di analisi dei dati da una collezione di script in una <em>pipeline di dati riproducibile e automatizzata</em>.</p>
 </section></section><section id="dag-della-pipeline" class="level3" data-number="14.6.4"><h3 data-number="14.6.4" class="anchored" data-anchor-id="dag-della-pipeline">
 <span class="header-section-number">14.6.4</span> DAG della pipeline</h3>
-<div class="cell" data-layout-align="center">
+<div class="cell" data-layout-align="default">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>flowchart LR</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    A["raw.csv"] --&gt; B["clean.csv"]</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    B --&gt; C["scored.csv"]</span>
@@ -949,11 +956,11 @@ clean:
 <p>I vantaggi si manifestano su tre livelli:</p>
 <ol type="1">
 <li>
-<em>Personale</em>: la capacità di riattivare, correggere o estendere un’analisi a distanza di tempo senza perdita di informazione</li>
+<em>personale</em>: la capacità di riattivare, correggere o estendere un’analisi a distanza di tempo senza perdita di informazione</li>
 <li>
-<em>Collettivo</em>: la possibilità per altri ricercatori di verificare, adattare e costruire sulle procedure condivise</li>
+<em>collettivo</em>: la possibilità per altri ricercatori di verificare, adattare e costruire sulle procedure condivise</li>
 <li>
-<em>Epistemologico</em>: la costruzione di una conoscenza cumulativa e criticabile, basata su processi analitici trasparenti</li>
+<em>epistemologico</em>: la costruzione di una conoscenza cumulativa e criticabile, basata su processi analitici trasparenti</li>
 </ol>
 <p>Strumenti come il <em>versioning</em> (<code>git</code>), la strutturazione coerente dei progetti e l’automazione dei flussi (<code>make</code>) non sono mere questioni organizzative, ma abilitatori concreti di rigore metodologico. Un’analisi riproducibile non è solo “ordinata” — è intrinsecamente più robusta, in quanto costringe a esplicitare assunzioni, scelte e trasformazioni.</p>
 <p>Investire in pratiche riproducibili significa quindi investire nella qualità del proprio lavoro: non un vincolo “burocratico”, ma una disciplina che affina il pensiero critico e trasforma l’analisi dati da attività esecutiva a processo scientifico pienamente consapevole.</p>
@@ -976,7 +983,7 @@ Nota
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Consiglio</span>Risposte alle Domande Iniziali
+<span class="screen-reader-only">Consiglio</span>Risposte alle domande iniziali
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -1297,43 +1304,43 @@ Evita di modificare accidentalmente i dati originali, garantendo riproducibilit�
 <span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt;  [1] pillar_1.11.1         tinytable_0.15.2      patchwork_1.3.2      </span></span>
-<span><span class="co">#&gt;  [4] ggdist_3.3.3          tidybayes_3.0.7       bayesplot_1.15.0     </span></span>
-<span><span class="co">#&gt;  [7] ggplot2_4.0.1         reliabilitydiag_0.2.1 priorsense_1.2.0     </span></span>
-<span><span class="co">#&gt; [10] posterior_1.6.1       loo_2.9.0             rstan_2.32.7         </span></span>
-<span><span class="co">#&gt; [13] StanHeaders_2.32.10   brms_2.23.0           Rcpp_1.1.0           </span></span>
-<span><span class="co">#&gt; [16] sessioninfo_1.2.3     conflicted_1.2.0      janitor_2.2.1        </span></span>
-<span><span class="co">#&gt; [19] matrixStats_1.5.0     modelr_0.1.11         tibble_3.3.0         </span></span>
-<span><span class="co">#&gt; [22] dplyr_1.1.4           tidyr_1.3.2           rio_1.2.4            </span></span>
-<span><span class="co">#&gt; [25] here_1.0.2           </span></span>
+<span><span class="co">#&gt;  [1] ragg_1.5.0            tinytable_0.15.2      withr_3.0.2          </span></span>
+<span><span class="co">#&gt;  [4] systemfonts_1.3.1     patchwork_1.3.2       ggdist_3.3.3         </span></span>
+<span><span class="co">#&gt;  [7] tidybayes_3.0.7       bayesplot_1.15.0      ggplot2_4.0.1        </span></span>
+<span><span class="co">#&gt; [10] reliabilitydiag_0.2.1 priorsense_1.2.0      posterior_1.6.1      </span></span>
+<span><span class="co">#&gt; [13] loo_2.9.0             rstan_2.32.7          StanHeaders_2.32.10  </span></span>
+<span><span class="co">#&gt; [16] brms_2.23.0           Rcpp_1.1.0            sessioninfo_1.2.3    </span></span>
+<span><span class="co">#&gt; [19] conflicted_1.2.0      janitor_2.2.1         matrixStats_1.5.0    </span></span>
+<span><span class="co">#&gt; [22] modelr_0.1.11         tibble_3.3.0          dplyr_1.1.4          </span></span>
+<span><span class="co">#&gt; [25] tidyr_1.3.2           rio_1.2.4             here_1.0.2           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span><span class="co">#&gt;  [1] svUnit_1.0.8          tidyselect_1.2.1      farver_2.1.2         </span></span>
 <span><span class="co">#&gt;  [4] S7_0.2.1              fastmap_1.2.0         TH.data_1.1-5        </span></span>
 <span><span class="co">#&gt;  [7] tensorA_0.36.2.1      digest_0.6.39         timechange_0.3.0     </span></span>
 <span><span class="co">#&gt; [10] estimability_1.5.1    lifecycle_1.0.5       survival_3.8-3       </span></span>
-<span><span class="co">#&gt; [13] magrittr_2.0.4        compiler_4.5.2        rlang_1.1.6          </span></span>
+<span><span class="co">#&gt; [13] magrittr_2.0.4        compiler_4.5.2        rlang_1.1.7          </span></span>
 <span><span class="co">#&gt; [16] tools_4.5.2           knitr_1.51            bridgesampling_1.2-1 </span></span>
 <span><span class="co">#&gt; [19] htmlwidgets_1.6.4     curl_7.0.0            pkgbuild_1.4.8       </span></span>
 <span><span class="co">#&gt; [22] RColorBrewer_1.1-3    abind_1.4-8           multcomp_1.4-29      </span></span>
-<span><span class="co">#&gt; [25] withr_3.0.2           purrr_1.2.0           grid_4.5.2           </span></span>
-<span><span class="co">#&gt; [28] stats4_4.5.2          colorspace_2.1-2      xtable_1.8-4         </span></span>
-<span><span class="co">#&gt; [31] inline_0.3.21         emmeans_2.0.1         scales_1.4.0         </span></span>
-<span><span class="co">#&gt; [34] MASS_7.3-65           cli_3.6.5             mvtnorm_1.3-3        </span></span>
-<span><span class="co">#&gt; [37] rmarkdown_2.30        ragg_1.5.0            generics_0.1.4       </span></span>
-<span><span class="co">#&gt; [40] otel_0.2.0            RcppParallel_5.1.11-1 cachem_1.1.0         </span></span>
-<span><span class="co">#&gt; [43] stringr_1.6.0         splines_4.5.2         parallel_4.5.2       </span></span>
-<span><span class="co">#&gt; [46] vctrs_0.6.5           V8_8.0.1              Matrix_1.7-4         </span></span>
-<span><span class="co">#&gt; [49] sandwich_3.1-1        jsonlite_2.0.0        arrayhelpers_1.1-0   </span></span>
-<span><span class="co">#&gt; [52] systemfonts_1.3.1     glue_1.8.0            codetools_0.2-20     </span></span>
-<span><span class="co">#&gt; [55] distributional_0.5.0  lubridate_1.9.4       stringi_1.8.7        </span></span>
-<span><span class="co">#&gt; [58] gtable_0.3.6          QuickJSR_1.8.1        htmltools_0.5.9      </span></span>
-<span><span class="co">#&gt; [61] Brobdingnag_1.2-9     R6_2.6.1              textshaping_1.0.4    </span></span>
-<span><span class="co">#&gt; [64] rprojroot_2.1.1       evaluate_1.0.5        lattice_0.22-7       </span></span>
-<span><span class="co">#&gt; [67] backports_1.5.0       memoise_2.0.1         broom_1.0.11         </span></span>
-<span><span class="co">#&gt; [70] snakecase_0.11.1      rstantools_2.5.0      gridExtra_2.3        </span></span>
-<span><span class="co">#&gt; [73] coda_0.19-4.1         nlme_3.1-168          checkmate_2.3.3      </span></span>
-<span><span class="co">#&gt; [76] xfun_0.55             zoo_1.8-15            pkgconfig_2.0.3</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<span><span class="co">#&gt; [25] purrr_1.2.1           grid_4.5.2            stats4_4.5.2         </span></span>
+<span><span class="co">#&gt; [28] colorspace_2.1-2      xtable_1.8-4          inline_0.3.21        </span></span>
+<span><span class="co">#&gt; [31] emmeans_2.0.1         scales_1.4.0          MASS_7.3-65          </span></span>
+<span><span class="co">#&gt; [34] cli_3.6.5             mvtnorm_1.3-3         rmarkdown_2.30       </span></span>
+<span><span class="co">#&gt; [37] generics_0.1.4        otel_0.2.0            RcppParallel_5.1.11-1</span></span>
+<span><span class="co">#&gt; [40] cachem_1.1.0          stringr_1.6.0         splines_4.5.2        </span></span>
+<span><span class="co">#&gt; [43] parallel_4.5.2        vctrs_0.6.5           V8_8.0.1             </span></span>
+<span><span class="co">#&gt; [46] Matrix_1.7-4          sandwich_3.1-1        jsonlite_2.0.0       </span></span>
+<span><span class="co">#&gt; [49] arrayhelpers_1.1-0    glue_1.8.0            codetools_0.2-20     </span></span>
+<span><span class="co">#&gt; [52] distributional_0.5.0  lubridate_1.9.4       stringi_1.8.7        </span></span>
+<span><span class="co">#&gt; [55] gtable_0.3.6          QuickJSR_1.8.1        pillar_1.11.1        </span></span>
+<span><span class="co">#&gt; [58] htmltools_0.5.9       Brobdingnag_1.2-9     R6_2.6.1             </span></span>
+<span><span class="co">#&gt; [61] textshaping_1.0.4     rprojroot_2.1.1       evaluate_1.0.5       </span></span>
+<span><span class="co">#&gt; [64] lattice_0.22-7        backports_1.5.0       memoise_2.0.1        </span></span>
+<span><span class="co">#&gt; [67] broom_1.0.11          snakecase_0.11.1      rstantools_2.5.0     </span></span>
+<span><span class="co">#&gt; [70] gridExtra_2.3         coda_0.19-4.1         nlme_3.1-168         </span></span>
+<span><span class="co">#&gt; [73] checkmate_2.3.3       xfun_0.55             zoo_1.8-15           </span></span>
+<span><span class="co">#&gt; [76] pkgconfig_2.0.3</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>

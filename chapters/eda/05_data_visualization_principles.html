@@ -499,14 +499,20 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/09_causality_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Dalla correlazione alla causalità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/11_outlier.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Outlier</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Outlier</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/12_gauss.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Assunzione di gaussianità e trasformazioni dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Assunzione di gaussianità e trasformazioni dei dati</span></span></a>
   </div>
 </li>
       </ul>
@@ -568,8 +574,8 @@ window.Quarto = {
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-body-container">
-<p>Una visualizzazione ben progettata non è un ornamento che abbellisce l’analisi dei dati — è uno strumento epistemologico che trasforma numeri in intuizioni, pattern nascosti in evidenze visibili, complessità in chiarezza. In questo capitolo esploreremo i principi fondamentali che distinguono una visualizzazione efficace da una fuorviante, i criteri che guidano scelte apparentemente estetiche ma che in realtà determinano la correttezza interpretativa dei risultati, e gli errori ricorrenti che anche ricercatori esperti commettono quando confondono l’immediatezza visiva con la precisione comunicativa.</p>
-<p>Non parleremo di codice, per quello rimandiamo al <a href="../R/06_ggplot2.html" class="quarto-xref"><span>Capitolo 10</span></a>, dove la grammatica dei grafici viene introdotta sistematicamente. Qui ci concentreremo su <em>cosa</em> visualizzare, <em>perché</em> una rappresentazione funziona meglio di un’altra, e <em>come</em> riconoscere quando un grafico mente anche se tecnicamente corretto. Perché la visualizzazione, come ogni forma di comunicazione scientifica, porta con sé responsabilità etiche: ogni scelta cromatica, ogni scala, ogni geometria influenza il modo in cui i dati verranno interpretati e, potenzialmente, le decisioni che ne deriveranno.</p>
+<p>Una visualizzazione ben progettata non è un semplice abbellimento dell’analisi dei dati, ma uno strumento epistemologico che trasforma i numeri in intuizioni, i pattern nascosti in evidenze visibili e la complessità in chiarezza. In questo capitolo esploreremo i principi fondamentali che distinguono una visualizzazione efficace da una fuorviante, i criteri che guidano le scelte apparentemente estetiche, ma che in realtà determinano la correttezza interpretativa dei risultati, e gli errori ricorrenti che anche i ricercatori esperti commettono quando confondono l’immediatezza visiva con la precisione comunicativa.</p>
+<p>Non parleremo di codice: per questo rimandiamo al <a href="../R/06_ggplot2.html" class="quarto-xref"><span>Capitolo 11</span></a>, dove la grammatica dei grafici viene introdotta in modo sistematico. Qui ci concentreremo su cosa visualizzare, perché una rappresentazione funziona meglio di un’altra e come riconoscere quando un grafico è tecnicamente corretto, ma ingannevole. La visualizzazione, infatti, come ogni forma di comunicazione scientifica, porta con sé delle responsabilità etiche: ogni scelta cromatica, ogni scala e ogni geometria influenzano il modo in cui i dati verranno interpretati e, potenzialmente, le decisioni che ne deriveranno.</p>
 </div>
 </div>
 </div>
@@ -644,7 +650,8 @@ window.Quarto = {
 </div>
 </section><section id="quando-i-numeri-non-bastano" class="level2" data-number="17.1"><h2 data-number="17.1" class="anchored" data-anchor-id="quando-i-numeri-non-bastano">
 <span class="header-section-number">17.1</span> Quando i numeri non bastano</h2>
-<p>I numeri in sé raramente raccontano una storia chiara. Prendiamo ad esempio i dati sugli omicidi commessi con armi da fuoco negli Stati Uniti. Da una semplice tabella apprendiamo che in California si sono registrati 1257 casi, in Texas 805, a New York 517. Queste cifre, tuttavia, restano isolate e poco eloquenti: quali stati hanno una popolazione più ampia? Esiste una relazione tra il numero di abitanti e gli omicidi? E il Sud è davvero più violento del Nord-Est? Senza un contesto o una visione d’insieme, i dati grezzi lasciano aperte più domande di quante ne risolvano.</p>
+<p>I numeri, da soli, raramente raccontano una storia completa. Consideriamo i dati sugli omicidi con armi da fuoco negli Stati Uniti. Una tabella potrebbe dirci, ad esempio, che in California se ne sono registrati 1257, in Texas 805 e a New York 517. Ma questi valori, privi di contesto, sono poco informativi.</p>
+<p>La California ha davvero il tasso più alto? Il Sud è effettivamente più violento del Nord-Est? Senza conoscere la popolazione di ogni stato o un termine di paragone, i dati grezzi lasciano più domande aperte che risposte chiare. La vera comprensione emerge solo quando i numeri vengono messi in relazione, normalizzati e visualizzati in un quadro più ampio.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">murders</span>, <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="co">#&gt;         state abb    region population total</span></span>
@@ -657,7 +664,7 @@ window.Quarto = {
 <span><span class="co">#&gt; 7 Connecticut  CT Northeast    3574097    97</span></span>
 <span><span class="co">#&gt; 8    Delaware  DE     South     897934    38</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Un grafico, al contrario, rende queste relazioni visibili in modo immediato. L’adozione di una scala logaritmica su entrambi gli assi permette di rappresentare efficacemente tanto gli stati più popolosi, come la California, quanto quelli con un ridotto numero di abitanti, come il Wyoming, preservando nel contempo chiarezza e leggibilità dell’intera visualizzazione.</p>
+<p>Un grafico, al contrario, rende queste relazioni visibili in modo immediato. L’adozione di una scala logaritmica su entrambi gli assi permette di rappresentare efficacemente tanto gli stati più popolosi, come la California, quanto quelli con un ridotto numero di abitanti, come il Wyoming, mantenendo al tempo stesso la chiarezza e la leggibilità dell’intera visualizzazione.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-murders-viz" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -670,74 +677,87 @@ Figura&nbsp;17.1: Relazione popolazione-omicidi negli Stati Uniti
 </div>
 </div>
 </div>
-<p>In pochi secondi è possibile cogliere pattern che richiederebbero lunghi minuti di analisi tabellare: la relazione pressoché lineare tra popolazione e omicidi; la tendenza degli stati del Sud a collocarsi sistematicamente sopra la tendenza centrale; la posizione del Nord-Est al di sotto di essa; la marcata variabilità delle regioni dell’Ovest. Il Distretto di Columbia (DC) emerge come un outlier drammatico — una popolazione ridotta ma un tasso di omicidi estremamente elevato.</p>
-<p><strong>È questo il potere della visualizzazione</strong>: tradurre strutture astratte e complesse in pattern spaziali che il nostro sistema visivo elabora in modo immediato e intuitivo. Tuttavia, tale potere implica una pari responsabilità: così come un grafico ben costruito può svelare verità nascoste nei dati, uno progettato in modo inadeguato o ingannevole può generare illusioni altrettanto convincenti.</p>
+<p>In pochi secondi è possibile cogliere schemi che richiederebbero minuti di analisi tabellare: la chiara relazione tra numero di abitanti e omicidi; la tendenza degli stati del Sud a posizionarsi costantemente al di sopra della media nazionale; il posizionamento del Nord-Est al di sotto di essa; la maggiore variabilità registrata negli stati occidentali. Il Distretto di Columbia (DC) si distingue come un caso eclatante, con una popolazione ridotta ma un tasso di omicidi sproporzionatamente elevato.</p>
+<p><strong>Questo è il potere della visualizzazione</strong>: trasformare strutture astratte e complesse in configurazioni spaziali che il nostro sistema visivo elabora in modo immediato e intuitivo. Tale potere, tuttavia, comporta un’analoga responsabilità: così come un grafico ben progettato può rivelare verità nascoste nei dati, uno costruito in modo approssimativo o ingannevole può generare illusioni altrettanto convincenti.</p>
 </section><section id="i-tre-pilastri-tufte-cleveland-cairo" class="level2" data-number="17.2"><h2 data-number="17.2" class="anchored" data-anchor-id="i-tre-pilastri-tufte-cleveland-cairo">
 <span class="header-section-number">17.2</span> I tre pilastri: Tufte, Cleveland, Cairo</h2>
 <section id="edward-tufte-leconomia-visiva" class="level3" data-number="17.2.1"><h3 data-number="17.2.1" class="anchored" data-anchor-id="edward-tufte-leconomia-visiva">
 <span class="header-section-number">17.2.1</span> Edward Tufte: l’economia visiva</h3>
-<p>Il principio fondamentale introdotto da Edward Tufte è quello del <strong>data-ink ratio</strong> — il rapporto tra l’inchiostro utilizzato per rappresentare l’informazione vera e propria e l’inchiostro totale impiegato nel grafico:</p>
+<p>Il principio fondamentale introdotto da Edward Tufte è quello del <strong>data-ink ratio</strong>, ovvero il rapporto tra l’inchiostro utilizzato per rappresentare l’informazione vera e propria e l’inchiostro totale impiegato nel grafico:</p>
 <p><span class="math display">\[
 \text{Rapporto inchiostro-dati} = \frac{\text{inchiostro usato per i dati}}{\text{inchiostro totale del grafico}} .
 \]</span></p>
-<p>Un grafico efficace punta a <strong>massimizzare questo rapporto</strong>, eliminando senza esitazioni ogni elemento che non contribuisce in modo diretto alla comprensione dei dati. Tufte ha coniato il termine <strong>chartjunk</strong> per descrivere tutto ciò che distrae lo sguardo senza aggiungere alcuna informazione significativa.</p>
+<p>Un grafico efficace punta a <strong>massimizzare questo rapporto</strong>, eliminando senza esitazioni ogni elemento che non contribuisce in modo diretto alla comprensione dei dati. Tufte ha coniato il termine <strong>chartjunk</strong> (“spazzatura grafica”) per descrivere tutto ciò che distrae lo sguardo senza aggiungere valore.</p>
 <p><strong>Principi fondamentali secondo Tufte</strong>:</p>
 <ol type="1">
 <li>
-<strong>Prima di tutto, mostra i dati</strong> – La centralità dell’informazione deve prevalere su ogni decorazione superflua.</li>
+<strong>Prima di tutto, mostra i dati</strong> – L’informazione deve prevalere su ogni decorazione superflua.</li>
 <li>
-<strong>Massimizza l’inchiostro per i dati</strong> – Ogni tratto, ogni punto, ogni elemento grafico deve avere una ragione informativa per essere presente.</li>
-<li>
-<strong>Elimina l’inchiostro non-dati</strong> – Rimuovi griglie eccessive, bordi decorativi, sfondi inutili e ogni altro elemento che non veicola informazione.</li>
-<li>
-<strong>Elimina le ridondanze nell’inchiostro-dati</strong> – Ogni informazione dovrebbe essere rappresentata una sola volta, in modo chiaro ed efficace.</li>
-<li>
-<strong>Rivedi e modifica</strong> – Nessun grafico è perfetto al primo tentativo; la revisione è parte essenziale del processo di comunicazione visiva.</li>
-</ol></section><section id="william-cleveland-la-gerarchia-percettiva" class="level3" data-number="17.2.2"><h3 data-number="17.2.2" class="anchored" data-anchor-id="william-cleveland-la-gerarchia-percettiva">
-<span class="header-section-number">17.2.2</span> William Cleveland: la gerarchia percettiva</h3>
-<p>Cleveland misurò sperimentalmente l’accuratezza con cui le persone interpretano diversi elementi visivi, individuando una <strong>gerarchia ben definita di efficacia percettiva</strong>:</p>
-<ol type="1">
-<li>
-<strong>Posizione su una scala condivisa</strong> – Scatter plot, grafici a linee (massima precisione)</li>
-<li>
-<strong>Posizione su scale non allineate</strong> – Grafici a pannelli (<em>small multiples</em>)</li>
-<li>
-<strong>Lunghezza</strong> – Barplot, grafici a bastoncini (<em>lollipop chart</em>)</li>
-<li>
-<strong>Direzione e Angolo</strong> – Campi vettoriali, diagrammi a raggera</li>
-<li>
-<strong>Area</strong> – <em>Bubble chart</em>, <em>treemap</em>
+<strong>Massimizza l’inchiostro per i dati</strong> – Ogni segno grafico deve avere una ragione informativa per esistere.<br>
 </li>
 <li>
-<strong>Volume / Densità</strong> – Grafici tridimensionali, superfici</li>
+<strong>Elimina l’inchiostro non-dati</strong> – Riduci al minimo griglie, cornici, sfondi ed elementi puramente decorativi.<br>
+</li>
 <li>
-<strong>Tonalità / Saturazione del colore</strong> – Mappe di calore (<em>heatmap</em>)</li>
+<strong>Elimina le ridondanze nell’inchiostro-dati</strong> – Ogni informazione dovrebbe essere trasmessa una sola volta, nel modo più diretto.<br>
+</li>
+<li>
+<strong>Rivedi e modifica</strong> – Nessuna visualizzazione nasce perfetta; la revisione è parte essenziale della comunicazione visiva.</li>
+</ol></section><section id="william-cleveland-la-gerarchia-percettiva" class="level3" data-number="17.2.2"><h3 data-number="17.2.2" class="anchored" data-anchor-id="william-cleveland-la-gerarchia-percettiva">
+<span class="header-section-number">17.2.2</span> William Cleveland: la gerarchia percettiva</h3>
+<p>Attraverso studi sperimentali, William Cleveland misurò l’accuratezza con cui gli osservatori umani decodificano diversi <em>encodings</em> visivi. I suoi risultati hanno definito una <strong>gerarchia percettiva degli elementi grafici</strong>, ordinata dalla rappresentazione più precisa a quella meno precisa:</p>
+<ol type="1">
+<li>
+<strong>Posizione su una scala comune</strong> – Plot a dispersione (<em>scatter plot</em>), grafici a linee.</li>
+<li>
+<strong>Posizione su scale non allineate</strong> – Grafici a pannelli (<em>small multiples</em>).</li>
+<li>
+<strong>Lunghezza</strong> – Diagrammi a barre, grafici a bastoncini (<em>lollipop chart</em>).</li>
+<li>
+<strong>Direzione e angolazione</strong> – Campi vettoriali, diagrammi radiali.</li>
+<li>
+<strong>Area</strong> – Diagrammi a bolle (<em>bubble chart</em>), mappe ad albero (<em>treemap</em>).</li>
+<li>
+<strong>Volume / densità</strong> – Visualizzazioni tridimensionali, superfici.</li>
+<li>
+<strong>Tonalità / saturazione cromatica</strong> – Mappe di calore (<em>heatmap</em>).</li>
 </ol>
-<p><strong>L’implicazione pratica è chiara</strong>: per confronti quantitativi precisi, è preferibile utilizzare elementi posizionali (come punti o linee) o lunghezze. Se l’obiettivo è differenziare categorie o evidenziare pattern qualitativi, il colore può essere sufficiente. Per comunicare differenze in cui la precisione assoluta non è critica, si possono impiegare efficacemente variazioni di area o di colore.</p>
+<p><strong>L’implicazione metodologica è chiara</strong>: per confronti quantitativi precisi, è preferibile utilizzare elementi posizionali (come punti o linee) o lunghezze. Se l’obiettivo è differenziare categorie o evidenziare pattern qualitativi, il colore può essere sufficiente. Per comunicare differenze in cui la precisione assoluta non è critica, si possono impiegare efficacemente variazioni di area o di colore.</p>
 </section><section id="alberto-cairo-lonestà-visiva" class="level3" data-number="17.2.3"><h3 data-number="17.2.3" class="anchored" data-anchor-id="alberto-cairo-lonestà-visiva">
 <span class="header-section-number">17.2.3</span> Alberto Cairo: l’onestà visiva</h3>
 <p>Alberto Cairo sposta l’attenzione dall’efficienza tecnica e percettiva verso la dimensione <strong>etica della comunicazione visiva</strong>. Secondo Cairo, un grafico può essere tecnicamente impeccabile ma moralmente ingannevole se sfrutta consapevolmente i bias percettivi del lettore per suggerire conclusioni non supportate dai dati.</p>
 <p><strong>I cinque pilastri della visualizzazione etica secondo Cairo</strong>:</p>
 <ol type="1">
 <li>
-<strong>Veridicità (Truthfulness)</strong> – Il grafico rappresenta i dati in modo accurato e privo di distorsioni?</li>
+<strong>Veridicità (Truthfulness)</strong>: il grafico rappresenta i dati in modo accurato e privo di distorsioni?</li>
 <li>
-<strong>Funzionalità (Functionality)</strong> – È efficace per lo scopo comunicativo che si prefigge?</li>
+<strong>Funzionalità (Functionality)</strong>: il grafico è efficace per lo scopo comunicativo che si prefigge?</li>
 <li>
-<strong>Bellezza (Beauty)</strong> – La sua estetica è raffinata senza essere frivola o decorativa?</li>
+<strong>Bellezza (Beauty)</strong>: la sua estetica è raffinata senza essere frivola o decorativa?</li>
 <li>
 <strong>Profondità (Insightfulness)</strong> – Rivela pattern, relazioni o intuizioni non immediatamente evidenti?</li>
 <li>
-<strong>Illuminazione (Enlightenment)</strong> – Aumenta effettivamente la comprensione del lettore su un determinato fenomeno?</li>
+<strong>Illuminazione (Enlightenment)</strong>: aumenta effettivamente la comprensione del lettore su un determinato fenomeno?</li>
 </ol>
-<p>Cairo sottolinea con forza che <strong>l’assenza di errori tecnici non equivale automaticamente a onestà comunicativa</strong>. Un grafico può essere costruito in modo formale corretto eppure ingannevole: ad esempio, utilizzando assi troncati per amplificare artificiosamente delle differenze, impiegando scale logaritmiche senza dichiararlo per appiattire un trend, o rappresentando quantità con aree (che il nostro occhio stima con difficoltà) anziché con lunghezze (più intuitive), distorcendo così le proporzioni reali.</p>
+<p>Cairo sottolinea con forza che <strong>l’assenza di errori tecnici non equivale automaticamente a onestà comunicativa</strong>. Un grafico può essere formalmente corretto eppure ingannevole, ad esempio, utilizzando assi troncati per amplificare artificialmente delle differenze, impiegando scale logaritmiche senza dichiararlo per appiattire un trend o rappresentando quantità con aree (che un osservatore umano stima con difficoltà) anziché con lunghezze (più intuitive), distorcendo così le proporzioni reali.</p>
 </section></section><section id="errori-comuni-una-galleria-degli-orrori" class="level2" data-number="17.3"><h2 data-number="17.3" class="anchored" data-anchor-id="errori-comuni-una-galleria-degli-orrori">
 <span class="header-section-number">17.3</span> Errori comuni: una galleria degli orrori</h2>
 <section id="errore-1-i-grafici-a-dinamite-lillusione-della-precisione" class="level3" data-number="17.3.1"><h3 data-number="17.3.1" class="anchored" data-anchor-id="errore-1-i-grafici-a-dinamite-lillusione-della-precisione">
-<span class="header-section-number">17.3.1</span> Errore 1: I grafici a dinamite — l’illusione della precisione</h3>
-<p>I cosiddetti <strong>grafici a dinamite</strong> (o <em>dynamite plots</em>) — barre con errori standard — rappresentano l’equivalente visivo dei p-value: sono tecnicamente corretti e informativi, ma nella pratica spesso fuorvianti.</p>
-<p><strong>Qual è il problema?</strong> Osservando solo la media ± l’errore standard, si perde completamente la vista di: - <strong>La forma della distribuzione</strong> (è simmetrica? bimodale? asimmetrica?) - <strong>La presenza di potenziali outlier</strong> - <strong>L’effettiva sovrapposizione tra i gruppi a confronto</strong> - <strong>La dimensione del campione</strong> (un gruppo con N=5 e uno con N=500 vengono rappresentati in modo identico, nascondendo la diversa affidabilità delle stime)</p>
-<p><strong>La soluzione</strong>: Sostituire o affiancare il grafico a barre con visualizzazioni che mostrino i dati veri e propri, ad esempio tramite <em>jitter</em>, trasparenza (<em>alpha blending</em>) o sovrapponendo sintesi statistiche più robuste (come diagrammi a scatola e baffi o violino) ai singoli punti dati.</p>
+<span class="header-section-number">17.3.1</span> Errore 1: i grafici a dinamite — l’illusione della precisione</h3>
+<p>I cosiddetti <strong>grafici a dinamite</strong> (<em>dynamite plots</em>), ossia grafici a barre accompagnati da errori standard, possono essere considerati l’equivalente visivo dei valori-<span class="math inline">\(p\)</span>: sono formalmente corretti e contengono informazione, ma <strong>nella pratica comunicano poco e spesso in modo fuorviante</strong>.</p>
+<p><strong>Qual è il problema principale?</strong> Limitandosi a mostrare la media ± errore standard, questi grafici occultano quasi completamente la struttura dei dati sottostanti. In particolare, non permettono di valutare:</p>
+<ul>
+<li>
+<strong>La forma della distribuzione</strong> (simmetrica, asimmetrica, multimodale);</li>
+<li>
+<strong>La presenza di outlier o valori anomali</strong>;</li>
+<li>
+<strong>Il grado reale di sovrapposizione tra i gruppi</strong>;</li>
+<li>
+<strong>La dimensione del campione</strong>, poiché gruppi con numerosità molto diverse (ad esempio <span class="math inline">\(N=5\)</span> contro <span class="math inline">\(N=500\)</span>) vengono rappresentati in modo visivamente indistinguibile, suggerendo erroneamente la stessa precisione delle stime.</li>
+</ul>
+<p>Il risultato è una rappresentazione che <strong>enfatizza un singolo numero riassuntivo</strong> e trasmette un’illusione di precisione che i dati, spesso, non giustificano.</p>
+<p><strong>La soluzione.</strong> Sostituire i grafici a barre con visualizzazioni che rendano espliciti i dati osservati. Tecniche come il <em>jitter</em>, la trasparenza (<em>alpha blending</em>) e la sovrapposizione dei punti individuali consentono di mostrare la variabilità reale. In alternativa, o in aggiunta, è preferibile utilizzare sintesi più informative e robuste, come <strong>boxplot</strong> o <strong>grafici a violino</strong>, eventualmente combinati con i singoli punti.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-dynamite-fix" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -751,9 +771,10 @@ Figura&nbsp;17.2: Dynamite plot (sinistra) vs.&nbsp;dati completi (destra)
 </div>
 </div>
 </section><section id="errore-2-i-grafici-a-torta-quando-gli-angoli-ingannano" class="level3" data-number="17.3.2"><h3 data-number="17.3.2" class="anchored" data-anchor-id="errore-2-i-grafici-a-torta-quando-gli-angoli-ingannano">
-<span class="header-section-number">17.3.2</span> Errore 2: I grafici a torta — quando gli angoli ingannano</h3>
-<p>La ricerca sperimentale di William Cleveland ha dimostrato che confrontare angoli è un’operazione visivamente faticosa e poco precisa. Quando il numero di categorie supera le tre, i grafici a torta diventano praticamente illeggibili.</p>
-<p><strong>Un ulteriore problema comune</strong>: l’ordine delle fette segue spesso l’alfabeto o una sequenza casuale, invece di essere organizzato per valori decrescenti, rendendo ancora più difficile cogliere immediatamente le proporzioni relative e il pattern dominante.</p>
+<span class="header-section-number">17.3.2</span> Errore 2: i grafici a torta — quando gli angoli ingannano</h3>
+<p>La ricerca sperimentale di <strong>William Cleveland</strong> ha mostrato che il confronto tra <strong>angoli</strong> è un compito percettivamente impegnativo e intrinsecamente impreciso. A differenza di lunghezze o posizioni lungo una scala comune, gli angoli non vengono valutati con facilità dal sistema visivo umano. Di conseguenza, quando il numero di categorie supera le due o tre, i <strong>grafici a torta</strong> diventano rapidamente difficili da interpretare e, di fatto, poco informativi.</p>
+<p>A questo limite percettivo si aggiunge un <strong>problema di progettazione frequente</strong>: le fette sono spesso ordinate in modo arbitrario — ad esempio alfabeticamente o secondo l’ordine di inserimento dei dati — anziché in base alle proporzioni rappresentate. Questa scelta impedisce di individuare a colpo d’occhio le categorie dominanti e rende più complesso confrontare le dimensioni relative delle parti.</p>
+<p>Il risultato è una visualizzazione che richiede uno sforzo cognitivo elevato per trasmettere un’informazione semplice, e che può facilmente portare a interpretazioni imprecise o errate.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-pie-vs-bar" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -766,125 +787,140 @@ Figura&nbsp;17.3: Pie chart (sinistra) vs.&nbsp;barplot ordinato (destra)
 </div>
 </div>
 </div>
-<p><strong>Verdetto</strong>: Per confronti quantitativi, usa sempre lunghezza (barplot), mai angoli (pie).</p>
-</section><section id="errore-3-grafici-a-doppio-asse-lillusione-della-correlazione" class="level3" data-number="17.3.3"><h3 data-number="17.3.3" class="anchored" data-anchor-id="errore-3-grafici-a-doppio-asse-lillusione-della-correlazione">
-<span class="header-section-number">17.3.3</span> Errore 3: Grafici a doppio asse — l’illusione della correlazione</h3>
-<p>I grafici con due assi verticali indipendenti possono creare l’ingannevole impressione di una relazione tra variabili che in realtà non esiste, semplicemente manipolando le scale delle due serie di dati.</p>
-<p><strong>Un esempio celebre</strong>: il presunto legame tra il consumo di formaggio e le morti per impigliamento nelle lenzuola, reso famoso dal progetto <em>“Spurious Correlations”</em> di Tyler Vigen. Scalando opportunamente i due assi, le curve dei dati possono essere fatte apparire quasi perfettamente sovrapposte.</p>
-<p><strong>Il problema</strong>: il lettore interpreta questa sovrapposizione visiva come prova di correlazione, senza rendersi conto che le due scale sono arbitrarie e del tutto indipendenti, rendendo ogni confronto diretto privo di significato statistico.</p>
-<p><strong>Soluzioni alternative</strong>:</p>
+<p><strong>Verdetto</strong>: per confronti quantitativi, usa sempre lunghezza (barplot), mai angoli (pie).</p>
+</section><section id="errore-3-i-grafici-a-doppio-asse-lillusione-della-correlazione" class="level3" data-number="17.3.3"><h3 data-number="17.3.3" class="anchored" data-anchor-id="errore-3-i-grafici-a-doppio-asse-lillusione-della-correlazione">
+<span class="header-section-number">17.3.3</span> Errore 3: i grafici a doppio asse — l’illusione della correlazione</h3>
+<p><strong>Errore.</strong> Utilizzare grafici con <strong>due assi verticali indipendenti</strong> per rappresentare serie di dati diverse sullo stesso pannello.</p>
+<p><strong>Perché è un problema.</strong> La presenza di due scale distinte consente di manipolare visivamente l’andamento delle serie, creando l’illusione di una relazione che può non esistere affatto. Regolando opportunamente le scale, curve prive di qualsiasi legame statistico possono apparire fortemente sincronizzate. Il lettore tende a interpretare questa sovrapposizione visiva come evidenza di correlazione, ignorando che le scale sono arbitrarie e non confrontabili.</p>
+<p>Un esempio celebre è il presunto legame tra <strong>consumo di formaggio</strong> e <strong>morti per impigliamento nelle lenzuola</strong>, reso popolare dal progetto <em>Spurious Correlations</em> di <strong>Tyler Vigen</strong>: due fenomeni indipendenti che, grazie a un uso disinvolto dei doppi assi, sembrano seguire lo stesso andamento.</p>
+<p><strong>Soluzione.</strong> Evitare, per quanto possibile, i grafici a doppio asse. Quando è necessario confrontare più serie, sono preferibili approcci alternativi più trasparenti:</p>
 <ol type="1">
 <li>
-<strong>Utilizzare un asse comune</strong> – Se le variabili condividono unità di misura comparabili.</li>
+<strong>Usare un asse comune</strong>, quando le variabili condividono unità di misura comparabili.</li>
 <li>
-<strong>Normalizzare i dati</strong> – Trasformare entrambe le serie in z-score o percentuali per renderle confrontabili sulla stessa scala.</li>
+<strong>Normalizzare i dati</strong>, ad esempio tramite z-score o percentuali rispetto a un valore di riferimento, così da rendere le serie confrontabili sulla stessa scala.</li>
 <li>
-<strong>Creare due grafici separati</strong> – Allinearli verticalmente per facilitare il confronto visivo senza confondere le scale.</li>
+<strong>Separare i grafici</strong>, disponendoli su pannelli allineati verticalmente, per facilitare il confronto visivo senza confondere le scale.</li>
 <li>
-<strong>Se il doppio asse è inevitabile</strong> – Essere espliciti con un’annotazione chiara: <em>“Scale arbitrarie e non confrontabili”</em>, per avvertire il lettore.</li>
-</ol></section><section id="errore-4-confondere-area-e-volume-con-la-lunghezza" class="level3" data-number="17.3.4"><h3 data-number="17.3.4" class="anchored" data-anchor-id="errore-4-confondere-area-e-volume-con-la-lunghezza">
-<span class="header-section-number">17.3.4</span> Errore 4: Confondere area e volume con la lunghezza</h3>
-<p>Quando si rappresentano quantità numeriche tramite l’area (di cerchi, quadrati) o, peggio, il volume di forme tridimensionali, si introduce una distorsione sistematica: l’occhio percepisce differenze proporzionali al <em>quadrato</em> (per l’area) o al <em>cubo</em> (per il volume) della differenza reale.</p>
-<p><strong>Esempio pratico</strong>:<br>
-il PIL degli Stati Uniti è di circa 20 trilioni di dollari, quello della Francia di 2,7 trilioni. Il rapporto reale è circa <strong>7.4 volte</strong>.</p>
+<strong>Se il doppio asse è inevitabile</strong>, dichiarare esplicitamente la natura arbitraria delle scale con un’annotazione chiara (ad esempio: <em>“Assi su scale diverse e non confrontabili”</em>), riducendo il rischio di interpretazioni fuorvianti.</li>
+</ol></section><section id="errore-4-confondere-lunghezza-area-e-volume" class="level3" data-number="17.3.4"><h3 data-number="17.3.4" class="anchored" data-anchor-id="errore-4-confondere-lunghezza-area-e-volume">
+<span class="header-section-number">17.3.4</span> Errore 4: confondere lunghezza, area e volume</h3>
+<p><strong>Errore.</strong> Rappresentare quantità numeriche tramite <strong>aree</strong> (cerchi, quadrati) o, peggio, tramite <strong>volumi tridimensionali</strong>, come se l’occhio umano interpretasse queste grandezze in modo lineare.</p>
+<p><strong>Perché è un problema.</strong> Il sistema visivo non percepisce le differenze in termini di raggio o diametro, ma reagisce all’<strong>area</strong> o al <strong>volume</strong> complessivo delle forme. Di conseguenza, quando una variabile è mappata su una dimensione lineare (ad esempio il raggio), l’informazione percepita cresce in modo non lineare: proporzionalmente al <strong>quadrato</strong> nel caso dell’area e al <strong>cubo</strong> nel caso del volume. Questo introduce una distorsione sistematica che amplifica visivamente le differenze reali.</p>
+<p><strong>Esempio pratico.</strong> Il PIL degli Stati Uniti è di circa 20 trilioni di dollari, mentre quello della Francia è di circa 2,7 trilioni. Il rapporto reale è quindi di circa <strong>7,4 a 1</strong>.</p>
 <ul>
 <li>
-<strong>Cerchi con raggio proporzionale</strong>: l’area del cerchio degli USA sarebbe circa <strong>(7.4)² ≈ 55 volte</strong> più grande di quella della Francia — una distorsione di quasi 7.4 volte rispetto alla realtà.</li>
+<strong>Cerchi con raggio proporzionale al PIL:</strong> l’area del cerchio degli Stati Uniti risulterebbe circa <span class="math inline">\((7.4)^2 \approx 55\)</span> volte più grande di quella della Francia, suggerendo una disparità quasi otto volte superiore a quella reale.</li>
 <li>
-<strong>Sfere 3D con raggio proporzionale</strong>: il volume apparente degli USA diventerebbe <strong>(7.4)³ ≈ 405 volte</strong> maggiore — una distorsione di 55 volte rispetto al rapporto reale.</li>
+<strong>Sfere tridimensionali con raggio proporzionale:</strong> il volume apparente crescerebbe come <span class="math inline">\((7.4)^3 \approx 405\)</span>, producendo una distorsione estrema e del tutto fuorviante.</li>
 </ul>
-<p>Un esempio famoso di questo errore è stato commesso nel grafico utilizzato durante il <strong>Discorso sullo Stato dell’Unione del 2011</strong>.</p>
-<p><strong>Soluzione</strong>: per confronti quantitativi precisi, privilegia sempre rappresentazioni basate sulla <strong>lunghezza</strong>, come i barplot. Se si sceglie di utilizzare un <em>bubble chart</em> (per rappresentare ad esempio tre variabili), è essenziale dichiarare esplicitamente che la dimensione delle bolle è proporzionale al <em>raggio</em> (e non al diametro o all’area) della variabile rappresentata.</p>
-</section><section id="errore-5-effetti-tridimensionali-distrazione-senza-sostanza" class="level3" data-number="17.3.5"><h3 data-number="17.3.5" class="anchored" data-anchor-id="errore-5-effetti-tridimensionali-distrazione-senza-sostanza">
-<span class="header-section-number">17.3.5</span> Errore 5: Effetti tridimensionali — distrazione senza sostanza</h3>
-<p>L’aggiunta di effetti prospettici “3D” a barre, torte o grafici a linee rappresenta una delle forme più diffuse di <em>chartjunk</em>, perché:</p>
+<p>Un esempio noto di questo errore è apparso nel grafico utilizzato durante il <strong>Discorso sullo Stato dell’Unione del 2011</strong>, dove l’uso di forme tridimensionali ha amplificato in modo artificiale le differenze tra quantità.</p>
+<p><strong>Soluzione.</strong> Per confronti quantitativi accurati, privilegiare rappresentazioni basate sulla <strong>lunghezza</strong>, come grafici a barre o dot plot, che consentono confronti percettivamente affidabili. Se si utilizza un <strong>bubble chart</strong> (ad esempio per rappresentare una terza variabile), è fondamentale mappare la variabile sull’<strong>area</strong> in modo corretto e dichiararlo esplicitamente, evitando qualsiasi ambiguità sulla relazione tra dimensione visiva e valore numerico.</p>
+</section><section id="errore-5-effetti-tridimensionali-distrazione-senza-informazione" class="level3" data-number="17.3.5"><h3 data-number="17.3.5" class="anchored" data-anchor-id="errore-5-effetti-tridimensionali-distrazione-senza-informazione">
+<span class="header-section-number">17.3.5</span> Errore 5: effetti tridimensionali — distrazione senza informazione</h3>
+<p><strong>Errore.</strong> Aggiungere effetti prospettici tridimensionali a grafici a barre, a torta o a linee, senza che la terza dimensione rappresenti una variabile aggiuntiva.</p>
+<p><strong>Perché è un problema.</strong> L’uso del 3D in questo contesto costituisce una forma classica di <em>chartjunk</em>: introduce complessità visiva senza apportare informazione. In particolare, gli effetti prospettici:</p>
 <ul>
-<li>introduce distorsioni percettive (gli elementi in primo piano sembrano più grandi di quelli sullo sfondo);</li>
-<li>può nascondere parzialmente alcuni elementi, che risultano oscurati da altri;</li>
-<li>non codifica alcuna terza variabile reale o informativa aggiuntiva;</li>
-<li>distrae l’attenzione con effetti luminosi, ombreggiature e dettagli puramente decorativi.</li>
+<li>generano <strong>distorsioni percettive</strong>, facendo apparire più grandi gli elementi in primo piano rispetto a quelli sullo sfondo;</li>
+<li>possono <strong>occultare parzialmente i dati</strong>, con barre o fette che coprono altre parti del grafico;</li>
+<li>non codificano <strong>alcuna variabile informativa aggiuntiva</strong>, rendendo la terza dimensione puramente decorativa;</li>
+<li>
+<strong>distraggono l’attenzione</strong> con ombreggiature, riflessi ed effetti di profondità che competono con il contenuto informativo.</li>
 </ul>
-<p><strong>Regola pratica di Tufte</strong>: Se, rimuovendo la prospettiva tridimensionale, il grafico non perde alcun dato informativo, allora quella terza dimensione era inutile e andava eliminata.</p>
-</section><section id="errore-6-ordine-alfabetico-per-categorie-naturalmente-ordinate" class="level3" data-number="17.3.6"><h3 data-number="17.3.6" class="anchored" data-anchor-id="errore-6-ordine-alfabetico-per-categorie-naturalmente-ordinate">
-<span class="header-section-number">17.3.6</span> Errore 6: Ordine alfabetico per categorie naturalmente ordinate</h3>
-<p>Quando le categorie possiedono un ordinamento intrinseco — come età, livelli di gravità o qualsiasi scala che rifletta una progressione logica o quantitativa — presentarle in ordine alfabetico annulla immediatamente questa struttura e nasconde il pattern sottostante.</p>
-<p><strong>Esempio pratico</strong>:</p>
+<p>Il risultato è una visualizzazione più difficile da leggere, meno precisa e cognitivamente più costosa, senza alcun beneficio analitico.</p>
+<p><strong>Soluzione.</strong> Eliminare sistematicamente gli effetti tridimensionali quando non veicolano informazione reale. Come sintetizzato efficacemente da <strong>Edward Tufte</strong>: <em>se, rimuovendo la prospettiva tridimensionale, il grafico non perde alcun contenuto informativo, allora quella terza dimensione era superflua e dovrebbe essere eliminata.</em></p>
+</section><section id="errore-6-ordinare-alfabeticamente-categorie-naturalmente-ordinate" class="level3" data-number="17.3.6"><h3 data-number="17.3.6" class="anchored" data-anchor-id="errore-6-ordinare-alfabeticamente-categorie-naturalmente-ordinate">
+<span class="header-section-number">17.3.6</span> Errore 6: ordinare alfabeticamente categorie naturalmente ordinate</h3>
+<p><strong>Errore.</strong> Disporre le categorie in ordine alfabetico quando esse possiedono un <strong>ordinamento intrinseco</strong>, come livelli di gravità, classi di età, stadi di un processo o qualsiasi scala che rappresenti una progressione logica o quantitativa.</p>
+<p><strong>Perché è un problema.</strong> L’ordine alfabetico distrugge la struttura semantica dei dati, interrompendo la continuità naturale tra le categorie. In questo modo, il lettore non riesce più a cogliere facilmente <strong>andamenti, gradienti o transizioni</strong>, e il pattern sottostante viene di fatto nascosto o reso ambiguo.</p>
+<p><strong>Esempio pratico.</strong></p>
 <ul>
 <li>
-<strong>Cattiva disposizione</strong>: <code>[Lieve] [Minima] [Moderata] [Severa]</code> (ordine alfabetico italiano)</li>
+<strong>Disposizione scorretta (ordine alfabetico):</strong> <code>[Lieve] [Minima] [Moderata] [Severa]</code>
+</li>
 <li>
-<strong>Disposizione corretta</strong>: <code>[Minima] [Lieve] [Moderata] [Severa]</code> (ordine crescente di gravità clinica)</li>
+<strong>Disposizione corretta (ordine crescente di gravità clinica):</strong> <code>[Minima] [Lieve] [Moderata] [Severa]</code>
+</li>
 </ul>
-<p><strong>Regola generale</strong>: Ordina sistematicamente le categorie in base al loro valore numerico o alla loro sequenza naturale, a meno che non esista un ordine convenzionale diverso già consolidato (ad esempio i giorni della settimana o le fasi di un trattamento).</p>
+<p>Nel primo caso, la sequenza suggerisce un andamento irregolare e privo di significato; nel secondo, la progressione è immediatamente leggibile.</p>
+<p><strong>Soluzione.</strong> Ordinare sistematicamente le categorie secondo il loro <strong>valore numerico implicito</strong> o la loro <strong>sequenza naturale</strong>, così da preservare la struttura informativa dei dati. Fanno eccezione solo quei casi in cui esiste un ordine convenzionale consolidato e universalmente riconosciuto (ad esempio i giorni della settimana, i mesi dell’anno o le fasi standard di un trattamento).</p>
 </section><section id="errore-7-scale-non-uniformi-nei-confronti-distributivi" class="level3" data-number="17.3.7"><h3 data-number="17.3.7" class="anchored" data-anchor-id="errore-7-scale-non-uniformi-nei-confronti-distributivi">
-<span class="header-section-number">17.3.7</span> Errore 7: Scale non uniformi nei confronti distributivi</h3>
-<p>Quando si confrontano distribuzioni, ad esempio tramite istogrammi o density plot, l’uso di scale verticali diverse rende il confronto visivo impossibile e ingannevole.</p>
-<p><strong>Il problema</strong>: l’occhio interpreta naturalmente l’altezza delle barre o delle curve come un’indicazione diretta della quantità rappresentata. Se le scale degli assi Y sono diverse tra i pannelli a confronto, altezze visivamente simili corrisponderanno in realtà a quantità molto diverse.</p>
-<p><strong>La soluzione</strong>: imposta sempre le scale su valori fissi e uniformi (<code>scales = "fixed"</code>) per garantire un confronto onesto e diretto. L’opzione di scale libere (<code>scales = "free_y"</code>) dovrebbe essere usata solo in casi particolari, ad esempio quando la forma delle distribuzioni è così diversa che una scala uniforme nasconderebbe completamente la struttura di uno dei gruppi.</p>
+<span class="header-section-number">17.3.7</span> Errore 7: scale non uniformi nei confronti distributivi</h3>
+<p><strong>Errore.</strong> Utilizzare <strong>scale verticali diverse</strong> quando si confrontano distribuzioni, ad esempio tramite istogrammi o <em>density plot</em> affiancati.</p>
+<p><strong>Perché è un problema.</strong> L’osservatore interpreta naturalmente l’altezza delle barre o delle curve come un indicatore diretto della quantità o della densità rappresentata. Se gli assi verticali differiscono tra i pannelli, <strong>altezze visivamente simili possono corrispondere a valori numerici molto diversi</strong>, rendendo il confronto immediato non solo difficile, ma potenzialmente fuorviante. Il risultato è un’illusione di somiglianza o di differenza che dipende esclusivamente dalla scelta della scala, non dai dati.</p>
+<p><strong>Soluzione.</strong> Impostare sempre <strong>scale fisse e condivise</strong> per tutti i pannelli (<code>scales = "fixed"</code>), così da garantire un confronto visivo diretto e onesto tra le distribuzioni. L’uso di scale libere (<code>scales = "free_y"</code>) dovrebbe essere limitato a casi specifici e dichiarati esplicitamente, ad esempio quando le distribuzioni hanno ordini di grandezza molto diversi e una scala comune finirebbe per occultare completamente la struttura di uno dei gruppi.</p>
 </section></section><section id="trasformazioni-quando-ingannano-e-quando-illuminano" class="level2" data-number="17.4"><h2 data-number="17.4" class="anchored" data-anchor-id="trasformazioni-quando-ingannano-e-quando-illuminano">
 <span class="header-section-number">17.4</span> Trasformazioni: quando ingannano e quando illuminano</h2>
+<p>Le trasformazioni delle scale non sono né buone né cattive in sé: diventano <strong>strumenti di chiarificazione</strong> quando sono motivate e dichiarate, oppure <strong>fonti di distorsione</strong> quando vengono usate in modo opaco o arbitrario. Il loro scopo non è “abbellire” i dati, ma rendere leggibili strutture che altrimenti rimarrebbero nascoste.</p>
 <section id="trasformazioni-logaritmiche-comprimere-intervalli-estesi" class="level3" data-number="17.4.1"><h3 data-number="17.4.1" class="anchored" data-anchor-id="trasformazioni-logaritmiche-comprimere-intervalli-estesi">
 <span class="header-section-number">17.4.1</span> Trasformazioni logaritmiche: comprimere intervalli estesi</h3>
-<p><strong>Quando utilizzarle</strong>:</p>
+<p><strong>Quando utilizzarle.</strong> Le trasformazioni logaritmiche sono particolarmente indicate in presenza di:</p>
 <ul>
-<li>Dati che coprono <strong>tre o più ordini di grandezza</strong> (ad esempio: popolazioni che vanno da migliaia a milioni).</li>
-<li>Distribuzioni fortemente <strong>asimmetriche a destra</strong>, dominate da pochi valori estremi.</li>
-<li>Relazioni di tipo <strong>moltiplicativo</strong> tra variabili, che in scala logaritmica diventano <strong>additive</strong> e quindi lineari.</li>
+<li>dati che coprono <strong>tre o più ordini di grandezza</strong> (ad esempio popolazioni che vanno da migliaia a decine di milioni);</li>
+<li>distribuzioni fortemente <strong>asimmetriche a destra</strong>, dominate da pochi valori estremi;</li>
+<li>relazioni di tipo <strong>moltiplicativo</strong> tra variabili, che in scala logaritmica diventano <strong>additive</strong> e quindi più facilmente interpretabili come relazioni lineari.</li>
 </ul>
-<p><strong>Esempio concreto</strong>: nel grafico sugli omicidi, una scala logaritmica permette di visualizzare contemporaneamente e con chiarezza sia stati piccoli come il Wyoming (~500.000 abitanti) che quelli enormi come la California (~39 milioni).</p>
-<p><strong>Importante</strong>: <strong>dichiara sempre esplicitamente</strong> l’uso di una scala trasformata. È preferibile usare etichette leggibili come “1M, 10M, 100M” piuttosto che valori logaritmici puri come “6.0, 7.0, 8.0” (log₁₀), che possono confondere il lettore.</p>
+<p><strong>Esempio concreto.</strong> In un grafico che confronta il numero di omicidi tra Stati con popolazioni molto diverse, una scala logaritmica consente di visualizzare simultaneamente e con chiarezza realtà piccole come il Wyoming (circa 500.000 abitanti) e Stati molto popolosi come la California (circa 39 milioni), evitando che i primi vengano schiacciati sull’asse.</p>
+<p><strong>Avvertenza fondamentale.</strong> L’uso di una scala trasformata deve essere <strong>sempre dichiarato esplicitamente</strong>. Inoltre, è preferibile adottare etichette intuitive e leggibili (ad esempio <em>1M, 10M, 100M</em>) piuttosto che valori logaritmici puri (<em>6, 7, 8</em> in log₁₀), che richiedono una conversione mentale e possono confondere il lettore.</p>
 </section><section id="altre-trasformazioni-utili" class="level3" data-number="17.4.2"><h3 data-number="17.4.2" class="anchored" data-anchor-id="altre-trasformazioni-utili">
 <span class="header-section-number">17.4.2</span> Altre trasformazioni utili</h3>
+<p>Oltre alla scala logaritmica, esistono trasformazioni comunemente utilizzate per risolvere problemi specifici:</p>
 <ul>
 <li>
-<strong>Radice quadrata</strong>: Utile per stabilizzare la varianza nei dati di conteggio (distribuzione di Poisson).</li>
+<strong>Radice quadrata</strong>: utile per stabilizzare la varianza nei dati di conteggio, tipicamente modellati da una distribuzione di Poisson.</li>
 <li>
-<strong>Logit</strong>: Trasforma gli odds ratio, rendendo lineare la relazione con i predittori.</li>
+<strong>Logit</strong>: trasforma probabilità o proporzioni in <strong>odds</strong> su una scala non limitata, rendendo spesso lineare la relazione con i predittori.</li>
 <li>
-<strong>Arcsin</strong>: Aiuta a stabilizzare la varianza nelle proporzioni (ad esempio, tassi o percentuali).</li>
-</ul>
-<p><strong>Principio guida</strong>: Una trasformazione è legittima se:</p>
+<strong>Arcoseno (arcsin √p)</strong>: storicamente utilizzata per stabilizzare la varianza nelle proporzioni, soprattutto quando i valori sono vicini a 0 o 1.</li>
+</ul></section><section id="principio-guida" class="level3" data-number="17.4.3"><h3 data-number="17.4.3" class="anchored" data-anchor-id="principio-guida">
+<span class="header-section-number">17.4.3</span> Principio guida</h3>
+<p>Una trasformazione è metodologicamente legittima quando:</p>
 <ol type="1">
-<li>rende visibile un <strong>pattern reale</strong> che nella scala originale sarebbe nascosto;</li>
-<li>viene <strong>esplicitamente dichiarata</strong> e spiegata;</li>
-<li>ha una <strong>giustificazione teorica</strong> o metodologica solida (ad esempio, la linearizzazione di una relazione nota).</li>
-</ol></section></section><section id="colore-alleato-o-nemico" class="level2" data-number="17.5"><h2 data-number="17.5" class="anchored" data-anchor-id="colore-alleato-o-nemico">
+<li>rende visibile un <strong>pattern reale</strong> che nella scala originale sarebbe difficilmente osservabile;</li>
+<li>è <strong>chiaramente dichiarata e spiegata</strong> al lettore;</li>
+<li>ha una <strong>giustificazione teorica o statistica</strong> solida, come la linearizzazione di una relazione nota o la stabilizzazione della varianza.</li>
+</ol>
+<p>In assenza di queste condizioni, una trasformazione rischia di diventare uno strumento retorico più che analitico.</p>
+</section></section><section id="colore-alleato-o-nemico" class="level2" data-number="17.5"><h2 data-number="17.5" class="anchored" data-anchor-id="colore-alleato-o-nemico">
 <span class="header-section-number">17.5</span> Colore: alleato o nemico?</h2>
+<p>Il colore è uno degli strumenti più potenti nella visualizzazione dei dati: può <strong>chiarire immediatamente la struttura dell’informazione</strong> oppure, se usato in modo improprio, <strong>confondere, distrarre o distorcere</strong> l’interpretazione. Usarlo bene significa prima di tutto comprendere <strong>quale ruolo informativo</strong> gli si sta assegnando.</p>
 <section id="i-tre-ruoli-del-colore" class="level3" data-number="17.5.1"><h3 data-number="17.5.1" class="anchored" data-anchor-id="i-tre-ruoli-del-colore">
 <span class="header-section-number">17.5.1</span> I tre ruoli del colore</h3>
 <ol type="1">
-<li>
-<strong>Distinguere categorie</strong> (scala qualitativa): utilizzare <strong>tonalità chiaramente distinte</strong>.</li>
-<li>
-<strong>Codificare un ordine</strong> (scala sequenziale): utilizzare <strong>gradazioni di luminosità o saturazione</strong> di una stessa tonalità.</li>
-<li>
-<strong>Evidenziare divergenze</strong> (scala divergente): utilizzare <strong>due tonalità distinte che partono da un colore neutro centrale</strong>, per mostrare deviazioni positive e negative.</li>
+<li><p><strong>Distinguere categorie (scala qualitativa)</strong> Utilizzare <strong>tonalità chiaramente distinte</strong>, evitando gradienti o variazioni di luminosità che suggerirebbero un ordine inesistente.</p></li>
+<li><p><strong>Codificare un ordine (scala sequenziale)</strong> Utilizzare <strong>gradazioni monotone di luminosità o saturazione</strong> di una stessa tonalità, così che valori maggiori corrispondano in modo naturale a colori più “intensi”.</p></li>
+<li><p><strong>Evidenziare divergenze (scala divergente)</strong> Utilizzare <strong>due tonalità contrastanti</strong> che si allontanano da un <strong>colore neutro centrale</strong>, per rappresentare deviazioni positive e negative rispetto a un valore di riferimento (ad esempio zero o la media).</p></li>
 </ol></section><section id="palette-consigliate" class="level3" data-number="17.5.2"><h3 data-number="17.5.2" class="anchored" data-anchor-id="palette-consigliate">
 <span class="header-section-number">17.5.2</span> Palette consigliate</h3>
-<p><strong>Per categorie (qualitative)</strong>:</p>
+<p><strong>Per categorie (qualitative):</strong></p>
 <ul>
 <li>
-<code><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html">viridis::viridis</a></code> (ideale fino a 5 categorie, sicura per il daltonismo)</li>
+<code><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html">viridis::viridis</a></code> — ideale fino a 5 categorie, percettivamente uniforme e sicura per il daltonismo;</li>
 <li>
-<code>RColorBrewer::Set2</code> (fino a 8 categorie)</li>
+<code>RColorBrewer::Set2</code> — adatta fino a 8 categorie ben distinguibili.</li>
 </ul>
-<p><strong>Per valori ordinati (sequenziali)</strong>:</p>
-<ul>
-<li><code><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html">viridis::magma</a></code></li>
-<li><code>RColorBrewer::Blues</code></li>
-</ul>
-<p><strong>Per valori divergenti da un centro</strong>:</p>
+<p><strong>Per valori ordinati (sequenziali):</strong></p>
 <ul>
 <li>
-<code>RColorBrewer::RdBu</code> (perfetta per correlazioni, es. mappe di calore)</li>
-<li><code><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html">viridis::plasma</a></code></li>
+<code><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html">viridis::magma</a></code> — ottima uniformità percettiva e leggibilità anche in stampa;</li>
+<li>
+<code>RColorBrewer::Blues</code> — intuitiva e adatta a grandezze crescenti.</li>
+</ul>
+<p><strong>Per valori divergenti rispetto a un centro:</strong></p>
+<ul>
+<li>
+<code>RColorBrewer::RdBu</code> — particolarmente efficace per mappe di calore e correlazioni;</li>
+<li>
+<code><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html">viridis::plasma</a></code> — alternativa moderna con buona resa percettiva.</li>
 </ul></section><section id="errori-cromatici-da-evitare" class="level3" data-number="17.5.3"><h3 data-number="17.5.3" class="anchored" data-anchor-id="errori-cromatici-da-evitare">
 <span class="header-section-number">17.5.3</span> Errori cromatici da evitare</h3>
-<p>❌ Utilizzare combinazioni <strong>rosso-verde</strong> per distinguere categorie (circa l’8% degli uomini è daltonico).<br>
-❌ Usare la palette <strong>arcobaleno</strong> per dati sequenziali (è percettivamente non uniforme).<br>
-❌ Introdurre <strong>troppe tonalità</strong> (oltre 7 diventano difficili da distinguere).<br>
-❌ Ignorare il <strong>significato culturale</strong> dei colori (es. rosso = negativo in finanza, positivo in alcune culture).</p>
-<p><strong>Test di efficacia</strong>: Se il tuo grafico comunica correttamente il messaggio anche in scala di grigi, allora la tua scelta cromatica è solida.</p>
+<p>❌ Usare combinazioni <strong>rosso–verde</strong> per distinguere categorie (circa l’8% degli uomini presenta una forma di daltonismo).</p>
+<p>❌ Applicare la palette <strong>arcobaleno</strong> a dati sequenziali: non è percettivamente uniforme e introduce salti artificiali.</p>
+<p>❌ Impiegare <strong>troppe tonalità</strong>: oltre 6–7 categorie, la discriminazione cromatica diventa rapidamente imprecisa.</p>
+<p>❌ Ignorare il <strong>contesto culturale e semantico</strong> dei colori (ad esempio, rosso come segnale di perdita in ambito finanziario, ma di successo in altre culture).</p>
+</section><section id="test-di-efficacia" class="level3" data-number="17.5.4"><h3 data-number="17.5.4" class="anchored" data-anchor-id="test-di-efficacia">
+<span class="header-section-number">17.5.4</span> Test di efficacia</h3>
+<p>Un buon criterio empirico è il seguente: <strong>se il grafico rimane comprensibile e informativo anche in scala di grigi, allora la scelta cromatica è probabilmente solida</strong>. In questo caso, il colore rafforza il messaggio anziché sostituirlo.</p>
 <div class="callout callout-style-default callout-tip callout-titled" title="Checklist per l'auto-valutazione di una visualizzazione">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -933,13 +969,13 @@ il PIL degli Stati Uniti è di circa 20 trilioni di dollari, quello della Franci
 </div>
 </div>
 </section></section><section id="riflessioni-conclusive" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="riflessioni-conclusive">Riflessioni conclusive</h2>
-<p>La visualizzazione dei dati è un linguaggio, ovvero un sistema di simboli dotato di una sua grammatica, semantica e pragmatica. Come ogni linguaggio, può essere usato per chiarire o per ingannare, per semplificare o per complicare. Ciò che fa la differenza non è la complessità tecnica, ma l’intenzione comunicativa e il rispetto per il destinatario del messaggio.</p>
-<p>Edward Tufte ci ha insegnato il valore dell’<strong>economia visiva</strong>: ogni elemento grafico, ogni pixel, deve giustificare la propria esistenza contribuendo alla comprensione dei dati. William Cleveland ci ha fornito una <strong>gerarchia percettiva</strong> empirica, mostrandoci che non tutti i canali visivi sono ugualmente efficaci nella comunicazione di informazioni quantitative. Alberto Cairo, invece, ci ha posto di fronte alla dimensione <strong>etica</strong>, ricordandoci che un grafico può essere tecnicamente impeccabile ma moralmente inaccettabile se deliberatamente fuorviante.</p>
-<p>In psicologia, la tentazione di semplificare eccessivamente è forte. I <em>dynamite plots</em> nascondono la complessità delle distribuzioni; i <em>pie chart</em> trasformano le proporzioni in angoli difficili da confrontare e i grafici a doppio asse possono creare illusorie correlazioni. Ogni volta che scegliamo queste rappresentazioni per mera “convenienza” o “tradizione”, rischiamo di tradire sia i dati che i fenomeni complessi che intendiamo studiare.</p>
-<p>Tuttavia, la visualizzazione non è solo una protezione contro l’inganno, ma soprattutto uno strumento per la <strong>scoperta</strong>. Un grafico ben concepito può rivelare pattern sfuggenti a ogni analisi statistica, suggerire ipotesi inaspettate che nessun modello avrebbe individuato e mettere in luce anomalie che nessun test formale avrebbe rilevato.</p>
-<p>Per questo motivo, la visualizzazione non è solo un ornamento del processo scientifico, ma una componente <strong>epistemologica</strong> fondamentale. Non è un semplice ornamento della scienza, ma la costituisce. E, come ogni strumento epistemologico, richiede rigore metodologico, onestà intellettuale e umiltà.</p>
-<p>Per visualizzare in modo efficace, è necessario rispettare tre principi fondamentali: i <strong>dati</strong> (rappresentandoli con fedeltà), il <strong>lettore</strong> (comunicando in modo chiaro) e la <strong>verità</strong> (evitando ogni tipo di manipolazione percettiva).</p>
-<p>Questa triade, ovvero fedeltà, chiarezza e onestà, non garantisce la perfezione di ogni grafico, ma assicura che la visualizzazione adempia al suo scopo più alto: essere uno strumento rigoroso e trasparente al servizio della conoscenza scientifica.</p>
+<p>La visualizzazione dei dati è un <strong>linguaggio</strong>: un sistema di segni dotato di una propria grammatica, di una semantica e di una pragmatica. Come ogni linguaggio, può essere impiegato per chiarire o per confondere, per semplificare o per distorcere. A fare la differenza non è la sofisticazione tecnica degli strumenti, ma l’<strong>intenzione comunicativa</strong> di chi costruisce il grafico e il <strong>rispetto per il destinatario</strong> del messaggio.</p>
+<p>Edward Tufte ci ha insegnato il valore dell’<strong>economia visiva</strong>: ogni elemento grafico, ogni tratto e ogni pixel devono giustificare la propria presenza contribuendo alla comprensione dei dati. William Cleveland ha fornito una <strong>gerarchia percettiva</strong> fondata su evidenze empiriche, mostrando che non tutti i canali visivi sono ugualmente efficaci nel trasmettere informazioni quantitative. Alberto Cairo, infine, ha richiamato l’attenzione sulla dimensione <strong>etica</strong> della visualizzazione, ricordandoci che un grafico può essere tecnicamente impeccabile e, allo stesso tempo, profondamente fuorviante.</p>
+<p>In psicologia, la tentazione di una semplificazione eccessiva è particolarmente forte. I <em>dynamite plots</em> occultano la struttura delle distribuzioni; i <em>pie chart</em> trasformano confronti numerici in angoli difficili da valutare; i grafici a doppio asse possono suggerire correlazioni illusorie. Ogni volta che adottiamo queste soluzioni per abitudine, tradizione o comodità, rischiamo di tradire non solo i dati, ma anche la complessità dei fenomeni che intendiamo comprendere.</p>
+<p>Eppure, la visualizzazione non è soltanto una difesa contro l’inganno: è soprattutto uno strumento di <strong>scoperta</strong>. Un grafico ben progettato può rendere evidenti pattern che sfuggono all’analisi numerica, suggerire ipotesi che nessun modello aveva anticipato e portare alla luce anomalie che nessun test formale avrebbe segnalato.</p>
+<p>Per questo motivo, la visualizzazione non è un semplice ornamento del processo scientifico, ma una componente <strong>epistemologica</strong> essenziale. Non accompagna la conoscenza: la rende possibile. E, come ogni strumento epistemologico, richiede rigore metodologico, onestà intellettuale e una dose necessaria di umiltà.</p>
+<p>Visualizzare bene significa rispettare tre principi fondamentali: i <strong>dati</strong>, rappresentandoli con fedeltà; il <strong>lettore</strong>, comunicando in modo chiaro; e la <strong>verità</strong>, evitando qualsiasi forma di manipolazione percettiva.</p>
+<p>Questa triade — <strong>fedeltà, chiarezza e onestà</strong> — non garantisce la perfezione di ogni grafico, ma assicura che la visualizzazione assolva alla sua funzione più alta: essere uno strumento rigoroso, trasparente e responsabile al servizio della conoscenza scientifica.</p>
 </section><section id="esercizi" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="esercizi">Esercizi</h2>
 <div class="callout callout-style-default callout-important callout-titled" title="Esercizio 1: Critica visuale">
 <div class="callout-header d-flex align-content-center">
@@ -1006,42 +1042,6 @@ il PIL degli Stati Uniti è di circa 20 trilioni di dollari, quello della Franci
 <p>Scrivi: 1. “Pitch”: Come convincere non-esperto 2. “Confessione”: Come smascherare la manipolazione</p>
 <p><strong>Obiettivo</strong>: Riconoscere manipolazioni diventando temporaneamente manipolatore.</p>
 </div>
-</div>
-<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Punti chiave da ricordare">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Consiglio</span>Punti chiave da ricordare
-</div>
-</div>
-<section id="da-ricordare" class="level2 callout-body-container callout-body" data-number="17.6"><h2 data-number="17.6" class="anchored" data-anchor-id="da-ricordare">
-<span class="header-section-number">17.6</span> 📌 Da ricordare</h2>
-<p><strong>Principi</strong>:</p>
-<ul>
-<li>
-<strong>Tufte</strong>: Data-ink ratio, elimina chartjunk</li>
-<li>
-<strong>Cleveland</strong>: Posizione/lunghezza per confronti quantitativi</li>
-<li>
-<strong>Cairo</strong>: Onestà visiva = responsabilità etica</li>
-</ul>
-<p><strong>Errori</strong>:</p>
-<ul>
-<li>❌ Dynamite plots, pie charts, dual-axis, area vs lunghezza, 3D decorativo</li>
-</ul>
-<p><strong>Best practices</strong>:</p>
-<ul>
-<li>✅ Mostra dati grezzi (jitter, trasparenza)</li>
-<li>✅ Ordina per valore</li>
-<li>✅ Barplot da zero</li>
-<li>✅ Palette colorblind-safe</li>
-<li>✅ Titolo comunica finding</li>
-<li>✅ Revisione iterativa</li>
-</ul>
-<p><strong>Collegamenti</strong>: il <a href="../R/06_ggplot2.html" class="quarto-xref"><span>Capitolo 10</span></a> per l’implementazione tecnica.</p>
-</section>
 </div>
 </section><section id="bibliografia" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="bibliografia">Bibliografia</h2>
 
