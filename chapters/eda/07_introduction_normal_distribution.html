@@ -755,64 +755,25 @@ Figura&nbsp;19.1: Distribuzione teorica dei punteggi di QI nella popolazione
 <span class="header-section-number">19.2.1</span> Rappresentazione visiva</h3>
 <p>Ecco come appare la distribuzione normale con diversi valori di <span class="math inline">\(\mu\)</span> e <span class="math inline">\(\sigma\)</span>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Diverse medie, stessa sd</span></span>
-<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5</span>, <span class="fl">15</span>, <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">mutate</span><span class="op">(</span></span>
-<span>    mu0 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">dnorm</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">0</span>, <span class="fl">2</span><span class="op">)</span>,</span>
-<span>    mu5 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">dnorm</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">5</span>, <span class="fl">2</span><span class="op">)</span>,</span>
-<span>    mu8 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">dnorm</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">8</span>, <span class="fl">2</span><span class="op">)</span></span>
-<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">pivot_longer</span><span class="op">(</span><span class="op">-</span><span class="va">x</span>, names_to <span class="op">=</span> <span class="st">"distribuzione"</span>, values_to <span class="op">=</span> <span class="st">"densita"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">mutate</span><span class="op">(</span>distribuzione <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">distribuzione</span>, </span>
-<span>                                 levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"mu0"</span>, <span class="st">"mu5"</span>, <span class="st">"mu8"</span><span class="op">)</span>,</span>
-<span>                                 labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"μ=0, σ=2"</span>, <span class="st">"μ=5, σ=2"</span>, <span class="st">"μ=8, σ=2"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">densita</span>, color <span class="op">=</span> <span class="va">distribuzione</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_line</span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">scale_y_continuous</span><span class="op">(</span>expand <span class="op">=</span> <span class="fu">expansion</span><span class="op">(</span>mult <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">labs</span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Effetto della media (μ)"</span>,</span>
-<span>       subtitle <span class="op">=</span> <span class="st">"Diverse medie, stessa deviazione standard"</span>,</span>
-<span>       x <span class="op">=</span> <span class="st">"x"</span>, y <span class="op">=</span> <span class="st">"Densità"</span>,</span>
-<span>       color <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Stessa media, diverse sd</span></span>
-<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">10</span>, <span class="fl">10</span>, <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">mutate</span><span class="op">(</span></span>
-<span>    sd1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">dnorm</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
-<span>    sd2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">dnorm</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">0</span>, <span class="fl">2</span><span class="op">)</span>,</span>
-<span>    sd4 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">dnorm</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">0</span>, <span class="fl">4</span><span class="op">)</span></span>
-<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">pivot_longer</span><span class="op">(</span><span class="op">-</span><span class="va">x</span>, names_to <span class="op">=</span> <span class="st">"distribuzione"</span>, values_to <span class="op">=</span> <span class="st">"densita"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">mutate</span><span class="op">(</span>distribuzione <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">distribuzione</span>,</span>
-<span>                                 levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"sd1"</span>, <span class="st">"sd2"</span>, <span class="st">"sd4"</span><span class="op">)</span>,</span>
-<span>                                 labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"μ=0, σ=1"</span>, <span class="st">"μ=0, σ=2"</span>, <span class="st">"μ=0, σ=4"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">densita</span>, color <span class="op">=</span> <span class="va">distribuzione</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_line</span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">scale_y_continuous</span><span class="op">(</span>expand <span class="op">=</span> <span class="fu">expansion</span><span class="op">(</span>mult <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">labs</span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Effetto della deviazione standard (σ)"</span>,</span>
-<span>       subtitle <span class="op">=</span> <span class="st">"Stessa media, diverse deviazioni standard"</span>,</span>
-<span>       x <span class="op">=</span> <span class="st">"x"</span>, y <span class="op">=</span> <span class="st">"Densità"</span>,</span>
-<span>       color <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p1</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><a href="07_introduction_normal_distribution_files/figure-html/unnamed-chunk-3-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="07_introduction_normal_distribution_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p2</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-normal-params-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-normal-params-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="07_introduction_normal_distribution_files/figure-html/fig-normal-params-1-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figura&nbsp;19.2: Effetto dei parametri μ e σ sulla forma della distribuzione normale"><img src="07_introduction_normal_distribution_files/figure-html/fig-normal-params-1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a>
+<a href="07_introduction_normal_distribution_files/figure-html/fig-normal-params-1-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figura&nbsp;19.2: Effetto del parametro μ sulla forma della distribuzione normale"><img src="07_introduction_normal_distribution_files/figure-html/fig-normal-params-1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-normal-params-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;19.2: Effetto dei parametri μ e σ sulla forma della distribuzione normale
+Figura&nbsp;19.2: Effetto del parametro μ sulla forma della distribuzione normale
+</figcaption></figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-normal-params-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-normal-params-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="07_introduction_normal_distribution_files/figure-html/fig-normal-params-2-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figura&nbsp;19.3: Effetto del parametro σ sulla forma della distribuzione normale"><img src="07_introduction_normal_distribution_files/figure-html/fig-normal-params-2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-normal-params-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;19.3: Effetto del parametro σ sulla forma della distribuzione normale
 </figcaption></figure>
 </div>
 </div>
@@ -871,71 +832,21 @@ Figura&nbsp;19.2: Effetto dei parametri μ e σ sulla forma della distribuzione 
 </ul>
 <p>Queste proporzioni forniscono una guida pratica per interpretare la variabilità dei dati e per valutare quanto un’osservazione sia tipica o estrema rispetto alla distribuzione di riferimento.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Creiamo una distribuzione normale standard</span></span>
-<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>, <span class="fl">4</span>, length.out <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span>
-<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">dnorm</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
-<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="va">df</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_line</span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">labs</span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Deviazioni standard dalla media"</span>,</span>
-<span>       y <span class="op">=</span> <span class="st">"Densità"</span>,</span>
-<span>       title <span class="op">=</span> <span class="st">"La regola empirica 68-95-99.7"</span>,</span>
-<span>       subtitle <span class="op">=</span> <span class="st">"Percentuale di dati entro 1, 2 e 3 deviazioni standard"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="co"># Aree</span></span>
-<span>  <span class="fu">geom_area</span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">df</span>, <span class="va">x</span> <span class="op">&gt;=</span> <span class="op">-</span><span class="fl">3</span> <span class="op">&amp;</span> <span class="va">x</span> <span class="op">&lt;=</span> <span class="fl">3</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">"lightblue"</span>, alpha <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_area</span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">df</span>, <span class="va">x</span> <span class="op">&gt;=</span> <span class="op">-</span><span class="fl">2</span> <span class="op">&amp;</span> <span class="va">x</span> <span class="op">&lt;=</span> <span class="fl">2</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">"lightblue"</span>, alpha <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_area</span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">df</span>, <span class="va">x</span> <span class="op">&gt;=</span> <span class="op">-</span><span class="fl">1</span> <span class="op">&amp;</span> <span class="va">x</span> <span class="op">&lt;=</span> <span class="fl">1</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">"lightblue"</span>, alpha <span class="op">=</span> <span class="fl">0.4</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="co"># Linee verticali</span></span>
-<span>  <span class="fu">geom_vline</span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">3</span>, <span class="op">-</span><span class="fl">2</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>,</span>
-<span>             linetype <span class="op">=</span> <span class="st">"dashed"</span>, alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="co"># Annotazioni (spostate in x per non sovrapporsi)</span></span>
-<span>  <span class="fu">annotate</span><span class="op">(</span><span class="st">"text"</span>, x <span class="op">=</span> <span class="fl">0</span>,  y <span class="op">=</span> <span class="fl">0.15</span>, label <span class="op">=</span> <span class="st">"68%"</span>,</span>
-<span>           size <span class="op">=</span> <span class="fl">5</span>, fontface <span class="op">=</span> <span class="st">"bold"</span>, color <span class="op">=</span> <span class="st">"darkblue"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">annotate</span><span class="op">(</span><span class="st">"text"</span>, x <span class="op">=</span> <span class="op">-</span><span class="fl">1.6</span>, y <span class="op">=</span> <span class="fl">0.06</span>, label <span class="op">=</span> <span class="st">"95%"</span>,</span>
-<span>           size <span class="op">=</span> <span class="fl">5</span>, fontface <span class="op">=</span> <span class="st">"bold"</span>, color <span class="op">=</span> <span class="st">"darkblue"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">annotate</span><span class="op">(</span><span class="st">"text"</span>, x <span class="op">=</span> <span class="fl">2.2</span>, y <span class="op">=</span> <span class="fl">0.02</span>, label <span class="op">=</span> <span class="st">"99.7%"</span>,</span>
-<span>           size <span class="op">=</span> <span class="fl">5</span>, fontface <span class="op">=</span> <span class="st">"bold"</span>, color <span class="op">=</span> <span class="st">"darkblue"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">scale_x_continuous</span><span class="op">(</span>breaks <span class="op">=</span> <span class="op">-</span><span class="fl">3</span><span class="op">:</span><span class="fl">3</span>,</span>
-<span>                     labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"-3σ"</span>, <span class="st">"-2σ"</span>, <span class="st">"-1σ"</span>, <span class="st">"μ"</span>, <span class="st">"+1σ"</span>, <span class="st">"+2σ"</span>, <span class="st">"+3σ"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">p</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-empirical-rule" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-empirical-rule-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="07_introduction_normal_distribution_files/figure-html/fig-empirical-rule-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figura&nbsp;19.3: La regola empirica 68-95-99.7 per la distribuzione normale"><img src="07_introduction_normal_distribution_files/figure-html/fig-empirical-rule-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a>
+<a href="07_introduction_normal_distribution_files/figure-html/fig-empirical-rule-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figura&nbsp;19.4: La regola empirica 68-95-99.7 per la distribuzione normale"><img src="07_introduction_normal_distribution_files/figure-html/fig-empirical-rule-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-empirical-rule-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;19.3: La regola empirica 68-95-99.7 per la distribuzione normale
+Figura&nbsp;19.4: La regola empirica 68-95-99.7 per la distribuzione normale
 </figcaption></figure>
 </div>
 </div>
 </div>
 </section><section id="applicazione-pratica-test-del-qi" class="level3" data-number="19.3.2"><h3 data-number="19.3.2" class="anchored" data-anchor-id="applicazione-pratica-test-del-qi">
 <span class="header-section-number">19.3.2</span> Applicazione pratica: Test del QI</h3>
-<p>Riprendiamo l’esempio dei punteggi di QI (media = 100, deviazione standard = 15). Applicando la regola empirica:</p>
+<p>Riprendiamo l’esempio dei punteggi di QI (media = 100, deviazione standard = 15). Applicando la regola empirica otteniamo:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mu_qi</span> <span class="op">&lt;-</span> <span class="fl">100</span></span>
-<span><span class="va">sd_qi</span> <span class="op">&lt;-</span> <span class="fl">15</span></span>
-<span></span>
-<span><span class="co"># Calcoliamo gli intervalli</span></span>
-<span><span class="va">intervalli</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
-<span>  Intervallo <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"μ ± 1σ"</span>, <span class="st">"μ ± 2σ"</span>, <span class="st">"μ ± 3σ"</span><span class="op">)</span>,</span>
-<span>  Limiti <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">mu_qi</span> <span class="op">-</span> <span class="va">sd_qi</span>, <span class="st">"-"</span>, <span class="va">mu_qi</span> <span class="op">+</span> <span class="va">sd_qi</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">mu_qi</span> <span class="op">-</span> <span class="fl">2</span><span class="op">*</span><span class="va">sd_qi</span>, <span class="st">"-"</span>, <span class="va">mu_qi</span> <span class="op">+</span> <span class="fl">2</span><span class="op">*</span><span class="va">sd_qi</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">mu_qi</span> <span class="op">-</span> <span class="fl">3</span><span class="op">*</span><span class="va">sd_qi</span>, <span class="st">"-"</span>, <span class="va">mu_qi</span> <span class="op">+</span> <span class="fl">3</span><span class="op">*</span><span class="va">sd_qi</span><span class="op">)</span></span>
-<span>  <span class="op">)</span>,</span>
-<span>  Percentuale <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"68%"</span>, <span class="st">"95%"</span>, <span class="st">"99.7%"</span><span class="op">)</span>,</span>
-<span>  Interpretazione <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
-<span>    <span class="st">"La maggior parte delle persone"</span>,</span>
-<span>    <span class="st">"Quasi tutte le persone"</span>,</span>
-<span>    <span class="st">"Praticamente tutta la popolazione"</span></span>
-<span>  <span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="va">intervalli</span>, </span>
-<span>             caption <span class="op">=</span> <span class="st">"Applicazione della regola empirica ai punteggi di QI"</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <caption>Applicazione della regola empirica ai punteggi di QI</caption>
@@ -978,7 +889,7 @@ Figura&nbsp;19.3: La regola empirica 68-95-99.7 per la distribuzione normale
 <span class="header-section-number">19.3.3</span> Verifica empirica con dati reali</h3>
 <p>Vediamo se la regola empirica si applica effettivamente a un dataset reale. Useremo ancora le altezze maschili dal dataset <code>heights</code>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Estraiamo le altezze maschili</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Estraiamo le altezze maschili</span></span>
 <span><span class="va">index</span> <span class="op">&lt;-</span> <span class="fu">dslabs</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/dslabs/man/heights.html">heights</a></span><span class="op">$</span><span class="va">sex</span> <span class="op">==</span> <span class="st">"Male"</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">dslabs</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/dslabs/man/heights.html">heights</a></span><span class="op">$</span><span class="va">height</span><span class="op">[</span><span class="va">index</span><span class="op">]</span></span>
 <span></span>
@@ -1053,7 +964,7 @@ Figura&nbsp;19.3: La regola empirica 68-95-99.7 per la distribuzione normale
 <span class="header-section-number">19.4.1</span> Stima dei parametri</h3>
 <p>Estraiamo i dati e calcoliamo media e deviazione standard:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">index</span> <span class="op">&lt;-</span> <span class="fu">dslabs</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/dslabs/man/heights.html">heights</a></span><span class="op">$</span><span class="va">sex</span> <span class="op">==</span> <span class="st">"Male"</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">index</span> <span class="op">&lt;-</span> <span class="fu">dslabs</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/dslabs/man/heights.html">heights</a></span><span class="op">$</span><span class="va">sex</span> <span class="op">==</span> <span class="st">"Male"</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">dslabs</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/dslabs/man/heights.html">heights</a></span><span class="op">$</span><span class="va">height</span><span class="op">[</span><span class="va">index</span><span class="op">]</span></span>
 <span></span>
 <span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
@@ -1081,7 +992,7 @@ Avviso
 <span class="header-section-number">19.4.2</span> Confronto visivo</h3>
 <p>Possiamo ora confrontare la distribuzione osservata (in blu) con la distribuzione normale teorica (in nero):</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">norm_dist</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">norm_dist</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="va">m</span> <span class="op">-</span> <span class="fl">4</span><span class="op">*</span><span class="va">s</span>, <span class="va">m</span> <span class="op">+</span> <span class="fl">4</span><span class="op">*</span><span class="va">s</span>, length.out <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">mutate</span><span class="op">(</span>density <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">dnorm</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">m</span>, <span class="va">s</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -1098,10 +1009,10 @@ Avviso
 <div class="cell-output-display">
 <div id="fig-altezza-normale" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-altezza-normale-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="07_introduction_normal_distribution_files/figure-html/fig-altezza-normale-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Figura&nbsp;19.4: Confronto tra distribuzione osservata delle altezze maschili e distribuzione normale teorica"><img src="07_introduction_normal_distribution_files/figure-html/fig-altezza-normale-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a>
+<a href="07_introduction_normal_distribution_files/figure-html/fig-altezza-normale-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Figura&nbsp;19.5: Confronto tra distribuzione osservata delle altezze maschili e distribuzione normale teorica"><img src="07_introduction_normal_distribution_files/figure-html/fig-altezza-normale-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-altezza-normale-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;19.4: Confronto tra distribuzione osservata delle altezze maschili e distribuzione normale teorica
+Figura&nbsp;19.5: Confronto tra distribuzione osservata delle altezze maschili e distribuzione normale teorica
 </figcaption></figure>
 </div>
 </div>
@@ -1127,7 +1038,7 @@ z = \frac{x - \mu}{\sigma},
 <p>Attraverso questa trasformazione, ogni osservazione viene ricollocata rispetto al centro e alla dispersione della distribuzione, rendendo i valori direttamente confrontabili.</p>
 <p>In <strong>R</strong>, gli z-scores possono essere calcolati in modo semplice utilizzando la funzione <code><a href="https://rdrr.io/r/base/scale.html">scale()</a></code>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Z-scores delle altezze maschili</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Z-scores delle altezze maschili</span></span>
 <span><span class="va">z</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Primi 10 z-scores:\n"</span><span class="op">)</span></span>
@@ -1180,7 +1091,7 @@ z = \frac{x - \mu}{\sigma},
 <p>La domanda è: <strong>in quale dei due test lo studente ha performato meglio in termini relativi rispetto alla popolazione di riferimento?</strong></p>
 <p>Per rispondere, trasformiamo entrambi i punteggi in <strong>z-scores</strong>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Calcolo degli z-scores</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Calcolo degli z-scores</span></span>
 <span></span>
 <span><span class="va">z_qi</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fl">115</span> <span class="op">-</span> <span class="fl">100</span><span class="op">)</span> <span class="op">/</span> <span class="fl">15</span></span>
 <span><span class="va">z_memoria</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fl">65</span> <span class="op">-</span> <span class="fl">50</span><span class="op">)</span> <span class="op">/</span> <span class="fl">10</span></span>
@@ -1206,7 +1117,7 @@ z = \frac{x - \mu}{\sigma},
 <p>La standardizzazione non altera la forma della distribuzione: essa si limita a <strong>ricentrare</strong> i dati sulla media zero e a <strong>riscalarli</strong> in unità di deviazione standard. In questo modo, qualsiasi distribuzione normale può essere ricondotta a un’unica distribuzione di riferimento, rendendo possibili confronti diretti e calcoli probabilistici uniformi.</p>
 <p>La figura seguente illustra visivamente questo processo, mostrando una distribuzione normale originale e la corrispondente distribuzione dopo la standardizzazione.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Dati originali e standardizzati</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Dati originali e standardizzati</span></span>
 <span></span>
 <span><span class="va">plot_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
 <span>originale <span class="op">=</span> <span class="va">x</span>,</span>
@@ -1237,10 +1148,10 @@ z = \frac{x - \mu}{\sigma},
 <div class="cell-output-display">
 <div id="fig-standardization" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-standardization-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="07_introduction_normal_distribution_files/figure-html/fig-standardization-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6" title="Figura&nbsp;19.5: Standardizzazione: da distribuzione normale a normale standard"><img src="07_introduction_normal_distribution_files/figure-html/fig-standardization-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a>
+<a href="07_introduction_normal_distribution_files/figure-html/fig-standardization-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6" title="Figura&nbsp;19.6: Standardizzazione: da distribuzione normale a normale standard"><img src="07_introduction_normal_distribution_files/figure-html/fig-standardization-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-standardization-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;19.5: Standardizzazione: da distribuzione normale a normale standard
+Figura&nbsp;19.6: Standardizzazione: da distribuzione normale a normale standard
 </figcaption></figure>
 </div>
 </div>
@@ -1281,7 +1192,7 @@ Figura&nbsp;19.5: Standardizzazione: da distribuzione normale a normale standard
 <span class="header-section-number">19.6.2</span> Creazione di un QQ-plot in R</h3>
 <p>Con <code>ggplot2</code>, un QQ-plot può essere generato nel modo seguente:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">dslabs</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/dslabs/man/heights.html">heights</a></span> <span class="op">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">dslabs</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/dslabs/man/heights.html">heights</a></span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">sex</span> <span class="op">==</span> <span class="st">"Male"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>sample <span class="op">=</span> <span class="va">height</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_qq</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
@@ -1292,10 +1203,10 @@ Figura&nbsp;19.5: Standardizzazione: da distribuzione normale a normale standard
 <div class="cell-output-display">
 <div id="fig-qqplot-altezze" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-qqplot-altezze-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="07_introduction_normal_distribution_files/figure-html/fig-qqplot-altezze-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7" title="Figura&nbsp;19.6: QQ-plot per le altezze maschili"><img src="07_introduction_normal_distribution_files/figure-html/fig-qqplot-altezze-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a>
+<a href="07_introduction_normal_distribution_files/figure-html/fig-qqplot-altezze-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7" title="Figura&nbsp;19.7: QQ-plot per le altezze maschili"><img src="07_introduction_normal_distribution_files/figure-html/fig-qqplot-altezze-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-altezze-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;19.6: QQ-plot per le altezze maschili
+Figura&nbsp;19.7: QQ-plot per le altezze maschili
 </figcaption></figure>
 </div>
 </div>
@@ -1303,46 +1214,15 @@ Figura&nbsp;19.6: QQ-plot per le altezze maschili
 <p>In questo caso, i punti si allineano bene lungo la linea rossa, confermando che la distribuzione delle altezze maschili è approssimativamente normale.</p>
 </section><section id="interpretare-deviazioni-dalla-normalità" class="level3" data-number="19.6.3"><h3 data-number="19.6.3" class="anchored" data-anchor-id="interpretare-deviazioni-dalla-normalità">
 <span class="header-section-number">19.6.3</span> Interpretare deviazioni dalla normalità</h3>
-<p>Il QQ-plot rivela diversi tipi di non-normalità:</p>
+<p>Il QQ-plot rivela diversi tipi di non-normalità.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Generiamo diverse distribuzioni</span></span>
-<span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">500</span></span>
-<span><span class="va">dati_normale</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="va">dati_asim_dx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">0</span>, <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Asimmetria positiva</span></span>
-<span><span class="va">dati_asim_sx</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">0</span>, <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Asimmetria negativa</span></span>
-<span><span class="va">dati_code_pesanti</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/TDist.html">rt</a></span><span class="op">(</span><span class="va">n</span>, df <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>  <span class="co"># Code pesanti (t-student)</span></span>
-<span></span>
-<span><span class="co"># Creiamo i QQ-plots</span></span>
-<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">dati_normale</span><span class="op">)</span>, <span class="fu">aes</span><span class="op">(</span>sample <span class="op">=</span> <span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_qq</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_qq_line</span><span class="op">(</span>color <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">labs</span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Distribuzione normale"</span>,</span>
-<span>       subtitle <span class="op">=</span> <span class="st">"Punti allineati = normalità"</span><span class="op">)</span> </span>
-<span></span>
-<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">dati_asim_dx</span><span class="op">)</span>, <span class="fu">aes</span><span class="op">(</span>sample <span class="op">=</span> <span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_qq</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_qq_line</span><span class="op">(</span>color <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">labs</span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Asimmetria positiva"</span>,</span>
-<span>       subtitle <span class="op">=</span> <span class="st">"Curva verso l'alto a destra"</span><span class="op">)</span> </span>
-<span></span>
-<span><span class="va">p3</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">dati_asim_sx</span><span class="op">)</span>, <span class="fu">aes</span><span class="op">(</span>sample <span class="op">=</span> <span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_qq</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_qq_line</span><span class="op">(</span>color <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">labs</span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Asimmetria negativa"</span>,</span>
-<span>       subtitle <span class="op">=</span> <span class="st">"Curva verso il basso a sinistra"</span><span class="op">)</span> </span>
-<span></span>
-<span><span class="va">p4</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">dati_code_pesanti</span><span class="op">)</span>, <span class="fu">aes</span><span class="op">(</span>sample <span class="op">=</span> <span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_qq</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_qq_line</span><span class="op">(</span>color <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">labs</span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Code pesanti"</span>,</span>
-<span>       subtitle <span class="op">=</span> <span class="st">"Punti si allontanano agli estremi"</span><span class="op">)</span> </span>
-<span></span>
-<span><span class="fu">grid.arrange</span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span>, <span class="va">p3</span>, <span class="va">p4</span>, ncol <span class="op">=</span> <span class="fl">2</span>, nrow <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-qqplot-patterns" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-qqplot-patterns-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="07_introduction_normal_distribution_files/figure-html/fig-qqplot-patterns-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8" title="Figura&nbsp;19.7: Patterns comuni nei QQ-plots e la loro interpretazione"><img src="07_introduction_normal_distribution_files/figure-html/fig-qqplot-patterns-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a>
+<a href="07_introduction_normal_distribution_files/figure-html/fig-qqplot-patterns-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8" title="Figura&nbsp;19.8: Patterns comuni nei QQ-plots e la loro interpretazione"><img src="07_introduction_normal_distribution_files/figure-html/fig-qqplot-patterns-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qqplot-patterns-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;19.7: Patterns comuni nei QQ-plots e la loro interpretazione
+Figura&nbsp;19.8: Patterns comuni nei QQ-plots e la loro interpretazione
 </figcaption></figure>
 </div>
 </div>
@@ -1361,7 +1241,7 @@ Figura&nbsp;19.7: Patterns comuni nei QQ-plots e la loro interpretazione
 <span class="header-section-number">19.6.4</span> Test formali di normalità</h3>
 <p>Oltre ai QQ-plots, esistono test statistici formali per verificare la normalità. Il più comune è il <strong>test di Shapiro-Wilk</strong>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Test di Shapiro-Wilk</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Test di Shapiro-Wilk</span></span>
 <span><span class="va">shapiro_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/shapiro.test.html">shapiro.test</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Test di Shapiro-Wilk\n"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Test di Shapiro-Wilk</span></span>
@@ -1523,7 +1403,7 @@ Figura&nbsp;19.7: Patterns comuni nei QQ-plots e la loro interpretazione
 </ol>
 <p><strong>6. Analisi con R</strong></p>
 <p>Usa il seguente codice per generare e analizzare dati:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
 <span><span class="co"># Genera dati approssimativamente normali</span></span>
 <span><span class="va">dati_normali</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">100</span>, mean <span class="op">=</span> <span class="fl">50</span>, sd <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span></span>
@@ -1612,7 +1492,7 @@ Figura&nbsp;19.7: Patterns comuni nei QQ-plots e la loro interpretazione
 <p><strong>3c.</strong> Dopo standardizzazione: media=0, sd=1 sempre.</p>
 </section><section id="soluzioni-parte-2" class="level3 unnumbered unlisted"><h3 class="unnumbered unlisted anchored" data-anchor-id="soluzioni-parte-2">Soluzioni Parte 2</h3>
 <p><strong>5.</strong> Per i dati SWLS forniti:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">swls</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">18</span>, <span class="fl">22</span>, <span class="fl">25</span>, <span class="fl">21</span>, <span class="fl">26</span>, <span class="fl">19</span>, <span class="fl">20</span>, <span class="fl">23</span>, <span class="fl">24</span>, <span class="fl">17</span>, <span class="fl">22</span>, <span class="fl">27</span>, <span class="fl">28</span>, <span class="fl">21</span>, <span class="fl">19</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">swls</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">18</span>, <span class="fl">22</span>, <span class="fl">25</span>, <span class="fl">21</span>, <span class="fl">26</span>, <span class="fl">19</span>, <span class="fl">20</span>, <span class="fl">23</span>, <span class="fl">24</span>, <span class="fl">17</span>, <span class="fl">22</span>, <span class="fl">27</span>, <span class="fl">28</span>, <span class="fl">21</span>, <span class="fl">19</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">swls</span><span class="op">)</span>  <span class="co"># 22.13</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">swls</span><span class="op">)</span>    <span class="co"># 3.42</span></span>
 <span></span>
@@ -1623,7 +1503,7 @@ Figura&nbsp;19.7: Patterns comuni nei QQ-plots e la loro interpretazione
 <span><span class="op">(</span><span class="fl">28</span> <span class="op">-</span> <span class="fl">22.13</span><span class="op">)</span><span class="op">/</span><span class="fl">3.42</span>  <span class="co"># 1.72</span></span>
 <span><span class="co"># Il punteggio 28 è leggermente più estremo (in valore assoluto)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>7.</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Test A</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Test A</span></span>
 <span><span class="va">z_a</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fl">75</span> <span class="op">-</span> <span class="fl">60</span><span class="op">)</span> <span class="op">/</span> <span class="fl">10</span>  <span class="co"># 1.5</span></span>
 <span></span>
 <span><span class="co"># Test B  </span></span>
@@ -1657,7 +1537,7 @@ Figura&nbsp;19.7: Patterns comuni nei QQ-plots e la loro interpretazione
 <div id="callout-12" class="callout-12-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.5.2 (2025-10-31)</span></span>
 <span><span class="co">#&gt; Platform: aarch64-apple-darwin20</span></span>
 <span><span class="co">#&gt; Running under: macOS Tahoe 26.2</span></span>

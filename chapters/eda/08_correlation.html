@@ -704,9 +704,13 @@ window.Quarto = {
 <p>Successivamente, è stato realizzato un grafico a dispersione (<em>scatterplot</em>) in cui i valori del BDI-II sono stati posti sull’asse delle ascisse e quelli del CES-D sull’asse delle ordinate. Ogni punto rappresenta un partecipante, suddiviso per gruppo (soggetti depressi e controlli). L’aggiunta di una retta di regressione, ottenuta mediante un modello lineare, consente di valutare visivamente la tendenza di associazione tra le due misure.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><a href="08_correlation_files/figure-html/unnamed-chunk-3-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="08_correlation_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a></p>
-</figure>
+<div id="fig-cesd-bdi2" class="quarto-float quarto-figure quarto-figure-center anchored" width="85%" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-cesd-bdi2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="08_correlation_files/figure-html/fig-cesd-bdi2-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figura&nbsp;20.1: "><img src="08_correlation_files/figure-html/fig-cesd-bdi2-1.png" id="fig-cesd-bdi2" class="img-fluid quarto-figure quarto-figure-center anchored figure-img" style="width:85.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-cesd-bdi2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;20.1
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -822,7 +826,7 @@ r = \frac{1}{n} \sum_{i=1}^{n} \left( \frac{x_i - \bar{x}}{\sigma_x} \right) \le
 </div>
 <div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Per i dati riportati nel diagramma della <span class="quarto-unresolved-ref">?sec-zetsche-scatter</span>, la covarianza è 207.4. Il segno positivo della covarianza ci dice che tra le due variabili c’è un’associazione lineare positiva. Per capire quale sia l’intensità della relazione lineare calcoliamo la correlazione. Essendo le deviazioni standard del BDI-II e del CES-D rispettavamente uguali a 15.37 e 14.93, la correlazione diventa uguale a <span class="math inline">\(\frac{207.426}{15.38 \cdot 14.93} = 0.904.\)</span> Tale valore è prossimo a 1.0, il che vuol dire che i punti del diagramma a dispersione non si discostano troppo da una retta con una pendenza positiva.</p>
+<p>Per i dati riportati nel diagramma della <a href="#fig-cesd-bdi2" class="quarto-xref">Figura&nbsp;<span>20.1</span></a>, la covarianza è 207.4. Il segno positivo della covarianza ci dice che tra le due variabili c’è un’associazione lineare positiva. Per capire quale sia l’intensità della relazione lineare calcoliamo la correlazione. Essendo le deviazioni standard del BDI-II e del CES-D rispettavamente uguali a 15.37 e 14.93, la correlazione diventa uguale a <span class="math inline">\(\frac{207.426}{15.38 \cdot 14.93} = 0.904.\)</span> Tale valore è prossimo a 1.0, il che vuol dire che i punti del diagramma a dispersione non si discostano troppo da una retta con una pendenza positiva.</p>
 <p>Troviamo la correlazione con la funzione <code>corrcoef()</code>:</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span></span>
@@ -963,18 +967,23 @@ Nota
 <span>  <span class="fu">labs</span><span class="op">(</span>x <span class="op">=</span> <span class="cn">NULL</span>, y <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><a href="08_correlation_files/figure-html/unnamed-chunk-13-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="08_correlation_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a></p>
+<figure class="figure"><p><a href="08_correlation_files/figure-html/unnamed-chunk-12-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="08_correlation_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Tutti questi esempi rafforzano l’idea che l’assenza di correlazione lineare non significa assenza di relazione: potremmo avere strutture curve, pattern complessi o punti anomali (outlier) capaci di modificare radicalmente la forma della relazione tra le variabili.</p>
-<p>Oltre alle relazioni non lineari, esistono situazioni in cui la correlazione, da sola, può fornire un’immagine distorta dei dati. Tra queste ricordiamo due fenomeni noti come il <em>paradosso di Simpson</em> e il <em>paradosso di Berkson</em>.</p>
+<p>Oltre alle relazioni non lineari, esistono situazioni in cui la correlazione, da sola, <strong>può fornire un’immagine distorta dei dati</strong>. Tra queste ricordiamo due fenomeni noti come il <em>paradosso di Simpson</em> e il <em>paradosso di Berkson</em>.</p>
 </section><section id="paradosso-di-simpson" class="level3" data-number="20.7.2"><h3 data-number="20.7.2" class="anchored" data-anchor-id="paradosso-di-simpson">
 <span class="header-section-number">20.7.2</span> Paradosso di Simpson</h3>
-<p>Il paradosso di Simpson si verifica quando, guardando i dati raggruppati per sottogruppi, si osserva una certa relazione tra due variabili, ma aggregando i dati di tutti i sottogruppi insieme emerge una relazione opposta. In altre parole, la tendenza che appare quando si considerano i dati divisi per gruppi scompare o si inverte quando si esamina l’intero campione senza tenere conto della suddivisione in sottogruppi.</p>
-<p>Immaginiamo di avere due dipartimenti universitari, A e B. All’interno di ciascun dipartimento, la relazione tra il voto di laurea (X) e la performance in un successivo programma di specializzazione (Y) è positiva: all’aumentare del voto di laurea aumenta, in media, la performance nella scuola di specializzazione.</p>
-<p>Tuttavia, supponiamo che il Dipartimento A abbia in generale voti di laurea mediamente più bassi, ma ottime performance nella specializzazione; mentre il Dipartimento B abbia voti di laurea mediamente più alti, ma performance alla specializzazione un po’ più basse. Se uniamo tutti gli studenti dei due dipartimenti senza considerarne l’appartenenza, potremmo osservare una relazione negativa tra voto di laurea e performance, sovvertendo le conclusioni tratte guardando ai singoli sottogruppi.</p>
+<p>Il paradosso di Simpson si verifica quando, osservando i dati raggruppati per sottogruppi, si nota una certa relazione tra due variabili, ma aggregando i dati di tutti i sottogruppi insieme, emerge una relazione opposta. In altre parole, una tendenza presente all’interno di ciascun gruppo può scomparire o trasformarsi nel suo opposto quando i dati vengono combinati senza tenere conto della struttura dei sottogruppi.</p>
+<p>Supponiamo di analizzare la relazione tra il voto di laurea (<span class="math inline">\(X\)</span>) e la performance in un successivo programma di specializzazione (<span class="math inline">\(Y\)</span>) in due dipartimenti universitari, A e B. All’interno di ciascun dipartimento, osserviamo una relazione positiva: gli studenti con voti di laurea più alti tendono, in media, a ottenere performance migliori nella specializzazione. Tuttavia, i due dipartimenti differiscono sistematicamente nei livelli medi:</p>
+<ul>
+<li>il <strong>Dipartimento A</strong> ha voti di laurea mediamente più bassi, ma performance nella specializzazione generalmente più elevate;</li>
+<li>il <strong>Dipartimento B</strong> ha voti di laurea mediamente più alti, ma performance nella specializzazione leggermente inferiori.</li>
+</ul>
+<p>Quando i dati vengono aggregati ignorando l’appartenenza dipartimentale, queste differenze strutturali dominano la relazione globale, producendo una correlazione complessiva negativa tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>.</p>
+<p>Questo fenomeno non è un’anomalia statistica, ma il risultato dell’interazione tra variabili confondenti e differenze sistematiche tra i gruppi.</p>
 <p>Ecco come possiamo simulare questi dati in R:</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
@@ -1023,24 +1032,41 @@ Nota
 <span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><a href="08_correlation_files/figure-html/unnamed-chunk-15-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="08_correlation_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a></p>
+<figure class="figure"><p><a href="08_correlation_files/figure-html/unnamed-chunk-14-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="08_correlation_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a></p>
 </figure>
 </div>
 </div>
 </div>
+<section id="interpretazione-dei-risultati" class="level4" data-number="20.7.2.1"><h4 data-number="20.7.2.1" class="anchored" data-anchor-id="interpretazione-dei-risultati">
+<span class="header-section-number">20.7.2.1</span> Interpretazione dei risultati</h4>
 <ul>
-<li><p><em>All’interno del Dipartimento A</em>: la correlazione tra voto di laurea (X) e performance (Y) è positiva. Ciò significa che, per gli studenti di A, avere un voto di laurea più alto è associato a una performance maggiore nella specializzazione.</p></li>
-<li><p><em>All’interno del Dipartimento B</em>: la correlazione tra X e Y è anch’essa positiva, indicando che anche nel secondo dipartimento voti più alti tendono ad accompagnarsi a performance più alte.</p></li>
-<li><p><em>Considerando entrambi i dipartimenti insieme</em>: a causa delle differenze nei livelli medi di X e Y tra i dipartimenti, unendo i dati senza distinguere il gruppo di appartenenza otteniamo una correlazione globale negativa. Questo significa che, ignorando la suddivisione in dipartimenti, sembra che aumentare il voto di laurea sia associato a una diminuzione della performance nella specializzazione — una conclusione opposta a quella tratta dall’analisi separata dei due sottogruppi.</p></li>
+<li>
+<strong>All’interno del Dipartimento A</strong>, la correlazione tra il voto di laurea (<span class="math inline">\(X\)</span>) e la performance (<span class="math inline">\(Y\)</span>) è positiva: a voti più alti corrispondono, in media, performance migliori.</li>
+<li>
+<strong>All’interno del Dipartimento B</strong>, la relazione è anch’essa positiva, indicando lo stesso andamento.</li>
+<li>
+<strong>Considerando i due dipartimenti insieme</strong>, la correlazione complessiva diventa negativa: ignorando l’appartenenza al dipartimento, sembra che voti di laurea più alti siano associati a performance peggiori.</li>
 </ul>
-<p>Questo è un esempio concreto del paradosso di Simpson: la relazione osservata in sottogruppi omogenei si inverte quando si aggregano i dati, mettendo in guardia sulla necessità di considerare con attenzione la struttura dei dati e i fattori confondenti prima di trarre conclusioni.</p>
-</section><section id="paradosso-di-berkson" class="level3" data-number="20.7.3"><h3 data-number="20.7.3" class="anchored" data-anchor-id="paradosso-di-berkson">
+<p>Questa inversione apparente non riflette un cambiamento reale nel comportamento individuale, ma emerge perché il <strong>dipartimento di appartenenza</strong> agisce come variabile confondente, influenzando sia <span class="math inline">\(X\)</span> che <span class="math inline">\(Y\)</span>.</p>
+</section><section id="significato-metodologico" class="level4" data-number="20.7.2.2"><h4 data-number="20.7.2.2" class="anchored" data-anchor-id="significato-metodologico">
+<span class="header-section-number">20.7.2.2</span> Significato metodologico</h4>
+<p>Il paradosso di Simpson mostra in modo particolarmente chiaro che:</p>
+<ul>
+<li>le relazioni statistiche <strong>non sono proprietà intrinseche dei dati</strong>, ma dipendono dal livello di analisi;</li>
+<li>l’aggregazione indiscriminata può produrre conclusioni profondamente fuorvianti;</li>
+<li>è essenziale considerare la <strong>struttura dei dati</strong>, i <strong>fattori di raggruppamento</strong> e le <strong>variabili confondenti</strong> prima di trarre inferenze causali o interpretative.</li>
+</ul>
+<p>In psicologia questo paradosso rappresenta un monito fondamentale: <strong>analizzare senza stratificare equivale spesso a perdere l’informazione più rilevante</strong>.</p>
+</section></section><section id="paradosso-di-berkson" class="level3" data-number="20.7.3"><h3 data-number="20.7.3" class="anchored" data-anchor-id="paradosso-di-berkson">
 <span class="header-section-number">20.7.3</span> Paradosso di Berkson</h3>
-<p>Il paradosso di Berkson è un fenomeno legato alla selezione del campione. Se il dataset non è rappresentativo della popolazione generale, la relazione osservata può risultare artificiale o opposta a quella esistente su un campione più ampio. Per esempio, analizzando solo ciclisti professionisti, potremmo non vedere alcuna relazione tra VO2 max e probabilità di vincere una gara, poiché tutti hanno già superato una certa soglia di VO2 max. Considerando la popolazione generale, invece, potrebbe emergere chiaramente una relazione positiva tra questi due fattori. Questo paradosso evidenzia l’importanza di considerare il processo di selezione dei dati e di chiedersi se il campione analizzato sia adeguato a rispondere alla domanda di ricerca.</p>
+<p>Il paradosso di Berkson è un fenomeno statistico che mostra come la selezione non casuale di un campione possa alterare l’associazione osservata tra due variabili, invertendone la direzione o generandone una spuria. Si verifica quando il dataset analizzato non è rappresentativo della popolazione generale, perché è sottoposto a un processo di selezione che dipende da entrambe le variabili in esame.</p>
+<p>Un esempio classico è il seguente: analizzando solo ciclisti professionisti, potremmo non osservare alcuna relazione tra la capacità aerobica (VO2 max) e la probabilità di vincere una gara. Ciò accade perché tutti i ciclisti a quel livello hanno già superato una soglia elevatissima di VO2 max, rendendo irrilevante tale variabile all’interno del gruppo selezionato. Se invece considerassimo la popolazione generale, emergerebbe chiaramente una forte relazione positiva tra i due fattori.</p>
+<p>Questo paradosso può essere generalizzato anche a situazioni psicologiche. Ad esempio, studiando l’associazione tra depressione e ansia esclusivamente in un campione di pazienti ricoverati in una struttura psichiatrica, si potrebbe osservare una correlazione nulla o negativa, poiché entrambe le condizioni sono già ampiamente rappresentate e il campione è preselezionato in base alla gravità del disagio. Nella popolazione generale, invece, le due condizioni mostrerebbero una chiara associazione positiva.</p>
+<p>Il paradosso di Berkson evidenzia quindi l’importanza critica di interrogarsi sul processo di selezione dei dati e sull’adeguatezza del campione rispetto alla domanda di ricerca. Ignorare questo aspetto può condurre a conclusioni fuorvianti.</p>
 </section><section id="limiti-delle-statistiche-riassuntive-semplici" class="level3" data-number="20.7.4"><h3 data-number="20.7.4" class="anchored" data-anchor-id="limiti-delle-statistiche-riassuntive-semplici">
 <span class="header-section-number">20.7.4</span> Limiti delle statistiche riassuntive semplici</h3>
-<p>Un esempio famoso che dimostra i limiti delle semplici statistiche descrittive — come media, deviazione standard e correlazione — è il quartetto di Anscombe. Questo insieme di quattro piccoli dataset possiede identiche medie, varianze e correlazioni tra variabili, ma rappresenta relazioni estremamente differenti tra X e Y <span class="citation" data-cites="anscombe1973graphs">(<a href="#ref-anscombe1973graphs" role="doc-biblioref">Anscombe, 1973</a>)</span>.</p>
-<p>Importiamo il dataset <code>anscombe</code> già disponibile nel pacchetto <code>datasets</code> di R:</p>
+<p>Un esempio famoso che dimostra i limiti delle semplici statistiche descrittive, come la media, la deviazione standard e la correlazione, è il quartetto di Anscombe. Questo insieme di quattro piccoli dataset ha medie, varianze e correlazioni tra variabili identiche, ma rappresenta relazioni estremamente diverse tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> <span class="citation" data-cites="anscombe1973graphs">(<a href="#ref-anscombe1973graphs" role="doc-biblioref">Anscombe, 1973</a>)</span>.</p>
+<p>Importiamo il dataset <code>anscombe</code> disponibile nel pacchetto <code>datasets</code> di R:</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"anscombe"</span><span class="op">)</span></span>
 <span></span>
@@ -1054,7 +1080,7 @@ Nota
 <span><span class="co">#&gt; 5 11 11 11  8 8.33 9.26  7.81 8.47</span></span>
 <span><span class="co">#&gt; 6 14 14 14  8 9.96 8.10  8.84 7.04</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Il dataset <code>anscombe</code> contiene quattro serie di dati (x1, y1), (x2, y2), (x3, y3) e (x4, y4), ognuna costituita da 11 coppie di valori (x, y). Per comprendere meglio le loro caratteristiche, iniziamo calcolando alcune statistiche descrittive. La funzione <code><a href="https://rdrr.io/r/base/apply.html">apply()</a></code> consente di applicare una funzione (ad esempio, <code>mean</code>) a tutte le colonne di un data frame. Usandola sulle colonne di <code>anscombe</code>, otteniamo le medie di ciascuna delle otto variabili (le quattro x e le quattro y):</p>
+<p>Il dataset <code>anscombe</code> contiene quattro serie di dati (x1, y1), (x2, y2), (x3, y3) e (x4, y4), ognuna costituita da 11 coppie di valori (x, y). Per comprenderne meglio le loro caratteristiche, iniziamo calcolando alcune statistiche descrittive. La funzione <code><a href="https://rdrr.io/r/base/apply.html">apply()</a></code> consente di applicare una funzione (ad esempio, <code>mean</code>) a tutte le colonne di un data frame. Utilizzandola sulle colonne di <code>anscombe</code>, otteniamo le medie di ciascuna delle otto variabili (le quattro x e le quattro y):</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">anscombe</span>, MARGIN <span class="op">=</span> <span class="fl">2</span>, <span class="va">mean</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  x1  x2  x3  x4  y1  y2  y3  y4 </span></span>
@@ -1081,8 +1107,8 @@ Nota
 <span><span class="co">#&gt; Correlazione tra x 3 e y 3 : 0.816 </span></span>
 <span><span class="co">#&gt; Correlazione tra x 4 e y 4 : 0.817</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Se ci limitassimo a guardare queste statistiche (media, deviazione standard, correlazione), potremmo facilmente essere indotti a concludere che i quattro dataset sono tra loro sostanzialmente indistinguibili. Tuttavia, la realtà è molto diversa. Le statistiche descrittive, prese da sole, non offrono una visione completa e possono nascondere importanti differenze nella struttura dei dati.</p>
-<p>Questa differenza diventa evidente non appena decidiamo di visualizzare i dati. La rappresentazione grafica fornisce informazioni che non emergono dalle sole statistiche riassuntive:</p>
+<p>Se ci limitassimo a osservare queste statistiche (media, deviazione standard, correlazione), potremmo facilmente concludere che i quattro dataset sono sostanzialmente indistinguibili tra loro. Tuttavia, la realtà è ben diversa. Le statistiche descrittive, prese da sole, non offrono una visione completa e possono nascondere importanti differenze nella struttura dei dati.</p>
+<p>Questa differenza diventa evidente non appena si decide di visualizzare i dati. La rappresentazione grafica fornisce informazioni che non emergono dalle sole statistiche riassuntive:</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">anscombe_m</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
@@ -1098,26 +1124,28 @@ Nota
 <span>  <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span><span class="va">set</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><a href="08_correlation_files/figure-html/unnamed-chunk-20-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="08_correlation_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a></p>
+<figure class="figure"><p><a href="08_correlation_files/figure-html/unnamed-chunk-19-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="08_correlation_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a></p>
 </figure>
 </div>
 </div>
 </div>
-<p>Osservando i grafici, notiamo subito che i quattro dataset sono profondamente diversi:</p>
+<p>Osservando i grafici, notiamo subito che i quattro dataset sono molto diversi tra loro.</p>
 <ul>
 <li>
-<em>Dataset 1:</em> Qui la relazione tra x e y è approssimativamente lineare, e la correlazione riflette in modo appropriato il legame tra le due variabili.</li>
+<em>Dataset 1:</em> qui la relazione tra x e y è approssimativamente lineare, e la correlazione riflette in modo appropriato il legame tra le due variabili.</li>
 <li>
-<em>Dataset 2:</em> Sebbene la correlazione sia simile a quella del Dataset 1, i dati mostrano una relazione curvilinea e non lineare. La semplice correlazione lineare non ne cattura la forma.</li>
+<em>Dataset 2:</em> sebbene la correlazione sia simile a quella del Dataset 1, ma i dati mostrano una relazione curvilinea e non lineare. La semplice correlazione lineare non riesce a coglierne la forma.</li>
 <li>
-<em>Dataset 3:</em> La presenza di un singolo outlier distorce la percezione della relazione tra le variabili, altrimenti lineare. La correlazione alta è influenzata in modo sproporzionato da questo punto anomalo.</li>
+<em>Dataset 3:</em> la presenza di un singolo outlier distorce la percezione della relazione lineare tra le variabili. La correlazione elevata è influenzata in modo sproporzionato da questo punto anomalo.</li>
 <li>
-<em>Dataset 4:</em> Qui i dati non mostrano alcuna relazione lineare. La correlazione elevata è il frutto di un pattern fortemente atipico (ad esempio, una sola coppia di punti allineata).</li>
+<em>Dataset 4:</em> in questo caso, i dati non mostrano alcuna relazione lineare. La correlazione elevata è il risultato di un pattern fortemente atipico (per esempio, una sola coppia di punti allineati).</li>
 </ul>
-<p>Il quartetto di Anscombe mette in luce un principio fondamentale: statistiche descrittive come media, deviazione standard e correlazione non sono sempre sufficienti per comprendere la natura dei dati. La visualizzazione grafica è essenziale per cogliere relazioni, pattern non lineari, outlier e altre caratteristiche che le semplici statistiche non riescono a rivelare. In definitiva, questo esempio dimostra che analizzare i dati soltanto attraverso poche statistiche di sintesi può portare a conclusioni fuorvianti, mentre l’integrazione con la rappresentazione grafica fornisce una visione più completa e accurata.</p>
+<p>Il quartetto di Anscombe mette in luce un principio fondamentale: le statistiche descrittive, come la media, la deviazione standard e la correlazione, non sono sempre sufficienti per comprendere la natura dei dati. La visualizzazione grafica è essenziale per cogliere relazioni, pattern non lineari, outlier e altre caratteristiche che le statistiche descrittive non riescono a rivelare. In definitiva, questo esempio dimostra che l’analisi dei dati basata esclusivamente su poche statistiche di sintesi può condurre a conclusioni fuorvianti, mentre l’integrazione con la rappresentazione grafica offre una visione più completa e accurata.</p>
 </section></section><section id="riflessioni-conclusive" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="riflessioni-conclusive">Riflessioni conclusive</h2>
-<p>La covarianza e la correlazione sono strumenti preziosi per capire l’intensità e la direzione lineare di una relazione tra due variabili. Tuttavia, non dobbiamo confondere la loro semplicità con completezza d’informazione. Una correlazione nulla non implica assenza di relazione, ma solo assenza di una relazione lineare. Inoltre, il paradosso di Simpson e il paradosso di Berkson dimostrano che la semplice osservazione di correlazioni può essere fuorviante se non si tiene conto della struttura dei dati o del processo di selezione del campione.</p>
-<p>Infine, esempi come il quartetto di Anscombe sottolineano quanto sia fondamentale accompagnare le statistiche riassuntive con analisi grafiche e un’attenzione costante ai possibili pattern non lineari, agli outlier e alle caratteristiche peculiari del dataset. Nel prossimo capitolo esamineremo approcci che consentono di avvicinarsi alla comprensione causale dei fenomeni, andando oltre la semplice osservazione dell’associazione tra variabili.</p>
+<p>La covarianza e la correlazione sono strumenti fondamentali per descrivere la direzione e l’intensità di una relazione lineare tra due variabili. Tuttavia, la loro apparente semplicità non deve essere confusa con una completezza informativa. Una correlazione pari a zero non indica l’assenza di relazione in senso assoluto, ma segnala soltanto l’assenza di un legame <strong>lineare</strong>.</p>
+<p>Inoltre, fenomeni come il <strong>paradosso di Simpson</strong> e il <strong>paradosso di Berkson</strong> mostrano chiaramente come le correlazioni possano risultare fuorvianti quando si ignorano la <strong>struttura dei dati</strong> o il <strong>processo di selezione del campione</strong>. In questi casi, la relazione osservata riflette più il modo in cui i dati sono stati raccolti o aggregati che il legame reale tra le variabili.</p>
+<p>Esempi classici come il <strong>quartetto di Anscombe</strong> rafforzano ulteriormente questo punto, evidenziando l’importanza di affiancare alle statistiche riassuntive un’attenta <strong>analisi grafica</strong>. Solo così è possibile individuare pattern non lineari, valori anomali e peculiarità del dataset che le misure sintetiche da sole non riescono a catturare.</p>
+<p>Nel prossimo capitolo, introdurremo approcci che permettono di andare oltre la semplice descrizione dell’associazione, avvicinandoci a una comprensione più profonda dei meccanismi sottostanti e ponendo le basi per un’analisi di tipo causale dei fenomeni psicologici.</p>
 </section><section id="esercizi" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="esercizi">Esercizi</h2>
 <div class="callout callout-style-default callout-tip callout-titled" title="Esercizio">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
@@ -1471,12 +1499,12 @@ Nota
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span><span class="co">#&gt;  [1] gridExtra_2.3         inline_0.3.21         sandwich_3.1-1       </span></span>
-<span><span class="co">#&gt;  [4] rlang_1.1.6           magrittr_2.0.4        multcomp_1.4-29      </span></span>
+<span><span class="co">#&gt;  [4] rlang_1.1.7           magrittr_2.0.4        multcomp_1.4-29      </span></span>
 <span><span class="co">#&gt;  [7] snakecase_0.11.1      otel_0.2.0            compiler_4.5.2       </span></span>
 <span><span class="co">#&gt; [10] mgcv_1.9-4            vctrs_0.6.5           stringr_1.6.0        </span></span>
 <span><span class="co">#&gt; [13] pkgconfig_2.0.3       arrayhelpers_1.1-0    fastmap_1.2.0        </span></span>
 <span><span class="co">#&gt; [16] backports_1.5.0       labeling_0.4.3        utf8_1.2.6           </span></span>
-<span><span class="co">#&gt; [19] rmarkdown_2.30        tzdb_0.5.0            purrr_1.2.0          </span></span>
+<span><span class="co">#&gt; [19] rmarkdown_2.30        tzdb_0.5.0            purrr_1.2.1          </span></span>
 <span><span class="co">#&gt; [22] xfun_0.55             cachem_1.1.0          jsonlite_2.0.0       </span></span>
 <span><span class="co">#&gt; [25] broom_1.0.11          parallel_4.5.2        R6_2.6.1             </span></span>
 <span><span class="co">#&gt; [28] stringi_1.8.7         RColorBrewer_1.1-3    lubridate_1.9.4      </span></span>
