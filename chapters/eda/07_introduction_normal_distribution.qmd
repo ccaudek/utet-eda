@@ -116,6 +116,7 @@ Questi due parametri sono sufficienti a descrivere sia la posizione sia la varia
 Ecco come appare la distribuzione normale con diversi valori di $\mu$ e $\sigma$:
 
 ```{r}
+#| echo: false
 # Diverse medie, stessa sd
 p1 <- tibble(x = seq(-5, 15, 0.1)) |>
   mutate(
@@ -158,12 +159,16 @@ p2 <- tibble(x = seq(-10, 10, 0.1)) |>
 ```
 
 ```{r}
+#| echo: false
+#| label: fig-normal-params-1
+#| fig-cap: "Effetto del parametro μ sulla forma della distribuzione normale"
 p1
 ```
 
 ```{r}
-#| label: fig-normal-params-1
-#| fig-cap: "Effetto dei parametri μ e σ sulla forma della distribuzione normale"
+#| echo: false
+#| label: fig-normal-params-2
+#| fig-cap: "Effetto del parametro σ sulla forma della distribuzione normale"
 p2
 ```
 
@@ -211,6 +216,7 @@ Per **qualsiasi distribuzione normale**, indipendentemente dai valori specifici 
 Queste proporzioni forniscono una guida pratica per interpretare la variabilità dei dati e per valutare quanto un’osservazione sia tipica o estrema rispetto alla distribuzione di riferimento.
 
 ```{r}
+#| echo: false
 #| label: fig-empirical-rule
 #| fig-cap: "La regola empirica 68-95-99.7 per la distribuzione normale"
 #| fig-height: 5
@@ -222,35 +228,44 @@ df <- data.frame(x = x, y = y)
 
 p <- ggplot(df, aes(x = x, y = y)) +
   geom_line(linewidth = 1.2) +
-  labs(x = "Deviazioni standard dalla media",
-       y = "Densità",
-       title = "La regola empirica 68-95-99.7",
-       subtitle = "Percentuale di dati entro 1, 2 e 3 deviazioni standard") +
-  # Aree
-  geom_area(data = subset(df, x >= -3 & x <= 3), fill = "lightblue", alpha = 0.3) +
-  geom_area(data = subset(df, x >= -2 & x <= 2), fill = "lightblue", alpha = 0.3) +
-  geom_area(data = subset(df, x >= -1 & x <= 1), fill = "lightblue", alpha = 0.4) +
-  # Linee verticali
+  labs(
+    x = "Deviazioni standard dalla media",
+    y = "Densità",
+    title = "La regola empirica 68-95-99.7",
+    subtitle = "Percentuale di dati entro 1, 2 e 3 deviazioni standard"
+  ) +
+  # Aree (disegnale dal centro verso l'esterno per evitare effetti strani)
+  geom_area(data = subset(df, x >= -3 & x <= 3), fill = "lightblue", alpha = 0.25) +
+  geom_area(data = subset(df, x >= -2 & x <= 2), fill = "lightblue", alpha = 0.25) +
+  geom_area(data = subset(df, x >= -1 & x <= 1), fill = "lightblue", alpha = 0.35) +
   geom_vline(xintercept = c(-3, -2, -1, 0, 1, 2, 3),
              linetype = "dashed", alpha = 0.5) +
-  # Annotazioni (spostate in x per non sovrapporsi)
-  annotate("text", x = 0,  y = 0.15, label = "68%",
+  annotate("text", x = 0,   y = 0.15, label = "68%",
            size = 5, fontface = "bold", color = "darkblue") +
   annotate("text", x = -1.6, y = 0.06, label = "95%",
            size = 5, fontface = "bold", color = "darkblue") +
   annotate("text", x = 2.2, y = 0.02, label = "99.7%",
            size = 5, fontface = "bold", color = "darkblue") +
-  scale_x_continuous(breaks = -3:3,
-                     labels = c("-3σ", "-2σ", "-1σ", "μ", "+1σ", "+2σ", "+3σ"))
+  scale_x_continuous(
+    breaks = -3:3,
+    labels = c("-3σ", "-2σ", "-1σ", "μ", "+1σ", "+2σ", "+3σ")
+  ) +
+  # Forza limiti (soprattutto y) e lascia "respiro" sotto
+  coord_cartesian(xlim = c(-3.5, 3.5), ylim = c(0, 0.42), clip = "off") +
+  theme_minimal() +
+  theme(
+    plot.margin = margin(12, 12, 18, 12) # più margine in basso
+  )
 
 p
 ```
 
 ### Applicazione pratica: Test del QI
 
-Riprendiamo l'esempio dei punteggi di QI (media = 100, deviazione standard = 15). Applicando la regola empirica:
+Riprendiamo l'esempio dei punteggi di QI (media = 100, deviazione standard = 15). Applicando la regola empirica otteniamo:
 
 ```{r}
+#| echo: false
 mu_qi <- 100
 sd_qi <- 15
 
@@ -549,9 +564,10 @@ In questo caso, i punti si allineano bene lungo la linea rossa, confermando che 
 
 ### Interpretare deviazioni dalla normalità
 
-Il QQ-plot rivela diversi tipi di non-normalità:
+Il QQ-plot rivela diversi tipi di non-normalità.
 
 ```{r fig.asp=1}
+#| echo: false
 #| label: fig-qqplot-patterns
 #| fig-cap: "Patterns comuni nei QQ-plots e la loro interpretazione"
 #| fig-height: 8
