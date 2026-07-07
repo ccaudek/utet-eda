@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.26">
+<meta name="generator" content="quarto-1.9.38">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
 <title>21&nbsp; Dalla correlazione alla causalità – Analisi esplorativa dei dati in psicologia</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -74,6 +80,7 @@ div.csl-indent {
   margin-left: 2em;
 }</style>
 
+
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../../site_libs/clipboard/clipboard.min.js"></script>
@@ -86,22 +93,22 @@ div.csl-indent {
 <link href="../../style/gauss.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-b758ccaa5987ceb1b75504551e579abf.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-0a6b7249c26820e032cb0bd839ff02b1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-88f89515ec50d56ed60c0d65bb29dbd0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-12c7548f543ff79fe76bca8cab42d0cf.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-88f89515ec50d56ed60c0d65bb29dbd0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-a0bb4f8876326eb7771edc79fa342270.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-7c5efe83671fda2688731f9f1d4acab0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-a0bb4f8876326eb7771edc79fa342270.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script src="../../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="../../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
-<link href="../../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><script id="quarto-search-options" type="application/json">{
+<link href="../../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -127,14 +134,22 @@ div.csl-indent {
     "search-submit-button-title": "Inviare",
     "search-label": "Ricerca"
   }
-}</script><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-QT5S3P9D31"></script><script type="text/javascript">
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-QT5S3P9D31"></script>
+
+<script type="text/javascript">
 
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
-</script><style>html{ scroll-behavior: smooth; }</style>
-<script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script><script type="text/javascript">
+</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
 const typesetMath = (el) => {
   if (window.MathJax) {
     // MathJax Typeset
@@ -159,8 +174,11 @@ const typesetMath = (el) => {
 window.Quarto = {
   typesetMath
 };
-</script><link rel="stylesheet" href="../../style/custom.css">
+</script>
+
+<link rel="stylesheet" href="../../style/custom.css">
 </head>
+
 <body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
       const mode = bsSheetEl.getAttribute("data-mode");
@@ -326,7 +344,9 @@ window.Quarto = {
   </script>
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
@@ -337,9 +357,13 @@ window.Quarto = {
         <i class="bi bi-search"></i>
       </button>
     </div>
-  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="../../">Analisi esplorativa dei dati in psicologia</a> 
         <div class="sidebar-tools-main tools-wide">
@@ -360,7 +384,7 @@ window.Quarto = {
         </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-<li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Analisi esplorativa dei dati in psicologia</span></span></a>
@@ -380,8 +404,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/02_key_notions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Concetti chiave</span></span></a>
@@ -406,7 +430,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../chapters/R/introduction_r_lang.html" class="sidebar-item-text sidebar-link">
@@ -415,8 +439,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/01_r_syntax.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Un approccio moderno all’analisi dei dati</span></span></a>
@@ -465,7 +489,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../chapters/eda/introduction_eda.html" class="sidebar-item-text sidebar-link">
@@ -474,8 +498,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/01_project_structure.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Il ciclo di vita di un progetto di analisi dei dati</span></span></a>
@@ -529,14 +553,8 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Outlier</span></span></a>
   </div>
 </li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../chapters/eda/12_gauss.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Assunzione di gaussianità e trasformazioni dei dati</span></span></a>
-  </div>
-</li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
@@ -545,34 +563,41 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/epiloque/epiloque.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Considerazioni conclusive</span></a>
   </div>
 </li>
       </ul>
-</li>
+  </li>
     </ul>
-</div>
-</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Sommario</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Sommario</h2>
    
   <ul class="collapse">
-<li><a href="#intuizioni-quotidiane-di-causalit%C3%A0" id="toc-intuizioni-quotidiane-di-causalità" class="nav-link active" data-scroll-target="#intuizioni-quotidiane-di-causalit%C3%A0"><span class="header-section-number">21.1</span> Intuizioni quotidiane di causalità</a></li>
+  <li><a href="#intuizioni-quotidiane-di-causalità" id="toc-intuizioni-quotidiane-di-causalità" class="nav-link active" data-scroll-target="#intuizioni-quotidiane-di-causalità"><span class="header-section-number">21.1</span> Intuizioni quotidiane di causalità</a></li>
   <li><a href="#formalizzare-i-controfattuali" id="toc-formalizzare-i-controfattuali" class="nav-link" data-scroll-target="#formalizzare-i-controfattuali"><span class="header-section-number">21.2</span> Formalizzare i controfattuali</a></li>
-  <li><a href="#perch%C3%A9-correlazione-non-%C3%A8-causalit%C3%A0-il-salto-concettuale" id="toc-perché-correlazione-non-è-causalità-il-salto-concettuale" class="nav-link" data-scroll-target="#perch%C3%A9-correlazione-non-%C3%A8-causalit%C3%A0-il-salto-concettuale"><span class="header-section-number">21.3</span> Perché correlazione non è causalità: il salto concettuale</a></li>
+  <li><a href="#perché-correlazione-non-è-causalità-il-salto-concettuale" id="toc-perché-correlazione-non-è-causalità-il-salto-concettuale" class="nav-link" data-scroll-target="#perché-correlazione-non-è-causalità-il-salto-concettuale"><span class="header-section-number">21.3</span> Perché correlazione non è causalità: il salto concettuale</a></li>
   <li><a href="#vedere-il-confondimento-in-azione-simulazioni" id="toc-vedere-il-confondimento-in-azione-simulazioni" class="nav-link" data-scroll-target="#vedere-il-confondimento-in-azione-simulazioni"><span class="header-section-number">21.4</span> Vedere il confondimento in azione: simulazioni</a></li>
   <li><a href="#oltre-il-confondimento-mediazione-e-moderazione" id="toc-oltre-il-confondimento-mediazione-e-moderazione" class="nav-link" data-scroll-target="#oltre-il-confondimento-mediazione-e-moderazione"><span class="header-section-number">21.5</span> Oltre il confondimento: mediazione e moderazione</a></li>
   <li><a href="#un-esempio-numerico-quando-lassociazione-inganna" id="toc-un-esempio-numerico-quando-lassociazione-inganna" class="nav-link" data-scroll-target="#un-esempio-numerico-quando-lassociazione-inganna"><span class="header-section-number">21.6</span> Un esempio numerico: quando l’associazione inganna</a></li>
   <li><a href="#misure-di-effetto-scale-diverse-per-comunicare-i-risultati" id="toc-misure-di-effetto-scale-diverse-per-comunicare-i-risultati" class="nav-link" data-scroll-target="#misure-di-effetto-scale-diverse-per-comunicare-i-risultati"><span class="header-section-number">21.7</span> Misure di effetto: scale diverse per comunicare i risultati</a></li>
-  </ul><div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/eda/09_causality_intro.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
+  </ul>
+<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/eda/09_causality_intro.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/09_causality_intro.html"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Dalla correlazione alla causalità</span></a></li></ol></nav><div class="quarto-title">
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/09_causality_intro.html"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Dalla correlazione alla causalità</span></a></li></ol></nav>
+<div class="quarto-title">
 <h1 class="title"><span id="sec-causality-intro" class="quarto-section-identifier"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Dalla correlazione alla causalità</span></span></h1>
 </div>
 
@@ -587,7 +612,10 @@ window.Quarto = {
   
 
 
-</header><div class="callout callout-style-simple callout-note no-icon">
+</header>
+
+
+<div class="callout callout-style-simple callout-note no-icon">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
@@ -608,18 +636,15 @@ window.Quarto = {
 </div>
 <div class="callout-body-container callout-body">
 <ul>
-<li>
-<strong>Controfattuali</strong>: l’effetto causale è la differenza tra ciò che accade con il trattamento e ciò che accadrebbe senza.</li>
-<li>
-<strong>Confondimento</strong>: quando una terza variabile influenza sia la causa che l’effetto, la correlazione osservata può essere fuorviante.</li>
-<li>
-<strong>Randomizzazione</strong>: assegnare casualmente il trattamento rende i gruppi comparabili, permettendo di stimare effetti causali.</li>
-<li>
-<strong>Mediazione vs confondimento</strong>: distinguere quando una variabile spiega il meccanismo causale da quando lo distorce.</li>
+<li><strong>Controfattuali</strong>: l’effetto causale è la differenza tra ciò che accade con il trattamento e ciò che accadrebbe senza.</li>
+<li><strong>Confondimento</strong>: quando una terza variabile influenza sia la causa che l’effetto, la correlazione osservata può essere fuorviante.</li>
+<li><strong>Randomizzazione</strong>: assegnare casualmente il trattamento rende i gruppi comparabili, permettendo di stimare effetti causali.</li>
+<li><strong>Mediazione vs confondimento</strong>: distinguere quando una variabile spiega il meccanismo causale da quando lo distorce.</li>
 </ul>
 </div>
 </div>
-<section id="panoramica-del-capitolo" class="level3 unnumbered unlisted"><h3 class="unnumbered unlisted anchored" data-anchor-id="panoramica-del-capitolo">Panoramica del capitolo</h3>
+<section id="panoramica-del-capitolo" class="level3 unnumbered unlisted">
+<h3 class="unnumbered unlisted anchored" data-anchor-id="panoramica-del-capitolo">Panoramica del capitolo</h3>
 <ul>
 <li>Comprendere cosa significa “effetto causale” in termini controfattuali.</li>
 <li>Distinguere tra associazione osservata e effetto causale.</li>
@@ -659,22 +684,21 @@ window.Quarto = {
 <div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"code"</span>, <span class="st">"_common.R"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/source.html">source</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"code"</span>, <span class="st">"_common.R"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">source</span>()</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
 </div>
-</section><section id="intuizioni-quotidiane-di-causalità" class="level2" data-number="21.1"><h2 data-number="21.1" class="anchored" data-anchor-id="intuizioni-quotidiane-di-causalità">
-<span class="header-section-number">21.1</span> Intuizioni quotidiane di causalità</h2>
+</section>
+<section id="intuizioni-quotidiane-di-causalità" class="level2" data-number="21.1">
+<h2 data-number="21.1" class="anchored" data-anchor-id="intuizioni-quotidiane-di-causalità"><span class="header-section-number">21.1</span> Intuizioni quotidiane di causalità</h2>
 <p>Nella vita di tutti i giorni formuliamo continuamente inferenze causali, spesso in modo implicito e inconsapevole. Quando uno studente si chiede: “Se ripasso mentalmente quell’argomento prima dell’esame, mi sentirò meno ansioso?”, sta ponendo una vera e propria domanda causale. È presente un’azione potenziale, il ripasso mentale, che in termini statistici può essere interpretato come un trattamento, e un esito di interesse, il livello di ansia.</p>
 <p>Queste intuizioni spontanee non sono vaghe o imprecise, ma riflettono una struttura logica ben definita che la statistica moderna ha formalizzato attraverso il concetto di <strong>controfattuale</strong>. L’idea, nella sua essenza, è semplice ma estremamente potente.</p>
 <p>Per stabilire se il ripasso mentale <em>causa</em> una riduzione dell’ansia, dovremmo poter confrontare due scenari alternativi riferiti <strong>allo stesso studente e allo stesso momento</strong>:</p>
 <ol type="1">
-<li>
-<strong>Scenario A</strong>: lo studente effettua il ripasso mentale e osserviamo il suo livello di ansia.</li>
-<li>
-<strong>Scenario B</strong>: lo stesso studente, nelle medesime condizioni, <em>non</em> effettua il ripasso e osserviamo il suo livello di ansia.</li>
+<li><strong>Scenario A</strong>: lo studente effettua il ripasso mentale e osserviamo il suo livello di ansia.</li>
+<li><strong>Scenario B</strong>: lo stesso studente, nelle medesime condizioni, <em>non</em> effettua il ripasso e osserviamo il suo livello di ansia.</li>
 </ol>
 <p>La differenza tra i livelli di ansia osservati in questi due scenari rappresenterebbe l’<strong>effetto causale</strong> del ripasso mentale.</p>
 <p>Il problema fondamentale dell’inferenza causale è che <strong>solo uno di questi due scenari può essere osservato</strong>: lo studente o ripassa, oppure non lo fa. L’altro scenario rimane inevitabilmente non osservabile, ovvero <em>controfattuale</em>. Proprio questa impossibilità, ovvero osservare simultaneamente ciò che è accaduto e ciò che sarebbe accaduto in alternativa, è al cuore delle difficoltà metodologiche dell’analisi causale e motiva lo sviluppo di strumenti statistici più sofisticati, che verranno introdotti nei capitoli successivi.</p>
@@ -691,14 +715,13 @@ window.Quarto = {
 <p>Per ogni individuo possiamo osservare solo uno dei due esiti potenziali. L’altro rimane invisibile. Questo è chiamato il <em>problema fondamentale dell’inferenza causale</em> <span class="citation" data-cites="holland1986statistics">(<a href="#ref-holland1986statistics" role="doc-biblioref">Holland, 1986</a>)</span>.</p>
 </div>
 </div>
-</section><section id="formalizzare-i-controfattuali" class="level2" data-number="21.2"><h2 data-number="21.2" class="anchored" data-anchor-id="formalizzare-i-controfattuali">
-<span class="header-section-number">21.2</span> Formalizzare i controfattuali</h2>
+</section>
+<section id="formalizzare-i-controfattuali" class="level2" data-number="21.2">
+<h2 data-number="21.2" class="anchored" data-anchor-id="formalizzare-i-controfattuali"><span class="header-section-number">21.2</span> Formalizzare i controfattuali</h2>
 <p>La statistica rende esplicita l’intuizione quotidiana appena discussa traducendola in un linguaggio formale. Per ogni individuo esposto a una possibile azione o intervento, che chiameremo <strong>trattamento</strong>, possiamo concettualmente distinguere due <strong>esiti potenziali</strong>:</p>
 <ul>
-<li>
-<span class="math inline">\(Y^{(1)}\)</span>: l’esito che si osserverebbe se l’individuo <strong>ricevesse</strong> il trattamento;</li>
-<li>
-<span class="math inline">\(Y^{(0)}\)</span>: l’esito che si osserverebbe se lo stesso individuo <strong>non ricevesse</strong> il trattamento.</li>
+<li><span class="math inline">\(Y^{(1)}\)</span>: l’esito che si osserverebbe se l’individuo <strong>ricevesse</strong> il trattamento;</li>
+<li><span class="math inline">\(Y^{(0)}\)</span>: l’esito che si osserverebbe se lo stesso individuo <strong>non ricevesse</strong> il trattamento.</li>
 </ul>
 <p>Questi due esiti rappresentano i possibili risultati alternativi associati alle due condizioni di interesse. Naturalmente, per ciascun individuo possiamo osservare <strong>al più uno</strong> di questi due esiti.</p>
 <p>Se indichiamo con <span class="math inline">\(A\)</span> il trattamento effettivamente ricevuto, dove <span class="math inline">\(A = 1\)</span> se l’individuo riceve il trattamento e <span class="math inline">\(A = 0\)</span> altrimenti, l’esito osservato <span class="math inline">\(Y\)</span> può essere scritto come:</p>
@@ -711,8 +734,8 @@ Y^{(0)} &amp; \text{se } A = 0.
 \]</span></p>
 <p>Questa relazione esprime il <strong>principio di consistenza</strong>: l’esito che osserviamo coincide con l’esito potenziale corrispondente al trattamento effettivamente ricevuto. In altre parole, non esiste ambiguità tra ciò che accade e il modo in cui definiamo gli esiti potenziali: l’osservazione è semplicemente una realizzazione di uno dei due scenari controfattuali possibili.</p>
 <p>Questo formalismo costituisce il punto di partenza per tutta l’inferenza causale moderna e rende esplicita, in termini matematici, l’idea intuitiva secondo cui ogni domanda causale implica un confronto tra ciò che è accaduto e ciò che sarebbe potuto accadere in condizioni alternative.</p>
-<section id="effetto-causale-individuale-e-medio" class="level3" data-number="21.2.1"><h3 data-number="21.2.1" class="anchored" data-anchor-id="effetto-causale-individuale-e-medio">
-<span class="header-section-number">21.2.1</span> Effetto causale individuale e medio</h3>
+<section id="effetto-causale-individuale-e-medio" class="level3" data-number="21.2.1">
+<h3 data-number="21.2.1" class="anchored" data-anchor-id="effetto-causale-individuale-e-medio"><span class="header-section-number">21.2.1</span> Effetto causale individuale e medio</h3>
 <p>A livello individuale, l’<strong>effetto causale</strong> di un trattamento può essere definito come la differenza tra i due esiti potenziali associati allo stesso individuo:</p>
 <p><span class="math display">\[
 \tau_i = Y_i^{(1)} - Y_i^{(0)} .
@@ -724,19 +747,22 @@ Y^{(0)} &amp; \text{se } A = 0.
 \]</span></p>
 <p>In termini intuitivi, ci stiamo chiedendo: <em>«Quale sarebbe, in media, la differenza tra un mondo in cui tutti ricevono il trattamento e un mondo in cui nessuno lo riceve?»</em></p>
 <p>Questa è la quantità che la maggior parte degli studi empirici cerca di stimare.</p>
-</section><section id="lassunzione-sutva" class="level3" data-number="21.2.2"><h3 data-number="21.2.2" class="anchored" data-anchor-id="lassunzione-sutva">
-<span class="header-section-number">21.2.2</span> L’assunzione SUTVA</h3>
+</section>
+<section id="lassunzione-sutva" class="level3" data-number="21.2.2">
+<h3 data-number="21.2.2" class="anchored" data-anchor-id="lassunzione-sutva"><span class="header-section-number">21.2.2</span> L’assunzione SUTVA</h3>
 <p>Affinché queste definizioni siano coerenti e interpretabili, è necessario assumere alcune condizioni di base, riassunte nell’acronimo <strong>SUTVA</strong> (<em>Stable Unit Treatment Value Assumption</em>). In una formulazione intuitiva, SUTVA include due idee fondamentali:</p>
 <ol type="1">
 <li><p><strong>Assenza di interferenza</strong> L’esito di un individuo non deve dipendere dal trattamento ricevuto da altri individui. Ad esempio, se uno studente effettua un ripasso mentale prima dell’esame, questo non dovrebbe influenzare il livello di ansia di un altro studente.</p></li>
 <li><p><strong>Unicità del trattamento</strong> Il trattamento deve essere definito in modo chiaro e univoco. Dire che uno studente “fa ripasso” deve avere lo stesso significato per tutti: stessa modalità, stessa intensità, stesso contesto.</p></li>
 </ol>
 <p>Queste assunzioni possono sembrare astratte, ma hanno conseguenze pratiche rilevanti. In studi su interventi di gruppo, ad esempio, l’assenza di interferenza può essere difficile da sostenere. Allo stesso modo, una definizione vaga del trattamento può introdurre ambiguità, rendendo poco chiara l’interpretazione dell’effetto stimato.</p>
-</section></section><section id="perché-correlazione-non-è-causalità-il-salto-concettuale" class="level2" data-number="21.3"><h2 data-number="21.3" class="anchored" data-anchor-id="perché-correlazione-non-è-causalità-il-salto-concettuale">
-<span class="header-section-number">21.3</span> Perché correlazione non è causalità: il salto concettuale</h2>
+</section>
+</section>
+<section id="perché-correlazione-non-è-causalità-il-salto-concettuale" class="level2" data-number="21.3">
+<h2 data-number="21.3" class="anchored" data-anchor-id="perché-correlazione-non-è-causalità-il-salto-concettuale"><span class="header-section-number">21.3</span> Perché correlazione non è causalità: il salto concettuale</h2>
 <p>Una volta chiarito cosa intendiamo per effetto causale, diventa più facile comprendere perché questo concetto <strong>non coincide</strong> con la semplice associazione osservata nei dati.</p>
-<section id="due-domande-diverse" class="level3" data-number="21.3.1"><h3 data-number="21.3.1" class="anchored" data-anchor-id="due-domande-diverse">
-<span class="header-section-number">21.3.1</span> Due domande diverse</h3>
+<section id="due-domande-diverse" class="level3" data-number="21.3.1">
+<h3 data-number="21.3.1" class="anchored" data-anchor-id="due-domande-diverse"><span class="header-section-number">21.3.1</span> Due domande diverse</h3>
 <p>Quando parliamo di <strong>effetto causale</strong>, stiamo formulando una domanda controfattuale che coinvolge la <em>stessa popolazione</em> in due scenari alternativi:</p>
 <p><span class="math display">\[
 \text{Effetto causale} = \mathbb{E}[Y^{(1)}] - \mathbb{E}[Y^{(0)}].
@@ -747,8 +773,9 @@ Y^{(0)} &amp; \text{se } A = 0.
 \]</span></p>
 <p>La differenza è sottile ma cruciale. Nel caso causale immaginiamo cosa accadrebbe <em>alla stessa popolazione</em> sotto due condizioni alternative. Nel caso associativo, invece, confrontiamo gruppi di individui che <strong>potrebbero differire già prima del trattamento</strong> per molte altre caratteristiche rilevanti.</p>
 <p>È proprio questa discrepanza tra “mondi ipotetici” e “gruppi osservati” che rende l’inferenza causale più complessa della semplice analisi delle correlazioni e che motiva lo sviluppo di disegni di studio e metodi statistici specificamente pensati per avvicinarsi, per quanto possibile, all’effetto causale di interesse.</p>
-</section><section id="il-problema-del-confondimento" class="level3" data-number="21.3.2"><h3 data-number="21.3.2" class="anchored" data-anchor-id="il-problema-del-confondimento">
-<span class="header-section-number">21.3.2</span> Il problema del confondimento</h3>
+</section>
+<section id="il-problema-del-confondimento" class="level3" data-number="21.3.2">
+<h3 data-number="21.3.2" class="anchored" data-anchor-id="il-problema-del-confondimento"><span class="header-section-number">21.3.2</span> Il problema del confondimento</h3>
 <p>Immaginiamo che a ricevere un trattamento, ad esempio una <strong>tecnica di rilassamento</strong>, siano soprattutto gli studenti che partono da livelli di ansia più elevati. In questo caso, il semplice confronto tra chi ha ricevuto il trattamento e chi non lo ha ricevuto <strong>non riflette soltanto l’effetto del trattamento</strong>, ma anche il fatto che i due gruppi erano diversi <em>già prima</em> dell’intervento.</p>
 <p>Questa situazione prende il nome di <strong>confondimento</strong>. Il confondimento si verifica quando esistono variabili che:</p>
 <ul>
@@ -773,11 +800,13 @@ Y^{(0)} &amp; \text{se } A = 0.
 </ul>
 </div>
 </div>
-</section></section><section id="vedere-il-confondimento-in-azione-simulazioni" class="level2" data-number="21.4"><h2 data-number="21.4" class="anchored" data-anchor-id="vedere-il-confondimento-in-azione-simulazioni">
-<span class="header-section-number">21.4</span> Vedere il confondimento in azione: simulazioni</h2>
+</section>
+</section>
+<section id="vedere-il-confondimento-in-azione-simulazioni" class="level2" data-number="21.4">
+<h2 data-number="21.4" class="anchored" data-anchor-id="vedere-il-confondimento-in-azione-simulazioni"><span class="header-section-number">21.4</span> Vedere il confondimento in azione: simulazioni</h2>
 <p>Per rendere concreti questi concetti, utilizziamo delle <strong>simulazioni</strong> in R. Le simulazioni hanno un vantaggio cruciale: ci permettono di lavorare in un contesto in cui <strong>conosciamo il vero meccanismo generativo dei dati</strong>, cosa che nella ricerca empirica reale non è mai possibile.</p>
-<section id="simulazione-1-confondimento-senza-effetto-causale" class="level3" data-number="21.4.1"><h3 data-number="21.4.1" class="anchored" data-anchor-id="simulazione-1-confondimento-senza-effetto-causale">
-<span class="header-section-number">21.4.1</span> Simulazione 1: confondimento senza effetto causale</h3>
+<section id="simulazione-1-confondimento-senza-effetto-causale" class="level3" data-number="21.4.1">
+<h3 data-number="21.4.1" class="anchored" data-anchor-id="simulazione-1-confondimento-senza-effetto-causale"><span class="header-section-number">21.4.1</span> Simulazione 1: confondimento senza effetto causale</h3>
 <p>Immaginiamo una situazione in cui il trattamento — ad esempio l’uso di una strategia di <em>reappraisal</em> per ridurre l’ansia — viene scelto più spesso da chi è <strong>naturalmente più ansioso</strong>. Assumiamo però che il trattamento, di per sé, <strong>non abbia alcun effetto causale</strong> sull’esito.</p>
 <p>In questo scenario:</p>
 <ul>
@@ -786,80 +815,87 @@ Y^{(0)} &amp; \text{se } A = 0.
 </ul>
 <p>Nonostante ciò, il confronto tra trattati e non trattati produrrà un’associazione apparente.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
-<span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">1000</span></span>
-<span></span>
-<span><span class="co"># Generiamo ansia di tratto (confondente)</span></span>
-<span><span class="va">ansia_tratto</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">N</span>, mean <span class="op">=</span> <span class="fl">50</span>, sd <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Probabilità di trattamento aumenta con l'ansia di tratto</span></span>
-<span><span class="va">prob_tratt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html">plogis</a></span><span class="op">(</span><span class="op">(</span><span class="va">ansia_tratto</span> <span class="op">-</span> <span class="fl">50</span><span class="op">)</span><span class="op">/</span><span class="fl">10</span><span class="op">)</span></span>
-<span><span class="va">A</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span><span class="va">N</span>, <span class="fl">1</span>, <span class="va">prob_tratt</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># L'esito dipende SOLO dall'ansia di tratto (non dal trattamento!)</span></span>
-<span><span class="co"># Effetto causale vero = 0</span></span>
-<span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="va">ansia_tratto</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">N</span>, <span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Confronto osservazionale (sbagliato!)</span></span>
-<span><span class="va">assoc_obs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">Y</span><span class="op">[</span><span class="va">A</span><span class="op">==</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">Y</span><span class="op">[</span><span class="va">A</span><span class="op">==</span><span class="fl">0</span><span class="op">]</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Visualizzazione</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/boxplot.html">boxplot</a></span><span class="op">(</span><span class="va">Y</span> <span class="op">~</span> <span class="va">A</span>, names<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Non trattati"</span>,<span class="st">"Trattati"</span><span class="op">)</span>,</span>
-<span>        ylab<span class="op">=</span><span class="st">"Esito (ansia)"</span>, main<span class="op">=</span><span class="st">"Associazione osservata"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/text.html">text</a></span><span class="op">(</span><span class="fl">1.5</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span><span class="op">*</span><span class="fl">0.95</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Diff ="</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">assoc_obs</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>, col<span class="op">=</span><span class="st">"red"</span>, cex<span class="op">=</span><span class="fl">1.2</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">ansia_tratto</span>, <span class="va">Y</span>, col<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">A</span><span class="op">==</span><span class="fl">1</span>, <span class="st">"red"</span>, <span class="st">"blue"</span><span class="op">)</span>, pch<span class="op">=</span><span class="fl">19</span>, alpha<span class="op">=</span><span class="fl">0.5</span>,</span>
-<span>     xlab<span class="op">=</span><span class="st">"Ansia di tratto (confondente)"</span>, ylab<span class="op">=</span><span class="st">"Esito (ansia)"</span>,</span>
-<span>     main<span class="op">=</span><span class="st">"Struttura del confondimento"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html">legend</a></span><span class="op">(</span><span class="st">"topleft"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Trattati"</span>,<span class="st">"Non trattati"</span><span class="op">)</span>, col<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"red"</span>,<span class="st">"blue"</span><span class="op">)</span>, pch<span class="op">=</span><span class="fl">19</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Generiamo ansia di tratto (confondente)</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>ansia_tratto <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(N, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Probabilità di trattamento aumenta con l'ansia di tratto</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>prob_tratt <span class="ot">&lt;-</span> <span class="fu">plogis</span>((ansia_tratto <span class="sc">-</span> <span class="dv">50</span>)<span class="sc">/</span><span class="dv">10</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(N, <span class="dv">1</span>, prob_tratt)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># L'esito dipende SOLO dall'ansia di tratto (non dal trattamento!)</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Effetto causale vero = 0</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> ansia_tratto <span class="sc">+</span> <span class="fu">rnorm</span>(N, <span class="dv">0</span>, <span class="dv">5</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Confronto osservazionale (sbagliato!)</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>assoc_obs <span class="ot">&lt;-</span> <span class="fu">mean</span>(Y[A<span class="sc">==</span><span class="dv">1</span>]) <span class="sc">-</span> <span class="fu">mean</span>(Y[A<span class="sc">==</span><span class="dv">0</span>])</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualizzazione</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(Y <span class="sc">~</span> A, <span class="at">names=</span><span class="fu">c</span>(<span class="st">"Non trattati"</span>,<span class="st">"Trattati"</span>),</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylab=</span><span class="st">"Esito (ansia)"</span>, <span class="at">main=</span><span class="st">"Associazione osservata"</span>)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="fl">1.5</span>, <span class="fu">max</span>(Y)<span class="sc">*</span><span class="fl">0.95</span>, <span class="fu">paste</span>(<span class="st">"Diff ="</span>, <span class="fu">round</span>(assoc_obs, <span class="dv">2</span>)), <span class="at">col=</span><span class="st">"red"</span>, <span class="at">cex=</span><span class="fl">1.2</span>)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ansia_tratto, Y, <span class="at">col=</span><span class="fu">ifelse</span>(A<span class="sc">==</span><span class="dv">1</span>, <span class="st">"red"</span>, <span class="st">"blue"</span>), <span class="at">pch=</span><span class="dv">19</span>, <span class="at">alpha=</span><span class="fl">0.5</span>,</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"Ansia di tratto (confondente)"</span>, <span class="at">ylab=</span><span class="st">"Esito (ansia)"</span>,</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>     <span class="at">main=</span><span class="st">"Struttura del confondimento"</span>)</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="fu">c</span>(<span class="st">"Trattati"</span>,<span class="st">"Non trattati"</span>), <span class="at">col=</span><span class="fu">c</span>(<span class="st">"red"</span>,<span class="st">"blue"</span>), <span class="at">pch=</span><span class="dv">19</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><a href="09_causality_intro_files/figure-html/sim-confounding-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Confondimento: il trattamento non ha effetto, ma l’associazione è positiva"><img src="09_causality_intro_files/figure-html/sim-confounding-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%" alt="Confondimento: il trattamento non ha effetto, ma l’associazione è positiva"></a></p>
+<figure class="figure">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="09_causality_intro_files/figure-html/sim-confounding-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Confondimento: il trattamento non ha effetto, ma l’associazione è positiva"><img src="09_causality_intro_files/figure-html/sim-confounding-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%" alt="Confondimento: il trattamento non ha effetto, ma l’associazione è positiva"></a></p>
 </figure>
 </div>
-<figcaption>Confondimento: il trattamento non ha effetto, ma l’associazione è positiva</figcaption></figure>
+<figcaption>Confondimento: il trattamento non ha effetto, ma l’associazione è positiva</figcaption>
+</figure>
 </div>
 </div>
 </div>
 <p><strong>Cosa osserviamo?</strong> I soggetti trattati mostrano un livello di ansia più elevato rispetto ai non trattati. Tuttavia, questo non significa che il trattamento sia dannoso: riflette semplicemente il fatto che <strong>chi si tratta è già più ansioso</strong>. L’associazione osservata è quindi <strong>fuorviante</strong>, perché confonde effetto causale e differenze iniziali.</p>
-</section><section id="simulazione-2-il-ruolo-della-randomizzazione" class="level3" data-number="21.4.2"><h3 data-number="21.4.2" class="anchored" data-anchor-id="simulazione-2-il-ruolo-della-randomizzazione">
-<span class="header-section-number">21.4.2</span> Simulazione 2: il ruolo della randomizzazione</h3>
+</section>
+<section id="simulazione-2-il-ruolo-della-randomizzazione" class="level3" data-number="21.4.2">
+<h3 data-number="21.4.2" class="anchored" data-anchor-id="simulazione-2-il-ruolo-della-randomizzazione"><span class="header-section-number">21.4.2</span> Simulazione 2: il ruolo della randomizzazione</h3>
 <p>Ripetiamo ora la stessa simulazione, ma assegniamo il trattamento <strong>in modo casuale</strong>, indipendentemente dal livello di ansia di tratto.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">43</span><span class="op">)</span></span>
-<span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">1000</span></span>
-<span></span>
-<span><span class="co"># Stessa struttura di prima</span></span>
-<span><span class="va">ansia_tratto</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">N</span>, mean <span class="op">=</span> <span class="fl">50</span>, sd <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># MA ORA: trattamento assegnato casualmente!</span></span>
-<span><span class="va">A</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span><span class="va">N</span>, <span class="fl">1</span>, <span class="fl">0.5</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Esito come prima: dipende solo dall'ansia di tratto</span></span>
-<span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="va">ansia_tratto</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">N</span>, <span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Confronto osservazionale</span></span>
-<span><span class="va">assoc_rand</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">Y</span><span class="op">[</span><span class="va">A</span><span class="op">==</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">Y</span><span class="op">[</span><span class="va">A</span><span class="op">==</span><span class="fl">0</span><span class="op">]</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Visualizzazione</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/boxplot.html">boxplot</a></span><span class="op">(</span><span class="va">Y</span> <span class="op">~</span> <span class="va">A</span>, names<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Non trattati"</span>,<span class="st">"Trattati"</span><span class="op">)</span>,</span>
-<span>        ylab<span class="op">=</span><span class="st">"Esito (ansia)"</span>, main<span class="op">=</span><span class="st">"Con randomizzazione"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/text.html">text</a></span><span class="op">(</span><span class="fl">1.5</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span><span class="op">*</span><span class="fl">0.95</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Diff ="</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">assoc_rand</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>, col<span class="op">=</span><span class="st">"darkgreen"</span>, cex<span class="op">=</span><span class="fl">1.2</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">ansia_tratto</span>, <span class="va">Y</span>, col<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">A</span><span class="op">==</span><span class="fl">1</span>, <span class="st">"red"</span>, <span class="st">"blue"</span><span class="op">)</span>, pch<span class="op">=</span><span class="fl">19</span>, alpha<span class="op">=</span><span class="fl">0.5</span>,</span>
-<span>     xlab<span class="op">=</span><span class="st">"Ansia di tratto"</span>, ylab<span class="op">=</span><span class="st">"Esito (ansia)"</span>,</span>
-<span>     main<span class="op">=</span><span class="st">"Randomizzazione: bilanciamento"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html">legend</a></span><span class="op">(</span><span class="st">"topleft"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Trattati"</span>,<span class="st">"Non trattati"</span><span class="op">)</span>, col<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"red"</span>,<span class="st">"blue"</span><span class="op">)</span>, pch<span class="op">=</span><span class="fl">19</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">43</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Stessa struttura di prima</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>ansia_tratto <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(N, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># MA ORA: trattamento assegnato casualmente!</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(N, <span class="dv">1</span>, <span class="fl">0.5</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Esito come prima: dipende solo dall'ansia di tratto</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> ansia_tratto <span class="sc">+</span> <span class="fu">rnorm</span>(N, <span class="dv">0</span>, <span class="dv">5</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Confronto osservazionale</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>assoc_rand <span class="ot">&lt;-</span> <span class="fu">mean</span>(Y[A<span class="sc">==</span><span class="dv">1</span>]) <span class="sc">-</span> <span class="fu">mean</span>(Y[A<span class="sc">==</span><span class="dv">0</span>])</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualizzazione</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(Y <span class="sc">~</span> A, <span class="at">names=</span><span class="fu">c</span>(<span class="st">"Non trattati"</span>,<span class="st">"Trattati"</span>),</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylab=</span><span class="st">"Esito (ansia)"</span>, <span class="at">main=</span><span class="st">"Con randomizzazione"</span>)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="fl">1.5</span>, <span class="fu">max</span>(Y)<span class="sc">*</span><span class="fl">0.95</span>, <span class="fu">paste</span>(<span class="st">"Diff ="</span>, <span class="fu">round</span>(assoc_rand, <span class="dv">2</span>)), <span class="at">col=</span><span class="st">"darkgreen"</span>, <span class="at">cex=</span><span class="fl">1.2</span>)</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ansia_tratto, Y, <span class="at">col=</span><span class="fu">ifelse</span>(A<span class="sc">==</span><span class="dv">1</span>, <span class="st">"red"</span>, <span class="st">"blue"</span>), <span class="at">pch=</span><span class="dv">19</span>, <span class="at">alpha=</span><span class="fl">0.5</span>,</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"Ansia di tratto"</span>, <span class="at">ylab=</span><span class="st">"Esito (ansia)"</span>,</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>     <span class="at">main=</span><span class="st">"Randomizzazione: bilanciamento"</span>)</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="fu">c</span>(<span class="st">"Trattati"</span>,<span class="st">"Non trattati"</span>), <span class="at">col=</span><span class="fu">c</span>(<span class="st">"red"</span>,<span class="st">"blue"</span>), <span class="at">pch=</span><span class="dv">19</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><a href="09_causality_intro_files/figure-html/sim-randomization-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Randomizzazione: i gruppi sono bilanciati, l’associazione riflette la causalità"><img src="09_causality_intro_files/figure-html/sim-randomization-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%" alt="Randomizzazione: i gruppi sono bilanciati, l’associazione riflette la causalità"></a></p>
+<figure class="figure">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="09_causality_intro_files/figure-html/sim-randomization-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Randomizzazione: i gruppi sono bilanciati, l’associazione riflette la causalità"><img src="09_causality_intro_files/figure-html/sim-randomization-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%" alt="Randomizzazione: i gruppi sono bilanciati, l’associazione riflette la causalità"></a></p>
 </figure>
 </div>
-<figcaption>Randomizzazione: i gruppi sono bilanciati, l’associazione riflette la causalità</figcaption></figure>
+<figcaption>Randomizzazione: i gruppi sono bilanciati, l’associazione riflette la causalità</figcaption>
+</figure>
 </div>
 </div>
 </div>
@@ -883,8 +919,9 @@ Y^{(0)} &amp; \text{se } A = 0.
 </ul>
 </div>
 </div>
-</section><section id="simulazione-3-confondimento-e-paradosso-di-simpson" class="level3" data-number="21.4.3"><h3 data-number="21.4.3" class="anchored" data-anchor-id="simulazione-3-confondimento-e-paradosso-di-simpson">
-<span class="header-section-number">21.4.3</span> Simulazione 3: confondimento e paradosso di Simpson</h3>
+</section>
+<section id="simulazione-3-confondimento-e-paradosso-di-simpson" class="level3" data-number="21.4.3">
+<h3 data-number="21.4.3" class="anchored" data-anchor-id="simulazione-3-confondimento-e-paradosso-di-simpson"><span class="header-section-number">21.4.3</span> Simulazione 3: confondimento e paradosso di Simpson</h3>
 <p>Un caso particolarmente istruttivo è il <strong>paradosso di Simpson</strong>, che mostra come il confondimento possa produrre risultati apparentemente contraddittori.</p>
 <p>Supponiamo di avere due sottogruppi di studenti:</p>
 <ul>
@@ -898,51 +935,54 @@ Y^{(0)} &amp; \text{se } A = 0.
 <li>gli studenti ad alta ansia abbiano esiti mediamente più elevati, indipendentemente dal trattamento.</li>
 </ol>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
-<span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">4000</span></span>
-<span><span class="va">gruppo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span><span class="va">N</span>, <span class="fl">1</span>, <span class="fl">0.5</span><span class="op">)</span>  <span class="co"># 0 = bassa ansia, 1 = alta ansia</span></span>
-<span></span>
-<span><span class="co"># Prevalenze diverse di trattamento</span></span>
-<span><span class="va">A</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">gruppo</span><span class="op">==</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span><span class="va">N</span>,<span class="fl">1</span>,<span class="fl">0.7</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span><span class="va">N</span>,<span class="fl">1</span>,<span class="fl">0.3</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Effetto causale vero = -0.3 in ENTRAMBI i gruppi</span></span>
-<span><span class="va">tau</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">0.3</span></span>
-<span><span class="va">mu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">gruppo</span><span class="op">==</span><span class="fl">1</span>, <span class="fl">0.8</span>, <span class="fl">0.2</span><span class="op">)</span>  <span class="co"># baseline diversi</span></span>
-<span><span class="va">Y0</span> <span class="op">&lt;-</span> <span class="va">mu</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">N</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="va">Y1</span> <span class="op">&lt;-</span> <span class="va">Y0</span> <span class="op">+</span> <span class="va">tau</span></span>
-<span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">A</span><span class="op">==</span><span class="fl">1</span>, <span class="va">Y1</span>, <span class="va">Y0</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Calcolo effetti</span></span>
-<span><span class="va">eff_g0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">Y</span><span class="op">[</span><span class="va">gruppo</span><span class="op">==</span><span class="fl">0</span> <span class="op">&amp;</span> <span class="va">A</span><span class="op">==</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">Y</span><span class="op">[</span><span class="va">gruppo</span><span class="op">==</span><span class="fl">0</span> <span class="op">&amp;</span> <span class="va">A</span><span class="op">==</span><span class="fl">0</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="va">eff_g1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">Y</span><span class="op">[</span><span class="va">gruppo</span><span class="op">==</span><span class="fl">1</span> <span class="op">&amp;</span> <span class="va">A</span><span class="op">==</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">Y</span><span class="op">[</span><span class="va">gruppo</span><span class="op">==</span><span class="fl">1</span> <span class="op">&amp;</span> <span class="va">A</span><span class="op">==</span><span class="fl">0</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="va">eff_marginale</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">Y</span><span class="op">[</span><span class="va">A</span><span class="op">==</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">Y</span><span class="op">[</span><span class="va">A</span><span class="op">==</span><span class="fl">0</span><span class="op">]</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Visualizzazione</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Grafico 1: effetti nei sottogruppi vs marginale</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html">barplot</a></span><span class="op">(</span>height <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">eff_g0</span>, <span class="va">eff_g1</span>, <span class="va">eff_marginale</span><span class="op">)</span>,</span>
-<span>        names.arg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Bassa ansia"</span>, <span class="st">"Alta ansia"</span>, <span class="st">"Totale\n(ignorando gruppo)"</span><span class="op">)</span>,</span>
-<span>        ylab <span class="op">=</span> <span class="st">"Effetto stimato"</span>, </span>
-<span>        main <span class="op">=</span> <span class="st">"Paradosso di Simpson"</span>,</span>
-<span>        col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"lightblue"</span>, <span class="st">"lightblue"</span>, <span class="st">"salmon"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html">abline</a></span><span class="op">(</span>h <span class="op">=</span> <span class="fl">0</span>, lty <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html">abline</a></span><span class="op">(</span>h <span class="op">=</span> <span class="va">tau</span>, lty <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"darkgreen"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/text.html">text</a></span><span class="op">(</span><span class="fl">2</span>, <span class="va">tau</span> <span class="op">+</span> <span class="fl">0.15</span>, <span class="st">"Vero effetto = -0.3"</span>, col <span class="op">=</span> <span class="st">"darkgreen"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Grafico 2: struttura dei dati</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/jitter.html">jitter</a></span><span class="op">(</span><span class="va">gruppo</span><span class="op">)</span>, <span class="va">Y</span>, col<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">A</span><span class="op">==</span><span class="fl">1</span>, <span class="st">"red"</span>, <span class="st">"blue"</span><span class="op">)</span>, pch<span class="op">=</span><span class="fl">19</span>,</span>
-<span>     xlab<span class="op">=</span><span class="st">"Gruppo (0=bassa ansia, 1=alta ansia)"</span>, ylab<span class="op">=</span><span class="st">"Esito"</span>,</span>
-<span>     main<span class="op">=</span><span class="st">"Struttura dei dati"</span>, xaxt<span class="op">=</span><span class="st">"n"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/axis.html">axis</a></span><span class="op">(</span><span class="fl">1</span>, at<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, labels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Bassa"</span>,<span class="st">"Alta"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html">legend</a></span><span class="op">(</span><span class="st">"topleft"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Trattati"</span>,<span class="st">"Non trattati"</span><span class="op">)</span>, col<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"red"</span>,<span class="st">"blue"</span><span class="op">)</span>, pch<span class="op">=</span><span class="fl">19</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">4000</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>gruppo <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(N, <span class="dv">1</span>, <span class="fl">0.5</span>)  <span class="co"># 0 = bassa ansia, 1 = alta ansia</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Prevalenze diverse di trattamento</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(gruppo<span class="sc">==</span><span class="dv">1</span>, <span class="fu">rbinom</span>(N,<span class="dv">1</span>,<span class="fl">0.7</span>), <span class="fu">rbinom</span>(N,<span class="dv">1</span>,<span class="fl">0.3</span>))</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Effetto causale vero = -0.3 in ENTRAMBI i gruppi</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>tau <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fl">0.3</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(gruppo<span class="sc">==</span><span class="dv">1</span>, <span class="fl">0.8</span>, <span class="fl">0.2</span>)  <span class="co"># baseline diversi</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>Y0 <span class="ot">&lt;-</span> mu <span class="sc">+</span> <span class="fu">rnorm</span>(N, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>Y1 <span class="ot">&lt;-</span> Y0 <span class="sc">+</span> tau</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(A<span class="sc">==</span><span class="dv">1</span>, Y1, Y0)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcolo effetti</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>eff_g0 <span class="ot">&lt;-</span> <span class="fu">mean</span>(Y[gruppo<span class="sc">==</span><span class="dv">0</span> <span class="sc">&amp;</span> A<span class="sc">==</span><span class="dv">1</span>]) <span class="sc">-</span> <span class="fu">mean</span>(Y[gruppo<span class="sc">==</span><span class="dv">0</span> <span class="sc">&amp;</span> A<span class="sc">==</span><span class="dv">0</span>])</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>eff_g1 <span class="ot">&lt;-</span> <span class="fu">mean</span>(Y[gruppo<span class="sc">==</span><span class="dv">1</span> <span class="sc">&amp;</span> A<span class="sc">==</span><span class="dv">1</span>]) <span class="sc">-</span> <span class="fu">mean</span>(Y[gruppo<span class="sc">==</span><span class="dv">1</span> <span class="sc">&amp;</span> A<span class="sc">==</span><span class="dv">0</span>])</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>eff_marginale <span class="ot">&lt;-</span> <span class="fu">mean</span>(Y[A<span class="sc">==</span><span class="dv">1</span>]) <span class="sc">-</span> <span class="fu">mean</span>(Y[A<span class="sc">==</span><span class="dv">0</span>])</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualizzazione</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico 1: effetti nei sottogruppi vs marginale</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(<span class="at">height =</span> <span class="fu">c</span>(eff_g0, eff_g1, eff_marginale),</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>        <span class="at">names.arg =</span> <span class="fu">c</span>(<span class="st">"Bassa ansia"</span>, <span class="st">"Alta ansia"</span>, <span class="st">"Totale</span><span class="sc">\n</span><span class="st">(ignorando gruppo)"</span>),</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">"Effetto stimato"</span>, </span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Paradosso di Simpson"</span>,</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"lightblue"</span>, <span class="st">"lightblue"</span>, <span class="st">"salmon"</span>))</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> tau, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"darkgreen"</span>)</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="dv">2</span>, tau <span class="sc">+</span> <span class="fl">0.15</span>, <span class="st">"Vero effetto = -0.3"</span>, <span class="at">col =</span> <span class="st">"darkgreen"</span>)</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico 2: struttura dei dati</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">jitter</span>(gruppo), Y, <span class="at">col=</span><span class="fu">ifelse</span>(A<span class="sc">==</span><span class="dv">1</span>, <span class="st">"red"</span>, <span class="st">"blue"</span>), <span class="at">pch=</span><span class="dv">19</span>,</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"Gruppo (0=bassa ansia, 1=alta ansia)"</span>, <span class="at">ylab=</span><span class="st">"Esito"</span>,</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>     <span class="at">main=</span><span class="st">"Struttura dei dati"</span>, <span class="at">xaxt=</span><span class="st">"n"</span>)</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"Bassa"</span>,<span class="st">"Alta"</span>))</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="fu">c</span>(<span class="st">"Trattati"</span>,<span class="st">"Non trattati"</span>), <span class="at">col=</span><span class="fu">c</span>(<span class="st">"red"</span>,<span class="st">"blue"</span>), <span class="at">pch=</span><span class="dv">19</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><a href="09_causality_intro_files/figure-html/sim-simpson-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Paradosso di Simpson: stesso effetto nei sottogruppi, ma effetto opposto nel campione totale"><img src="09_causality_intro_files/figure-html/sim-simpson-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%" alt="Paradosso di Simpson: stesso effetto nei sottogruppi, ma effetto opposto nel campione totale"></a></p>
+<figure class="figure">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="09_causality_intro_files/figure-html/sim-simpson-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Paradosso di Simpson: stesso effetto nei sottogruppi, ma effetto opposto nel campione totale"><img src="09_causality_intro_files/figure-html/sim-simpson-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%" alt="Paradosso di Simpson: stesso effetto nei sottogruppi, ma effetto opposto nel campione totale"></a></p>
 </figure>
 </div>
-<figcaption>Paradosso di Simpson: stesso effetto nei sottogruppi, ma effetto opposto nel campione totale</figcaption></figure>
+<figcaption>Paradosso di Simpson: stesso effetto nei sottogruppi, ma effetto opposto nel campione totale</figcaption>
+</figure>
 </div>
 </div>
 </div>
@@ -971,15 +1011,18 @@ Y^{(0)} &amp; \text{se } A = 0.
 </ul>
 </div>
 </div>
-</section><section id="messaggio-chiave" class="level3" data-number="21.4.4"><h3 data-number="21.4.4" class="anchored" data-anchor-id="messaggio-chiave">
-<span class="header-section-number">21.4.4</span> Messaggio chiave</h3>
+</section>
+<section id="messaggio-chiave" class="level3" data-number="21.4.4">
+<h3 data-number="21.4.4" class="anchored" data-anchor-id="messaggio-chiave"><span class="header-section-number">21.4.4</span> Messaggio chiave</h3>
 <p>Il confondimento non è un dettaglio tecnico, ma un problema <strong>centrale</strong> dell’inferenza causale. Senza un disegno adeguato (come la randomizzazione) o senza un controllo esplicito delle variabili rilevanti, <strong>l’associazione osservata non coincide con l’effetto causale</strong>. Le simulazioni rendono evidente perché la causalità richiede strumenti concettuali e metodologici più forti della semplice comparazione tra gruppi.</p>
-</section></section><section id="oltre-il-confondimento-mediazione-e-moderazione" class="level2" data-number="21.5"><h2 data-number="21.5" class="anchored" data-anchor-id="oltre-il-confondimento-mediazione-e-moderazione">
-<span class="header-section-number">21.5</span> Oltre il confondimento: mediazione e moderazione</h2>
+</section>
+</section>
+<section id="oltre-il-confondimento-mediazione-e-moderazione" class="level2" data-number="21.5">
+<h2 data-number="21.5" class="anchored" data-anchor-id="oltre-il-confondimento-mediazione-e-moderazione"><span class="header-section-number">21.5</span> Oltre il confondimento: mediazione e moderazione</h2>
 <p>Abbiamo visto che il <strong>confondimento</strong> è problematico perché altera la relazione tra trattamento ed esito, rendendo fuorviante l’interpretazione causale. Tuttavia, non tutte le cosiddette <em>terze variabili</em> svolgono questo ruolo. A seconda di <strong>come</strong> una variabile si colloca rispetto a trattamento ed esito, essa può avere significati molto diversi.</p>
 <p>È quindi fondamentale distinguere tra <strong>confondimento</strong>, <strong>mediazione</strong> e <strong>moderazione</strong>. Sebbene questi concetti vengano talvolta confusi, essi rispondono a domande scientifiche profondamente diverse.</p>
-<section id="variabili-di-confondimento" class="level3" data-number="21.5.1"><h3 data-number="21.5.1" class="anchored" data-anchor-id="variabili-di-confondimento">
-<span class="header-section-number">21.5.1</span> Variabili di confondimento</h3>
+<section id="variabili-di-confondimento" class="level3" data-number="21.5.1">
+<h3 data-number="21.5.1" class="anchored" data-anchor-id="variabili-di-confondimento"><span class="header-section-number">21.5.1</span> Variabili di confondimento</h3>
 <p>Una <strong>variabile di confondimento</strong> è una variabile che influisce <strong>sia sul trattamento sia sull’esito</strong>, creando un’associazione che non riflette un legame causale diretto.</p>
 <p><strong>Esempio (psicologico).</strong> Studiamo la relazione tra <strong>uso dei social media</strong> e <strong>sintomi depressivi</strong> negli adolescenti. La <strong>solitudine</strong> può agire come confondente perché:</p>
 <ul>
@@ -1003,8 +1046,9 @@ Avviso
 <p><strong>Quando c’è confondimento</strong> Per stimare correttamente l’effetto causale è necessario <strong>controllare per il confondente</strong>, ad esempio includendolo nel modello statistico, stratificando o utilizzando tecniche di matching.</p>
 </div>
 </div>
-</section><section id="variabili-mediatrici" class="level3" data-number="21.5.2"><h3 data-number="21.5.2" class="anchored" data-anchor-id="variabili-mediatrici">
-<span class="header-section-number">21.5.2</span> Variabili mediatrici</h3>
+</section>
+<section id="variabili-mediatrici" class="level3" data-number="21.5.2">
+<h3 data-number="21.5.2" class="anchored" data-anchor-id="variabili-mediatrici"><span class="header-section-number">21.5.2</span> Variabili mediatrici</h3>
 <p>Una <strong>variabile mediatrice</strong> non distorce la relazione causale, ma ne rappresenta il <strong>meccanismo</strong>. È il passaggio attraverso cui il trattamento esercita il suo effetto sull’esito.</p>
 <p><strong>Esempio (psicologico).</strong> Studiamo l’effetto dello <strong>stress</strong> sul <strong>rendimento agli esami</strong>. La <strong>qualità del sonno</strong> può fungere da mediatore:</p>
 <pre><code>Stress → Qualità del sonno → Rendimento</code></pre>
@@ -1022,8 +1066,9 @@ Consiglio
 <p><strong>Quando c’è mediazione</strong> Se vogliamo stimare l’<strong>effetto totale</strong> dello stress sul rendimento, <strong>non</strong> dobbiamo controllare per il mediatore. Farlo significherebbe rimuovere proprio il meccanismo causale. Il controllo del mediatore ha senso solo quando l’obiettivo è stimare l’<strong>effetto diretto</strong>.</p>
 </div>
 </div>
-</section><section id="variabili-moderatrici" class="level3" data-number="21.5.3"><h3 data-number="21.5.3" class="anchored" data-anchor-id="variabili-moderatrici">
-<span class="header-section-number">21.5.3</span> Variabili moderatrici</h3>
+</section>
+<section id="variabili-moderatrici" class="level3" data-number="21.5.3">
+<h3 data-number="21.5.3" class="anchored" data-anchor-id="variabili-moderatrici"><span class="header-section-number">21.5.3</span> Variabili moderatrici</h3>
 <p>Una <strong>variabile moderatrice</strong> non è parte della catena causale, ma <strong>modifica l’intensità o la direzione dell’effetto</strong> del trattamento sull’esito. Risponde alla domanda: <em>per chi</em> o <em>in quali condizioni</em> l’effetto è più forte o più debole?</p>
 <p><strong>Esempio (psicologico).</strong> Studiamo l’effetto di un intervento di <strong>mindfulness</strong> sull’ansia. Il <strong>livello iniziale di ansia</strong> può essere un moderatore:</p>
 <ul>
@@ -1047,33 +1092,37 @@ Consiglio
 <p><strong>Quando c’è moderazione</strong> È appropriato includere <strong>termini di interazione</strong> nei modelli statistici (ad esempio <code>mindfulness × ansia_iniziale</code>) per verificare se l’effetto varia in funzione del moderatore. Questo permette di capire <em>per chi</em> il trattamento funziona meglio.</p>
 </div>
 </div>
-</section><section id="riepilogo-concettuale" class="level3" data-number="21.5.4"><h3 data-number="21.5.4" class="anchored" data-anchor-id="riepilogo-concettuale">
-<span class="header-section-number">21.5.4</span> Riepilogo concettuale</h3>
+</section>
+<section id="riepilogo-concettuale" class="level3" data-number="21.5.4">
+<h3 data-number="21.5.4" class="anchored" data-anchor-id="riepilogo-concettuale"><span class="header-section-number">21.5.4</span> Riepilogo concettuale</h3>
 <ul>
-<li>
-<strong>Confondimento</strong>: distorce l’effetto → va controllato.</li>
-<li>
-<strong>Mediazione</strong>: spiega l’effetto → va interpretata, non rimossa (se interessa l’effetto totale).</li>
-<li>
-<strong>Moderazione</strong>: specifica quando e per chi l’effetto cambia → va modellata tramite interazioni.</li>
+<li><strong>Confondimento</strong>: distorce l’effetto → va controllato.</li>
+<li><strong>Mediazione</strong>: spiega l’effetto → va interpretata, non rimossa (se interessa l’effetto totale).</li>
+<li><strong>Moderazione</strong>: specifica quando e per chi l’effetto cambia → va modellata tramite interazioni.</li>
 </ul>
 <p>Il grafico seguente riassume visivamente questi tre ruoli distinti delle terze variabili.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><a href="09_causality_intro_files/figure-html/conf-med-mod-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Tre ruoli diversi delle terze variabili"><img src="09_causality_intro_files/figure-html/conf-med-mod-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%" alt="Tre ruoli diversi delle terze variabili"></a></p>
+<figure class="figure">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="09_causality_intro_files/figure-html/conf-med-mod-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Tre ruoli diversi delle terze variabili"><img src="09_causality_intro_files/figure-html/conf-med-mod-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%" alt="Tre ruoli diversi delle terze variabili"></a></p>
 </figure>
 </div>
-<figcaption>Tre ruoli diversi delle terze variabili</figcaption></figure>
+<figcaption>Tre ruoli diversi delle terze variabili</figcaption>
+</figure>
 </div>
 </div>
 </div>
-</section><section id="messaggio-chiave-1" class="level3" data-number="21.5.5"><h3 data-number="21.5.5" class="anchored" data-anchor-id="messaggio-chiave-1">
-<span class="header-section-number">21.5.5</span> Messaggio chiave</h3>
+</section>
+<section id="messaggio-chiave-1" class="level3" data-number="21.5.5">
+<h3 data-number="21.5.5" class="anchored" data-anchor-id="messaggio-chiave-1"><span class="header-section-number">21.5.5</span> Messaggio chiave</h3>
 <p>Non tutte le “terze variabili” sono un problema. Il vero errore metodologico non è la loro presenza, ma <strong>non riconoscerne il ruolo</strong>. Distinguere correttamente tra confondimento, mediazione e moderazione è essenziale per formulare domande causali sensate e per scegliere strategie di analisi coerenti con gli obiettivi della ricerca. Ecco una versione migliorata, più fluida e didatticamente più incisiva, mantenendo l’esempio numerico e il codice invariati ma chiarendo meglio il messaggio causale:</p>
-</section></section><section id="un-esempio-numerico-quando-lassociazione-inganna" class="level2" data-number="21.6"><h2 data-number="21.6" class="anchored" data-anchor-id="un-esempio-numerico-quando-lassociazione-inganna">
-<span class="header-section-number">21.6</span> Un esempio numerico: quando l’associazione inganna</h2>
+</section>
+</section>
+<section id="un-esempio-numerico-quando-lassociazione-inganna" class="level2" data-number="21.6">
+<h2 data-number="21.6" class="anchored" data-anchor-id="un-esempio-numerico-quando-lassociazione-inganna"><span class="header-section-number">21.6</span> Un esempio numerico: quando l’associazione inganna</h2>
 <p>Torniamo ora a un esempio numerico per osservare il <strong>confondimento</strong> in modo concreto. Immaginiamo di voler stimare se lo <strong>studio pomeridiano</strong> (<span class="math inline">\(X\)</span>) migliori il <strong>rendimento a un test</strong> (<span class="math inline">\(Y\)</span>). Supponiamo però che esista una terza variabile rilevante: la <strong>motivazione</strong> (<span class="math inline">\(U\)</span>).</p>
 <p>In particolare, assumiamo che:</p>
 <ul>
@@ -1082,47 +1131,49 @@ Consiglio
 <li>lo studio pomeridiano, di per sé, <strong>non abbia alcun effetto causale</strong> sul rendimento.</li>
 </ul>
 <p>Se ignoriamo la motivazione, il confronto tra chi studia e chi non studia rischia quindi di essere profondamente fuorviante.</p>
-<section id="simulazione-dei-dati" class="level3" data-number="21.6.1"><h3 data-number="21.6.1" class="anchored" data-anchor-id="simulazione-dei-dati">
-<span class="header-section-number">21.6.1</span> Simulazione dei dati</h3>
+<section id="simulazione-dei-dati" class="level3" data-number="21.6.1">
+<h3 data-number="21.6.1" class="anchored" data-anchor-id="simulazione-dei-dati"><span class="header-section-number">21.6.1</span> Simulazione dei dati</h3>
 <p>Simuliamo questa situazione in R:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
-<span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">200</span></span>
-<span><span class="va">motivazione</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">1</span>, <span class="fl">0.5</span><span class="op">)</span>  <span class="co"># 0 = bassa, 1 = alta</span></span>
-<span></span>
-<span><span class="co"># La motivazione influenza sia lo studio che il rendimento</span></span>
-<span><span class="va">studio</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">1</span>, <span class="fl">0.3</span> <span class="op">+</span> <span class="fl">0.4</span><span class="op">*</span><span class="va">motivazione</span><span class="op">)</span></span>
-<span><span class="va">rendimento</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">1</span>, <span class="fl">0.2</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">*</span><span class="va">motivazione</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Tabella di contingenza</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Tabella studio × rendimento:\n"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Tabella studio × rendimento:</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">studio</span>, <span class="va">rendimento</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;       rendimento</span></span>
-<span><span class="co">#&gt; studio  0  1</span></span>
-<span><span class="co">#&gt;      0 52 43</span></span>
-<span><span class="co">#&gt;      1 45 60</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"\n\nProporzioni condizionate (per riga):\n"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Proporzioni condizionate (per riga):</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/proportions.html">prop.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">studio</span>, <span class="va">rendimento</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;       rendimento</span></span>
-<span><span class="co">#&gt; studio     0     1</span></span>
-<span><span class="co">#&gt;      0 0.547 0.453</span></span>
-<span><span class="co">#&gt;      1 0.429 0.571</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">200</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>motivazione <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, <span class="fl">0.5</span>)  <span class="co"># 0 = bassa, 1 = alta</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># La motivazione influenza sia lo studio che il rendimento</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>studio <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, <span class="fl">0.3</span> <span class="sc">+</span> <span class="fl">0.4</span><span class="sc">*</span>motivazione)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>rendimento <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, <span class="fl">0.2</span> <span class="sc">+</span> <span class="fl">0.5</span><span class="sc">*</span>motivazione)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Tabella di contingenza</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Tabella studio × rendimento:</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Tabella studio × rendimento:</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">table</span>(studio, rendimento))</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       rendimento</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; studio  0  1</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      0 52 43</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      1 45 60</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n\n</span><span class="st">Proporzioni condizionate (per riga):</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Proporzioni condizionate (per riga):</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">prop.table</span>(<span class="fu">table</span>(studio, rendimento), <span class="dv">1</span>))</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       rendimento</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; studio     0     1</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      0 0.547 0.453</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      1 0.429 0.571</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</section><section id="interpretazione-ingenua" class="level3" data-number="21.6.2"><h3 data-number="21.6.2" class="anchored" data-anchor-id="interpretazione-ingenua">
-<span class="header-section-number">21.6.2</span> Interpretazione ingenua</h3>
+</section>
+<section id="interpretazione-ingenua" class="level3" data-number="21.6.2">
+<h3 data-number="21.6.2" class="anchored" data-anchor-id="interpretazione-ingenua"><span class="header-section-number">21.6.2</span> Interpretazione ingenua</h3>
 <p>Osservando i dati aggregati, potremmo concludere che:</p>
 <ul>
 <li>tra chi <strong>studia nel pomeriggio</strong>, circa il <strong>62%</strong> supera il test;</li>
 <li>tra chi <strong>non studia</strong>, solo circa il <strong>29%</strong> ottiene un buon risultato.</li>
 </ul>
 <p>Una lettura superficiale suggerirebbe che lo studio pomeridiano <strong>quasi raddoppia la probabilità di successo</strong>.</p>
-</section><section id="la-vera-struttura-dei-dati" class="level3" data-number="21.6.3"><h3 data-number="21.6.3" class="anchored" data-anchor-id="la-vera-struttura-dei-dati">
-<span class="header-section-number">21.6.3</span> La vera struttura dei dati</h3>
+</section>
+<section id="la-vera-struttura-dei-dati" class="level3" data-number="21.6.3">
+<h3 data-number="21.6.3" class="anchored" data-anchor-id="la-vera-struttura-dei-dati"><span class="header-section-number">21.6.3</span> La vera struttura dei dati</h3>
 <p>In realtà, in questa simulazione lo studio pomeridiano <strong>non ha alcun effetto causale</strong> sul rendimento. L’intera associazione osservata è dovuta al fatto che gli studenti più motivati:</p>
 <ul>
 <li>studiano di più;</li>
@@ -1130,25 +1181,25 @@ Consiglio
 </ul>
 <p>Per verificarlo, analizziamo i dati separatamente per livello di motivazione:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Studenti a BASSA motivazione:\n"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Studenti a BASSA motivazione:</span></span>
-<span><span class="va">low_mot</span> <span class="op">&lt;-</span> <span class="va">motivazione</span> <span class="op">==</span> <span class="fl">0</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/proportions.html">prop.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">studio</span><span class="op">[</span><span class="va">low_mot</span><span class="op">]</span>, <span class="va">rendimento</span><span class="op">[</span><span class="va">low_mot</span><span class="op">]</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    </span></span>
-<span><span class="co">#&gt;         0     1</span></span>
-<span><span class="co">#&gt;   0 0.652 0.348</span></span>
-<span><span class="co">#&gt;   1 0.794 0.206</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"\n\nStudenti ad ALTA motivazione:\n"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Studenti ad ALTA motivazione:</span></span>
-<span><span class="va">high_mot</span> <span class="op">&lt;-</span> <span class="va">motivazione</span> <span class="op">==</span> <span class="fl">1</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/proportions.html">prop.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">studio</span><span class="op">[</span><span class="va">high_mot</span><span class="op">]</span>, <span class="va">rendimento</span><span class="op">[</span><span class="va">high_mot</span><span class="op">]</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    </span></span>
-<span><span class="co">#&gt;         0     1</span></span>
-<span><span class="co">#&gt;   0 0.269 0.731</span></span>
-<span><span class="co">#&gt;   1 0.254 0.746</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Studenti a BASSA motivazione:</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Studenti a BASSA motivazione:</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>low_mot <span class="ot">&lt;-</span> motivazione <span class="sc">==</span> <span class="dv">0</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">prop.table</span>(<span class="fu">table</span>(studio[low_mot], rendimento[low_mot]), <span class="dv">1</span>))</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    </span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         0     1</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   0 0.652 0.348</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   1 0.794 0.206</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n\n</span><span class="st">Studenti ad ALTA motivazione:</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Studenti ad ALTA motivazione:</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>high_mot <span class="ot">&lt;-</span> motivazione <span class="sc">==</span> <span class="dv">1</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">prop.table</span>(<span class="fu">table</span>(studio[high_mot], rendimento[high_mot]), <span class="dv">1</span>))</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    </span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         0     1</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   0 0.269 0.731</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   1 0.254 0.746</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>All’interno di ciascun livello di motivazione, l’associazione tra studio pomeridiano e rendimento <strong>scompare o diventa trascurabile</strong>. Questo conferma che la relazione osservata nel campione complessivo era <strong>spuria</strong>, generata dal confondimento.</p>
 <div class="callout callout-style-default callout-important callout-titled" title="La lezione fondamentale">
@@ -1165,32 +1216,36 @@ Consiglio
 </div>
 </div>
 <p>Questo esempio mostra perché l’inferenza causale non può basarsi su confronti grezzi: <strong>capire da dove provengono le differenze tra i gruppi è tanto importante quanto misurare l’associazione stessa</strong>.</p>
-</section></section><section id="misure-di-effetto-scale-diverse-per-comunicare-i-risultati" class="level2" data-number="21.7"><h2 data-number="21.7" class="anchored" data-anchor-id="misure-di-effetto-scale-diverse-per-comunicare-i-risultati">
-<span class="header-section-number">21.7</span> Misure di effetto: scale diverse per comunicare i risultati</h2>
+</section>
+</section>
+<section id="misure-di-effetto-scale-diverse-per-comunicare-i-risultati" class="level2" data-number="21.7">
+<h2 data-number="21.7" class="anchored" data-anchor-id="misure-di-effetto-scale-diverse-per-comunicare-i-risultati"><span class="header-section-number">21.7</span> Misure di effetto: scale diverse per comunicare i risultati</h2>
 <p>Quando descriviamo un <strong>effetto causale</strong>, non esiste un’unica misura “corretta” in assoluto. La scelta della misura dipende dalla <strong>domanda di ricerca</strong>, dal <strong>contesto applicativo</strong> e dal <strong>pubblico</strong> a cui vogliamo comunicare i risultati. Diverse misure mettono in evidenza aspetti diversi dello stesso fenomeno.</p>
 <p>Consideriamo un esempio concreto. Supponiamo che, in un esperimento randomizzato:</p>
 <ul>
 <li>tra i <strong>trattati</strong>, il <strong>20%</strong> sviluppi un attacco d’ansia;</li>
 <li>tra i <strong>controlli</strong>, il <strong>10%</strong> sviluppi un attacco d’ansia.</li>
 </ul>
-<section id="differenza-di-rischi-risk-difference-rd" class="level3" data-number="21.7.1"><h3 data-number="21.7.1" class="anchored" data-anchor-id="differenza-di-rischi-risk-difference-rd">
-<span class="header-section-number">21.7.1</span> Differenza di rischi (Risk Difference, RD)</h3>
+<section id="differenza-di-rischi-risk-difference-rd" class="level3" data-number="21.7.1">
+<h3 data-number="21.7.1" class="anchored" data-anchor-id="differenza-di-rischi-risk-difference-rd"><span class="header-section-number">21.7.1</span> Differenza di rischi (Risk Difference, RD)</h3>
 <p>La <strong>differenza di rischi</strong> misura l’effetto in termini <strong>assoluti</strong>:</p>
 <p><span class="math display">\[
 \text{RD} = P(Y=1 \mid A=1) - P(Y=1 \mid A=0) = 0.20 - 0.10 = 0.10.
 \]</span></p>
 <p><strong>Interpretazione.</strong> Il trattamento aumenta il rischio di <strong>10 punti percentuali</strong>. In altre parole, su 100 persone trattate, ci aspettiamo <strong>10 casi in più</strong> rispetto a uno scenario in cui nessuno fosse trattato.</p>
 <p><strong>Quando usarla.</strong> La RD è particolarmente utile quando interessa valutare l’<strong>impatto concreto</strong> di un intervento, ad esempio in ambito clinico o di salute pubblica, dove le decisioni dipendono dal numero assoluto di eventi evitati o indotti.</p>
-</section><section id="rapporto-di-rischi-risk-ratio-rr" class="level3" data-number="21.7.2"><h3 data-number="21.7.2" class="anchored" data-anchor-id="rapporto-di-rischi-risk-ratio-rr">
-<span class="header-section-number">21.7.2</span> Rapporto di rischi (Risk Ratio, RR)</h3>
+</section>
+<section id="rapporto-di-rischi-risk-ratio-rr" class="level3" data-number="21.7.2">
+<h3 data-number="21.7.2" class="anchored" data-anchor-id="rapporto-di-rischi-risk-ratio-rr"><span class="header-section-number">21.7.2</span> Rapporto di rischi (Risk Ratio, RR)</h3>
 <p>Il <strong>rapporto di rischi</strong> esprime l’effetto in termini <strong>relativi</strong>:</p>
 <p><span class="math display">\[
 \text{RR} = \frac{P(Y=1 \mid A=1)}{P(Y=1 \mid A=0)} = \frac{0.20}{0.10} = 2.0.
 \]</span></p>
 <p><strong>Interpretazione.</strong> Il rischio di sviluppare un attacco d’ansia è <strong>doppio</strong> nei trattati rispetto ai controlli.</p>
 <p><strong>Quando usarla.</strong> La RR è utile quando si vuole enfatizzare quanto il rischio <strong>aumenti o diminuisca proporzionalmente</strong>. È spesso intuitiva e facilmente comunicabile, ma può risultare fuorviante se non accompagnata da informazioni sul rischio assoluto.</p>
-</section><section id="odds-ratio-or" class="level3" data-number="21.7.3"><h3 data-number="21.7.3" class="anchored" data-anchor-id="odds-ratio-or">
-<span class="header-section-number">21.7.3</span> Odds ratio (OR)</h3>
+</section>
+<section id="odds-ratio-or" class="level3" data-number="21.7.3">
+<h3 data-number="21.7.3" class="anchored" data-anchor-id="odds-ratio-or"><span class="header-section-number">21.7.3</span> Odds ratio (OR)</h3>
 <p>L’<strong>odds ratio</strong> confronta le <em>odds</em> dell’evento nei due gruppi:</p>
 <p><span class="math display">\[
 \text{OR} =
@@ -1200,29 +1255,30 @@ Consiglio
 \]</span></p>
 <p><strong>Interpretazione.</strong> Le <em>odds</em> di sviluppare un attacco d’ansia sono circa <strong>2.25 volte</strong> più alte nei trattati rispetto ai controlli.</p>
 <p><strong>Quando usarla.</strong> L’OR è la misura naturale nei <strong>modelli di regressione logistica</strong>. Ha proprietà matematiche convenienti, ma è meno intuitiva: quando gli eventi non sono rari, l’OR tende a <strong>sovrastimare</strong> l’effetto rispetto al rapporto di rischi.</p>
-</section><section id="confronto-tramite-simulazione" class="level3" data-number="21.7.4"><h3 data-number="21.7.4" class="anchored" data-anchor-id="confronto-tramite-simulazione">
-<span class="header-section-number">21.7.4</span> Confronto tramite simulazione</h3>
+</section>
+<section id="confronto-tramite-simulazione" class="level3" data-number="21.7.4">
+<h3 data-number="21.7.4" class="anchored" data-anchor-id="confronto-tramite-simulazione"><span class="header-section-number">21.7.4</span> Confronto tramite simulazione</h3>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">7</span><span class="op">)</span></span>
-<span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">10000</span></span>
-<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fl">0.20</span>  <span class="co"># rischio tra trattati</span></span>
-<span><span class="va">p0</span> <span class="op">&lt;-</span> <span class="fl">0.10</span>  <span class="co"># rischio tra controlli</span></span>
-<span><span class="va">A</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">1</span>, <span class="fl">0.5</span><span class="op">)</span></span>
-<span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">A</span><span class="op">==</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">1</span>, <span class="va">p1</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">1</span>, <span class="va">p0</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">p_hat1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">Y</span><span class="op">[</span><span class="va">A</span><span class="op">==</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="va">p_hat0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">Y</span><span class="op">[</span><span class="va">A</span><span class="op">==</span><span class="fl">0</span><span class="op">]</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">RD</span> <span class="op">&lt;-</span> <span class="va">p_hat1</span> <span class="op">-</span> <span class="va">p_hat0</span></span>
-<span><span class="va">RR</span> <span class="op">&lt;-</span> <span class="va">p_hat1</span> <span class="op">/</span> <span class="va">p_hat0</span></span>
-<span><span class="va">OR</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">p_hat1</span><span class="op">/</span><span class="op">(</span><span class="fl">1</span><span class="op">-</span><span class="va">p_hat1</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="va">p_hat0</span><span class="op">/</span><span class="op">(</span><span class="fl">1</span><span class="op">-</span><span class="va">p_hat0</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"Differenza di rischi (RD) = %.3f\n"</span>, <span class="va">RD</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Differenza di rischi (RD) = 0.095</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"Rapporto di rischi (RR)    = %.2f\n"</span>, <span class="va">RR</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Rapporto di rischi (RR)    = 1.91</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"Odds ratio (OR)            = %.2f\n"</span>, <span class="va">OR</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Odds ratio (OR)            = 2.13</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">7</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fl">0.20</span>  <span class="co"># rischio tra trattati</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>p0 <span class="ot">&lt;-</span> <span class="fl">0.10</span>  <span class="co"># rischio tra controlli</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, <span class="fl">0.5</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(A<span class="sc">==</span><span class="dv">1</span>, <span class="fu">rbinom</span>(n, <span class="dv">1</span>, p1), <span class="fu">rbinom</span>(n, <span class="dv">1</span>, p0))</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>p_hat1 <span class="ot">&lt;-</span> <span class="fu">mean</span>(Y[A<span class="sc">==</span><span class="dv">1</span>])</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>p_hat0 <span class="ot">&lt;-</span> <span class="fu">mean</span>(Y[A<span class="sc">==</span><span class="dv">0</span>])</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>RD <span class="ot">&lt;-</span> p_hat1 <span class="sc">-</span> p_hat0</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>RR <span class="ot">&lt;-</span> p_hat1 <span class="sc">/</span> p_hat0</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>OR <span class="ot">&lt;-</span> (p_hat1<span class="sc">/</span>(<span class="dv">1</span><span class="sc">-</span>p_hat1)) <span class="sc">/</span> (p_hat0<span class="sc">/</span>(<span class="dv">1</span><span class="sc">-</span>p_hat0))</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Differenza di rischi (RD) = %.3f</span><span class="sc">\n</span><span class="st">"</span>, RD))</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Differenza di rischi (RD) = 0.095</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Rapporto di rischi (RR)    = %.2f</span><span class="sc">\n</span><span class="st">"</span>, RR))</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Rapporto di rischi (RR)    = 1.91</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Odds ratio (OR)            = %.2f</span><span class="sc">\n</span><span class="st">"</span>, OR))</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Odds ratio (OR)            = 2.13</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>La simulazione mostra come <strong>lo stesso effetto causale</strong> possa essere espresso in modi numericamente diversi a seconda della scala scelta.</p>
 <div class="callout callout-style-default callout-tip callout-titled" title="Quale misura scegliere?">
@@ -1237,17 +1293,17 @@ Consiglio
 <div class="callout-body-container callout-body">
 <p>Non esiste una risposta universale:</p>
 <ul>
-<li>
-<strong>RD</strong> è preferibile per comunicare l’<strong>impatto assoluto</strong> e supportare decisioni pratiche;</li>
-<li>
-<strong>RR</strong> è utile per enfatizzare l’<strong>aumento o la riduzione relativa</strong> del rischio;</li>
-<li>
-<strong>OR</strong> è spesso inevitabile nei modelli logistici, ma richiede attenzione interpretativa.</li>
+<li><strong>RD</strong> è preferibile per comunicare l’<strong>impatto assoluto</strong> e supportare decisioni pratiche;</li>
+<li><strong>RR</strong> è utile per enfatizzare l’<strong>aumento o la riduzione relativa</strong> del rischio;</li>
+<li><strong>OR</strong> è spesso inevitabile nei modelli logistici, ma richiede attenzione interpretativa.</li>
 </ul>
 <p>La scelta non è solo tecnica, ma anche comunicativa: l’importante è <strong>essere consapevoli della misura utilizzata</strong> e dichiararla chiaramente.</p>
 </div>
 </div>
-</section></section><section id="riflessioni-conclusive" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="riflessioni-conclusive">Riflessioni conclusive</h2>
+</section>
+</section>
+<section id="riflessioni-conclusive" class="level2 unnumbered unlisted">
+<h2 class="unnumbered unlisted anchored" data-anchor-id="riflessioni-conclusive">Riflessioni conclusive</h2>
 <p>In questo capitolo abbiamo compiuto un passaggio concettuale fondamentale, passando dalla semplice osservazione delle <strong>associazioni</strong> alla formulazione di domande <strong>causali</strong>. I punti chiave possono essere riassunti come segue:</p>
 <ol type="1">
 <li><p><strong>Correlazione ≠ causalità</strong> Un’associazione statistica tra due variabili, per quanto robusta, non implica automaticamente un legame causale. Senza considerare la struttura dei dati e le variabili confondenti, l’interpretazione può risultare profondamente fuorviante.</p></li>
@@ -1269,14 +1325,10 @@ Consiglio
 <div class="callout-body-container callout-body">
 <p>Questo capitolo ha introdotto le intuizioni concettuali di base. Nei capitoli successivi del <a href="https://ccaudek.github.io/utet-companion/">manuale principale</a> verranno presentati strumenti più formali per l’inferenza causale, tra cui:</p>
 <ul>
-<li>
-<strong>Grafi aciclici diretti (DAG)</strong>, per rappresentare e rendere esplicite le ipotesi causali;</li>
-<li>
-<strong>Backdoor criterion</strong>, per identificare in modo sistematico quali variabili controllare;</li>
-<li>
-<strong>Metodi per dati osservazionali</strong>, come matching, pesatura tramite <em>propensity score</em> e regressione in prospettiva causale;</li>
-<li>
-<strong>Inferenza bayesiana</strong>, per quantificare l’incertezza sulle stime causali e integrare informazioni a priori.</li>
+<li><strong>Grafi aciclici diretti (DAG)</strong>, per rappresentare e rendere esplicite le ipotesi causali;</li>
+<li><strong>Backdoor criterion</strong>, per identificare in modo sistematico quali variabili controllare;</li>
+<li><strong>Metodi per dati osservazionali</strong>, come matching, pesatura tramite <em>propensity score</em> e regressione in prospettiva causale;</li>
+<li><strong>Inferenza bayesiana</strong>, per quantificare l’incertezza sulle stime causali e integrare informazioni a priori.</li>
 </ul>
 <p>Questi strumenti permetteranno di passare dalle intuizioni introdotte qui a un’analisi causale più rigorosa e formalizzata.</p>
 </div>
@@ -1294,67 +1346,66 @@ Consiglio
 <div id="callout-14" class="callout-14-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; R version 4.5.2 (2025-10-31)</span></span>
-<span><span class="co">#&gt; Platform: aarch64-apple-darwin20</span></span>
-<span><span class="co">#&gt; Running under: macOS Tahoe 26.2</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Matrix products: default</span></span>
-<span><span class="co">#&gt; BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib </span></span>
-<span><span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; locale:</span></span>
-<span><span class="co">#&gt; [1] C.UTF-8/UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; time zone: Europe/Rome</span></span>
-<span><span class="co">#&gt; tzcode source: internal</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; attached base packages:</span></span>
-<span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt;  [1] ragg_1.5.0            tinytable_0.15.2      withr_3.0.2          </span></span>
-<span><span class="co">#&gt;  [4] systemfonts_1.3.1     patchwork_1.3.2       ggdist_3.3.3         </span></span>
-<span><span class="co">#&gt;  [7] tidybayes_3.0.7       bayesplot_1.15.0      ggplot2_4.0.1        </span></span>
-<span><span class="co">#&gt; [10] reliabilitydiag_0.2.1 priorsense_1.2.0      posterior_1.6.1      </span></span>
-<span><span class="co">#&gt; [13] loo_2.9.0             rstan_2.32.7          StanHeaders_2.32.10  </span></span>
-<span><span class="co">#&gt; [16] brms_2.23.0           Rcpp_1.1.0            sessioninfo_1.2.3    </span></span>
-<span><span class="co">#&gt; [19] conflicted_1.2.0      janitor_2.2.1         matrixStats_1.5.0    </span></span>
-<span><span class="co">#&gt; [22] modelr_0.1.11         tibble_3.3.0          dplyr_1.1.4          </span></span>
-<span><span class="co">#&gt; [25] tidyr_1.3.2           rio_1.2.4             here_1.0.2           </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;  [1] svUnit_1.0.8          tidyselect_1.2.1      farver_2.1.2         </span></span>
-<span><span class="co">#&gt;  [4] S7_0.2.1              fastmap_1.2.0         TH.data_1.1-5        </span></span>
-<span><span class="co">#&gt;  [7] tensorA_0.36.2.1      digest_0.6.39         timechange_0.3.0     </span></span>
-<span><span class="co">#&gt; [10] estimability_1.5.1    lifecycle_1.0.5       survival_3.8-3       </span></span>
-<span><span class="co">#&gt; [13] magrittr_2.0.4        compiler_4.5.2        rlang_1.1.7          </span></span>
-<span><span class="co">#&gt; [16] tools_4.5.2           yaml_2.3.12           knitr_1.51           </span></span>
-<span><span class="co">#&gt; [19] bridgesampling_1.2-1  htmlwidgets_1.6.4     curl_7.0.0           </span></span>
-<span><span class="co">#&gt; [22] pkgbuild_1.4.8        RColorBrewer_1.1-3    abind_1.4-8          </span></span>
-<span><span class="co">#&gt; [25] multcomp_1.4-29       purrr_1.2.1           grid_4.5.2           </span></span>
-<span><span class="co">#&gt; [28] stats4_4.5.2          colorspace_2.1-2      xtable_1.8-4         </span></span>
-<span><span class="co">#&gt; [31] inline_0.3.21         emmeans_2.0.1         scales_1.4.0         </span></span>
-<span><span class="co">#&gt; [34] MASS_7.3-65           cli_3.6.5             mvtnorm_1.3-3        </span></span>
-<span><span class="co">#&gt; [37] rmarkdown_2.30        generics_0.1.4        otel_0.2.0           </span></span>
-<span><span class="co">#&gt; [40] RcppParallel_5.1.11-1 cachem_1.1.0          stringr_1.6.0        </span></span>
-<span><span class="co">#&gt; [43] splines_4.5.2         parallel_4.5.2        vctrs_0.6.5          </span></span>
-<span><span class="co">#&gt; [46] V8_8.0.1              Matrix_1.7-4          sandwich_3.1-1       </span></span>
-<span><span class="co">#&gt; [49] jsonlite_2.0.0        arrayhelpers_1.1-0    glue_1.8.0           </span></span>
-<span><span class="co">#&gt; [52] codetools_0.2-20      distributional_0.5.0  lubridate_1.9.4      </span></span>
-<span><span class="co">#&gt; [55] stringi_1.8.7         gtable_0.3.6          QuickJSR_1.8.1       </span></span>
-<span><span class="co">#&gt; [58] pillar_1.11.1         htmltools_0.5.9       Brobdingnag_1.2-9    </span></span>
-<span><span class="co">#&gt; [61] R6_2.6.1              textshaping_1.0.4     rprojroot_2.1.1      </span></span>
-<span><span class="co">#&gt; [64] evaluate_1.0.5        lattice_0.22-7        backports_1.5.0      </span></span>
-<span><span class="co">#&gt; [67] memoise_2.0.1         broom_1.0.11          snakecase_0.11.1     </span></span>
-<span><span class="co">#&gt; [70] rstantools_2.5.0      gridExtra_2.3         coda_0.19-4.1        </span></span>
-<span><span class="co">#&gt; [73] nlme_3.1-168          checkmate_2.3.3       xfun_0.55            </span></span>
-<span><span class="co">#&gt; [76] zoo_1.8-15            pkgconfig_2.0.3</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; R version 4.6.0 (2026-04-24)</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Platform: aarch64-apple-darwin23</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Running under: macOS Tahoe 26.5.1</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Matrix products: default</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib </span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; locale:</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] C.UTF-8/UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; time zone: Europe/Rome</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tzcode source: internal</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; attached base packages:</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; other attached packages:</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] ragg_1.5.2            tinytable_0.17.0      withr_3.0.3          </span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [4] systemfonts_1.3.2     patchwork_1.3.2       ggdist_3.3.3         </span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [7] tidybayes_3.0.7       bayesplot_1.15.0      ggplot2_4.0.3        </span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [10] reliabilitydiag_0.2.1 priorsense_1.2.0      posterior_1.7.0      </span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [13] loo_2.10.0            rstan_2.32.7          StanHeaders_2.32.10  </span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [16] brms_2.23.0           Rcpp_1.1.1-1.1        sessioninfo_1.2.4    </span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [19] conflicted_1.2.0      janitor_2.2.1         matrixStats_1.5.0    </span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [22] modelr_0.1.11         tibble_3.3.1          dplyr_1.2.1          </span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [25] tidyr_1.3.2           rio_1.3.0             here_1.0.2           </span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] svUnit_1.0.8          tidyselect_1.2.1      farver_2.1.2         </span></span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [4] S7_0.2.2              fastmap_1.2.0         tensorA_0.36.2.1     </span></span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [7] digest_0.6.39         timechange_0.4.0      estimability_2.0.0   </span></span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [10] lifecycle_1.0.5       magrittr_2.0.5        compiler_4.6.0       </span></span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [13] rlang_1.2.0           tools_4.6.0           yaml_2.3.12          </span></span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [16] knitr_1.51            bridgesampling_1.2-1  htmlwidgets_1.6.4    </span></span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [19] pkgbuild_1.4.8        curl_7.1.0            RColorBrewer_1.1-3   </span></span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [22] abind_1.4-8           purrr_1.2.2           grid_4.6.0           </span></span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [25] stats4_4.6.0          xtable_1.8-8          inline_0.3.21        </span></span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [28] emmeans_2.0.3         scales_1.4.0          cli_3.6.6            </span></span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [31] mvtnorm_1.4-1         rmarkdown_2.31        generics_0.1.4       </span></span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [34] otel_0.2.0            RcppParallel_5.1.11-2 cachem_1.1.0         </span></span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [37] stringr_1.6.0         parallel_4.6.0        vctrs_0.7.3          </span></span>
+<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [40] V8_8.2.0              Matrix_1.7-5          jsonlite_2.0.0       </span></span>
+<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [43] arrayhelpers_1.1-1    glue_1.8.1            codetools_0.2-20     </span></span>
+<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [46] distributional_0.8.1  lubridate_1.9.5       stringi_1.8.7        </span></span>
+<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [49] gtable_0.3.6          QuickJSR_1.10.0       pillar_1.11.1        </span></span>
+<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [52] htmltools_0.5.9       Brobdingnag_1.2-9     R6_2.6.1             </span></span>
+<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [55] textshaping_1.0.5     rprojroot_2.1.1       evaluate_1.0.5       </span></span>
+<span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [58] lattice_0.22-9        backports_1.5.1       memoise_2.0.1        </span></span>
+<span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [61] broom_1.0.13          snakecase_0.11.1      rstantools_2.6.0     </span></span>
+<span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [64] coda_0.19-4.1         gridExtra_2.3.1       nlme_3.1-169         </span></span>
+<span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [67] checkmate_2.3.4       xfun_0.59             pkgconfig_2.0.3</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
 </div>
-</section><section id="bibliografia" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="bibliografia">Bibliografia</h2>
+</section>
+<section id="bibliografia" class="level2 unnumbered unlisted">
+<h2 class="unnumbered unlisted anchored" data-anchor-id="bibliografia">Bibliografia</h2>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
@@ -1368,7 +1419,10 @@ Hernan, M. A., &amp; Robins, J. M. (2023). <em>Causal Inference: What If</em>. C
 Holland, P. W. (1986). Statistics and causal inference. <em>Journal of the American statistical Association</em>, <em>81</em>(396), 945–960.
 </div>
 </div>
-</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right
     if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
@@ -1787,7 +1841,9 @@ Holland, P. W. (1986). Statistics and causal inference. <em>Journal of the Ameri
       }
     }
   });
-  </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
       <a href="../../chapters/eda/08_correlation.html" class="pagination-link" aria-label="Relazioni tra variabili">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Relazioni tra variabili</span></span>
       </a>          
@@ -1799,7 +1855,8 @@ Holland, P. W. (1986). Statistics and causal inference. <em>Journal of the Ameri
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer">
+<footer class="footer">
+  <div class="nav-footer">
     <div class="nav-footer-left">
 <p><strong>Analisi esplorativa dei dati (EDA)</strong> — Modulo del progetto UTET a supporto del manuale <em>Inferenza bayesiana in psicologia: Ragionare con l’incertezza</em>.</p>
 </div>   
@@ -1810,7 +1867,8 @@ Holland, P. W. (1986). Statistics and causal inference. <em>Journal of the Ameri
 <p>Realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
 </div>
   </div>
-</footer><script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+</footer>
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {
@@ -1842,6 +1900,8 @@ Holland, P. W. (1986). Statistics and causal inference. <em>Journal of the Ameri
   
 })();
           </script>
+
+
 
 
 <script src="../../site_libs/quarto-html/zenscroll-min.js"></script>

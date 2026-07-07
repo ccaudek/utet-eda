@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.26">
+<meta name="generator" content="quarto-1.9.38">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
 <title>22&nbsp; Outlier – Analisi esplorativa dei dati in psicologia</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -74,6 +80,7 @@ div.csl-indent {
   margin-left: 2em;
 }</style>
 
+
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../../site_libs/clipboard/clipboard.min.js"></script>
@@ -81,27 +88,27 @@ div.csl-indent {
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../chapters/eda/12_gauss.html" rel="next">
+<link href="../../chapters/epiloque/epiloque.html" rel="next">
 <link href="../../chapters/eda/09_causality_intro.html" rel="prev">
 <link href="../../style/gauss.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-b758ccaa5987ceb1b75504551e579abf.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-0a6b7249c26820e032cb0bd839ff02b1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-88f89515ec50d56ed60c0d65bb29dbd0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-12c7548f543ff79fe76bca8cab42d0cf.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-88f89515ec50d56ed60c0d65bb29dbd0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-a0bb4f8876326eb7771edc79fa342270.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-7c5efe83671fda2688731f9f1d4acab0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-a0bb4f8876326eb7771edc79fa342270.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script src="../../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="../../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
-<link href="../../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><script id="quarto-search-options" type="application/json">{
+<link href="../../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -127,14 +134,22 @@ div.csl-indent {
     "search-submit-button-title": "Inviare",
     "search-label": "Ricerca"
   }
-}</script><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-QT5S3P9D31"></script><script type="text/javascript">
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-QT5S3P9D31"></script>
+
+<script type="text/javascript">
 
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
-</script><style>html{ scroll-behavior: smooth; }</style>
-<script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script><script type="text/javascript">
+</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
 const typesetMath = (el) => {
   if (window.MathJax) {
     // MathJax Typeset
@@ -159,8 +174,11 @@ const typesetMath = (el) => {
 window.Quarto = {
   typesetMath
 };
-</script><link rel="stylesheet" href="../../style/custom.css">
+</script>
+
+<link rel="stylesheet" href="../../style/custom.css">
 </head>
+
 <body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
       const mode = bsSheetEl.getAttribute("data-mode");
@@ -326,7 +344,9 @@ window.Quarto = {
   </script>
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
@@ -337,9 +357,13 @@ window.Quarto = {
         <i class="bi bi-search"></i>
       </button>
     </div>
-  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="../../">Analisi esplorativa dei dati in psicologia</a> 
         <div class="sidebar-tools-main tools-wide">
@@ -360,7 +384,7 @@ window.Quarto = {
         </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-<li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Analisi esplorativa dei dati in psicologia</span></span></a>
@@ -380,8 +404,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/02_key_notions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Concetti chiave</span></span></a>
@@ -406,7 +430,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../chapters/R/introduction_r_lang.html" class="sidebar-item-text sidebar-link">
@@ -415,8 +439,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/01_r_syntax.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Un approccio moderno all’analisi dei dati</span></span></a>
@@ -465,7 +489,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../chapters/eda/introduction_eda.html" class="sidebar-item-text sidebar-link">
@@ -474,8 +498,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/01_project_structure.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Il ciclo di vita di un progetto di analisi dei dati</span></span></a>
@@ -529,14 +553,8 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Outlier</span></span></a>
   </div>
 </li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../chapters/eda/12_gauss.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Assunzione di gaussianità e trasformazioni dei dati</span></span></a>
-  </div>
-</li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
@@ -545,32 +563,39 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/epiloque/epiloque.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Considerazioni conclusive</span></a>
   </div>
 </li>
       </ul>
-</li>
+  </li>
     </ul>
-</div>
-</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Sommario</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Sommario</h2>
    
   <ul class="collapse">
-<li><a href="#individuare-e-gestire-gli-outlier" id="toc-individuare-e-gestire-gli-outlier" class="nav-link active" data-scroll-target="#individuare-e-gestire-gli-outlier"><span class="header-section-number">22.1</span> Individuare e gestire gli outlier</a></li>
+  <li><a href="#individuare-e-gestire-gli-outlier" id="toc-individuare-e-gestire-gli-outlier" class="nav-link active" data-scroll-target="#individuare-e-gestire-gli-outlier"><span class="header-section-number">22.1</span> Individuare e gestire gli outlier</a></li>
   <li><a href="#come-identificare-gli-outlier" id="toc-come-identificare-gli-outlier" class="nav-link" data-scroll-target="#come-identificare-gli-outlier"><span class="header-section-number">22.2</span> Come identificare gli outlier</a></li>
   <li><a href="#outlier-multivariati" id="toc-outlier-multivariati" class="nav-link" data-scroll-target="#outlier-multivariati"><span class="header-section-number">22.3</span> Outlier multivariati</a></li>
   <li><a href="#cosa-fare-con-gli-outlier" id="toc-cosa-fare-con-gli-outlier" class="nav-link" data-scroll-target="#cosa-fare-con-gli-outlier"><span class="header-section-number">22.4</span> Cosa fare con gli outlier?</a></li>
   <li><a href="#importanza-della-trasparenza" id="toc-importanza-della-trasparenza" class="nav-link" data-scroll-target="#importanza-della-trasparenza"><span class="header-section-number">22.5</span> Importanza della trasparenza</a></li>
-  </ul><div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/eda/11_outlier.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
+  </ul>
+<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/eda/11_outlier.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/11_outlier.html"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Outlier</span></a></li></ol></nav><div class="quarto-title">
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/11_outlier.html"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Outlier</span></a></li></ol></nav>
+<div class="quarto-title">
 <h1 class="title"><span id="sec-eda-outlier" class="quarto-section-identifier"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Outlier</span></span></h1>
 </div>
 
@@ -585,7 +610,10 @@ window.Quarto = {
   
 
 
-</header><div class="callout callout-style-simple callout-note no-icon">
+</header>
+
+
+<div class="callout callout-style-simple callout-note no-icon">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
@@ -596,12 +624,13 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<section id="panoramica-del-capitolo" class="level3 unnumbered unlisted"><h3 class="unnumbered unlisted anchored" data-anchor-id="panoramica-del-capitolo">Panoramica del capitolo</h3>
+<section id="panoramica-del-capitolo" class="level3 unnumbered unlisted">
+<h3 class="unnumbered unlisted anchored" data-anchor-id="panoramica-del-capitolo">Panoramica del capitolo</h3>
 <p>In questo capitolo impareremo a:</p>
 <ul>
 <li>comprendere il ruolo e gli effetti degli outlier nelle analisi statistiche;</li>
 <li>individuare outlier con metodi <strong>univariati</strong> e <strong>multivariati</strong>;</li>
-<li>utilizzare il pacchetto <a href="https://easystats.github.io/performance/">performance</a> in R per la loro identificazione;</li>
+<li>utilizzare il pacchetto <code>{performance}</code> in R per la loro identificazione;</li>
 <li>documentare le decisioni in modo trasparente e riproducibile;</li>
 <li>valutare alternative alla rimozione (ad es. <strong>winsorizzazione</strong>) e l’importanza della <strong>preregistrazione</strong>.</li>
 </ul>
@@ -636,50 +665,55 @@ window.Quarto = {
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html">here</a></span><span class="op">(</span><span class="st">"code"</span>, <span class="st">"_common.R"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/source.html">source</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Load packages</span></span>
-<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">"pacman"</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"pacman"</span><span class="op">)</span></span>
-<span><span class="fu">pacman</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pacman/man/p_load.html">p_load</a></span><span class="op">(</span><span class="va">performance</span>, <span class="va">see</span>, <span class="va">datawizard</span>, <span class="va">MASS</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"code"</span>, <span class="st">"_common.R"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">source</span>()</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load packages</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">"pacman"</span>)) <span class="fu">install.packages</span>(<span class="st">"pacman"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(performance, see, datawizard, MASS)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
 </div>
-</section><section id="individuare-e-gestire-gli-outlier" class="level2" data-number="22.1"><h2 data-number="22.1" class="anchored" data-anchor-id="individuare-e-gestire-gli-outlier">
-<span class="header-section-number">22.1</span> Individuare e gestire gli outlier</h2>
+</section>
+<section id="individuare-e-gestire-gli-outlier" class="level2" data-number="22.1">
+<h2 data-number="22.1" class="anchored" data-anchor-id="individuare-e-gestire-gli-outlier"><span class="header-section-number">22.1</span> Individuare e gestire gli outlier</h2>
 <p>L’identificazione e la gestione degli outlier (o valori anomali) rappresentano una fase critica e interpretativa dell’analisi dei dati. La maggior parte delle statistiche di sintesi e dei modelli più diffusi, come la media, la deviazione standard, il coefficiente di correlazione o i parametri di una regressione lineare, sono infatti altamente sensibili alla loro presenza. Un singolo valore estremo può distorcere in modo significativo i risultati, portando a conclusioni errate o fuorvianti.</p>
 <p>Un classico esempio è il calcolo del reddito medio: l’inclusione accidentale di un dato estremamente elevato (ad es., di un miliardario in un campione di cittadini comuni) produrrà una media che non riflette affatto la condizione economica tipica del gruppo, alterando completamente la rappresentazione della realtà.</p>
 <p>Tuttavia, è fondamentale ricordare che individuare un outlier non significa automaticamente eliminarlo. La sua gestione è una scelta metodologica che deve essere ponderata: un valore anomalo può essere un errore di misurazione da correggere, ma anche un’osservazione genuina e informativa che richiede un modello analitico più robusto o che, addirittura, costituisce il vero oggetto di studio. La decisione finale dipende sempre dal contesto sostanziale della ricerca e dalla domanda analitica che si intende affrontare.</p>
-<section id="limportanza-della-visualizzazione-dei-dati" class="level3" data-number="22.1.1"><h3 data-number="22.1.1" class="anchored" data-anchor-id="limportanza-della-visualizzazione-dei-dati">
-<span class="header-section-number">22.1.1</span> L’importanza della visualizzazione dei dati</h3>
+<section id="limportanza-della-visualizzazione-dei-dati" class="level3" data-number="22.1.1">
+<h3 data-number="22.1.1" class="anchored" data-anchor-id="limportanza-della-visualizzazione-dei-dati"><span class="header-section-number">22.1.1</span> L’importanza della visualizzazione dei dati</h3>
 <p>La visualizzazione è spesso il primo passo per individuare valori anomali. Strumenti come <strong>boxplot</strong>, <strong>istogrammi</strong> e <strong>scatterplot</strong> permettono di identificare rapidamente osservazioni che si discostano dalla distribuzione generale.</p>
 <p>Tuttavia, queste tecniche sono efficaci soprattutto per outlier <strong>unidimensionali</strong> o <strong>bidimensionali</strong>. Quando il numero di variabili cresce, l’analisi visiva diventa insufficiente e sono necessari metodi statistici più strutturati, come la <strong>distanza di Mahalanobis</strong>.</p>
-</section></section><section id="come-identificare-gli-outlier" class="level2" data-number="22.2"><h2 data-number="22.2" class="anchored" data-anchor-id="come-identificare-gli-outlier">
-<span class="header-section-number">22.2</span> Come identificare gli outlier</h2>
-<section id="i-boxplot" class="level3" data-number="22.2.1"><h3 data-number="22.2.1" class="anchored" data-anchor-id="i-boxplot">
-<span class="header-section-number">22.2.1</span> I boxplot</h3>
+</section>
+</section>
+<section id="come-identificare-gli-outlier" class="level2" data-number="22.2">
+<h2 data-number="22.2" class="anchored" data-anchor-id="come-identificare-gli-outlier"><span class="header-section-number">22.2</span> Come identificare gli outlier</h2>
+<section id="i-boxplot" class="level3" data-number="22.2.1">
+<h3 data-number="22.2.1" class="anchored" data-anchor-id="i-boxplot"><span class="header-section-number">22.2.1</span> I boxplot</h3>
 <p>Il <em>boxplot</em> è uno strumento semplice e intuitivo. Riassume la distribuzione mostrando la mediana, il primo e il terzo quartile (Q1 e Q3) e due estremi, detti “whiskers”. I punti al di fuori di questi whiskers sono considerati potenziali outlier.</p>
 <p>Esempio in R:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
-<span>  value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">100</span>, mean <span class="op">=</span> <span class="fl">10</span>, sd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>, <span class="fl">30</span><span class="op">)</span></span>
-<span>  <span class="op">)</span> <span class="co"># Aggiungiamo un outlier</span></span>
-<span></span>
-<span><span class="fu">ggplot</span><span class="op">(</span><span class="va">data</span>, <span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_boxplot</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">coord_flip</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> <span class="fu">c</span>(<span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="at">mean =</span> <span class="dv">10</span>, <span class="at">sd =</span> <span class="dv">2</span>), <span class="dv">30</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  ) <span class="co"># Aggiungiamo un outlier</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">y =</span> value)) <span class="sc">+</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>()</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><a href="11_outlier_files/figure-html/unnamed-chunk-2-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="11_outlier_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a></p>
+<figure class="figure">
+<p><a href="11_outlier_files/figure-html/unnamed-chunk-2-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="11_outlier_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a></p>
 </figure>
 </div>
 </div>
 </div>
-</section><section id="metodi-basati-sulla-variabilità" class="level3" data-number="22.2.2"><h3 data-number="22.2.2" class="anchored" data-anchor-id="metodi-basati-sulla-variabilità">
-<span class="header-section-number">22.2.2</span> Metodi basati sulla variabilità</h3>
-<section id="intervallo-interquartile-iqr" class="level4" data-number="22.2.2.1"><h4 data-number="22.2.2.1" class="anchored" data-anchor-id="intervallo-interquartile-iqr">
-<span class="header-section-number">22.2.2.1</span> Intervallo interquartile (IQR)</h4>
+</section>
+<section id="metodi-basati-sulla-variabilità" class="level3" data-number="22.2.2">
+<h3 data-number="22.2.2" class="anchored" data-anchor-id="metodi-basati-sulla-variabilità"><span class="header-section-number">22.2.2</span> Metodi basati sulla variabilità</h3>
+<section id="intervallo-interquartile-iqr" class="level4" data-number="22.2.2.1">
+<h4 data-number="22.2.2.1" class="anchored" data-anchor-id="intervallo-interquartile-iqr"><span class="header-section-number">22.2.2.1</span> Intervallo interquartile (IQR)</h4>
 <p>John Tukey ha introdotto una definizione operativa di outlier basata sull’<em>Interquartile Range</em> (IQR), ovvero la differenza tra il terzo e il primo quartile:</p>
 <ul>
 <li>i valori inferiori a <span class="math inline">\(Q1 - 1.5 \times IQR\)</span> o superiori a <span class="math inline">\(Q3 + 1.5 \times IQR\)</span> sono considerati outlier moderati;</li>
@@ -687,31 +721,35 @@ window.Quarto = {
 </ul>
 <p>Esempio in R:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">Q1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">value</span>, <span class="fl">0.25</span><span class="op">)</span></span>
-<span><span class="va">Q3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">value</span>, <span class="fl">0.75</span><span class="op">)</span></span>
-<span><span class="va">IQR_value</span> <span class="op">&lt;-</span> <span class="va">Q3</span> <span class="op">-</span> <span class="va">Q1</span></span>
-<span><span class="va">lower_bound</span> <span class="op">&lt;-</span> <span class="va">Q1</span> <span class="op">-</span> <span class="fl">1.5</span> <span class="op">*</span> <span class="va">IQR_value</span></span>
-<span><span class="va">upper_bound</span> <span class="op">&lt;-</span> <span class="va">Q3</span> <span class="op">+</span> <span class="fl">1.5</span> <span class="op">*</span> <span class="va">IQR_value</span></span>
-<span></span>
-<span><span class="va">outliers</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">$</span><span class="va">value</span><span class="op">[</span><span class="va">data</span><span class="op">$</span><span class="va">value</span> <span class="op">&lt;</span> <span class="va">lower_bound</span> <span class="op">|</span> <span class="va">data</span><span class="op">$</span><span class="va">value</span> <span class="op">&gt;</span> <span class="va">upper_bound</span><span class="op">]</span></span>
-<span><span class="va">outliers</span></span>
-<span><span class="co">#&gt; [1] 15.49  3.79 30.00</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Q1 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(data<span class="sc">$</span>value, <span class="fl">0.25</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>Q3 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(data<span class="sc">$</span>value, <span class="fl">0.75</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>IQR_value <span class="ot">&lt;-</span> Q3 <span class="sc">-</span> Q1</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>lower_bound <span class="ot">&lt;-</span> Q1 <span class="sc">-</span> <span class="fl">1.5</span> <span class="sc">*</span> IQR_value</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>upper_bound <span class="ot">&lt;-</span> Q3 <span class="sc">+</span> <span class="fl">1.5</span> <span class="sc">*</span> IQR_value</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>outliers <span class="ot">&lt;-</span> data<span class="sc">$</span>value[data<span class="sc">$</span>value <span class="sc">&lt;</span> lower_bound <span class="sc">|</span> data<span class="sc">$</span>value <span class="sc">&gt;</span> upper_bound]</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>outliers</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 15.49  3.79 30.00</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Questo metodo è robusto e semplice, ma può risultare meno efficace con distribuzioni fortemente asimmetriche.</p>
-</section><section id="median-absolute-deviation-mad" class="level4" data-number="22.2.2.2"><h4 data-number="22.2.2.2" class="anchored" data-anchor-id="median-absolute-deviation-mad">
-<span class="header-section-number">22.2.2.2</span> Median Absolute Deviation (MAD)</h4>
+</section>
+<section id="median-absolute-deviation-mad" class="level4" data-number="22.2.2.2">
+<h4 data-number="22.2.2.2" class="anchored" data-anchor-id="median-absolute-deviation-mad"><span class="header-section-number">22.2.2.2</span> Median Absolute Deviation (MAD)</h4>
 <p>Un metodo più robusto rispetto all’IQR è il <em>Median Absolute Deviation</em> (MAD), che utilizza la mediana anziché la media per stimare la dispersione:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mad_value</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/mad.html">mad</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">value</span><span class="op">)</span></span>
-<span><span class="va">threshold</span> <span class="op">&lt;-</span> <span class="fl">3</span> <span class="op">*</span> <span class="va">mad_value</span> <span class="co"># Soglia classica per gli outlier</span></span>
-<span></span>
-<span><span class="va">outliers_mad</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">$</span><span class="va">value</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">value</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">value</span><span class="op">)</span><span class="op">)</span> <span class="op">&gt;</span> <span class="va">threshold</span><span class="op">]</span></span>
-<span><span class="va">outliers_mad</span></span>
-<span><span class="co">#&gt; [1] 15.49  3.79 30.00</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mad_value <span class="ot">&lt;-</span> <span class="fu">mad</span>(data<span class="sc">$</span>value)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>threshold <span class="ot">&lt;-</span> <span class="dv">3</span> <span class="sc">*</span> mad_value <span class="co"># Soglia classica per gli outlier</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>outliers_mad <span class="ot">&lt;-</span> data<span class="sc">$</span>value[<span class="fu">abs</span>(data<span class="sc">$</span>value <span class="sc">-</span> <span class="fu">median</span>(data<span class="sc">$</span>value)) <span class="sc">&gt;</span> threshold]</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>outliers_mad</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 15.49  3.79 30.00</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>È spesso preferibile quando i dati non seguono una distribuzione normale.</p>
-</section></section></section><section id="outlier-multivariati" class="level2" data-number="22.3"><h2 data-number="22.3" class="anchored" data-anchor-id="outlier-multivariati">
-<span class="header-section-number">22.3</span> Outlier multivariati</h2>
+</section>
+</section>
+</section>
+<section id="outlier-multivariati" class="level2" data-number="22.3">
+<h2 data-number="22.3" class="anchored" data-anchor-id="outlier-multivariati"><span class="header-section-number">22.3</span> Outlier multivariati</h2>
 <p>Un’osservazione può non apparire anomala su una singola variabile, ma risultare atipica considerando <strong>più variabili simultaneamente</strong>. La <strong>distanza di Mahalanobis</strong> misura quanto ogni osservazione si discosta dal centro multivariato, tenendo conto delle <strong>correlazioni</strong> tra variabili.</p>
 <ul>
 <li>Con la distanza “normale” (come quella che misuri con un righello), se una persona è più alta o più pesante della media, la distanza è calcolata in modo “isolato”, senza considerare che altezza e peso sono spesso correlate (persone più alte tendono a pesare di più).</li>
@@ -719,12 +757,14 @@ window.Quarto = {
 </ul>
 <p>Per comprendere intuitivamente la distanza di Mahalanobis, immaginiamo di avere una nube di punti che rappresentano individui, ciascuno con i propri valori di altezza e peso. Il “centro” di questa nube è un punto ideale che rappresenta una sorta di media multivariata (tenendo conto sia dell’altezza sia del peso). La distanza di Mahalanobis misura quanto ogni singolo individuo si allontana da questo centro, considerando la variabilità congiunta delle variabili (ad esempio, la correlazione tra altezza e peso). Se un individuo presenta caratteristiche molto diverse rispetto alla maggioranza, la sua distanza di Mahalanobis sarà elevata, segnalando un potenziale outlier.</p>
 <div id="fig-maha-dist" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-maha-dist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-maha-dist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <a href="../../figures/outliers.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figura&nbsp;22.1: Soglie per la detezione degli outliers (bande grigie) nel caso di una metrica unidimensionale (pannello di sinistra) e nel caso di una rappresentazione multivariata della varianza (pannello di destra) – figura creata da Sergen Cansiz."><img src="../../figures/outliers.png" class="img-fluid figure-img" style="width:70.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-maha-dist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;22.1: <strong>Soglie per la detezione degli outliers</strong> (bande grigie) nel caso di una metrica unidimensionale (pannello di sinistra) e nel caso di una rappresentazione multivariata della varianza (pannello di destra) – figura creata da Sergen Cansiz.
-</figcaption></figure>
+</figcaption>
+</figure>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled" title="Distanza di Mahalanobis">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
@@ -740,46 +780,35 @@ Figura&nbsp;22.1: <strong>Soglie per la detezione degli outliers</strong> (bande
 <div class="callout-body-container callout-body">
 <p>Consideriamo ora una definizione della distanza di Mahalanobis nel caso bivariato (due variabili). Immaginiamo di avere due variabili come altezza (<span class="math inline">\(X\)</span>) e peso (<span class="math inline">\(Y\)</span>), con:</p>
 <ul>
-<li>
-<strong>Medie</strong>: <span class="math inline">\(\mu_X\)</span> (altezza media del gruppo), <span class="math inline">\(\mu_Y\)</span> (peso medio del gruppo).<br>
+<li><strong>Medie</strong>: <span class="math inline">\(\mu_X\)</span> (altezza media del gruppo), <span class="math inline">\(\mu_Y\)</span> (peso medio del gruppo).<br>
 </li>
-<li>
-<strong>Varianze</strong>: <span class="math inline">\(\sigma_X^2\)</span> (quanto varia l’altezza), <span class="math inline">\(\sigma_Y^2\)</span> (quanto varia il peso).<br>
+<li><strong>Varianze</strong>: <span class="math inline">\(\sigma_X^2\)</span> (quanto varia l’altezza), <span class="math inline">\(\sigma_Y^2\)</span> (quanto varia il peso).<br>
 </li>
-<li>
-<strong>Correlazione</strong>: <span class="math inline">\(\rho\)</span> (quanto <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> sono legate, ad esempio: se l’altezza aumenta, di quanto aumenta solitamente il peso?).</li>
+<li><strong>Correlazione</strong>: <span class="math inline">\(\rho\)</span> (quanto <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> sono legate, ad esempio: se l’altezza aumenta, di quanto aumenta solitamente il peso?).</li>
 </ul>
 <p><strong>Per un nuovo individuo</strong> con altezza <span class="math inline">\(x\)</span> e peso <span class="math inline">\(y\)</span>, la distanza di Mahalanobis (<span class="math inline">\(D\)</span>) si calcola così:</p>
 <ol type="1">
-<li>
-<p><strong>Calcolare le differenze rispetto alla media</strong>:</p>
+<li><p><strong>Calcolare le differenze rispetto alla media</strong>:</p>
 <ul>
 <li>Quanto si discosta l’altezza: <span class="math inline">\((x - \mu_X)\)</span>.</li>
 <li>Quanto si discosta il peso: <span class="math inline">\((y - \mu_Y)\)</span>.</li>
-</ul>
-</li>
-<li>
-<p><strong>Scalare le differenze con le varianze</strong>:</p>
+</ul></li>
+<li><p><strong>Scalare le differenze con le varianze</strong>:</p>
 <ul>
-<li>
-<p>Dividere ogni differenza per la sua “variabilità tipica” (deviazione standard <span class="math inline">\(\sigma_X\)</span> e <span class="math inline">\(\sigma_Y\)</span>):</p>
+<li><p>Dividere ogni differenza per la sua “variabilità tipica” (deviazione standard <span class="math inline">\(\sigma_X\)</span> e <span class="math inline">\(\sigma_Y\)</span>):</p>
 <p><span class="math display">\[
 \frac{(x - \mu_X)}{\sigma_X} \quad \text{e} \quad \frac{(y - \mu_Y)}{\sigma_Y} .
-\]</span></p>
-</li>
-</ul>
-</li>
-<li>
-<p><strong>Correggere per la correlazione</strong>:</p>
+\]</span></p></li>
+</ul></li>
+<li><p><strong>Correggere per la correlazione</strong>:</p>
 <ul>
 <li>Se <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> sono correlate (<span class="math inline">\(\rho \neq 0\)</span>), modifica le differenze per tenere conto di come di solito si “muovono insieme”.<br>
 </li>
-<li>La formula finale combina tutto in un unico valore:<br><span class="math display">\[
+<li>La formula finale combina tutto in un unico valore:<br>
+<span class="math display">\[
 D = \sqrt{ \frac{ \left( \frac{(x - \mu_X)}{\sigma_X} \right)^2 + \left( \frac{(y - \mu_Y)}{\sigma_Y} \right)^2 - 2 \rho \left( \frac{(x - \mu_X)}{\sigma_X} \right)\left( \frac{(y - \mu_Y)}{\sigma_Y} \right) }{1 - \rho^2} }
-\]</span>
-</li>
-</ul>
-</li>
+\]</span></li>
+</ul></li>
 </ol>
 <p><strong>Spiegazione</strong>:</p>
 <ul>
@@ -815,64 +844,61 @@ d = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}
 </div>
 <p>Esempio in R:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"mpg"</span>, <span class="st">"hp"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="va">center</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">colMeans</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span></span>
-<span><span class="va">cov_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cov</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span></span>
-<span><span class="va">mahal_dist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/mahalanobis.html">mahalanobis</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">center</span>, <span class="va">cov_matrix</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">threshold</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html">qchisq</a></span><span class="op">(</span><span class="fl">0.975</span>, df <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span> <span class="co"># Soglia al 97.5%</span></span>
-<span><span class="va">outliers_mahal</span> <span class="op">&lt;-</span> <span class="va">X</span><span class="op">[</span><span class="va">mahal_dist</span> <span class="op">&gt;</span> <span class="va">threshold</span>, <span class="op">]</span></span>
-<span><span class="va">outliers_mahal</span></span>
-<span><span class="co">#&gt; mpg  hp </span></span>
-<span><span class="co">#&gt;  15 335</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(mtcars[, <span class="fu">c</span>(<span class="st">"mpg"</span>, <span class="st">"hp"</span>)])</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>center <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(X)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>cov_matrix <span class="ot">&lt;-</span> <span class="fu">cov</span>(X)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>mahal_dist <span class="ot">&lt;-</span> <span class="fu">mahalanobis</span>(X, center, cov_matrix)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>threshold <span class="ot">&lt;-</span> <span class="fu">qchisq</span>(<span class="fl">0.975</span>, <span class="at">df =</span> <span class="fu">ncol</span>(X)) <span class="co"># Soglia al 97.5%</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>outliers_mahal <span class="ot">&lt;-</span> X[mahal_dist <span class="sc">&gt;</span> threshold, ]</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>outliers_mahal</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; mpg  hp </span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  15 335</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Questo metodo è utile per dataset con più variabili correlate, come misure biometriche (altezza e peso).</p>
 <p>Tuttavia, la versione classica di questa misura non è particolarmente robusta: la presenza stessa di outlier può distorcere il calcolo del “centro” e della variabilità complessiva, rendendo meno affidabile l’individuazione di altri valori anomali. Per questo motivo, si preferisce utilizzare una variante più resistente, la Minimum Covariance Determinant (MCD), che diminuisce l’influenza degli outlier stessi nel processo di identificazione.</p>
 <p>All’interno del pacchetto {performance} in R, è possibile applicare questa variante robusta utilizzando la funzione <code>check_outliers()</code> con l’argomento <code>method = "mcd"</code>. In questo modo, è possibile individuare gli outlier multivariati in maniera più solida e coerente, anche quando si lavora con dati fortemente influenzati da valori estremi.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="va">mtcars</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"mpg"</span>, <span class="st">"hp"</span><span class="op">)</span><span class="op">]</span></span>
-<span><span class="va">outliers</span> <span class="op">&lt;-</span> <span class="fu">performance</span><span class="fu">::</span><span class="fu"><a href="https://easystats.github.io/performance/reference/check_outliers.html">check_outliers</a></span><span class="op">(</span><span class="va">d</span>, method <span class="op">=</span> <span class="st">"mcd"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">outliers</span></span>
-<span><span class="co">#&gt; 2 outliers detected: cases 20, 31.</span></span>
-<span><span class="co">#&gt; - Based on the following method and threshold: mcd (13.816).</span></span>
-<span><span class="co">#&gt; - For variables: mpg, hp.</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> mtcars[, <span class="fu">c</span>(<span class="st">"mpg"</span>, <span class="st">"hp"</span>)]</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>outliers <span class="ot">&lt;-</span> performance<span class="sc">::</span><span class="fu">check_outliers</span>(d, <span class="at">method =</span> <span class="st">"mcd"</span>, <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>outliers</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 outliers detected: cases 20, 31.</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - Based on the following method and threshold: mcd (13.816).</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; - For variables: mpg, hp.</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Si possono poi visualizzare questi outlier:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">outliers</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $threshold_outliers</span></span>
-<span><span class="co">#&gt; [1] 20 31</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $threshold</span></span>
-<span><span class="co">#&gt; [1] 13.8</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $elbow_outliers</span></span>
-<span><span class="co">#&gt; [1] 31</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $elbow_threshold</span></span>
-<span><span class="co">#&gt; [1] 6.41</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(outliers)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $threshold_outliers</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 20 31</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $threshold</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 13.8</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $elbow_outliers</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 31</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $elbow_threshold</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 6.41</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><a href="11_outlier_files/figure-html/unnamed-chunk-7-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="11_outlier_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a></p>
+<figure class="figure">
+<p><a href="11_outlier_files/figure-html/unnamed-chunk-7-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="11_outlier_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></a></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Sono disponibili anche altre varianti multivariate documentate nella help page della funzione.</p>
-</section><section id="cosa-fare-con-gli-outlier" class="level2" data-number="22.4"><h2 data-number="22.4" class="anchored" data-anchor-id="cosa-fare-con-gli-outlier">
-<span class="header-section-number">22.4</span> Cosa fare con gli outlier?</h2>
+</section>
+<section id="cosa-fare-con-gli-outlier" class="level2" data-number="22.4">
+<h2 data-number="22.4" class="anchored" data-anchor-id="cosa-fare-con-gli-outlier"><span class="header-section-number">22.4</span> Cosa fare con gli outlier?</h2>
 <p>Una volta identificati gli outlier, dobbiamo decidere se rimuoverli, correggerli o mantenerli <span class="citation" data-cites="leys2019classify">(<a href="#ref-leys2019classify" role="doc-biblioref">Leys et al., 2019</a>)</span>. Alcuni approcci comuni includono:</p>
 <ol type="1">
-<li>
-<strong>Verificare la fonte del dato</strong>: un errore di inserimento può essere corretto.</li>
-<li>
-<strong>Rimuovere gli outlier estremi</strong>: utile se il valore è chiaramente un errore di misura.</li>
-<li>
-<strong>Usare metodi robusti</strong>: strumenti come la mediana o il MAD sono meno influenzati dagli outlier.</li>
-<li>
-<strong>Trasformare i dati</strong>: applicare logaritmi o altre trasformazioni può ridurre l’impatto degli outlier.</li>
-<li>
-<strong>Winsorizzazione</strong>: invece di rimuovere gli outlier, possiamo limitarli a un massimo accettabile.</li>
+<li><strong>Verificare la fonte del dato</strong>: un errore di inserimento può essere corretto.</li>
+<li><strong>Rimuovere gli outlier estremi</strong>: utile se il valore è chiaramente un errore di misura.</li>
+<li><strong>Usare metodi robusti</strong>: strumenti come la mediana o il MAD sono meno influenzati dagli outlier.</li>
+<li><strong>Trasformare i dati</strong>: applicare logaritmi o altre trasformazioni può ridurre l’impatto degli outlier.</li>
+<li><strong>Winsorizzazione</strong>: invece di rimuovere gli outlier, possiamo limitarli a un massimo accettabile.</li>
 </ol>
 <div class="callout callout-style-default callout-tip callout-titled" title="Winsorizzazione">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
@@ -889,57 +915,53 @@ d = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}
 <p>La <strong>Winsorizzazione</strong> è una tecnica per gestire gli outlier senza eliminarli. Invece di scartare i valori estremi, questi vengono sostituiti con il valore più vicino ritenuto “accettabile”, preservando così la struttura e la dimensione del dataset.</p>
 <p><strong>Come si applica?</strong> Il procedimento si articola in due passaggi principali:</p>
 <ol type="1">
-<li>
-<strong>Definire le soglie</strong><br>
+<li><strong>Definire le soglie</strong><br>
 Si scelgono due percentili come limiti. Una scelta comune è utilizzare il <strong>5° percentile</strong> per il limite inferiore e il <strong>95° percentile</strong> per quello superiore.
 <ul>
 <li>I valori al di sotto del 5° percentile sono considerati outlier “bassi”.</li>
 <li>I valori al di sopra del 95° percentile sono considerati outlier “alti”.</li>
 <li>I percentili possono essere adattati (es. 1° e 99°) a seconda della necessità di essere più o meno conservativi.</li>
-</ul>
-</li>
-<li>
-<strong>Sostituire i valori</strong>
+</ul></li>
+<li><strong>Sostituire i valori</strong>
 <ul>
 <li>Tutti i dati <strong>inferiori</strong> al limite inferiore vengono portati al valore di quel limite (es. 5° percentile).</li>
 <li>Tutti i dati <strong>superiori</strong> al limite superiore vengono portati al valore di quel limite (es. 95° percentile).</li>
-</ul>
-</li>
+</ul></li>
 </ol>
 <p><strong>Esempio Pratico</strong></p>
-<p>Consideriamo i voti di 10 esami, ordinati:<br><code>40, 55, 60, 65, 70, 75, 80, 85, 90, 200</code></p>
+<p>Consideriamo i voti di 10 esami, ordinati:<br>
+<code>40, 55, 60, 65, 70, 75, 80, 85, 90, 200</code></p>
 <ul>
-<li>
-<strong>Limite inferiore (5° percentile)</strong>: 55</li>
-<li>
-<strong>Limite superiore (95° percentile)</strong>: 90</li>
+<li><strong>Limite inferiore (5° percentile)</strong>: 55</li>
+<li><strong>Limite superiore (95° percentile)</strong>: 90</li>
 </ul>
 <p><strong>Applicando la Winsorizzazione</strong>:</p>
 <ul>
 <li>Il valore <code>40</code> (outlier basso) viene sostituito con <code>55</code>.</li>
 <li>Il valore <code>200</code> (outlier alto) viene sostituito con <code>90</code>.</li>
 </ul>
-<p><strong>Dataset winsorizzato</strong>:<br><code>55, 55, 60, 65, 70, 75, 80, 85, 90, 90</code></p>
+<p><strong>Dataset winsorizzato</strong>:<br>
+<code>55, 55, 60, 65, 70, 75, 80, 85, 90, 90</code></p>
 <p><strong>Vantaggi e Applicazioni</strong></p>
 <ul>
-<li>
-<strong>Mantiene la dimensione del campione</strong>: non si perdono osservazioni, si “aggiustano” solo gli estremi.</li>
-<li>
-<strong>Robustezza statistica</strong>: riduce drasticamente l’influenza distorsiva degli outlier su indicatori sensibili come la media e la deviazione standard.</li>
-<li>
-<strong>Utilità pratica</strong>: è particolarmente utile in campi come la psicologia (per contenere l’effetto di misurazioni estreme), dove l’eliminazione dei dati non è sempre desiderabile o giustificabile.</li>
+<li><strong>Mantiene la dimensione del campione</strong>: non si perdono osservazioni, si “aggiustano” solo gli estremi.</li>
+<li><strong>Robustezza statistica</strong>: riduce drasticamente l’influenza distorsiva degli outlier su indicatori sensibili come la media e la deviazione standard.</li>
+<li><strong>Utilità pratica</strong>: è particolarmente utile in campi come la psicologia (per contenere l’effetto di misurazioni estreme), dove l’eliminazione dei dati non è sempre desiderabile o giustificabile.</li>
 </ul>
 </div>
 </div>
 </div>
 <p>Nel pacchetto <strong>easystats</strong>, la funzione <code>winsorize()</code> di <strong>datawizard</strong> semplifica il compito di Winsorizzazione:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">winsorized_data</span> <span class="op">&lt;-</span> </span>
-<span>  <span class="fu">winsorize</span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">value</span>, method <span class="op">=</span> <span class="st">"zscore"</span>, robust <span class="op">=</span> <span class="cn">TRUE</span>, threshold <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</section><section id="importanza-della-trasparenza" class="level2" data-number="22.5"><h2 data-number="22.5" class="anchored" data-anchor-id="importanza-della-trasparenza">
-<span class="header-section-number">22.5</span> Importanza della trasparenza</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>winsorized_data <span class="ot">&lt;-</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">winsorize</span>(data<span class="sc">$</span>value, <span class="at">method =</span> <span class="st">"zscore"</span>, <span class="at">robust =</span> <span class="cn">TRUE</span>, <span class="at">threshold =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="importanza-della-trasparenza" class="level2" data-number="22.5">
+<h2 data-number="22.5" class="anchored" data-anchor-id="importanza-della-trasparenza"><span class="header-section-number">22.5</span> Importanza della trasparenza</h2>
 <p>Qualunque scelta fatta nella gestione degli outlier deve essere documentata in modo completo e replicabile. La trasparenza richiede di specificare chiaramente quanti outlier sono stati individuati, descrivendo il metodo di identificazione e le soglie applicate. È fondamentale dichiarare in che modo sono stati gestiti, se mantenuti, corretti o esclusi, e fornire il codice utilizzato per l’intera procedura, preferibilmente in linguaggi come R o Python.</p>
 <p>Questa tracciabilità metodologica costituisce la base di una ricerca rigorosa. Pratiche come la preregistrazione del protocollo analitico e la condivisione aperta di dati e codice su piattaforme quali OSF, GitHub o Zenodo non sono semplicemente raccomandabili, ma rappresentano ormai lo standard imprescindibile per assicurare riproducibilità, credibilità e integrità scientifica.</p>
-</section><section id="riflessioni-conclusive" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="riflessioni-conclusive">Riflessioni conclusive</h2>
+</section>
+<section id="riflessioni-conclusive" class="level2 unnumbered unlisted">
+<h2 class="unnumbered unlisted anchored" data-anchor-id="riflessioni-conclusive">Riflessioni conclusive</h2>
 <p>L’analisi degli outlier non è una procedura meccanica o puramente tecnica, ma una scelta metodologica sostanziale. L’obiettivo delle buone pratiche non è quello di “ripulire” i dati automaticamente, quanto piuttosto di comprendere l’origine dei valori anomali, applicare metodi coerenti con gli obiettivi della ricerca, e documentare con trasparenza e giustificazione ogni decisione presa. In questo quadro, la gestione degli outlier non è un passaggio secondario, ma parte integrante di un’analisi dei dati responsabile, che mira a garantire rigore, riproducibilità e validità interpretativa dei risultati.</p>
 <div class="callout callout-style-default callout-important callout-titled" title="Problemi 1">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
@@ -982,60 +1004,42 @@ Si scelgono due percentili come limiti. Una scelta comune è utilizzare il <stro
 <div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ol type="1">
-<li>
-<p><strong>Cos’è un outlier?</strong></p>
+<li><p><strong>Cos’è un outlier?</strong></p>
 <ul>
 <li>Un outlier è un’osservazione che si discosta significativamente dalla maggior parte delle altre osservazioni in un insieme di dati. Può essere dovuto ad errori di misura, errori di inserimento dati o a casi estremi ma validi.</li>
-</ul>
-</li>
-<li>
-<p><strong>Perché è importante identificare e trattare correttamente gli outlier?</strong></p>
+</ul></li>
+<li><p><strong>Perché è importante identificare e trattare correttamente gli outlier?</strong></p>
 <ul>
 <li>Gli outlier possono distorcere i risultati dell’analisi statistica, portando a conclusioni errate. Identificarli e trattarli correttamente aiuta a ridurre l’effetto di questi valori anomali sulle statistiche descrittive e sulle inferenze statistiche.</li>
-</ul>
-</li>
-<li>
-<p><strong>Descrivi brevemente il metodo del boxplot per identificare gli outlier.</strong></p>
+</ul></li>
+<li><p><strong>Descrivi brevemente il metodo del boxplot per identificare gli outlier.</strong></p>
 <ul>
 <li>Il boxplot visualizza la distribuzione di una variabile, mostrando la mediana, il primo e il terzo quartile, e due estremi (“whiskers”). I punti al di fuori di questi whiskers sono considerati potenziali outlier.</li>
-</ul>
-</li>
-<li>
-<p><strong>Cosa si intende per Interquartile Range (IQR) e come viene utilizzato per individuare gli outlier?</strong></p>
+</ul></li>
+<li><p><strong>Cosa si intende per Interquartile Range (IQR) e come viene utilizzato per individuare gli outlier?</strong></p>
 <ul>
 <li>L’IQR è la differenza tra il terzo e il primo quartile di un insieme di dati. Valori inferiori a <span class="math inline">\(Q1 - 1.5 \times IQR\)</span> o superiori a <span class="math inline">\(Q3 + 1.5 \times IQR\)</span> sono considerati outlier moderati. Valori oltre <span class="math inline">\(Q1 - 3 \times IQR\)</span> o <span class="math inline">\(Q3 + 3 \times IQR\)</span> sono definiti “far out” outliers.</li>
-</ul>
-</li>
-<li>
-<p><strong>Qual è la differenza tra il metodo IQR e il Median Absolute Deviation (MAD) per l’identificazione degli outlier?</strong></p>
+</ul></li>
+<li><p><strong>Qual è la differenza tra il metodo IQR e il Median Absolute Deviation (MAD) per l’identificazione degli outlier?</strong></p>
 <ul>
 <li>Il metodo IQR si basa sulla differenza tra il terzo e il primo quartile, mentre il MAD utilizza la mediana delle deviazioni assolute dalla mediana per stimare la dispersione. Il MAD è meno sensibile agli outlier rispetto all’IQR e alla deviazione standard, rendendolo preferibile per dati con distribuzioni non normali.</li>
-</ul>
-</li>
-<li>
-<p><strong>Cos’è la distanza di Mahalanobis e in che modo può aiutare nell’identificazione degli outlier multivariati?</strong></p>
+</ul></li>
+<li><p><strong>Cos’è la distanza di Mahalanobis e in che modo può aiutare nell’identificazione degli outlier multivariati?</strong></p>
 <ul>
 <li>La distanza di Mahalanobis misura quanto un punto si discosta dal centro della distribuzione di un set di dati multivariato, tenendo conto della correlazione tra le variabili. Valori con distanze di Mahalanobis elevate sono potenziali outlier multivariati.</li>
-</ul>
-</li>
-<li>
-<p><strong>Perché la distanza di Mahalanobis classica potrebbe non essere robusta? Come si può migliorare l’approccio?</strong></p>
+</ul></li>
+<li><p><strong>Perché la distanza di Mahalanobis classica potrebbe non essere robusta? Come si può migliorare l’approccio?</strong></p>
 <ul>
 <li>La distanza di Mahalanobis classica può essere distorta dalla presenza di outlier, che influenzano il calcolo del centro e della variabilità complessiva. Un approccio più robusto è la Minimum Covariance Determinant (MCD), che riduce l’influenza degli outlier nel processo di identificazione.</li>
-</ul>
-</li>
-<li>
-<p><strong>Quali sono le opzioni per gestire gli outlier una volta identificati?</strong></p>
+</ul></li>
+<li><p><strong>Quali sono le opzioni per gestire gli outlier una volta identificati?</strong></p>
 <ul>
 <li>Le opzioni includono: verificare la fonte del dato per possibili errori, rimuovere gli outlier estremi, usare metodi robusti come la mediana o il MAD, trasformare i dati (ad esempio, logaritmi), e limitare gli outlier attraverso la Winsorizzazione.</li>
-</ul>
-</li>
-<li>
-<p><strong>Cos’è la Winsorizzazione e in quali casi potrebbe essere utile?</strong></p>
+</ul></li>
+<li><p><strong>Cos’è la Winsorizzazione e in quali casi potrebbe essere utile?</strong></p>
 <ul>
 <li>La Winsorizzazione è una tecnica che consiste nel sostituire gli outlier estremi con il valore massimo o minimo accettabile. È utile quando si vuole mantenere la dimensione del dataset e ridurre l’impatto degli outlier senza rimuoverli completamente.</li>
-</ul>
-</li>
+</ul></li>
 <li><p><strong>Perché è importante la trasparenza nelle decisioni riguardanti gli outlier?</strong></p></li>
 </ol>
 <ul>
@@ -1066,32 +1070,24 @@ Imparare a individuare e correggere gli outlier in un dataset che misura la sodd
 </ol>
 <p><strong>Fasi e Istruzioni</strong></p>
 <ol type="1">
-<li>
-<strong>Scarica o carica il dataset SWLS</strong>
+<li><strong>Scarica o carica il dataset SWLS</strong>
 <ul>
 <li>Nominare il dataset originale, ad esempio <em>SWLS_raw.csv</em>, contenente i punteggi dei partecipanti sulla Scala di Soddisfazione di Vita (SWLS).<br>
 </li>
 <li>Assicurati di avere nel dataset almeno le colonne:
 <ul>
-<li>
-<code>id</code> (identificatore univoco del partecipante)<br>
+<li><code>id</code> (identificatore univoco del partecipante)<br>
 </li>
-<li>
-<code>swls_score</code> (punteggio totale alla scala SWLS)</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<strong>Crea due outlier artificiali</strong>
+<li><code>swls_score</code> (punteggio totale alla scala SWLS)</li>
+</ul></li>
+</ul></li>
+<li><strong>Crea due outlier artificiali</strong>
 <ul>
 <li>Scegli <strong>un partecipante</strong> al quale assegnare un valore estremamente <strong>basso</strong> di <code>swls_score</code> (es. -999) e <strong>un altro partecipante</strong> con un valore estremamente <strong>alto</strong> (es. 999).<br>
 </li>
 <li>Spiega brevemente nel <code>.qmd</code> dove e come hai inserito questi valori.</li>
-</ul>
-</li>
-<li>
-<strong>Analizza i dati alla ricerca di outlier</strong>
+</ul></li>
+<li><strong>Analizza i dati alla ricerca di outlier</strong>
 <ul>
 <li>Visualizza la distribuzione tramite un boxplot e/o un istogramma.<br>
 </li>
@@ -1101,61 +1097,45 @@ Imparare a individuare e correggere gli outlier in un dataset che misura la sodd
 </li>
 <li>MAD (Median Absolute Deviation)<br>
 </li>
-</ul>
-</li>
+</ul></li>
 <li>Mostra quali osservazioni vengono segnalate come potenziali outlier.</li>
-</ul>
-</li>
-<li>
-<strong>Decidi come gestire gli outlier</strong>
+</ul></li>
+<li><strong>Decidi come gestire gli outlier</strong>
 <ul>
 <li>Scegli se rimuoverli, winsorizzarli o correggerli.<br>
 </li>
 <li>Giustifica la tua scelta: spiega perché quel metodo è appropriato per questi dati o perché preferisci un approccio rispetto a un altro.</li>
-</ul>
-</li>
-<li>
-<strong>Genera i dati “puliti”</strong>
+</ul></li>
+<li><strong>Genera i dati “puliti”</strong>
 <ul>
 <li>Applica il metodo selezionato.<br>
 </li>
 <li>Salva il dataset risultante (senza i valori anomali o con i valori modificati) in un file CSV chiamato <em>SWLS_clean.csv</em>.</li>
-</ul>
-</li>
-<li>
-<strong>Documenta tutto in un file <code>.qmd</code></strong>
+</ul></li>
+<li><strong>Documenta tutto in un file <code>.qmd</code></strong>
 <ul>
 <li>Includi codice R, commenti e brevi spiegazioni testuali dei vari passaggi.<br>
 </li>
 <li>Mostra i risultati rilevanti (boxplot, calcolo dei soglie IQR/MAD, elenco degli outlier individuati, ecc.).<br>
 </li>
 <li>Assicurati di eseguire il rendering del <code>.qmd</code> in modo che l’istruttore possa vedere sia l’output che il codice.</li>
-</ul>
-</li>
-<li>
-<strong>Consegnare i file</strong>
+</ul></li>
+<li><strong>Consegnare i file</strong>
 <ul>
-<li>
-<strong>File .qmd</strong>: deve contenere tutto il codice e i passaggi effettuati (inclusi grafici, calcoli e spiegazioni).<br>
+<li><strong>File .qmd</strong>: deve contenere tutto il codice e i passaggi effettuati (inclusi grafici, calcoli e spiegazioni).<br>
 </li>
-<li>
-<strong>File CSV “pulito”</strong> (<em>SWLS_clean.csv</em>): con i dati finali dopo il trattamento degli outlier.</li>
-</ul>
-</li>
+<li><strong>File CSV “pulito”</strong> (<em>SWLS_clean.csv</em>): con i dati finali dopo il trattamento degli outlier.</li>
+</ul></li>
 </ol>
 <p><strong>Suggerimenti</strong></p>
 <ul>
-<li>
-<strong>Struttura</strong> il tuo <code>.qmd</code> in sezioni (ad es. <em>Caricamento dati</em>, <em>Creazione outlier artificiali</em>, <em>Identificazione outlier</em>, <em>Gestione outlier</em>, <em>Salvataggio dati puliti</em>).<br>
+<li><strong>Struttura</strong> il tuo <code>.qmd</code> in sezioni (ad es. <em>Caricamento dati</em>, <em>Creazione outlier artificiali</em>, <em>Identificazione outlier</em>, <em>Gestione outlier</em>, <em>Salvataggio dati puliti</em>).<br>
 </li>
-<li>
-<strong>Motiva</strong> sempre le scelte, soprattutto se rimuovi o modifichi i dati originali: spiega perché il valore appare come un errore di misura o un valore estremo.<br>
+<li><strong>Motiva</strong> sempre le scelte, soprattutto se rimuovi o modifichi i dati originali: spiega perché il valore appare come un errore di misura o un valore estremo.<br>
 </li>
-<li>
-<strong>Fai controlli incrociati</strong>: potresti usare più di un metodo (boxplot, IQR, MAD) per vedere se l’outlier viene segnalato in tutti i casi.<br>
+<li><strong>Fai controlli incrociati</strong>: potresti usare più di un metodo (boxplot, IQR, MAD) per vedere se l’outlier viene segnalato in tutti i casi.<br>
 </li>
-<li>
-<strong>Documenta</strong> la tua strategia di trasparenza nell’analisi: note sull’eventuale preregistrazione di come avresti gestito gli outlier o su come hai deciso i threshold.</li>
+<li><strong>Documenta</strong> la tua strategia di trasparenza nell’analisi: note sull’eventuale preregistrazione di come avresti gestito gli outlier o su come hai deciso i threshold.</li>
 </ul>
 </div>
 </div>
@@ -1173,70 +1153,69 @@ Imparare a individuare e correggere gli outlier in un dataset che misura la sodd
 <div id="callout-9" class="callout-9-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; R version 4.5.2 (2025-10-31)</span></span>
-<span><span class="co">#&gt; Platform: aarch64-apple-darwin20</span></span>
-<span><span class="co">#&gt; Running under: macOS Tahoe 26.2</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Matrix products: default</span></span>
-<span><span class="co">#&gt; BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib </span></span>
-<span><span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; locale:</span></span>
-<span><span class="co">#&gt; [1] C.UTF-8/UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; time zone: Europe/Rome</span></span>
-<span><span class="co">#&gt; tzcode source: internal</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; attached base packages:</span></span>
-<span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt;  [1] MASS_7.3-65           datawizard_1.3.0      see_0.12.0           </span></span>
-<span><span class="co">#&gt;  [4] performance_0.15.2    ragg_1.5.0            tinytable_0.15.2     </span></span>
-<span><span class="co">#&gt;  [7] withr_3.0.2           systemfonts_1.3.1     patchwork_1.3.2      </span></span>
-<span><span class="co">#&gt; [10] ggdist_3.3.3          tidybayes_3.0.7       bayesplot_1.15.0     </span></span>
-<span><span class="co">#&gt; [13] ggplot2_4.0.1         reliabilitydiag_0.2.1 priorsense_1.2.0     </span></span>
-<span><span class="co">#&gt; [16] posterior_1.6.1       loo_2.9.0             rstan_2.32.7         </span></span>
-<span><span class="co">#&gt; [19] StanHeaders_2.32.10   brms_2.23.0           Rcpp_1.1.0           </span></span>
-<span><span class="co">#&gt; [22] sessioninfo_1.2.3     conflicted_1.2.0      janitor_2.2.1        </span></span>
-<span><span class="co">#&gt; [25] matrixStats_1.5.0     modelr_0.1.11         tibble_3.3.0         </span></span>
-<span><span class="co">#&gt; [28] dplyr_1.1.4           tidyr_1.3.2           rio_1.2.4            </span></span>
-<span><span class="co">#&gt; [31] here_1.0.2           </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;  [1] gridExtra_2.3         inline_0.3.21         sandwich_3.1-1       </span></span>
-<span><span class="co">#&gt;  [4] rlang_1.1.7           magrittr_2.0.4        multcomp_1.4-29      </span></span>
-<span><span class="co">#&gt;  [7] snakecase_0.11.1      otel_0.2.0            compiler_4.5.2       </span></span>
-<span><span class="co">#&gt; [10] vctrs_0.6.5           stringr_1.6.0         pkgconfig_2.0.3      </span></span>
-<span><span class="co">#&gt; [13] arrayhelpers_1.1-0    fastmap_1.2.0         backports_1.5.0      </span></span>
-<span><span class="co">#&gt; [16] labeling_0.4.3        rmarkdown_2.30        purrr_1.2.1          </span></span>
-<span><span class="co">#&gt; [19] xfun_0.55             cachem_1.1.0          jsonlite_2.0.0       </span></span>
-<span><span class="co">#&gt; [22] broom_1.0.11          parallel_4.5.2        R6_2.6.1             </span></span>
-<span><span class="co">#&gt; [25] stringi_1.8.7         RColorBrewer_1.1-3    lubridate_1.9.4      </span></span>
-<span><span class="co">#&gt; [28] estimability_1.5.1    knitr_1.51            zoo_1.8-15           </span></span>
-<span><span class="co">#&gt; [31] pacman_0.5.1          Matrix_1.7-4          splines_4.5.2        </span></span>
-<span><span class="co">#&gt; [34] timechange_0.3.0      tidyselect_1.2.1      abind_1.4-8          </span></span>
-<span><span class="co">#&gt; [37] codetools_0.2-20      curl_7.0.0            pkgbuild_1.4.8       </span></span>
-<span><span class="co">#&gt; [40] lattice_0.22-7        bridgesampling_1.2-1  S7_0.2.1             </span></span>
-<span><span class="co">#&gt; [43] coda_0.19-4.1         evaluate_1.0.5        survival_3.8-3       </span></span>
-<span><span class="co">#&gt; [46] RcppParallel_5.1.11-1 pillar_1.11.1         tensorA_0.36.2.1     </span></span>
-<span><span class="co">#&gt; [49] checkmate_2.3.3       stats4_4.5.2          insight_1.4.4        </span></span>
-<span><span class="co">#&gt; [52] distributional_0.5.0  generics_0.1.4        rprojroot_2.1.1      </span></span>
-<span><span class="co">#&gt; [55] rstantools_2.5.0      scales_1.4.0          xtable_1.8-4         </span></span>
-<span><span class="co">#&gt; [58] glue_1.8.0            emmeans_2.0.1         tools_4.5.2          </span></span>
-<span><span class="co">#&gt; [61] mvtnorm_1.3-3         grid_4.5.2            QuickJSR_1.8.1       </span></span>
-<span><span class="co">#&gt; [64] colorspace_2.1-2      nlme_3.1-168          cli_3.6.5            </span></span>
-<span><span class="co">#&gt; [67] textshaping_1.0.4     svUnit_1.0.8          Brobdingnag_1.2-9    </span></span>
-<span><span class="co">#&gt; [70] V8_8.0.1              gtable_0.3.6          digest_0.6.39        </span></span>
-<span><span class="co">#&gt; [73] ggrepel_0.9.6         TH.data_1.1-5         htmlwidgets_1.6.4    </span></span>
-<span><span class="co">#&gt; [76] farver_2.1.2          memoise_2.0.1         htmltools_0.5.9      </span></span>
-<span><span class="co">#&gt; [79] lifecycle_1.0.5</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; R version 4.6.0 (2026-04-24)</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Platform: aarch64-apple-darwin23</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Running under: macOS Tahoe 26.5.1</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Matrix products: default</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib </span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; locale:</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] C.UTF-8/UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; time zone: Europe/Rome</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tzcode source: internal</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; attached base packages:</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; other attached packages:</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] MASS_7.3-65           datawizard_1.3.1      see_0.14.1           </span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [4] performance_0.17.1    ragg_1.5.2            tinytable_0.17.0     </span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [7] withr_3.0.3           systemfonts_1.3.2     patchwork_1.3.2      </span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [10] ggdist_3.3.3          tidybayes_3.0.7       bayesplot_1.15.0     </span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [13] ggplot2_4.0.3         reliabilitydiag_0.2.1 priorsense_1.2.0     </span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [16] posterior_1.7.0       loo_2.10.0            rstan_2.32.7         </span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [19] StanHeaders_2.32.10   brms_2.23.0           Rcpp_1.1.1-1.1       </span></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [22] sessioninfo_1.2.4     conflicted_1.2.0      janitor_2.2.1        </span></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [25] matrixStats_1.5.0     modelr_0.1.11         tibble_3.3.1         </span></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [28] dplyr_1.2.1           tidyr_1.3.2           rio_1.3.0            </span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [31] here_1.0.2           </span></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] svUnit_1.0.8          tidyselect_1.2.1      farver_2.1.2         </span></span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [4] S7_0.2.2              fastmap_1.2.0         tensorA_0.36.2.1     </span></span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [7] pacman_0.5.1          digest_0.6.39         timechange_0.4.0     </span></span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [10] estimability_2.0.0    lifecycle_1.0.5       magrittr_2.0.5       </span></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [13] compiler_4.6.0        rlang_1.2.0           tools_4.6.0          </span></span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [16] knitr_1.51            labeling_0.4.3        bridgesampling_1.2-1 </span></span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [19] htmlwidgets_1.6.4     pkgbuild_1.4.8        curl_7.1.0           </span></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [22] RColorBrewer_1.1-3    abind_1.4-8           purrr_1.2.2          </span></span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [25] grid_4.6.0            stats4_4.6.0          xtable_1.8-8         </span></span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [28] inline_0.3.21         emmeans_2.0.3         scales_1.4.0         </span></span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [31] insight_1.5.2         cli_3.6.6             mvtnorm_1.4-1        </span></span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [34] rmarkdown_2.31        generics_0.1.4        otel_0.2.0           </span></span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [37] RcppParallel_5.1.11-2 cachem_1.1.0          stringr_1.6.0        </span></span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [40] parallel_4.6.0        vctrs_0.7.3           V8_8.2.0             </span></span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [43] Matrix_1.7-5          jsonlite_2.0.0        arrayhelpers_1.1-1   </span></span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [46] ggrepel_0.9.8         glue_1.8.1            codetools_0.2-20     </span></span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [49] distributional_0.8.1  lubridate_1.9.5       stringi_1.8.7        </span></span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [52] gtable_0.3.6          QuickJSR_1.10.0       pillar_1.11.1        </span></span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [55] htmltools_0.5.9       Brobdingnag_1.2-9     R6_2.6.1             </span></span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [58] textshaping_1.0.5     rprojroot_2.1.1       evaluate_1.0.5       </span></span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [61] lattice_0.22-9        backports_1.5.1       memoise_2.0.1        </span></span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [64] broom_1.0.13          snakecase_0.11.1      rstantools_2.6.0     </span></span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [67] coda_0.19-4.1         gridExtra_2.3.1       nlme_3.1-169         </span></span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [70] checkmate_2.3.4       xfun_0.59             pkgconfig_2.0.3</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
 </div>
-</section><section id="bibliografia" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="bibliografia">Bibliografia</h2>
+</section>
+<section id="bibliografia" class="level2 unnumbered unlisted">
+<h2 class="unnumbered unlisted anchored" data-anchor-id="bibliografia">Bibliografia</h2>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
@@ -1250,7 +1229,10 @@ Simmons, J. P., Nelson, L. D., &amp; Simonsohn, U. (2011). False-positive psycho
 Thériault, R., Ben-Shachar, M. S., Patil, I., Lüdecke, D., Wiernik, B. M., &amp; Makowski, D. (2024). Check your outliers! An introduction to identifying statistical outliers in R with easystats. <em>Behavior Research Methods</em>, <em>56</em>(4), 4162–4172.
 </div>
 </div>
-</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right
     if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
@@ -1669,19 +1651,22 @@ Thériault, R., Ben-Shachar, M. S., Patil, I., Lüdecke, D., Wiernik, B. M., &am
       }
     }
   });
-  </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
       <a href="../../chapters/eda/09_causality_intro.html" class="pagination-link" aria-label="Dalla correlazione alla causalità">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Dalla correlazione alla causalità</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../chapters/eda/12_gauss.html" class="pagination-link" aria-label="Assunzione di gaussianità e trasformazioni dei dati">
-        <span class="nav-page-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Assunzione di gaussianità e trasformazioni dei dati</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../chapters/epiloque/epiloque.html" class="pagination-link" aria-label="Considerazioni conclusive">
+        <span class="nav-page-text">Considerazioni conclusive</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer">
+<footer class="footer">
+  <div class="nav-footer">
     <div class="nav-footer-left">
 <p><strong>Analisi esplorativa dei dati (EDA)</strong> — Modulo del progetto UTET a supporto del manuale <em>Inferenza bayesiana in psicologia: Ragionare con l’incertezza</em>.</p>
 </div>   
@@ -1692,7 +1677,8 @@ Thériault, R., Ben-Shachar, M. S., Patil, I., Lüdecke, D., Wiernik, B. M., &am
 <p>Realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
 </div>
   </div>
-</footer><script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+</footer>
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {
@@ -1724,6 +1710,8 @@ Thériault, R., Ben-Shachar, M. S., Patil, I., Lüdecke, D., Wiernik, B. M., &am
   
 })();
           </script>
+
+
 
 
 <script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
