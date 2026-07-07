@@ -2,34 +2,58 @@ project:
   type: book
   output-dir: docs
 
+lang: it
+
 book:
   title: "Analisi esplorativa dei dati in psicologia"
   subtitle: "Modulo introduttivo"
-  license: "Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)"
-  reader-mode: true
-  google-analytics: G-QT5S3P9D31
 
-  author: 
+  author:
     - name: "Corrado Caudek"
       orcid: "0000-0002-1404-0420"
-  date: "last-modified"
-  search: true
+
+  date: last-modified
+  date-format: "DD MMMM YYYY"
+
+  license: "CC BY-NC-ND"
+  favicon: style/gauss.png
+
+  site-url: https://ccaudek.github.io/utet-eda/
   repo-url: https://github.com/ccaudek/utet-eda/
   repo-actions: [source, issue]
+
+  reader-mode: true
+  page-navigation: true
   back-to-top-navigation: true
-  site-url: https://ccaudek.github.io/utet-eda/
+
+  search:
+    location: sidebar
+    type: overlay
+    copy-button: true
+    show-item-context: true
+
+  sidebar:
+    collapse-level: 1
+
+  google-analytics:
+    tracking-id: "G-QT5S3P9D31"
+    anonymize-ip: true
+
+  cookie-consent:
+    type: express
+    style: headline
+    palette: light
+    language: it
+    prefs-text: "Preferenze cookie"
+
+  open-graph: true
+  twitter-card: true
+
   page-footer:
     left: |
       **Analisi esplorativa dei dati (EDA)** — Modulo del progetto UTET a supporto del manuale *Inferenza bayesiana in psicologia: Ragionare con l'incertezza*.
     right: |
-      Realizzato con <a href="https://quarto.org/">Quarto</a>.
-  favicon: style/gauss.png
-
-
-  sidebar:
-    # style: "docked"
-    search: true
-    collapse-level: 1
+      Realizzato con [Quarto](https://quarto.org/).
 
   chapters:
     - index.qmd
@@ -37,15 +61,13 @@ book:
 
     - part: chapters/key_notions/introduction_key_notions.qmd
       chapters:
-        # - chapters/key_notions/01_data_analysis.qmd
         - chapters/key_notions/02_key_notions.qmd
-        - chapters/key_notions/03_design.qmd 
+        - chapters/key_notions/03_design.qmd
         - chapters/key_notions/04_measurement.qmd
         - chapters/key_notions/05_cognitive_models.qmd
 
     - part: chapters/R/introduction_r_lang.qmd
       chapters:
-        
         - chapters/R/01_r_syntax.qmd
         - chapters/R/02_environment.qmd
         - chapters/R/03_utility_functions.qmd
@@ -54,7 +76,6 @@ book:
         - chapters/R/06_ggplot2.qmd
         - chapters/R/07_quarto.qmd
         - chapters/R/08_r_packages.qmd
-        
 
     - part: chapters/eda/introduction_eda.qmd
       chapters:
@@ -67,7 +88,6 @@ book:
         - chapters/eda/08_correlation.qmd
         - chapters/eda/09_causality_intro.qmd
         - chapters/eda/11_outlier.qmd
-        # - chapters/eda/12_gauss.qmd
 
     - part: "Epilogo"
       chapters:
@@ -76,74 +96,64 @@ book:
 crossref:
   appendix-title: "Appendice"
 
-toc: true
-toc-depth: 2
-
-bibliography: ./references.bib
-biblio-style: apalike
+bibliography: references.bib
 csl: apa.csl
 link-citations: true
 
 format:
   html:
-    # -------- Codice --------
+    theme:
+      light: cosmo
+      dark: darkly
+    css: style/custom.css
+
+    respect-user-color-scheme: true
+    canonical-url: true
+
+    toc: true
+    toc-depth: 2
+    toc-title: "Sommario"
+    toc-expand: 2
+    smooth-scroll: true
+    anchor-sections: true
+
     code-fold: false
     code-summary: "Mostra/Nascondi codice"
     code-copy: hover
     code-link: true
     code-overflow: scroll
     code-block-bg: true
-    
-    # -------- Tema --------
-    theme:
-      light: cosmo
-      dark: darkly
-    css: style/custom.css
-    mainfont: "system-ui"
-    lang: it
-    
-    # -------- Navigazione --------
-    reader-mode: true
-    toc: true              # TOC va qui sotto format:html:
-    toc-depth: 2           # E anche toc-depth
-    toc-title: "Sommario"
-    smooth-scroll: true
-    
-    # -------- Link e note --------
+
+    fig-responsive: true
+    fig-align: center
+    fig-cap-location: bottom
+    tbl-cap-location: top
+    lightbox: auto
+    df-print: paged
+
     footnotes-hover: true
+    citations-hover: true
+    crossrefs-hover: true
+
     link-external-icon: true
     link-external-newwindow: true
-    
-    # -------- Media --------
-    lightbox: auto
-    
-    # -------- Matematica --------
+    link-external-filter: "^(?:https?:)?//ccaudek\\.github\\.io/utet-eda/"
+
     html-math-method:
       method: mathjax
       url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
-      # Macro opzionali (decommentare se serve)
-      # macros:
-      #   "\\E": "\\mathbb{E}"
-      #   "\\Var": "\\mathrm{Var}"
-      #   "\\Cov": "\\mathrm{Cov}"
 
 execute:
-  freeze: auto  # Skip re-executing unchanged code chunks
-  echo: true  # Display code in the output document
-  warning: false  # Suppress warnings in output
-  message: false  # Suppress messages in output
-  fig.width: 6  # Set figure width (in inches)
-  fig.asp: 0.618  # Set figure aspect ratio (golden ratio for aesthetics)
-  fig.retina: 2  # High resolution for retina displays
-  fig.align: "center"  # Center-align all figures
-  fig.show: "hold"  # Group multiple figures from a chunk
+  freeze: auto
+  echo: true
+  warning: false
+  message: false
+  fig.width: 6
+  fig.asp: 0.618
+  fig.retina: 2
+  fig.align: center
+  fig.show: hold
   options:
-    width: 120            # allarga la console virtuale
-    pillar.width: Inf      # disattiva il riassunto colonne
-    tibble.width: Inf      # idem, per sicurezza
-
-website:
-  cookie-consent:
-    type: express
-    style: headline
-    anonymize-ip: true
+    width: 120
+    pillar.width: Inf
+    tibble.width: Inf
