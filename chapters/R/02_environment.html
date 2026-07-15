@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>7&nbsp; L’ambiente di programmazione – Analisi esplorativa dei dati in psicologia</title>
+<title>7&nbsp; Ambiente di lavoro e progetti R – Analisi esplorativa dei dati in psicologia</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -58,27 +58,7 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-  margin-bottom: 0em;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -91,33 +71,35 @@ div.csl-indent {
 <link href="../../chapters/R/03_utility_functions.html" rel="next">
 <link href="../../chapters/R/01_r_syntax.html" rel="prev">
 <link href="../../style/gauss.png" rel="icon" type="image/png">
+<script src="../../site_libs/cookie-consent/cookie-consent.js"></script>
+<link href="../../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-0a6b7249c26820e032cb0bd839ff02b1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-bd31b91f9ddb1a75e3744ba9797c8182.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-662b1d839dd28a08d17be9d78b753e45.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-bd31b91f9ddb1a75e3744ba9797c8182.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-a0bb4f8876326eb7771edc79fa342270.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-7c5efe83671fda2688731f9f1d4acab0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-a0bb4f8876326eb7771edc79fa342270.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-353ec92dc31bcb37568820202c74e1ec.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-ca56530e1a7dc3e4b2cbddadeb71310c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-353ec92dc31bcb37568820202c74e1ec.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
-  "copy-button": false,
+  "copy-button": true,
   "collapse-after": 3,
   "panel-placement": "start",
-  "type": "textbox",
+  "type": "overlay",
   "limit": 50,
   "keyboard-shortcut": [
     "f",
     "/",
     "s"
   ],
-  "show-item-context": false,
+  "show-item-context": true,
   "language": {
     "search-no-results-text": "Nessun risultato",
     "search-matching-documents-text": "documenti trovati",
@@ -134,17 +116,41 @@ div.csl-indent {
 }</script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-QT5S3P9D31"></script>
 
-<script type="text/javascript">
+<script type="text/plain" cookie-consent="tracking">
 
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 </script>
+
+<script type="text/javascript" charset="UTF-8">
+document.addEventListener('DOMContentLoaded', function () {
+cookieconsent.run({
+  "notice_banner_type":"headline",
+  "consent_type":"express",
+  "palette":"light",
+  "language":"en",
+  "page_load_consent_levels":["strictly-necessary"],
+  "notice_banner_reject_button_hide":false,
+  "preferences_center_close_button_hide":false,
+  "website_name":""
+  ,
+"language":"it"
+  });
+});
+</script> 
+  
 <style>html{ scroll-behavior: smooth; }</style>
 
 
-<link rel="stylesheet" href="../../style/custom.css">
+<meta property="og:title" content="7&nbsp; Ambiente di lavoro e progetti R – Analisi esplorativa dei dati in psicologia">
+<meta property="og:description" content="">
+<meta property="og:site_name" content="Analisi esplorativa dei dati in psicologia">
+<meta name="twitter:title" content="7&nbsp; Ambiente di lavoro e progetti R – Analisi esplorativa dei dati in psicologia">
+<meta name="twitter:description" content="">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://ccaudek.github.io/utet-eda/chapters/R/02_environment.html">
 </head>
 
 <body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
@@ -290,7 +296,8 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
       }
     };
     const authorPrefersDark = false;
-    const darkModeDefault = authorPrefersDark;
+    const queryPrefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    const darkModeDefault = queryPrefersDark.matches;
       document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
       document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
     let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
@@ -303,6 +310,14 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
       toggleGiscusIfUsed(toAlternate, darkModeDefault);
       window.dispatchEvent(new Event('resize'));
     };
+    queryPrefersDark.addEventListener("change", e => {
+      if(window.localStorage.getItem("quarto-color-scheme") !== null)
+        return;
+      const alternate = e.matches
+      toggleColorMode(alternate);
+      localAlternateSentinel = e.matches ? 'alternate' : 'default'; // this is used alongside local storage!
+      toggleGiscusIfUsed(alternate, darkModeDefault);
+    });
     // Switch to dark mode if need be
     if (hasAlternateSentinel()) {
       toggleColorMode(true);
@@ -318,7 +333,7 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/R/introduction_r_lang.html">R</a></li><li class="breadcrumb-item"><a href="../../chapters/R/02_environment.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">L’ambiente di programmazione</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/R/introduction_r_lang.html">R</a></li><li class="breadcrumb-item"><a href="../../chapters/R/02_environment.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Ambiente di lavoro e progetti R</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Ricerca" onclick="window.quartoOpenSearch();">
@@ -335,21 +350,17 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
     <div class="sidebar-title mb-0 py-0">
       <a href="../../">Analisi esplorativa dei dati in psicologia</a> 
         <div class="sidebar-tools-main tools-wide">
-    <a href="https://github.com/ccaudek/utet-eda/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/ccaudek/utet-eda/" title="Eseguire il codice" class="quarto-navigation-tool px-1" aria-label="Eseguire il codice"><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Attiva/disattiva la modalità oscura"><i class="bi"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Attiva/disattiva la modalità lettore">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
   </div>
 </a>
+    <div id="quarto-search" class="quarto-navigation-tool px-1" title="Ricerca"></div>
 </div>
     </div>
       </div>
-        <div class="mt-2 flex-shrink-0 align-items-center">
-        <div class="sidebar-search">
-        <div id="quarto-search" class="" title="Ricerca"></div>
-        </div>
-        </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
@@ -382,7 +393,7 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/03_design.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Campionamento, metodologia sperimentale e studi osservazionali</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Disegno di ricerca: quali conclusioni sono giustificate dai dati?</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -411,49 +422,43 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/01_r_syntax.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Un approccio moderno all’analisi dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sintassi minima per leggere codice R</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/02_environment.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">L’ambiente di programmazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Ambiente di lavoro e progetti R</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/03_utility_functions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Funzioni di utilità</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../chapters/R/04_r_programming.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Programmazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Dal file alla tabella controllata</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/05_dplyr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Usare <code>dplyr</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Trasformare i dati con <code>dplyr</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/06_ggplot2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Visualizzazione dei dati con ggplot2</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Visualizzare i dati con <code>ggplot2</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/07_quarto.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Quarto</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quarto</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/08_r_packages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Pacchetti</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Pacchetti</span></span></a>
   </div>
 </li>
       </ul>
@@ -470,55 +475,55 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/01_project_structure.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Il ciclo di vita di un progetto di analisi dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Organizzare un progetto di analisi dei dati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/02_data_cleaning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Flusso di lavoro per la pulizia dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulizia dei dati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/03_exploring_univariate_data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Esplorare distribuzioni univariate</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Esplorare una variabile alla volta</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/05_data_visualization_principles.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Principi della visualizzazione scientifica</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Principi della visualizzazione dei dati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/06_loc_scale.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Indicatori di tendenza centrale e variabilità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Indicatori di tendenza centrale e variabilità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/07_introduction_normal_distribution.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Introduzione alla distribuzione normale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Introduzione alla distribuzione normale</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/08_correlation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Relazioni tra variabili</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Relazioni tra variabili</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/09_causality_intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Dalla correlazione alla causalità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Dalla correlazione alla causalità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/11_outlier.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Outlier</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Valori inattesi e outlier</span></span></a>
   </div>
 </li>
       </ul>
@@ -546,14 +551,22 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="2">
     <h2 id="toc-title">Sommario</h2>
    
   <ul class="collapse">
-  <li><a href="#file-system" id="toc-file-system" class="nav-link active" data-scroll-target="#file-system"><span class="header-section-number">7.1</span> File system</a></li>
-  <li><a href="#versioni-di-r-e-pacchetti" id="toc-versioni-di-r-e-pacchetti" class="nav-link" data-scroll-target="#versioni-di-r-e-pacchetti"><span class="header-section-number">7.2</span> Versioni di R e pacchetti</a></li>
-  <li><a href="#progetti-in-r" id="toc-progetti-in-r" class="nav-link" data-scroll-target="#progetti-in-r"><span class="header-section-number">7.3</span> Progetti in R</a></li>
-  <li><a href="#funzione-here" id="toc-funzione-here" class="nav-link" data-scroll-target="#funzione-here"><span class="header-section-number">7.4</span> Funzione <code>here()</code></a></li>
+  <li><a href="#perché-questo-capitolo-viene-prima-dellanalisi" id="toc-perché-questo-capitolo-viene-prima-dellanalisi" class="nav-link active" data-scroll-target="#perché-questo-capitolo-viene-prima-dellanalisi"><span class="header-section-number">7.1</span> Perché questo capitolo viene prima dell’analisi</a></li>
+  <li><a href="#obiettivi-del-capitolo" id="toc-obiettivi-del-capitolo" class="nav-link" data-scroll-target="#obiettivi-del-capitolo"><span class="header-section-number">7.2</span> Obiettivi del capitolo</a></li>
+  <li><a href="#il-progetto-come-unità-di-lavoro" id="toc-il-progetto-come-unità-di-lavoro" class="nav-link" data-scroll-target="#il-progetto-come-unità-di-lavoro"><span class="header-section-number">7.3</span> Il progetto come unità di lavoro</a></li>
+  <li><a href="#nomi-di-file-semplici" id="toc-nomi-di-file-semplici" class="nav-link" data-scroll-target="#nomi-di-file-semplici"><span class="header-section-number">7.4</span> Nomi di file semplici</a></li>
+  <li><a href="#percorsi-assoluti-e-relativi" id="toc-percorsi-assoluti-e-relativi" class="nav-link" data-scroll-target="#percorsi-assoluti-e-relativi"><span class="header-section-number">7.5</span> Percorsi assoluti e relativi</a></li>
+  <li><a href="#evitare-setwd-nei-file-condivisi" id="toc-evitare-setwd-nei-file-condivisi" class="nav-link" data-scroll-target="#evitare-setwd-nei-file-condivisi"><span class="header-section-number">7.6</span> Evitare <code>setwd()</code> nei file condivisi</a></li>
+  <li><a href="#dati-originali-e-dati-modificati" id="toc-dati-originali-e-dati-modificati" class="nav-link" data-scroll-target="#dati-originali-e-dati-modificati"><span class="header-section-number">7.7</span> Dati originali e dati modificati</a></li>
+  <li><a href="#la-sessione-di-r" id="toc-la-sessione-di-r" class="nav-link" data-scroll-target="#la-sessione-di-r"><span class="header-section-number">7.8</span> La sessione di R</a></li>
+  <li><a href="#pacchetti-installare-e-caricare" id="toc-pacchetti-installare-e-caricare" class="nav-link" data-scroll-target="#pacchetti-installare-e-caricare"><span class="header-section-number">7.9</span> Pacchetti: installare e caricare</a></li>
+  <li><a href="#controlli-iniziali-su-un-progetto" id="toc-controlli-iniziali-su-un-progetto" class="nav-link" data-scroll-target="#controlli-iniziali-su-un-progetto"><span class="header-section-number">7.10</span> Controlli iniziali su un progetto</a></li>
+  <li><a href="#usare-lai-con-criterio" id="toc-usare-lai-con-criterio" class="nav-link" data-scroll-target="#usare-lai-con-criterio"><span class="header-section-number">7.11</span> Usare l’AI con criterio</a></li>
+  <li><a href="#cosa-portare-ai-capitoli-successivi" id="toc-cosa-portare-ai-capitoli-successivi" class="nav-link" data-scroll-target="#cosa-portare-ai-capitoli-successivi"><span class="header-section-number">7.12</span> Cosa portare ai capitoli successivi</a></li>
   </ul>
 <div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/R/02_environment.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
     </div>
@@ -561,9 +574,9 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 <main class="content" id="quarto-document-content">
 
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/R/introduction_r_lang.html">R</a></li><li class="breadcrumb-item"><a href="../../chapters/R/02_environment.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">L’ambiente di programmazione</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/R/introduction_r_lang.html">R</a></li><li class="breadcrumb-item"><a href="../../chapters/R/02_environment.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Ambiente di lavoro e progetti R</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-r-environment" class="quarto-section-identifier"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">L’ambiente di programmazione</span></span></h1>
+<h1 class="title"><span id="sec-r-environment" class="quarto-section-identifier"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Ambiente di lavoro e progetti R</span></span></h1>
 </div>
 
 
@@ -580,278 +593,257 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 </header>
 
 
-<section id="introduzione" class="level2 unnumbered unlisted">
-<h2 class="unnumbered unlisted anchored" data-anchor-id="introduzione">Introduzione</h2>
-<p>Programmare presuppone necessariamente un ambiente di programmazione. Una cattiva gestione di questo ambiente può causare il malfunzionamento degli script, rendendo fondamentale imparare a gestirlo correttamente.</p>
+<section id="perché-questo-capitolo-viene-prima-dellanalisi" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="perché-questo-capitolo-viene-prima-dellanalisi"><span class="header-section-number">7.1</span> Perché questo capitolo viene prima dell’analisi</h2>
+<p>Spesso, quando un’analisi non funziona, il problema non è una formula statistica. Spesso il problema è molto più semplice: il file dei dati non si trova nella cartella giusta, il percorso è scritto in modo diverso sul computer di un’altra persona, un pacchetto non è stato caricato o il codice dipende da oggetti rimasti in memoria da una sessione precedente.</p>
+<p>Per questo motivo, prima di imparare a trasformare o visualizzare i dati, è necessario imparare a organizzare l’ambiente di lavoro.</p>
+<p>In questo capitolo useremo il termine “ambiente” in senso pratico: il progetto, le cartelle, i file, la sessione di R, i pacchetti caricati e le condizioni che permettono di eseguire di nuovo un’analisi.</p>
+<p>L’idea centrale è semplice:</p>
 <blockquote class="blockquote">
-<p><strong>Nota</strong>: In R, il termine “ambiente” ha un significato specifico, riferendosi allo spazio di lavoro in cui gli oggetti vengono memorizzati durante una sessione. In questo capitolo, tuttavia, il termine si riferisce allo stato complessivo del tuo computer mentre programmi, inclusa l’organizzazione dei file, la versione di R che stai usando e altre impostazioni.</p>
+<p>Un’analisi è davvero utile solo se può essere capita, controllata e riprodotta.</p>
 </blockquote>
-<p>L’ambiente può influenzare persino il comportamento delle funzioni più basilari. Considera il seguente esempio:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Questo potrebbe produrre il seguente output:</p>
-<pre><code>[1] 1 2 3 4 5 6 7 8 9</code></pre>
-<p>Tuttavia, modificando l’opzione di larghezza in R, il comportamento cambia:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Dopo aver modificato options(width)</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">width =</span> <span class="dv">10</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<p>In questo caso, l’output potrebbe essere:</p>
-<pre><code>[1] 1 2 3
-[4] 4 5 6
-[7] 7 8 9</code></pre>
-<p>La differenza è dovuta a un’opzione dell’ambiente, <code>width</code>, che regola il numero massimo di caratteri visualizzati per ogni riga.</p>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Consiglio</span>Prerequisiti
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-1" class="callout-1-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<ul>
-<li>Leggere il capitolo 3, “Setting Up Your Data Science Project”, del libro <a href="https://vdsbook.com">Veridical Data Science</a> <span class="citation" data-cites="yu2024veridical">(<a href="#ref-yu2024veridical" role="doc-biblioref">Yu &amp; Barter, 2024</a>)</span>.</li>
-<li>Leggere il <span class="quarto-unresolved-ref">?sec-apx-shell</span> della dispensa.</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-caution callout-titled" title="Preparazione del Notebook">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Attenzione</span>Preparazione del Notebook
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"code"</span>, <span class="st">"_common.R"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">source</span>()</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load packages</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">"pacman"</span>)) <span class="fu">install.packages</span>(<span class="st">"pacman"</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyr)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</div>
-</div>
-</div>
+<p>Questo vale anche quando il codice è stato scritto con l’aiuto dell’AI. L’AI può suggerire comandi, correggere errori e proporre strutture di progetto, ma non può sapere da sola dove si trovano i vostri file, quale versione dei dati state utilizzando, quali passaggi avete già eseguito e quali scelte devono essere documentate.</p>
 </section>
-<section id="file-system" class="level2" data-number="7.1">
-<h2 data-number="7.1" class="anchored" data-anchor-id="file-system"><span class="header-section-number">7.1</span> File system</h2>
-<p>Prima di iniziare a organizzare un progetto in R, è fondamentale seguire alcune linee guida per strutturare e nominare i file in modo efficace. Spesso si tende a sottovalutare l’importanza di una buona organizzazione, ma adottare un sistema coerente può far risparmiare tempo prezioso nella ricerca e gestione dei progetti passati. Danielle Navarro ha creato una <a href="https://djnavarro.net/slides-project-structure/#1">presentazione</a> sulla struttura dei progetti, nella quale propone tre principi fondamentali per la gestione dei file:</p>
+<section id="obiettivi-del-capitolo" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="obiettivi-del-capitolo"><span class="header-section-number">7.2</span> Obiettivi del capitolo</h2>
+<p>Alla fine del capitolo dovreste sapere:</p>
 <ul>
-<li>essere gentili con le macchine;</li>
-<li>essere gentili con gli esseri umani;</li>
-<li>facilitare l’ordinamento e la ricerca.</li>
+<li>riconoscere la differenza tra file, cartelle e progetto;</li>
+<li>creare o aprire un progetto R in RStudio/Posit;</li>
+<li>usare nomi di file leggibili e robusti;</li>
+<li>distinguere percorsi assoluti e percorsi relativi;</li>
+<li>capire perché <code>setwd()</code> va evitato nei documenti condivisi;</li>
+<li>usare una struttura semplice per organizzare dati, codice e risultati;</li>
+<li>controllare se un’analisi può essere rieseguita da zero.</li>
 </ul>
-<section id="essere-gentili-con-le-macchine" class="level3" data-number="7.1.1">
-<h3 data-number="7.1.1" class="anchored" data-anchor-id="essere-gentili-con-le-macchine"><span class="header-section-number">7.1.1</span> Essere gentili con le macchine</h3>
-<p>Le macchine possono confondersi con spazi, caratteri speciali (come <code>^.*?+|$"</code>), e lettere accentate. Per evitare problemi:</p>
-<ul>
-<li>usa solo lettere minuscole, numeri, trattini <code>_</code> o <code>-</code>;</li>
-<li>evita caratteri speciali e spazi nei nomi dei file;</li>
-<li>evita le lettere accentate;</li>
-<li>usa estensioni coerenti, come <code>.R</code> per gli script R.</li>
-</ul>
-<p>Esempi:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Buono</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">progetto01_analisi_dati.R</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Cattivo</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Progetto</span> <span class="st">"Analisi Dati"</span>.R</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Non è necessario memorizzare ogni dettaglio tecnico. È invece importante sviluppare una buona abitudine: <strong>analisi deve essere inserita in una cartella di progetto ben organizzata</strong>.</p>
 </section>
-<section id="essere-gentili-con-gli-umani" class="level3" data-number="7.1.2">
-<h3 data-number="7.1.2" class="anchored" data-anchor-id="essere-gentili-con-gli-umani"><span class="header-section-number">7.1.2</span> Essere gentili con gli umani</h3>
-<p>Gli esseri umani hanno bisogno di contesto. Evita nomi vaghi e usa descrizioni significative.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Buono</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">analisi01_statistiche_descrittive.R</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ex">note02_intro_modello.docx</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Cattivo</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="ex">01.R</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="ex">appunti.docx</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="callout callout-style-default callout-important callout-titled">
+<section id="il-progetto-come-unità-di-lavoro" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="il-progetto-come-unità-di-lavoro"><span class="header-section-number">7.3</span> Il progetto come unità di lavoro</h2>
+<p>Un progetto di analisi non è un singolo file. Si tratta di una piccola unità di ricerca che contiene almeno:</p>
+<ul>
+<li>i dati;</li>
+<li>il codice;</li>
+<li>il testo che spiega le scelte fatte;</li>
+<li>gli output prodotti dall’analisi.</li>
+</ul>
+<p>In RStudio/Posit, un progetto R è una cartella che contiene un file con estensione <code>.Rproj</code>. Aprire quel file significa dire a R: “questa è la cartella principale del mio lavoro”.</p>
+<p>Una struttura minima può essere questa:</p>
+<pre class="text"><code>progetto_stress_sonno/
+├── progetto_stress_sonno.Rproj
+├── data/
+│   ├── raw/
+│   │   └── stress_sonno_originale.csv
+│   └── processed/
+│       └── stress_sonno_pulito.csv
+├── code/
+│   └── 01_pulizia_dati.R
+├── output/
+│   └── grafico_sonno.png
+└── report.qmd</code></pre>
+<p>Non tutti i progetti devono avere esattamente questa struttura. L’importante è che la struttura sia chiara e stabile. Chi apre il progetto deve poter capire rapidamente dove si trovano i dati originali, il codice e i risultati.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Regola pratica">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Importante
+<span class="screen-reader-only">Consiglio</span>Regola pratica
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Evitate categoricamente l’uso di spazi nei nomi di file, cartelle o oggetti in R. Anche se il sistema operativo potrebbe consentirlo, questa pratica può generare problemi futuri, complicare il debugging e rendere il codice meno leggibile e portabile. Per evitare questi inconvenienti, adottate sempre nomi privi di spazi, preferendo separatori come trattini bassi (<code>_</code>) o trattini (<code>-</code>).</p>
+<p>Create una cartella separata per ogni progetto. Non lavorate in una cartella generica chiamata <code>Desktop</code>, <code>Download</code> o <code>R</code>.</p>
 </div>
 </div>
 </section>
-<section id="facilitare-lordinamento-e-la-ricerca" class="level3" data-number="7.1.3">
-<h3 data-number="7.1.3" class="anchored" data-anchor-id="facilitare-lordinamento-e-la-ricerca"><span class="header-section-number">7.1.3</span> Facilitare l’ordinamento e la ricerca</h3>
-<p>Se i nomi dei file includono date, usa sempre il formato <code>YYYY-MM-DD</code> per permettere un ordinamento automatico.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Buono</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">2024-01-01_analisi.R</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="ex">2024-02-15_riassunto.docx</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Cattivo</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="ex">1-gennaio-2024.R</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="ex">riassunto-15-02-2024.docx</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Se devi ordinare i file in base a qualcosa di diverso dalle date, usa numeri con lo zero iniziale per mantenere l’ordine.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">reading01_shakespeare_romeo-and-juliet.docx</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">reading02_shakespeare_romeo-and-juliet.docx</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="ex">...</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="ex">reading11_shakespeare_romeo-and-juliet.docx</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="ex">notes01_shakespeare_romeo-and-juliet.docx</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="ex">...</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-</section>
-<section id="versioni-di-r-e-pacchetti" class="level2" data-number="7.2">
-<h2 data-number="7.2" class="anchored" data-anchor-id="versioni-di-r-e-pacchetti"><span class="header-section-number">7.2</span> Versioni di R e pacchetti</h2>
-<p>Aggiornare regolarmente R e i pacchetti è essenziale per evitare bug e sfruttare le nuove funzionalità. Ecco alcune buone pratiche:</p>
-<ol type="1">
-<li>Esegui <code>update.packages()</code> ogni poche settimane per aggiornare i pacchetti.</li>
-<li>Aggiorna la versione di R ogni pochi mesi. Su Windows puoi usare il pacchetto <code>installr</code>, mentre su altri sistemi puoi scaricare l’ultima versione dal sito ufficiale di R.</li>
-<li>Mantieni aggiornato anche il sistema operativo.</li>
-</ol>
-</section>
-<section id="progetti-in-r" class="level2" data-number="7.3">
-<h2 data-number="7.3" class="anchored" data-anchor-id="progetti-in-r"><span class="header-section-number">7.3</span> Progetti in R</h2>
-<p>Se hai seguito i consigli finora, avrai creato una cartella per tutti i tuoi progetti di programmazione e la tua installazione di R sarà aggiornata. Ora è il momento di organizzare i tuoi progetti in R.</p>
-<section id="percorsi-assoluti-e-relativi" class="level3" data-number="7.3.1">
-<h3 data-number="7.3.1" class="anchored" data-anchor-id="percorsi-assoluti-e-relativi"><span class="header-section-number">7.3.1</span> Percorsi assoluti e relativi</h3>
-<p>Un percorso assoluto parte dalla directory principale del tuo computer (ad esempio, <code>/</code> su Linux/MacOS o <code>C:/</code> su Windows) e indica in modo completo e univoco la posizione di un file o di una cartella. Un percorso relativo, invece, parte dalla directory corrente del progetto o dalla directory di lavoro impostata e descrive la posizione di un file in relazione a questa.</p>
-<p>Ad esempio, il percorso assoluto del file utilizzato per generare questa pagina HTML potrebbe essere ottenuto così:</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fs<span class="sc">::</span><span class="fu">path_abs</span>(<span class="st">"05_environment.qmd"</span>)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; /Users/corrado/_repositories/utet-eda/chapters/R/05_environment.qmd</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-</section>
-<section id="funzione-here" class="level2" data-number="7.4">
-<h2 data-number="7.4" class="anchored" data-anchor-id="funzione-here"><span class="header-section-number">7.4</span> Funzione <code>here()</code></h2>
-<p>Se il progetto si trova nella cartella <code>psicometria</code>, possiamo utilizzare la funzione <code>here()</code> del pacchetto <strong>here</strong> per indicare la posizione del file <code>05_environment.qmd</code> in modo relativo. Ecco un esempio:</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">file.exists</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"chapters"</span>, <span class="st">"R"</span>, <span class="st">"07_environment.qmd"</span>))</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] FALSE</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>In questo caso, il file <code>07_environment.qmd</code> è contenuto nella cartella <code>chapters/R</code>, che si trova all’interno della directory principale del progetto. Grazie a <code>here()</code>, non è necessario specificare manualmente la posizione del progetto: questa funzione identifica automaticamente la directory principale e consente di indicare solo il percorso relativo del file rispetto ad essa. In altre parole, puoi riferirti al file <code>07_environment.qmd</code> semplicemente fornendo il percorso relativo <strong>all’interno della struttura del progetto</strong>, lasciando a <code>here()</code> il compito di gestire il contesto globale.</p>
-<section id="perché-preferire-i-percorsi-relativi" class="level3" data-number="7.4.1">
-<h3 data-number="7.4.1" class="anchored" data-anchor-id="perché-preferire-i-percorsi-relativi"><span class="header-section-number">7.4.1</span> Perché preferire i percorsi relativi?</h3>
-<p>L’utilizzo di percorsi relativi con <code>here()</code> offre numerosi vantaggi:</p>
-<ol type="1">
-<li><strong>Portabilità</strong>: il codice diventa più semplice da condividere, poiché non dipende dalla struttura delle directory specifica del computer su cui è stato scritto.</li>
-<li><strong>Organizzazione</strong>: favorisce una struttura chiara e coerente all’interno del progetto, rendendo più facile individuare e accedere ai file.</li>
-<li><strong>Affidabilità</strong>: riduce il rischio di errori dovuti a percorsi assoluti errati, soprattutto quando il progetto viene spostato o condiviso.</li>
-</ol>
-</section>
-<section id="buone-pratiche" class="level3" data-number="7.4.2">
-<h3 data-number="7.4.2" class="anchored" data-anchor-id="buone-pratiche"><span class="header-section-number">7.4.2</span> Buone pratiche</h3>
+<section id="nomi-di-file-semplici" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="nomi-di-file-semplici"><span class="header-section-number">7.4</span> Nomi di file semplici</h2>
+<p>I nomi dei file devono essere facili da leggere per gli esseri umani e facili da gestire per il computer.</p>
+<p>Usate:</p>
 <ul>
-<li><strong>Usare sempre percorsi relativi</strong>: questo assicura che il progetto sia facilmente eseguibile su altri sistemi senza necessità di modifiche ai percorsi.</li>
-<li><strong>Impostare una struttura coerente del progetto</strong>: organizzare i file in cartelle ben definite (ad esempio, <code>data</code>, <code>scripts</code>, <code>outputs</code>) facilita l’uso di percorsi relativi.</li>
+<li>lettere minuscole;</li>
+<li>numeri;</li>
+<li>trattini bassi <code>_</code> o trattini <code>-</code>;</li>
+<li>date nel formato <code>YYYY-MM-DD</code>, quando servono.</li>
 </ul>
-<p>In sintesi, specificare i percorsi relativi rispetto alla directory principale del progetto è una buona pratica essenziale per garantire portabilità, organizzazione e riproducibilità del lavoro.</p>
+<p>Evitate:</p>
+<ul>
+<li>spazi;</li>
+<li>accenti;</li>
+<li>caratteri speciali;</li>
+<li>nomi vaghi come <code>file1.csv</code>, <code>nuovo.csv</code>, <code>analisi_finale_vera.R</code>.</li>
+</ul>
+<p>Esempi:</p>
+<pre class="text"><code># Meglio
+2026-03-15_stress_sonno_raw.csv
+01_pulizia_dati.R
+02_grafici_eda.qmd
+
+# Peggio
+Dati Stress Sonno.csv
+analisi finale.R
+nuovo file corretto 2.csv</code></pre>
+<p>Questa regola può sembrare banale, ma permette di evitare molti errori. Inoltre, rende più semplice chiedere aiuto all’AI: un nome chiaro permette di descrivere meglio il problema e di controllare più facilmente il codice suggerito.</p>
 </section>
-<section id="creare-un-progetto-in-r" class="level3" data-number="7.4.3">
-<h3 data-number="7.4.3" class="anchored" data-anchor-id="creare-un-progetto-in-r"><span class="header-section-number">7.4.3</span> Creare un progetto in R</h3>
-<p>Un progetto R è semplicemente una cartella con un file <code>.Rproj</code>. Puoi crearne uno con RStudio o con il pacchetto <code>usethis</code>.</p>
-<p><strong>In RStudio</strong>:</p>
-<ol type="1">
-<li>Vai su <code>File &gt; New Project</code>.</li>
-<li>Seleziona <code>New Directory &gt; New Project</code>.</li>
-<li>Dai un nome al progetto e scegli la sua posizione.</li>
-</ol>
-<p><strong>Con <code>usethis</code></strong>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>usethis<span class="sc">::</span><span class="fu">create_project</span>(<span class="st">"path/alla/cartella"</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Esempio:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>usethis<span class="sc">::</span><span class="fu">create_project</span>(<span class="st">"/Users/corrado/_repositories/psicometria"</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Vedremo nel <a href="../eda/01_project_structure.html" class="quarto-xref"><span>Capitolo 14</span></a> come organizzare i file all’interno di un progetto.</p>
-<div class="callout callout-style-default callout-note callout-titled" title="Informazioni sull'ambiente di sviluppo">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<section id="percorsi-assoluti-e-relativi" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="percorsi-assoluti-e-relativi"><span class="header-section-number">7.5</span> Percorsi assoluti e relativi</h2>
+<p>Un percorso indica la posizione di un file.</p>
+<p>Un <strong>percorso assoluto</strong> descrive la posizione completa del file nel computer:</p>
+<pre class="text"><code>/Users/maria/Desktop/progetto_stress_sonno/data/raw/stress_sonno_originale.csv</code></pre>
+<p>oppure, su Windows:</p>
+<pre class="text"><code>C:/Users/Maria/Desktop/progetto_stress_sonno/data/raw/stress_sonno_originale.csv</code></pre>
+<p>Il problema è che un percorso assoluto funziona solo su quel computer. Se il progetto viene spostato, condiviso o aperto da un’altra persona, il codice probabilmente non funzionerà più.</p>
+<p>Un <strong>percorso relativo</strong> descrive invece la posizione del file rispetto alla cartella principale del progetto:</p>
+<pre class="text"><code>data/raw/stress_sonno_originale.csv</code></pre>
+<p>Questo percorso è più robusto. Funziona finché la struttura interna del progetto rimane la stessa.</p>
+<div class="callout callout-style-default callout-important callout-titled" title="Da ricordare">
+<div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Nota</span>Informazioni sull’ambiente di sviluppo
+<span class="screen-reader-only">Importante</span>Da ricordare
 </div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; R version 4.6.0 (2026-04-24)</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Platform: aarch64-apple-darwin23</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Running under: macOS Tahoe 26.5.1</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Matrix products: default</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib </span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; locale:</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] C.UTF-8/UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8</span></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; time zone: Europe/Rome</span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tzcode source: internal</span></span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; attached base packages:</span></span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; other attached packages:</span></span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] ragg_1.5.2            tinytable_0.17.0      withr_3.0.3          </span></span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [4] systemfonts_1.3.2     patchwork_1.3.2       ggdist_3.3.3         </span></span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [7] tidybayes_3.0.7       bayesplot_1.15.0      ggplot2_4.0.3        </span></span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [10] reliabilitydiag_0.2.1 priorsense_1.2.0      posterior_1.7.0      </span></span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [13] loo_2.10.0            rstan_2.32.7          StanHeaders_2.32.10  </span></span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [16] brms_2.23.0           Rcpp_1.1.1-1.1        sessioninfo_1.2.4    </span></span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [19] conflicted_1.2.0      janitor_2.2.1         matrixStats_1.5.0    </span></span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [22] modelr_0.1.11         tibble_3.3.1          dplyr_1.2.1          </span></span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [25] tidyr_1.3.2           rio_1.3.0             here_1.0.2           </span></span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] svUnit_1.0.8          tidyselect_1.2.1      farver_2.1.2         </span></span>
-<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [4] S7_0.2.2              fastmap_1.2.0         tensorA_0.36.2.1     </span></span>
-<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [7] pacman_0.5.1          digest_0.6.39         timechange_0.4.0     </span></span>
-<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [10] estimability_2.0.0    lifecycle_1.0.5       magrittr_2.0.5       </span></span>
-<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [13] compiler_4.6.0        rlang_1.2.0           tools_4.6.0          </span></span>
-<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [16] knitr_1.51            bridgesampling_1.2-1  htmlwidgets_1.6.4    </span></span>
-<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [19] pkgbuild_1.4.8        curl_7.1.0            RColorBrewer_1.1-3   </span></span>
-<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [22] abind_1.4-8           purrr_1.2.2           grid_4.6.0           </span></span>
-<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [25] stats4_4.6.0          xtable_1.8-8          inline_0.3.21        </span></span>
-<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [28] emmeans_2.0.3         scales_1.4.0          cli_3.6.6            </span></span>
-<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [31] mvtnorm_1.4-1         crayon_1.5.3          rmarkdown_2.31       </span></span>
-<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [34] generics_0.1.4        otel_0.2.0            RcppParallel_5.1.11-2</span></span>
-<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [37] cachem_1.1.0          stringr_1.6.0         parallel_4.6.0       </span></span>
-<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [40] vctrs_0.7.3           V8_8.2.0              Matrix_1.7-5         </span></span>
-<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [43] jsonlite_2.0.0        arrayhelpers_1.1-1    glue_1.8.1           </span></span>
-<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [46] codetools_0.2-20      distributional_0.8.1  lubridate_1.9.5      </span></span>
-<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [49] stringi_1.8.7         gtable_0.3.6          QuickJSR_1.10.0      </span></span>
-<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [52] pillar_1.11.1         htmltools_0.5.9       Brobdingnag_1.2-9    </span></span>
-<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [55] R6_2.6.1              textshaping_1.0.5     rprojroot_2.1.1      </span></span>
-<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [58] evaluate_1.0.5        lattice_0.22-9        backports_1.5.1      </span></span>
-<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [61] memoise_2.0.1         broom_1.0.13          snakecase_0.11.1     </span></span>
-<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [64] rstantools_2.6.0      coda_0.19-4.1         gridExtra_2.3.1      </span></span>
-<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [67] nlme_3.1-169          checkmate_2.3.4       xfun_0.59            </span></span>
-<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [70] fs_2.1.0              pkgconfig_2.0.3</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</div>
+<p>Nei progetti condivisi, nei report Quarto e negli esercizi, utilizzate percorsi relativi. Evitate i percorsi che contengono il nome del vostro computer, il nome del vostro utente o il nome del vostro desktop.</p>
 </div>
 </div>
 </section>
+<section id="evitare-setwd-nei-file-condivisi" class="level2" data-number="7.6">
+<h2 data-number="7.6" class="anchored" data-anchor-id="evitare-setwd-nei-file-condivisi"><span class="header-section-number">7.6</span> Evitare <code>setwd()</code> nei file condivisi</h2>
+<p>In molti tutorial si trova un comando come questo:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">"/Users/maria/Desktop/progetto_stress_sonno"</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Questo comando cambia manualmente la cartella di lavoro. Può sembrare comodo, ma rende il codice fragile: funzionerà sul computer di Maria, ma non su quello di Luca o Giulia.</p>
+<p>In un progetto R ben organizzato, di solito non è necessario usare la funzione <code>setwd()</code>. Aprendo il file <code>.Rproj</code>, RStudio/Posit riconosce la cartella principale del progetto.</p>
+<p>Quando dobbiamo indicare un file all’interno del progetto, possiamo usare un percorso relativo:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">"data/raw/stress_sonno_originale.csv"</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>In alternativa, si può usare il pacchetto <code>here</code>, che costruisce percorsi a partire dalla radice del progetto:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>readr<span class="sc">::</span><span class="fu">read_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"raw"</span>, <span class="st">"stress_sonno_originale.csv"</span>))</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>La seconda forma è spesso più sicura quando il progetto contiene molti file e cartelle.</p>
 </section>
-<section id="bibliografia" class="level2 unnumbered unlisted">
-<h2 class="unnumbered unlisted anchored" data-anchor-id="bibliografia">Bibliografia</h2>
-
-
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
-<div id="ref-yu2024veridical" class="csl-entry" role="listitem">
-Yu, B., &amp; Barter, R. L. (2024). <em>Veridical data science: The practice of responsible data analysis and decision making</em>. MIT Press.
+<section id="dati-originali-e-dati-modificati" class="level2" data-number="7.7">
+<h2 data-number="7.7" class="anchored" data-anchor-id="dati-originali-e-dati-modificati"><span class="header-section-number">7.7</span> Dati originali e dati modificati</h2>
+<p>Una buona abitudine è non modificare mai direttamente i dati originali.</p>
+<p>Distinguete tra:</p>
+<ul>
+<li><code>data/raw/</code>: dati originali, così come sono stati ricevuti o scaricati;</li>
+<li><code>data/processed/</code>: dati puliti o trasformati;</li>
+<li><code>code/</code>: script che spiegano come si passa dai dati originali ai dati modificati.</li>
+</ul>
+<p>Per esempio:</p>
+<pre class="text"><code>data/raw/stress_sonno_originale.csv</code></pre>
+<p>può essere importato, controllato, corretto e salvato come:</p>
+<pre class="text"><code>data/processed/stress_sonno_pulito.csv</code></pre>
+<p>L’obiettivo non è creare molte cartelle. Il punto è poter rispondere a questa domanda:</p>
+<blockquote class="blockquote">
+<p>Da dove provengono questi dati e quali trasformazioni sono state effettuate?</p>
+</blockquote>
+<p>Questa domanda è più importante della sintassi. È una domanda metodologica.</p>
+</section>
+<section id="la-sessione-di-r" class="level2" data-number="7.8">
+<h2 data-number="7.8" class="anchored" data-anchor-id="la-sessione-di-r"><span class="header-section-number">7.8</span> La sessione di R</h2>
+<p>Quando lavorate in R, create oggetti nella memoria della sessione: dataset, vettori, risultati, grafici, modelli. Questi oggetti vivono temporaneamente nello spazio di lavoro.</p>
+<p>Un errore frequente è scrivere codice che funziona solo perché alcuni oggetti sono già presenti in memoria. In quel caso, il codice sembra corretto, ma non è davvero riproducibile.</p>
+<p>Per controllare il vostro lavoro, fate spesso questa prova:</p>
+<ol type="1">
+<li>riavviate R;</li>
+<li>eseguite il documento o lo script dall’inizio;</li>
+<li>verificate che non ci siano errori.</li>
+</ol>
+<p>In RStudio/Posit, potete riavviare R da:</p>
+<pre class="text"><code>Session &gt; Restart R</code></pre>
+<p>Poi rieseguite il codice. Se qualcosa si rompe, significa che il documento dipendeva da passaggi non espliciti.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Controllo minimo di riproducibilità">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Consiglio</span>Controllo minimo di riproducibilità
 </div>
 </div>
+<div class="callout-body-container callout-body">
+<p>Prima di consegnare un esercizio o un report, riavviate R ed eseguite tutto da capo. Se il documento non funziona dopo il riavvio, non è ancora riproducibile.</p>
+</div>
+</div>
+</section>
+<section id="pacchetti-installare-e-caricare" class="level2" data-number="7.9">
+<h2 data-number="7.9" class="anchored" data-anchor-id="pacchetti-installare-e-caricare"><span class="header-section-number">7.9</span> Pacchetti: installare e caricare</h2>
+<p>I pacchetti estendono R con nuove funzioni. Per utilizzarli, è necessario distinguere due operazioni.</p>
+<p>Installare un pacchetto significa scaricarlo sul computer:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"tidyverse"</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Caricare un pacchetto significa renderlo disponibile nella sessione corrente:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>L’installazione di solito si effettua una sola volta. Il caricamento, invece, va effettuato ogni volta che si apre una nuova sessione o si esegue un nuovo documento.</p>
+<p>Per rendere più chiaro da quale pacchetto proviene una funzione, si può usare la forma:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">"data/raw/stress_sonno_originale.csv"</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>In questo caso, <code>read_csv()</code> è la funzione e <code>readr</code> è il pacchetto.</p>
+</section>
+<section id="controlli-iniziali-su-un-progetto" class="level2" data-number="7.10">
+<h2 data-number="7.10" class="anchored" data-anchor-id="controlli-iniziali-su-un-progetto"><span class="header-section-number">7.10</span> Controlli iniziali su un progetto</h2>
+<p>Quando aprite un progetto, prima di analizzare i dati, effettuate alcuni controlli semplici.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Dove si trova la cartella di lavoro?</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">getwd</span>()</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Quali file ci sono nella cartella principale?</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">list.files</span>()</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Il file dei dati esiste?</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="fu">file.exists</span>(<span class="st">"data/raw/stress_sonno_originale.csv"</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Se usate <code>here</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>here<span class="sc">::</span><span class="fu">here</span>()</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">file.exists</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"raw"</span>, <span class="st">"stress_sonno_originale.csv"</span>))</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Questi comandi non sono analisi statistiche. Sono controlli di orientamento. Servono a evitare errori prima che diventino difficili da individuare.</p>
+</section>
+<section id="usare-lai-con-criterio" class="level2" data-number="7.11">
+<h2 data-number="7.11" class="anchored" data-anchor-id="usare-lai-con-criterio"><span class="header-section-number">7.11</span> Usare l’AI con criterio</h2>
+<p>L’AI è molto utile per risolvere problemi legati all’ambiente di lavoro. Potete chiederle, per esempio:</p>
+<blockquote class="blockquote">
+<p>Sto lavorando in un progetto R con cartelle <code>data/raw</code>, <code>data/processed</code> e <code>code</code>. Scrivi un esempio di codice per importare un file CSV da <code>data/raw</code> usando un percorso relativo.</p>
+</blockquote>
+<p>Oppure:</p>
+<blockquote class="blockquote">
+<p>Questo codice funziona sul mio computer, ma non su quello di un collega”. Controlla se ci sono percorsi assoluti o dipendenze dall’ambiente locale.</p>
+</blockquote>
+<p>Ci sono però cose che dovete controllare voi:</p>
+<ul>
+<li>il nome del file è corretto?</li>
+<li>il file si trova davvero nella cartella indicata?</li>
+<li>il codice usa percorsi relativi o assoluti?</li>
+<li>il pacchetto richiesto è installato e caricato?</li>
+<li>il progetto funziona dopo aver riavviato R?</li>
+</ul>
+<div class="callout callout-style-default callout-warning callout-titled" title="Errore frequente">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Avviso</span>Errore frequente
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>L’AI può generare nomi di file, cartelle o variabili plausibili ma inesistenti. Non copiate il codice senza prima aver verificato che corrisponda alla struttura reale del vostro progetto.</p>
+</div>
+</div>
+</section>
+<section id="cosa-portare-ai-capitoli-successivi" class="level2" data-number="7.12">
+<h2 data-number="7.12" class="anchored" data-anchor-id="cosa-portare-ai-capitoli-successivi"><span class="header-section-number">7.12</span> Cosa portare ai capitoli successivi</h2>
+<p>Nei capitoli successivi useremo R per importare, trasformare, riassumere e visualizzare i dati. Prima di procedere, è essenziale che ogni analisi abbia una casa: una cartella di progetto con nomi chiari, percorsi relativi e un documento che possa essere rieseguito.</p>
+<p>La sintassi di R è importante, ma non sufficiente. Un’analisi ordinata richiede anche una struttura ben organizzata.</p>
+<p>Prima di procedere, verificate di saper eseguire le seguenti operazioni:</p>
+<ul>
+<li>aprire un progetto R;</li>
+<li>trovare la cartella principale del progetto;</li>
+<li>indicare un file con un percorso relativo;</li>
+<li>distinguere i dati originali da quelli modificati;</li>
+<li>riavviare R ed eseguire tutto da capo.</li>
+<li>Spiegare a parole dove si trovano i dati e come vengono usati.</li>
+</ul>
+<p>Se siete in grado di fare tutto questo, allora siete pronti a usare R non solo come calcolatrice, ma anche come ambiente per un’analisi trasparente e riproducibile.</p>
+
+
 </section>
 
 </main> <!-- /main -->
@@ -941,7 +933,7 @@ Yu, B., &amp; Barter, R. L. (2024). <em>Veridical data science: The practice of 
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/ccaudek\.github\.io\/utet-eda\/");
+        var filterRegex = new RegExp("^(?:https?:)?//ccaudek\.github\.io/utet-prob/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -1277,13 +1269,13 @@ Yu, B., &amp; Barter, R. L. (2024). <em>Veridical data science: The practice of 
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../chapters/R/01_r_syntax.html" class="pagination-link" aria-label="Un approccio moderno all'analisi dei dati">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Un approccio moderno all’analisi dei dati</span></span>
+      <a href="../../chapters/R/01_r_syntax.html" class="pagination-link" aria-label="Sintassi minima per leggere codice R">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sintassi minima per leggere codice R</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../chapters/R/03_utility_functions.html" class="pagination-link" aria-label="Funzioni di utilità">
-        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Funzioni di utilità</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../chapters/R/03_utility_functions.html" class="pagination-link" aria-label="Dal file alla tabella controllata">
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Dal file alla tabella controllata</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -1294,8 +1286,8 @@ Yu, B., &amp; Barter, R. L. (2024). <em>Veridical data science: The practice of 
 <p><strong>Analisi esplorativa dei dati (EDA)</strong> — Modulo del progetto UTET a supporto del manuale <em>Inferenza bayesiana in psicologia: Ragionare con l’incertezza</em>.</p>
 </div>   
     <div class="nav-footer-center">
-      &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/R/02_environment.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></div>
+
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/R/02_environment.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div><div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Preferenze cookie</a></div></div>
     <div class="nav-footer-right">
 <p>Realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
 </div>

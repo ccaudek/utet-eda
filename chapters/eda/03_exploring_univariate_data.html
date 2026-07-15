@@ -1,13 +1,10 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
-
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.9.38">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-
-
-<title>16&nbsp; Esplorare distribuzioni univariate – Analisi esplorativa dei dati in psicologia</title>
+<title>15&nbsp; Esplorare una variabile alla volta – Analisi esplorativa dei dati in psicologia</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -58,28 +55,7 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-  margin-bottom: 0em;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
-
+</style>
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../../site_libs/quarto-nav/headroom.min.js"></script>
@@ -91,36 +67,37 @@ div.csl-indent {
 <link href="../../chapters/eda/05_data_visualization_principles.html" rel="next">
 <link href="../../chapters/eda/02_data_cleaning.html" rel="prev">
 <link href="../../style/gauss.png" rel="icon" type="image/png">
+<script src="../../site_libs/cookie-consent/cookie-consent.js"></script>
+<link href="../../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-0a6b7249c26820e032cb0bd839ff02b1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-bd31b91f9ddb1a75e3744ba9797c8182.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-662b1d839dd28a08d17be9d78b753e45.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-bd31b91f9ddb1a75e3744ba9797c8182.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-a0bb4f8876326eb7771edc79fa342270.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-7c5efe83671fda2688731f9f1d4acab0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-a0bb4f8876326eb7771edc79fa342270.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-353ec92dc31bcb37568820202c74e1ec.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-ca56530e1a7dc3e4b2cbddadeb71310c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-353ec92dc31bcb37568820202c74e1ec.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script src="../../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="../../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
-<link href="../../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
-<script id="quarto-search-options" type="application/json">{
+<link href="../../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
-  "copy-button": false,
+  "copy-button": true,
   "collapse-after": 3,
   "panel-placement": "start",
-  "type": "textbox",
+  "type": "overlay",
   "limit": 50,
   "keyboard-shortcut": [
     "f",
     "/",
     "s"
   ],
-  "show-item-context": false,
+  "show-item-context": true,
   "language": {
     "search-no-results-text": "Nessun risultato",
     "search-matching-documents-text": "documenti trovati",
@@ -134,51 +111,46 @@ div.csl-indent {
     "search-submit-button-title": "Inviare",
     "search-label": "Ricerca"
   }
-}</script>
-<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-QT5S3P9D31"></script>
-
-<script type="text/javascript">
+}</script><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-QT5S3P9D31"></script><script type="text/plain" cookie-consent="tracking">
 
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
-</script>
-<style>html{ scroll-behavior: smooth; }</style>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="stylesheet" href="../../style/custom.css">
+</script><script type="text/javascript" charset="UTF-8">
+document.addEventListener('DOMContentLoaded', function () {
+cookieconsent.run({
+  "notice_banner_type":"headline",
+  "consent_type":"express",
+  "palette":"light",
+  "language":"en",
+  "page_load_consent_levels":["strictly-necessary"],
+  "notice_banner_reject_button_hide":false,
+  "preferences_center_close_button_hide":false,
+  "website_name":""
+  ,
+"language":"it"
+  });
+});
+</script><style>html{ scroll-behavior: smooth; }</style>
+<link href="../../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="../../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<meta property="og:title" content="15&nbsp; Esplorare una variabile alla volta – Analisi esplorativa dei dati in psicologia">
+<meta property="og:description" content="Capire i dati prima di cercare relazioni">
+<meta property="og:image" content="https://ccaudek.github.io/utet-eda/chapters/eda/03_exploring_univariate_data_files/figure-html/barplot-gender-1.png">
+<meta property="og:site_name" content="Analisi esplorativa dei dati in psicologia">
+<meta property="og:image:alt" content="Distribuzione del genere dichiarato nel campione didattico.">
+<meta property="og:image:height" content="960">
+<meta property="og:image:width" content="1344">
+<meta name="twitter:title" content="15&nbsp; Esplorare una variabile alla volta – Analisi esplorativa dei dati in psicologia">
+<meta name="twitter:description" content="Capire i dati prima di cercare relazioni">
+<meta name="twitter:image" content="https://ccaudek.github.io/utet-eda/chapters/eda/03_exploring_univariate_data_files/figure-html/barplot-gender-1.png">
+<meta name="twitter:image:alt" content="Distribuzione del genere dichiarato nel campione didattico.">
+<meta name="twitter:image-height" content="960">
+<meta name="twitter:image-width" content="1344">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://ccaudek.github.io/utet-eda/chapters/eda/03_exploring_univariate_data.html">
 </head>
-
 <body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
       const mode = bsSheetEl.getAttribute("data-mode");
@@ -322,7 +294,8 @@ window.Quarto = {
       }
     };
     const authorPrefersDark = false;
-    const darkModeDefault = authorPrefersDark;
+    const queryPrefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    const darkModeDefault = queryPrefersDark.matches;
       document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
       document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
     let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
@@ -335,6 +308,14 @@ window.Quarto = {
       toggleGiscusIfUsed(toAlternate, darkModeDefault);
       window.dispatchEvent(new Event('resize'));
     };
+    queryPrefersDark.addEventListener("change", e => {
+      if(window.localStorage.getItem("quarto-color-scheme") !== null)
+        return;
+      const alternate = e.matches
+      toggleColorMode(alternate);
+      localAlternateSentinel = e.matches ? 'alternate' : 'default'; // this is used alongside local storage!
+      toggleGiscusIfUsed(alternate, darkModeDefault);
+    });
     // Switch to dark mode if need be
     if (hasAlternateSentinel()) {
       toggleColorMode(true);
@@ -344,47 +325,37 @@ window.Quarto = {
   </script>
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav">
-    <div class="container-fluid d-flex">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/03_exploring_univariate_data.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Esplorare distribuzioni univariate</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/03_exploring_univariate_data.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Esplorare una variabile alla volta</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Ricerca" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
-  </nav>
-</header>
-<!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="../../">Analisi esplorativa dei dati in psicologia</a> 
         <div class="sidebar-tools-main tools-wide">
-    <a href="https://github.com/ccaudek/utet-eda/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/ccaudek/utet-eda/" title="Eseguire il codice" class="quarto-navigation-tool px-1" aria-label="Eseguire il codice"><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Attiva/disattiva la modalità oscura"><i class="bi"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Attiva/disattiva la modalità lettore">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
   </div>
 </a>
+    <div id="quarto-search" class="quarto-navigation-tool px-1" title="Ricerca"></div>
 </div>
     </div>
       </div>
-        <div class="mt-2 flex-shrink-0 align-items-center">
-        <div class="sidebar-search">
-        <div id="quarto-search" class="" title="Ricerca"></div>
-        </div>
-        </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Analisi esplorativa dei dati in psicologia</span></span></a>
@@ -404,8 +375,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/02_key_notions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Concetti chiave</span></span></a>
@@ -414,7 +385,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/03_design.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Campionamento, metodologia sperimentale e studi osservazionali</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Disegno di ricerca: quali conclusioni sono giustificate dai dati?</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -430,7 +401,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../chapters/R/introduction_r_lang.html" class="sidebar-item-text sidebar-link">
@@ -439,57 +410,51 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/01_r_syntax.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Un approccio moderno all’analisi dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sintassi minima per leggere codice R</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/02_environment.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">L’ambiente di programmazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Ambiente di lavoro e progetti R</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/03_utility_functions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Funzioni di utilità</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../chapters/R/04_r_programming.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Programmazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Dal file alla tabella controllata</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/05_dplyr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Usare <code>dplyr</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Trasformare i dati con <code>dplyr</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/06_ggplot2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Visualizzazione dei dati con ggplot2</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Visualizzare i dati con <code>ggplot2</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/07_quarto.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Quarto</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quarto</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/08_r_packages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Pacchetti</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Pacchetti</span></span></a>
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../chapters/eda/introduction_eda.html" class="sidebar-item-text sidebar-link">
@@ -498,63 +463,63 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/01_project_structure.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Il ciclo di vita di un progetto di analisi dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Organizzare un progetto di analisi dei dati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/02_data_cleaning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Flusso di lavoro per la pulizia dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulizia dei dati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/03_exploring_univariate_data.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Esplorare distribuzioni univariate</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Esplorare una variabile alla volta</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/05_data_visualization_principles.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Principi della visualizzazione scientifica</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Principi della visualizzazione dei dati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/06_loc_scale.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Indicatori di tendenza centrale e variabilità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Indicatori di tendenza centrale e variabilità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/07_introduction_normal_distribution.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Introduzione alla distribuzione normale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Introduzione alla distribuzione normale</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/08_correlation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Relazioni tra variabili</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Relazioni tra variabili</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/09_causality_intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Dalla correlazione alla causalità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Dalla correlazione alla causalità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/11_outlier.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Outlier</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Valori inattesi e outlier</span></span></a>
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
@@ -563,40 +528,42 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/epiloque/epiloque.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Considerazioni conclusive</span></a>
   </div>
 </li>
       </ul>
-  </li>
+</li>
     </ul>
-    </div>
-</nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Sommario</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="2"><h2 id="toc-title">Sommario</h2>
    
   <ul class="collapse">
-  <li><a href="#due-nature-del-dato-psicologico" id="toc-due-nature-del-dato-psicologico" class="nav-link active" data-scroll-target="#due-nature-del-dato-psicologico"><span class="header-section-number">16.1</span> Due nature del dato psicologico</a></li>
-  <li><a href="#sec-categorical-data" id="toc-sec-categorical-data" class="nav-link" data-scroll-target="#sec-categorical-data"><span class="header-section-number">16.2</span> Parte I: quando i dati appartengono a categorie</a></li>
-  <li><a href="#sec-numerical-data" id="toc-sec-numerical-data" class="nav-link" data-scroll-target="#sec-numerical-data"><span class="header-section-number">16.3</span> Parte II: quando i dati si distribuiscono su continuità</a></li>
-  <li><a href="#ponti-tra-categorie-e-numeri" id="toc-ponti-tra-categorie-e-numeri" class="nav-link" data-scroll-target="#ponti-tra-categorie-e-numeri"><span class="header-section-number">16.4</span> Ponti tra categorie e numeri</a></li>
-  </ul>
-<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/eda/03_exploring_univariate_data.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
+<li><a href="#perch%C3%A9-questo-capitolo" id="toc-perché-questo-capitolo" class="nav-link active" data-scroll-target="#perch%C3%A9-questo-capitolo"><span class="header-section-number">15.1</span> Perché questo capitolo</a></li>
+  <li><a href="#una-sequenza-minima" id="toc-una-sequenza-minima" class="nav-link" data-scroll-target="#una-sequenza-minima"><span class="header-section-number">15.2</span> Una sequenza minima</a></li>
+  <li><a href="#un-esempio-ricorrente-stress-e-sonno" id="toc-un-esempio-ricorrente-stress-e-sonno" class="nav-link" data-scroll-target="#un-esempio-ricorrente-stress-e-sonno"><span class="header-section-number">15.3</span> Un esempio ricorrente: stress e sonno</a></li>
+  <li><a href="#primo-controllo-valori-mancanti-e-valori-inattesi" id="toc-primo-controllo-valori-mancanti-e-valori-inattesi" class="nav-link" data-scroll-target="#primo-controllo-valori-mancanti-e-valori-inattesi"><span class="header-section-number">15.4</span> Primo controllo: valori mancanti e valori inattesi</a></li>
+  <li><a href="#variabili-categoriali-contare-prima-di-interpretare" id="toc-variabili-categoriali-contare-prima-di-interpretare" class="nav-link" data-scroll-target="#variabili-categoriali-contare-prima-di-interpretare"><span class="header-section-number">15.5</span> Variabili categoriali: contare prima di interpretare</a></li>
+  <li><a href="#variabili-numeriche-guardare-forma-centro-e-variabilit%C3%A0" id="toc-variabili-numeriche-guardare-forma-centro-e-variabilità" class="nav-link" data-scroll-target="#variabili-numeriche-guardare-forma-centro-e-variabilit%C3%A0"><span class="header-section-number">15.6</span> Variabili numeriche: guardare forma, centro e variabilità</a></li>
+  <li><a href="#variabili-ordinali-numeri-che-non-sono-sempre-quantit%C3%A0-continue" id="toc-variabili-ordinali-numeri-che-non-sono-sempre-quantità-continue" class="nav-link" data-scroll-target="#variabili-ordinali-numeri-che-non-sono-sempre-quantit%C3%A0-continue"><span class="header-section-number">15.7</span> Variabili ordinali: numeri che non sono sempre quantità continue</a></li>
+  <li><a href="#confrontare-una-variabile-numerica-tra-gruppi" id="toc-confrontare-una-variabile-numerica-tra-gruppi" class="nav-link" data-scroll-target="#confrontare-una-variabile-numerica-tra-gruppi"><span class="header-section-number">15.8</span> Confrontare una variabile numerica tra gruppi</a></li>
+  <li><a href="#quale-grafico-scegliere" id="toc-quale-grafico-scegliere" class="nav-link" data-scroll-target="#quale-grafico-scegliere"><span class="header-section-number">15.9</span> Quale grafico scegliere?</a></li>
+  <li><a href="#usare-lai-con-criterio" id="toc-usare-lai-con-criterio" class="nav-link" data-scroll-target="#usare-lai-con-criterio"><span class="header-section-number">15.10</span> Usare l’AI con criterio</a></li>
+  <li><a href="#cosa-portare-al-capitolo-successivo" id="toc-cosa-portare-al-capitolo-successivo" class="nav-link" data-scroll-target="#cosa-portare-al-capitolo-successivo"><span class="header-section-number">15.11</span> Cosa portare al capitolo successivo</a></li>
+  </ul><div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/eda/03_exploring_univariate_data.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/03_exploring_univariate_data.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Esplorare distribuzioni univariate</span></a></li></ol></nav>
-<div class="quarto-title">
-<h1 class="title"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Esplorare distribuzioni univariate</span></h1>
-<p class="subtitle lead">Dal dato grezzo al pattern riconoscibile</p>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/03_exploring_univariate_data.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Esplorare una variabile alla volta</span></a></li></ol></nav><div class="quarto-title">
+<h1 class="title">
+<span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Esplorare una variabile alla volta</span>
+</h1>
+<p class="subtitle lead">Capire i dati prima di cercare relazioni</p>
 </div>
 
 
@@ -610,760 +577,682 @@ window.Quarto = {
   
 
 
-</header>
-
-
-<div class="callout callout-style-simple callout-note no-icon">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-body-container">
-<p>Prima di costruire modelli complessi o formulare inferenze, è necessario comprendere a fondo i propri dati. Questo capitolo introduce gli strumenti fondamentali dell’analisi esplorativa applicati a una variabile alla volta, che chiamiamo “esplorazione univariata”. Impareremo a osservare i dati da diverse prospettive: come categorie che si distribuiscono in modi inattesi, come distribuzioni numeriche che rivelano asimmetrie e concentrazioni, come pattern che emergono gradualmente attraverso rappresentazioni grafiche sempre più sofisticate.</p>
-<p>L’analisi esplorativa dei dati non è un passaggio formale da esaurire rapidamente. È il momento in cui costruiamo un’intuizione profonda su ciò che stiamo studiando, in cui scopriamo anomalie che potrebbero invalidare le analisi successive e in cui formuliamo le prime ipotesi che guideranno la nostra ricerca. In psicologia, dove si raccolgono variabili sociodemografiche, risposte a questionari, punteggi clinici e misure comportamentali, questa fase diventa ancora più cruciale: ogni distribuzione racconta una storia sul fenomeno osservato.</p>
-</div>
-</div>
-</div>
-<section id="prerequisiti" class="level2 unnumbered unlisted">
-<h2 class="unnumbered unlisted anchored" data-anchor-id="prerequisiti">Prerequisiti</h2>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Consiglio</span>Letture consigliate
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-1" class="callout-1-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Prima di procedere, familiarizzati con questi concetti attraverso:</p>
+</header><section id="perché-questo-capitolo" class="level2" data-number="15.1"><h2 data-number="15.1" class="anchored" data-anchor-id="perché-questo-capitolo">
+<span class="header-section-number">15.1</span> Perché questo capitolo</h2>
+<p>L’analisi esplorativa dei dati inizia con una domanda semplice: <strong>Che cosa contiene ciascuna variabile?</strong></p>
+<p>Prima di studiare le correlazioni, confrontare i gruppi o stimare i modelli, è necessario conoscere le variabili una alla volta. Una variabile può presentare valori mancanti, categorie riportate in modo incoerente, distribuzioni asimmetriche, gruppi molto sbilanciati o valori inattesi. Se non li osserviamo all’inizio, rischiamo di costruire analisi apparentemente corrette su dati che non abbiamo davvero compreso.</p>
+<p>In psicologia, questa fase è particolarmente importante. Le variabili possono rappresentare caratteristiche sociodemografiche, risposte a item, punteggi di scala, tempi di reazione, valutazioni soggettive o indicatori fisiologici. Ogni variabile ha un significato teorico e un’origine empirica. Esplorare una variabile non significa soltanto produrre un grafico, ma anche chiedersi cosa quel grafico ci dice del fenomeno osservato.</p>
+<p>Al termine del capitolo dovresti essere in grado di:</p>
 <ul>
-<li><a href="https://openintro-ims.netlify.app/explore-categorical">Exploring categorical data</a> di Mine Çetinkaya-Rundel e Johanna Hardin</li>
-<li><a href="https://openintro-ims.netlify.app/explore-numerical">Exploring numerical data</a> degli stessi autori</li>
-<li>L’Appendice <span class="quarto-unresolved-ref">?sec-apx-sums</span> per un ripasso dei concetti matematici di base</li>
+<li>distinguere le variabili categoriali da quelle numeriche;</li>
+<li>controllare i valori mancanti e quelli inattesi;</li>
+<li>scegliere rappresentazioni grafiche semplici e appropriate;</li>
+<li>leggere frequenze, proporzioni, istogrammi e boxplot;</li>
+<li>evitare interpretazioni premature;</li>
+<li>controllare criticamente il codice e i commenti prodotti con l’aiuto dell’AI.</li>
 </ul>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-caution callout-titled" title="Preparazione del Notebook">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Attenzione</span>Preparazione del Notebook
+<span class="screen-reader-only">Importante</span>Idea guida
 </div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
+<p>L’analisi univariata non permette di trarre conclusioni. Serve per <strong>orientarsi</strong>.</p>
+<p>Prima di domandarci se due variabili sono associate, dobbiamo capire come si comporta ciascuna variabile da sola.</p>
+</div>
+</div>
+</section><section id="una-sequenza-minima" class="level2" data-number="15.2"><h2 data-number="15.2" class="anchored" data-anchor-id="una-sequenza-minima">
+<span class="header-section-number">15.2</span> Una sequenza minima</h2>
+<p>Quando esploriamo una variabile, possiamo seguire una sequenza molto semplice.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead><tr class="header">
+<th>Passo</th>
+<th>Domanda guida</th>
+<th>Esempio di controllo</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>1. Identificare</td>
+<td>Che tipo di variabile è?</td>
+<td>Categoriale, ordinale, numerica, punteggio di scala</td>
+</tr>
+<tr class="even">
+<td>2. Controllare</td>
+<td>Ci sono valori mancanti o impossibili?</td>
+<td>
+<code>NA</code>, valori fuori scala, categorie inattese</td>
+</tr>
+<tr class="odd">
+<td>3. Contare o riassumere</td>
+<td>Dove si concentrano i valori?</td>
+<td>Frequenze, proporzioni, minimo, massimo, mediana</td>
+</tr>
+<tr class="even">
+<td>4. Visualizzare</td>
+<td>Quale grafico mostra meglio la distribuzione?</td>
+<td>Barre, istogramma, boxplot</td>
+</tr>
+<tr class="odd">
+<td>5. Interpretare con cautela</td>
+<td>Che cosa posso dire e che cosa no?</td>
+<td>Descrizione, non ancora spiegazione causale</td>
+</tr>
+</tbody>
+</table>
+<p>Questa sequenza verrà ripresa più volte nei capitoli successivi. L’EDA è un processo iterativo: spesso un grafico rivela un problema che ci costringe a tornare alle fasi di controllo o di pulizia.</p>
+</section><section id="un-esempio-ricorrente-stress-e-sonno" class="level2" data-number="15.3"><h2 data-number="15.3" class="anchored" data-anchor-id="un-esempio-ricorrente-stress-e-sonno">
+<span class="header-section-number">15.3</span> Un esempio ricorrente: stress e sonno</h2>
+<p>Useremo un piccolo dataset didattico su studenti universitari. Ogni riga rappresenta uno studente. Le variabili principali sono:</p>
+<table class="caption-top table">
+<thead><tr class="header">
+<th>Variabile</th>
+<th>Tipo</th>
+<th>Significato</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><code>genere</code></td>
+<td>categoriale</td>
+<td>genere dichiarato</td>
+</tr>
+<tr class="even">
+<td><code>anno</code></td>
+<td>categoriale/ordinale</td>
+<td>anno di corso</td>
+</tr>
+<tr class="odd">
+<td><code>stress</code></td>
+<td>numerica discreta</td>
+<td>stress accademico, da 1 a 10</td>
+</tr>
+<tr class="even">
+<td><code>sonno_ore</code></td>
+<td>numerica continua</td>
+<td>ore medie di sonno per notte</td>
+</tr>
+<tr class="odd">
+<td><code>qualita_sonno</code></td>
+<td>ordinale</td>
+<td>qualità soggettiva del sonno, da 1 a 5</td>
+</tr>
+</tbody>
+</table>
+<p>Nel capitolo precedente abbiamo visto che un dataset deve essere controllato e documentato. Qui si assume di avere già una versione pulita, ma si continuerà comunque a controllare ciò che si fa.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"code"</span>, <span class="st">"_common.R"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">source</span>()</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load packages</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">"pacman"</span>)) <span class="fu">install.packages</span>(<span class="st">"pacman"</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(janitor, viridis, vcd, ggbeeswarm, dslabs)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/">tibble</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">stress_sonno</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span></span>
+<span>  id <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">120</span>,</span>
+<span>  genere <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"F"</span>, <span class="st">"M"</span>, <span class="st">"Altro/non dichiarato"</span><span class="op">)</span>,</span>
+<span>                  size <span class="op">=</span> <span class="fl">120</span>,</span>
+<span>                  replace <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                  prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.58</span>, <span class="fl">.38</span>, <span class="fl">.04</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  anno <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Primo"</span>, <span class="st">"Secondo"</span>, <span class="st">"Terzo"</span><span class="op">)</span>,</span>
+<span>                size <span class="op">=</span> <span class="fl">120</span>,</span>
+<span>                replace <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.42</span>, <span class="fl">.34</span>, <span class="fl">.24</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  stress <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">pmin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">pmax</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">120</span>, mean <span class="op">=</span> <span class="fl">6.2</span>, sd <span class="op">=</span> <span class="fl">1.8</span><span class="op">)</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span>, <span class="fl">10</span><span class="op">)</span>,</span>
+<span>  sonno_ore <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">120</span>, mean <span class="op">=</span> <span class="fl">7.0</span>, sd <span class="op">=</span> <span class="fl">1.1</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  qualita_sonno <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">pmin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">pmax</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">120</span>, mean <span class="op">=</span> <span class="fl">3.1</span>, sd <span class="op">=</span> <span class="fl">1.0</span><span class="op">)</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span>, <span class="fl">5</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Introduciamo alcuni valori mancanti per rendere l'esempio realistico.</span></span>
+<span><span class="va">stress_sonno</span><span class="op">$</span><span class="va">sonno_ore</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">7</span>, <span class="fl">48</span>, <span class="fl">91</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
+<span><span class="va">stress_sonno</span><span class="op">$</span><span class="va">qualita_sonno</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">13</span>, <span class="fl">62</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">stress_sonno</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 120
+Columns: 6
+$ id            &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1…
+$ genere        &lt;chr&gt; "F", "M", "F", "M", "M", "F", "F", "M", "F", "F", "M", "…
+$ anno          &lt;chr&gt; "Secondo", "Primo", "Primo", "Primo", "Primo", "Terzo", …
+$ stress        &lt;dbl&gt; 6, 4, 5, 6, 10, 5, 7, 6, 4, 6, 9, 7, 6, 5, 3, 8, 4, 8, 1…
+$ sonno_ore     &lt;dbl&gt; 6.1, 6.4, 8.6, 5.7, 6.8, 9.1, NA, 5.5, 6.3, 7.5, 6.6, 6.…
+$ qualita_sonno &lt;dbl&gt; 3, 4, 3, 4, 4, 3, 3, 2, 4, 3, 5, 1, NA, 4, 4, 3, 2, 3, 3…</code></pre>
 </div>
 </div>
-</div>
-</div>
-</section>
-<section id="due-nature-del-dato-psicologico" class="level2" data-number="16.1">
-<h2 data-number="16.1" class="anchored" data-anchor-id="due-nature-del-dato-psicologico"><span class="header-section-number">16.1</span> Due nature del dato psicologico</h2>
-<p>I dati che incontriamo in psicologia hanno natura profondamente diversa. Da un lato, raccogliamo informazioni qualitative: il genere dei partecipanti, la diagnosi clinica, il tipo di intervento ricevuto e la condizione sperimentale assegnata. Queste variabili categorizzano il mondo in classi discrete, in etichette che distinguono senza necessariamente ordinare. Dall’altro lato, misuriamo quantità numeriche: punteggi di questionari, tempi di reazione, parametri fisiologici e scale di valutazione. Queste variabili posizionano ogni osservazione su un continuum, consentendoci di parlare di “più” o “meno”, di distanze e di medie.</p>
-<p>Questa fondamentale distinzione richiede strumenti analitici diversi. Non ha senso calcolare la media del genere, così come sarebbe riduttivo considerare un punteggio BDI come una semplice categoria. Eppure, entrambe le nature dei dati richiedono lo stesso rigore esplorativo: dobbiamo capire come si distribuiscono le osservazioni, dove si concentrano, quali combinazioni sono frequenti o rare e quali pattern emergono quando le stratifichiamo per gruppi.</p>
-<p>Inizieremo esplorando le variabili categoriali, per poi passare a quelle numeriche, scoprendo che le domande fondamentali rimangono invariate anche quando cambiano gli strumenti per rispondere.</p>
-</section>
-<section id="sec-categorical-data" class="level2" data-number="16.2">
-<h2 data-number="16.2" class="anchored" data-anchor-id="sec-categorical-data"><span class="header-section-number">16.2</span> Parte I: quando i dati appartengono a categorie</h2>
-<section id="i-pinguini-di-palmer" class="level3" data-number="16.2.1">
-<h3 data-number="16.2.1" class="anchored" data-anchor-id="i-pinguini-di-palmer"><span class="header-section-number">16.2.1</span> I pinguini di Palmer</h3>
-<p>Per esplorare i dati categoriali useremo il dataset <a href="https://allisonhorst.github.io/palmerpenguins/">palmerpenguins</a>, raccolto da <a href="https://www.uaf.edu/cfos/people/faculty/detail/kristen-gorman.php">Kristen Gorman</a> presso la Palmer Station in Antartide. Questo dataset documenta 344 pinguini appartenenti a tre specie (<em>Adelie</em>, <em>Chinstrap</em>, <em>Gentoo</em>), osservati su tre isole dell’arcipelago di Palmer. Oltre alle variabili categoriali come specie, isola e genere, il dataset include misure morfometriche che esploreremo nella seconda parte del capitolo.</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> rio<span class="sc">::</span><span class="fu">import</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"penguins.csv"</span>))</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Rimuoviamo le osservazioni incomplete per semplicità</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>df_penguins <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span> <span class="fu">drop_na</span>()</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(df_penguins)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Rows: 333</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: 8</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ species           &lt;chr&gt; "Adelie", "Adelie", "Adelie", "Adelie", "Adelie", "A…</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ island            &lt;chr&gt; "Torgersen", "Torgersen", "Torgersen", "Torgersen", …</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ bill_length_mm    &lt;dbl&gt; 39.1, 39.5, 40.3, 36.7, 39.3, 38.9, 39.2, 41.1, 38.6…</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ bill_depth_mm     &lt;dbl&gt; 18.7, 17.4, 18.0, 19.3, 20.6, 17.8, 19.6, 17.6, 21.2…</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ flipper_length_mm &lt;int&gt; 181, 186, 195, 193, 190, 181, 195, 182, 191, 198, 18…</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ body_mass_g       &lt;int&gt; 3750, 3800, 3250, 3450, 3650, 3625, 4675, 3200, 3800…</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ sex               &lt;chr&gt; "male", "female", "female", "female", "male", "femal…</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007…</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-<section id="contare-per-capire-le-tabelle-di-contingenza" class="level3" data-number="16.2.2">
-<h3 data-number="16.2.2" class="anchored" data-anchor-id="contare-per-capire-le-tabelle-di-contingenza"><span class="header-section-number">16.2.2</span> Contare per capire: le tabelle di contingenza</h3>
-<p>La prima domanda che ci poniamo di fronte a variabili categoriali è disarmante nella sua semplicità: <em>quanti?</em> Quanti pinguini per specie? Quanti maschi e femmine? Quante osservazioni per isola? Questa apparente banalità nasconde in realtà il nucleo dell’analisi esplorativa categoriale: la distribuzione delle frequenze, infatti, rivela immediatamente squilibri, assenze inattese e concentrazioni che suggeriscono pattern biologici o artefatti della raccolta dati.</p>
-<p>Le <em>tabelle di contingenza</em> organizzano questi conteggi quando vogliamo esaminare due variabili simultaneamente. Ogni cella della tabella risponde alla domanda: quante osservazioni condividono questa specifica combinazione di attributi? Nel nostro caso, possiamo chiederci come si distribuiscono le specie nelle diverse isole.</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df_penguins <span class="sc">|&gt;</span> </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tabyl</span>(island, species) <span class="sc">|&gt;</span> </span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_totals</span>(<span class="fu">c</span>(<span class="st">"row"</span>, <span class="st">"col"</span>))</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     island Adelie Chinstrap Gentoo Total</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     Biscoe     44         0    119   163</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      Dream     55        68      0   123</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Torgersen     47         0      0    47</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      Total    146        68    119   333</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>La tabella rivela immediatamente un interessante pattern ecologico: la specie Adelie è ubiquitaria, presente su tutte e tre le isole. I pinguini Chinstrap, invece, abitano esclusivamente l’isola Dream, mentre i pinguini Gentoo si trovano solo a Biscoe. Questa distribuzione non uniforme potrebbe riflettere preferenze ecologiche, storia evolutiva o semplicemente il disegno di campionamento dello studio. L’analisi esplorativa non ci dice il perché di questi pattern, ma ce li rende visibili, così da poter formulare ipotesi informate.</p>
-</section>
-<section id="proporzioni-quando-i-numeri-assoluti-ingannano" class="level3" data-number="16.2.3">
-<h3 data-number="16.2.3" class="anchored" data-anchor-id="proporzioni-quando-i-numeri-assoluti-ingannano"><span class="header-section-number">16.2.3</span> Proporzioni: quando i numeri assoluti ingannano</h3>
-<p>I conteggi grezzi, però, possono essere fuorvianti quando confrontiamo gruppi di dimensioni diverse. Se un’isola ospita molti più pinguini di un’altra, il semplice conteggio non ci dice se una specie è effettivamente più <em>predominante</em> in quella località. Per questo motivo, è necessario utilizzare le <em>proporzioni</em>, che normalizzano i conteggi rispetto ai totali di riga o colonna.</p>
-<p>Le proporzioni di riga ci dicono: “All’interno di questa isola, quale percentuale di pinguini appartiene a ciascuna specie?”.</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df_penguins <span class="sc">|&gt;</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tabyl</span>(island, species) <span class="sc">|&gt;</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_percentages</span>(<span class="st">"row"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_totals</span>(<span class="st">"col"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_pct_formatting</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     island  Adelie Chinstrap Gentoo   Total</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     Biscoe  26.99%     0.00% 73.01% 100.00%</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      Dream  44.72%    55.28%  0.00% 100.00%</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Torgersen 100.00%     0.00%  0.00% 100.00%</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Le proporzioni di colonna invertono la prospettiva: “All’interno di questa specie, quale percentuale di individui vive su ciascuna isola?”</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df_penguins <span class="sc">|&gt;</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tabyl</span>(island, species) <span class="sc">|&gt;</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_percentages</span>(<span class="st">"col"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_totals</span>(<span class="st">"row"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_pct_formatting</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     island  Adelie Chinstrap  Gentoo</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     Biscoe  30.14%     0.00% 100.00%</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      Dream  37.67%   100.00%   0.00%</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Torgersen  32.19%     0.00%   0.00%</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      Total 100.00%   100.00% 100.00%</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Queste due prospettive complementari rispondono a domande diverse. La prima ci aiuta a caratterizzare la composizione di ciascuna isola, la seconda a capire come ciascuna specie si distribuisce geograficamente. La scelta tra proporzioni di riga e di colonna dipende dalla domanda di ricerca e non da preferenze estetiche.</p>
-</section>
-<section id="visualizzare-categorie-i-grafici-a-barre" class="level3" data-number="16.2.4">
-<h3 data-number="16.2.4" class="anchored" data-anchor-id="visualizzare-categorie-i-grafici-a-barre"><span class="header-section-number">16.2.4</span> Visualizzare categorie: i grafici a barre</h3>
-<p>I numeri nelle tabelle sono precisi, ma la percezione visiva permette di cogliere pattern che sfuggono all’ispezione sequenziale propria della letturamdi una tabella. I <em>grafici a barre</em> traducono le frequenze in altezze, permettendoci di confrontare le categorie con un colpo d’occhio. Iniziamo con una singola variabile categoriale: la distribuzione delle specie.</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_penguins, <span class="fu">aes</span>(<span class="at">x =</span> species)) <span class="sc">+</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Specie"</span>,</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Numero di osservazioni"</span>,</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Abbondanza relativa delle specie"</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+</section><section id="primo-controllo-valori-mancanti-e-valori-inattesi" class="level2" data-number="15.4"><h2 data-number="15.4" class="anchored" data-anchor-id="primo-controllo-valori-mancanti-e-valori-inattesi">
+<span class="header-section-number">15.4</span> Primo controllo: valori mancanti e valori inattesi</h2>
+<p>Prima di creare i grafici, è consigliabile verificare che le variabili non presentino valori mancanti o valori fuori scala.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress_sonno</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="op">(</span></span>
+<span>      <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>      <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">.x</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="03_exploring_univariate_data_files/figure-html/barplot-species-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Distribuzione delle tre specie nel dataset completo"><img src="03_exploring_univariate_data_files/figure-html/barplot-species-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%" alt="Distribuzione delle tre specie nel dataset completo"></a></p>
-</figure>
-</div>
-<figcaption>Distribuzione delle tre specie nel dataset completo</figcaption>
-</figure>
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["genere"],"name":[2],"type":["int"],"align":["right"]},{"label":["anno"],"name":[3],"type":["int"],"align":["right"]},{"label":["stress"],"name":[4],"type":["int"],"align":["right"]},{"label":["sonno_ore"],"name":[5],"type":["int"],"align":["right"]},{"label":["qualita_sonno"],"name":[6],"type":["int"],"align":["right"]}],"data":[{"1":"0","2":"0","3":"0","4":"0","5":"3","6":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
 </div>
 </div>
 </div>
-<p>Quando vogliamo visualizzare due variabili categoriali simultaneamente, possiamo stratificare le barre utilizzando colori diversi. Questo approccio mantiene l’immediatezza del confronto visivo, aggiungendo però una dimensione informativa.</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_penguins, <span class="fu">aes</span>(<span class="at">x =</span> island, <span class="at">fill =</span> species)) <span class="sc">+</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"stack"</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_qualitative</span>() <span class="sc">+</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Isola"</span>,</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Numero di osservazioni"</span>,</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Specie"</span>,</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Composizione delle comunità per isola"</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  ) </span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Questo controllo risponde a una domanda pratica: <strong>quante osservazioni potrei perdere se una funzione elimina automaticamente i valori mancanti?</strong></p>
+<p>Per le variabili con scale definite, controlliamo anche i valori minimo e massimo.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress_sonno</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
+<span>    stress_min <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">stress</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    stress_max <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">stress</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    sonno_min <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">sonno_ore</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    sonno_max <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">sonno_ore</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    qualita_min <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">qualita_sonno</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    qualita_max <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">qualita_sonno</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="03_exploring_univariate_data_files/figure-html/stacked-barplot-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Distribuzione delle specie stratificata per isola"><img src="03_exploring_univariate_data_files/figure-html/stacked-barplot-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%" alt="Distribuzione delle specie stratificata per isola"></a></p>
-</figure>
-</div>
-<figcaption>Distribuzione delle specie stratificata per isola</figcaption>
-</figure>
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["stress_min"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["stress_max"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sonno_min"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["sonno_max"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["qualita_min"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["qualita_max"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"3","2":"10","3":"4.3","4":"9.8","5":"1","6":"5"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
 </div>
 </div>
 </div>
-<p>Le barre impilate mostrano chiaramente che Biscoe ospita molti più pinguini rispetto alle altre isole, ma questa abbondanza è dovuta principalmente alla popolazione di pinguini Gentoo. Se invece vogliamo mettere in risalto le proporzioni relative piuttosto che i conteggi assoluti, normalizziamo le altezze delle barre a 1.</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_penguins, <span class="fu">aes</span>(<span class="at">x =</span> island, <span class="at">fill =</span> species)) <span class="sc">+</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"fill"</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_qualitative</span>() <span class="sc">+</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Isola"</span>,</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Proporzione"</span>,</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Specie"</span>,</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Dominanza relativa: quale specie prevale dove?"</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  ) </span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="03_exploring_univariate_data_files/figure-html/filled-barplot-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Composizione proporzionale delle specie per isola"><img src="03_exploring_univariate_data_files/figure-html/filled-barplot-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%" alt="Composizione proporzionale delle specie per isola"></a></p>
-</figure>
-</div>
-<figcaption>Composizione proporzionale delle specie per isola</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>Ora ogni barra ha la stessa altezza, ma la suddivisione interna rivela che Dream è l’unica isola in cui coesistono due specie in proporzioni comparabili, mentre Biscoe è dominata dai pinguini Gentoo e Torgersen ospita esclusivamente i pinguini Adelie.</p>
-</section>
-<section id="mosaic-plot-quando-le-dimensioni-contano" class="level3" data-number="16.2.5">
-<h3 data-number="16.2.5" class="anchored" data-anchor-id="mosaic-plot-quando-le-dimensioni-contano"><span class="header-section-number">16.2.5</span> Mosaic plot: quando le dimensioni contano</h3>
-<p>I grafici a barre normalizzati presentano un limite: celano le differenze di dimensione assoluta tra i gruppi. Se un’isola ha 10 pinguini e un’altra 200, questo fatto scompare quando si normalizza a 1. Il <em>mosaic plot</em> risolve elegantemente questo problema, in quanto visualizza simultaneamente la dimensione relativa dei gruppi e la loro composizione interna.</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mosaic</span>(</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> species <span class="sc">+</span> island,</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> df_penguins,</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Distribuzione geografica delle specie"</span>,</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">shade =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend =</span> <span class="cn">TRUE</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="03_exploring_univariate_data_files/figure-html/mosaic-plot-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Mosaic plot: dimensione e composizione simultanee"><img src="03_exploring_univariate_data_files/figure-html/mosaic-plot-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%" alt="Mosaic plot: dimensione e composizione simultanee"></a></p>
-</figure>
-</div>
-<figcaption>Mosaic plot: dimensione e composizione simultanee</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>Nel mosaic plot, la <em>larghezza</em> di ogni rettangolo rappresenta la dimensione relativa del gruppo (in questo caso, la specie), mentre l’<em>altezza</em> all’interno di ogni colonna mostra come quella specie si distribuisce tra le isole. I colori (quando <code>shade = TRUE</code>) evidenziano le deviazioni dalle frequenze attese se le specie e le isole fossero indipendenti: le tonalità più scure indicano associazioni più forti del previsto.</p>
-<p>Il grafico rivela immediatamente che i pinguini Gentoo sono numerosi, ma confinati a Biscoe; i pinguini Chinstrap sono meno abbondanti e più esclusivi di Dream, mentre i pinguini Adelie sono la specie più diffusa geograficamente, ma anche quella più frammentata.</p>
-</section>
-<section id="confrontare-distribuzioni-categoriali" class="level3" data-number="16.2.6">
-<h3 data-number="16.2.6" class="anchored" data-anchor-id="confrontare-distribuzioni-categoriali"><span class="header-section-number">16.2.6</span> Confrontare distribuzioni categoriali</h3>
-<p>L’analisi esplorativa spesso richiede il confronto della distribuzione di una variabile categoriale rispetto a un’altra. Per esempio, possiamo chiederci se il rapporto tra maschi e femmine è bilanciato all’interno di ciascuna specie. Questo tipo di domanda combina stratificazione e visualizzazione.</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_penguins, <span class="fu">aes</span>(<span class="at">x =</span> species, <span class="at">fill =</span> sex)) <span class="sc">+</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"dodge"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_qualitative</span>() <span class="sc">+</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Specie"</span>,</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Numero di osservazioni"</span>,</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Genere"</span>,</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Rapporto tra generi: c'è equilibrio?"</span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  ) </span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="03_exploring_univariate_data_files/figure-html/gender-by-species-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Distribuzione del genere stratificata per specie"><img src="03_exploring_univariate_data_files/figure-html/gender-by-species-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%" alt="Distribuzione del genere stratificata per specie"></a></p>
-</figure>
-</div>
-<figcaption>Distribuzione del genere stratificata per specie</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>Le barre affiancate (<code>position = "dodge"</code>) facilitano il confronto diretto dei conteggi per genere all’interno di ciascuna specie. Il campione appare ragionevolmente bilanciato, sebbene presenti lievi asimmetrie, probabilmente dovute alla casualità del campionamento o a differenze comportamentali che influenzano la probabilità di cattura.</p>
-</section>
-</section>
-<section id="sec-numerical-data" class="level2" data-number="16.3">
-<h2 data-number="16.3" class="anchored" data-anchor-id="sec-numerical-data"><span class="header-section-number">16.3</span> Parte II: quando i dati si distribuiscono su continuità</h2>
-<section id="dalle-categorie-alle-quantità" class="level3" data-number="16.3.1">
-<h3 data-number="16.3.1" class="anchored" data-anchor-id="dalle-categorie-alle-quantità"><span class="header-section-number">16.3.1</span> Dalle categorie alle quantità</h3>
-<p>Passiamo ora a esaminare variabili <em>numeriche</em>, quelle che misurano quantità su scale continue piuttosto che appartenenze a classi discrete. In psicologia clinica, per esempio, i punteggi ottenuti con questionari standardizzati come il Beck Depression Inventory (BDI-II) collocano ogni individuo su un continuum di gravità dei sintomi. A differenza delle categorie diagnostiche (“depresso” vs.&nbsp;“non depresso”), questi punteggi catturano le sfumature e le gradazioni.</p>
-<p>Per esplorare i dati numerici useremo un dataset di <span class="citation" data-cites="zetsche_2019future">Zetsche et al. (<a href="#ref-zetsche_2019future" role="doc-biblioref">2019</a>)</span> che indaga il ruolo delle aspettative negative nel mantenimento della depressione. Lo studio ha messo a confronto pazienti affetti da disturbo depressivo maggiore (MDD) e soggetti sani, raccogliendo, tra le altre cose, i punteggi BDI-II.</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>df_dep <span class="ot">&lt;-</span> rio<span class="sc">::</span><span class="fu">import</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"data.mood.csv"</span>))</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Selezioniamo le variabili rilevanti</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>df_dep <span class="ot">&lt;-</span> df_dep <span class="sc">|&gt;</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(esm_id, group, bdi) <span class="sc">|&gt;</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Rimuoviamo duplicati (un solo BDI per partecipante)</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>() <span class="sc">|&gt;</span></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Eliminiamo missing</span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(bdi) <span class="sc">|&gt;</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Convertiamo group in factor</span></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">group =</span> <span class="fu">factor</span>(group, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"ctl"</span>, <span class="st">"mdd"</span>)))</span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(df_dep)</span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Rows: 66</span></span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: 3</span></span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ esm_id &lt;int&gt; 10, 9, 6, 7, 12, 16, 21, 18, 20, 22, 23, 25, 24, 26, 41, 31, 27…</span></span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ group  &lt;fct&gt; mdd, mdd, mdd, mdd, mdd, mdd, mdd, mdd, mdd, mdd, mdd, mdd, mdd…</span></span>
-<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ bdi    &lt;int&gt; 25, 30, 26, 35, 44, 30, 22, 33, 43, 43, 24, 39, 19, 3, 0, 25, 0…</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-<section id="prima-di-visualizzare-riassunti-numerici" class="level3" data-number="16.3.2">
-<h3 data-number="16.3.2" class="anchored" data-anchor-id="prima-di-visualizzare-riassunti-numerici"><span class="header-section-number">16.3.2</span> Prima di visualizzare: riassunti numerici</h3>
-<p>Prima di costruire i grafici, è buona norma ottenere dei riassunti numerici che ci aiutino a capire la natura della distribuzione. La funzione <code>summary()</code> fornisce quartili e media, rivelando immediatamente se ci sono valori estremi o asimmetrie.</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df_dep<span class="sc">$</span>bdi)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    0.00    0.25    6.00   14.94   29.50   44.00</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>I punteggi del BDI-II variano da un minimo di 1 (assenza di sintomi) a un massimo di 45 (sintomatologia severa). La mediana (19) è notevolmente inferiore alla media (21.7), il che suggerisce una distribuzione asimmetrica con coda destra, tipica quando un sottogruppo di individui presenta valori molto elevati.</p>
-</section>
-<section id="distribuzioni-di-frequenza-larte-di-riassumere" class="level3" data-number="16.3.3">
-<h3 data-number="16.3.3" class="anchored" data-anchor-id="distribuzioni-di-frequenza-larte-di-riassumere"><span class="header-section-number">16.3.3</span> Distribuzioni di frequenza: l’arte di riassumere</h3>
-<p>Quando ci troviamo di fronte a un gran numero di valori numerici distinti, una visualizzazione puntuale di tutti i dati rischia di produrre confusione e rumore visivo. Una strategia più efficace consiste nel <strong>raggruppare i valori in classi (o intervalli)</strong> e contare quante osservazioni appartengono a ciascuna. Questa operazione porta alla costruzione di una <strong>distribuzione di frequenza</strong>, che permette di cogliere con immediatezza la struttura e le tendenze sottostanti ai dati.</p>
-<p>Nel caso specifico del BDI-II, l’interpretazione dei punteggi si basa su soglie cliniche standardizzate che riflettono diversi livelli di gravità:</p>
-<ul>
-<li><strong>0–13</strong>: depressione minima</li>
-<li><strong>14–19</strong>: depressione lieve-moderata</li>
-<li><strong>20–28</strong>: depressione moderata-severa</li>
-<li><strong>29–63</strong>: depressione severa</li>
-</ul>
-<p>Possiamo sfruttare questi criteri per creare una variabile categoriale e calcolare la relativa frequenza, rendendo così immediatamente evidente la composizione del campione rispetto ai livelli clinici di riferimento.</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>df_dep <span class="ot">&lt;-</span> df_dep <span class="sc">|&gt;</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">bdi_class =</span> <span class="fu">cut</span>(</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>      bdi,</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">13.5</span>, <span class="fl">19.5</span>, <span class="fl">28.5</span>, <span class="dv">63</span>),</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Minima"</span>, <span class="st">"Lieve-mod"</span>, <span class="st">"Mod-sev"</span>, <span class="st">"Severa"</span>),</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">include.lowest =</span> <span class="cn">TRUE</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Frequenze assolute</span></span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(df_dep<span class="sc">$</span>bdi_class)</span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    Minima Lieve-mod   Mod-sev    Severa </span></span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        36         1        12        17</span></span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Frequenze relative (proporzioni)</span></span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="fu">prop.table</span>(<span class="fu">table</span>(df_dep<span class="sc">$</span>bdi_class)) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">3</span>)</span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    Minima Lieve-mod   Mod-sev    Severa </span></span>
-<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     0.545     0.015     0.182     0.258</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Circa il 36% del campione presenta una sintomatologia minima, mentre quasi un terzo (il 30%) rientra nella fascia severa. Questa bimodalità riflette la composizione del campione: controlli sani versus pazienti clinici.</p>
-</section>
-<section id="distribuzioni-cumulative-quanto-sta-sotto" class="level3" data-number="16.3.4">
-<h3 data-number="16.3.4" class="anchored" data-anchor-id="distribuzioni-cumulative-quanto-sta-sotto"><span class="header-section-number">16.3.4</span> Distribuzioni cumulative: quanto sta sotto?</h3>
-<p>Una <em>distribuzione cumulativa empirica</em> (eCDF) ci dice, per ogni valore <span class="math inline">\(a\)</span>, quale proporzione di dati è minore o uguale ad <span class="math inline">\(a\)</span>. Matematicamente:</p>
-<p><span class="math display">\[F(a) = P(X \leq a) = \frac{\text{conteggio di }X \leq a}{n}\]</span></p>
-<p>Questa rappresentazione è particolarmente utile per identificare percentili e valutare rapidamente la dispersione.</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_dep, <span class="fu">aes</span>(<span class="at">x =</span> bdi)) <span class="sc">+</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_ecdf</span>(<span class="at">geom =</span> <span class="st">"step"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"darkblue"</span>) <span class="sc">+</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Punteggio BDI-II"</span>,</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Proporzione cumulativa F(x)"</span>,</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"eCDF: quanti sono sotto ogni soglia?"</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>), </span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="03_exploring_univariate_data_files/figure-html/ecdf-plot-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6" title="Distribuzione cumulativa empirica dei punteggi BDI-II"><img src="03_exploring_univariate_data_files/figure-html/ecdf-plot-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%" alt="Distribuzione cumulativa empirica dei punteggi BDI-II"></a></p>
-</figure>
-</div>
-<figcaption>Distribuzione cumulativa empirica dei punteggi BDI-II</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>La curva presenta un andamento a gradini, tipico dei dati discreti. L’inflection point intorno al punteggio 20 suggerisce che in quel punto si concentra una transizione importante nella distribuzione, probabilmente il confine tra controlli e pazienti.</p>
-</section>
-<section id="istogrammi-la-forma-della-distribuzione" class="level3" data-number="16.3.5">
-<h3 data-number="16.3.5" class="anchored" data-anchor-id="istogrammi-la-forma-della-distribuzione"><span class="header-section-number">16.3.5</span> Istogrammi: la forma della distribuzione</h3>
-<p>Sebbene l’eCDF sia precisa, non permette di visualizzare immediatamente la forma della distribuzione, ovvero dove si concentrano i dati, se ci sono picchi multipli e quanto è dispersa la variabilità. Gli <em>istogrammi</em> sacrificano un po’ di precisione in cambio di un’immediata intuizione visiva.</p>
-<p>Un istogramma suddivide l’asse dei valori in intervalli (<em>bin</em>) di ampiezza uguale e rappresenta la densità delle osservazioni in ciascun bin con l’altezza delle barre. L’area di ogni rettangolo è proporzionale alla frequenza relativa, e l’area totale è normalizzata a 1.</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_dep, <span class="fu">aes</span>(<span class="at">x =</span> bdi)) <span class="sc">+</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)),</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">binwidth =</span> <span class="dv">3</span>,</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"white"</span>,</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.7</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Punteggio BDI-II"</span>,</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Densità"</span>,</span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Istogramma: la bimodalità emerge"</span></span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  ) </span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="03_exploring_univariate_data_files/figure-html/histogram-bdi-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7" title="Istogramma dei punteggi BDI-II con bin da 3 unità"><img src="03_exploring_univariate_data_files/figure-html/histogram-bdi-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%" alt="Istogramma dei punteggi BDI-II con bin da 3 unità"></a></p>
-</figure>
-</div>
-<figcaption>Istogramma dei punteggi BDI-II con bin da 3 unità</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>La scelta del “binwidth” è cruciale: bin troppo stretti producono istogrammi frastagliati in cui domina il rumore, mentre bin troppo larghi smussano eccessivamente, nascondendo i veri pattern. Qui utilizziamo bin di 3 unità, un compromesso che rivela la bimodalità senza introdurre artefatti.</p>
-</section>
-<section id="kernel-density-estimation-smussare-senza-perdere-informazione" class="level3" data-number="16.3.6">
-<h3 data-number="16.3.6" class="anchored" data-anchor-id="kernel-density-estimation-smussare-senza-perdere-informazione"><span class="header-section-number">16.3.6</span> Kernel Density Estimation: smussare senza perdere informazione</h3>
-<p>Gli istogrammi presentano un limite intrinseco: la loro forma dipende arbitrariamente dalla scelta dei bin. Modificare leggermente l’ampiezza o il punto di partenza può alterare sensibilmente l’aspetto del grafico. La stima della densità kernel (KDE) risolve questo problema costruendo una curva continua e smussata che non suddivide i dati in intervalli discreti.</p>
-<p>L’idea alla base della KDE è elegante: invece di raggruppare i dati in intervalli discreti, posizioniamo una piccola curva gaussiana (o altro kernel) su ciascuna osservazione e sommiamo tutte queste curve. Il risultato è una funzione di densità continua che approssima la distribuzione sottostante.</p>
-<p>Il parametro critico è il bandwidth, che controlla quanto “larghe” sono le curve gaussiane individuali. Un bandwidth piccolo produce una curva frastagliata che segue da vicino ogni singolo dato, mentre un bandwidth grande genera una curva molto liscia che rischia di nascondere i dettagli reali.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Base plot</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>base_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_dep, <span class="fu">aes</span>(<span class="at">x =</span> bdi)) <span class="sc">+</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)), </span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">binwidth =</span> <span class="dv">3</span>, <span class="at">fill =</span> <span class="st">"gray80"</span>, <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"BDI-II"</span>, <span class="at">y =</span> <span class="st">"Densità"</span>) </span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Bandwidth piccolo</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>base_plot <span class="sc">+</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">adjust =</span> <span class="fl">0.5</span>, <span class="at">linewidth =</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"darkblue"</span>) <span class="sc">+</span></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">subtitle =</span> <span class="st">"adjust = 0.5"</span>)</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Bandwidth standard</span></span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>base_plot <span class="sc">+</span></span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">adjust =</span> <span class="dv">1</span>, <span class="at">linewidth =</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"darkgreen"</span>) <span class="sc">+</span></span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">subtitle =</span> <span class="st">"adjust = 1 (default)"</span>)</span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Bandwidth grande</span></span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>base_plot <span class="sc">+</span></span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">adjust =</span> <span class="dv">2</span>, <span class="at">linewidth =</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"darkred"</span>) <span class="sc">+</span></span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">subtitle =</span> <span class="st">"adjust = 2"</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell quarto-layout-panel" data-layout-align="center" data-layout-ncol="3">
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="03_exploring_univariate_data_files/figure-html/kde-comparison-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8" title="Bandwidth piccolo (adjust = 0.5): troppo dettaglio"><img src="03_exploring_univariate_data_files/figure-html/kde-comparison-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%" alt="Bandwidth piccolo (adjust = 0.5): troppo dettaglio"></a></p>
-</figure>
-</div>
-<figcaption>Bandwidth piccolo (adjust = 0.5): troppo dettaglio</figcaption>
-</figure>
-</div>
-</div>
-<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="03_exploring_univariate_data_files/figure-html/kde-comparison-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9" title="Bandwidth standard (adjust = 1): bilanciato"><img src="03_exploring_univariate_data_files/figure-html/kde-comparison-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%" alt="Bandwidth standard (adjust = 1): bilanciato"></a></p>
-</figure>
-</div>
-<figcaption>Bandwidth standard (adjust = 1): bilanciato</figcaption>
-</figure>
-</div>
-</div>
-<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="03_exploring_univariate_data_files/figure-html/kde-comparison-3.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10" title="Bandwidth grande (adjust = 2): troppo smussato"><img src="03_exploring_univariate_data_files/figure-html/kde-comparison-3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%" alt="Bandwidth grande (adjust = 2): troppo smussato"></a></p>
-</figure>
-</div>
-<figcaption>Bandwidth grande (adjust = 2): troppo smussato</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
-<p>Confronto tra KDE con diversi bandwidth</p>
-</div>
-</div>
-</div>
-<p>Con <code>adjust = 1</code> (impostazione predefinita), la curva rivela chiaramente la natura bimodale della distribuzione: un picco tra 0–15 (controlli) e uno tra 25–40 (pazienti). Questa bimodalità riflette la struttura del campione e sarebbe meno evidente con un bandwidth troppo grande.</p>
-</section>
-<section id="confrontare-gruppi-sovrapposizioni-rivelano-differenze" class="level3" data-number="16.3.7">
-<h3 data-number="16.3.7" class="anchored" data-anchor-id="confrontare-gruppi-sovrapposizioni-rivelano-differenze"><span class="header-section-number">16.3.7</span> Confrontare gruppi: sovrapposizioni rivelano differenze</h3>
-<p>Uno degli usi più potenti della KDE è il confronto delle distribuzioni tra gruppi. Possiamo sovrapporre le curve di densità dei controlli e dei pazienti per valutare quanto le distribuzioni si sovrappongano.</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_dep, <span class="fu">aes</span>(<span class="at">x =</span> bdi, <span class="at">fill =</span> group)) <span class="sc">+</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"ctl"</span> <span class="ot">=</span> <span class="st">"#00BFC4"</span>, <span class="st">"mdd"</span> <span class="ot">=</span> <span class="st">"#F8766D"</span>),</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Controlli"</span>, <span class="st">"Pazienti MDD"</span>)</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Punteggio BDI-II"</span>,</span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Densità"</span>,</span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Gruppo"</span>,</span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Separazione quasi completa tra gruppi"</span></span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  ) </span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="03_exploring_univariate_data_files/figure-html/kde-by-group-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-11" title="Distribuzioni BDI-II stratificate per gruppo clinico"><img src="03_exploring_univariate_data_files/figure-html/kde-by-group-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%" alt="Distribuzioni BDI-II stratificate per gruppo clinico"></a></p>
-</figure>
-</div>
-<figcaption>Distribuzioni BDI-II stratificate per gruppo clinico</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>La sovrapposizione minima tra le due curve indica che il BDI-II discrimina efficacemente tra controlli sani e pazienti clinici in questo campione. Tuttavia, esiste una piccola zona di ambiguità intorno al punteggio 15-20, in cui i due gruppi tendono a sovrapporsi leggermente.</p>
-</section>
-<section id="quantili-e-boxplot-riassunti-robusti" class="level3" data-number="16.3.8">
-<h3 data-number="16.3.8" class="anchored" data-anchor-id="quantili-e-boxplot-riassunti-robusti"><span class="header-section-number">16.3.8</span> Quantili e boxplot: riassunti robusti</h3>
-<p>Mentre la media e la deviazione standard sono influenzate dai valori estremi, i quantili forniscono una sintesi robusta della distribuzione. I tre quartili (<span class="math inline">\(q_{0.25}\)</span>, <span class="math inline">\(q_{0.5}\)</span>, <span class="math inline">\(q_{0.75}\)</span>) dividono i dati in quattro parti di uguale numerosità. Il secondo quartile è la mediana, che non viene influenzata dagli outlier come invece accade alla media.</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(df_dep<span class="sc">$</span>bdi, <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>))</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   25%   50%   75% </span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  0.25  6.00 29.50</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Il <em>boxplot</em> (diagramma a scatola) visualizza questi quantili insieme ai valori estremi, fornendo un riassunto grafico compatto della distribuzione.</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_dep, <span class="fu">aes</span>(<span class="at">x =</span> group, <span class="at">y =</span> bdi, <span class="at">fill =</span> group)) <span class="sc">+</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">outlier.shape =</span> <span class="dv">16</span>) <span class="sc">+</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"ctl"</span> <span class="ot">=</span> <span class="st">"#00BFC4"</span>, <span class="st">"mdd"</span> <span class="ot">=</span> <span class="st">"#F8766D"</span>),</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Controlli"</span>, <span class="st">"Pazienti"</span>)</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Controlli"</span>, <span class="st">"Pazienti"</span>)) <span class="sc">+</span></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Gruppo"</span>,</span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Punteggio BDI-II"</span>,</span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Mediane e dispersione a confronto"</span></span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="03_exploring_univariate_data_files/figure-html/boxplot-by-group-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-12" title="Boxplot: confronto robusto tra gruppi"><img src="03_exploring_univariate_data_files/figure-html/boxplot-by-group-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%" alt="Boxplot: confronto robusto tra gruppi"></a></p>
-</figure>
-</div>
-<figcaption>Boxplot: confronto robusto tra gruppi</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>La scatola contiene il 50% centrale dei dati (da <span class="math inline">\(q_{0.25}\)</span> a <span class="math inline">\(q_{0.75}\)</span>) e una linea che indica la mediana. I “baffi” si estendono fino a 1.5 volte l’intervallo interquartile (IQR) e i punti oltre tale intervallo sono segnalati come potenziali outlier.</p>
-<p>Questo grafico mostra che non c’è alcuna sovrapposizione tra i due gruppi: anche il terzo quartile dei controlli (circa 14) è inferiore al primo quartile dei pazienti (circa 23). Questa separazione netta riflette la validità discriminante dello strumento in un campione clinico ben definito.</p>
-</section>
-<section id="violin-plot-boxplot-densità" class="level3" data-number="16.3.9">
-<h3 data-number="16.3.9" class="anchored" data-anchor-id="violin-plot-boxplot-densità"><span class="header-section-number">16.3.9</span> Violin plot: boxplot + densità</h3>
-<p>I violin plot combinano le informazioni sintetiche del boxplot con la forma completa della distribuzione mostrata dalla KDE. Il risultato è una visualizzazione che conserva sia i riassunti robusti che i dettagli della distribuzione.</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_dep, <span class="fu">aes</span>(<span class="at">x =</span> group, <span class="at">y =</span> bdi, <span class="at">fill =</span> group)) <span class="sc">+</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">trim =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">width =</span> <span class="fl">0.15</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"ctl"</span> <span class="ot">=</span> <span class="st">"#00BFC4"</span>, <span class="st">"mdd"</span> <span class="ot">=</span> <span class="st">"#F8766D"</span>),</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Controlli"</span>, <span class="st">"Pazienti"</span>)</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Controlli"</span>, <span class="st">"Pazienti"</span>)) <span class="sc">+</span></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Gruppo"</span>,</span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Punteggio BDI-II"</span>,</span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Forma completa + riassunto robusto"</span></span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="03_exploring_univariate_data_files/figure-html/violin-plot-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-13" title="Violin plot: sintesi e dettaglio simultanei"><img src="03_exploring_univariate_data_files/figure-html/violin-plot-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%" alt="Violin plot: sintesi e dettaglio simultanei"></a></p>
-</figure>
-</div>
-<figcaption>Violin plot: sintesi e dettaglio simultanei</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>La “larghezza” del violino in ogni punto corrisponde alla densità dei dati a quell’altezza. Ciò rivela che i controlli si concentrano principalmente tra i valori 5 e 15, mentre i pazienti mostrano una distribuzione più dispersa tra i valori 20 e 40.</p>
-</section>
-<section id="beeswarm-plot-ogni-punto-conta" class="level3" data-number="16.3.10">
-<h3 data-number="16.3.10" class="anchored" data-anchor-id="beeswarm-plot-ogni-punto-conta"><span class="header-section-number">16.3.10</span> Beeswarm plot: ogni punto conta</h3>
-<p>Quando il campione non è troppo grande, può essere utile visualizzare <em>ogni singola osservazione</em> mantenendo la leggibilità. I <em>beeswarm plot</em> dispongono i punti evitando sovrapposizioni, creando pattern che riflettono la densità locale.</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_dep, <span class="fu">aes</span>(<span class="at">x =</span> group, <span class="at">y =</span> bdi, <span class="at">color =</span> group)) <span class="sc">+</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_beeswarm</span>(<span class="at">cex =</span> <span class="fl">2.5</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"ctl"</span> <span class="ot">=</span> <span class="st">"#00BFC4"</span>, <span class="st">"mdd"</span> <span class="ot">=</span> <span class="st">"#F8766D"</span>),</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Controlli"</span>, <span class="st">"Pazienti"</span>)</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Controlli"</span>, <span class="st">"Pazienti"</span>)) <span class="sc">+</span></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Gruppo"</span>,</span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Punteggio BDI-II"</span>,</span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Nessun punto nascosto"</span></span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="03_exploring_univariate_data_files/figure-html/beeswarm-plot-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-14" title="Beeswarm: visibilità di ogni osservazione"><img src="03_exploring_univariate_data_files/figure-html/beeswarm-plot-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%" alt="Beeswarm: visibilità di ogni osservazione"></a></p>
-</figure>
-</div>
-<figcaption>Beeswarm: visibilità di ogni osservazione</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>Questo grafico rende evidente che non ci sono outlier nascosti e che la separazione tra i gruppi è netta, anche se ci sono alcune osservazioni borderline che meriterebbero un approfondimento clinico.</p>
-</section>
-</section>
-<section id="ponti-tra-categorie-e-numeri" class="level2" data-number="16.4">
-<h2 data-number="16.4" class="anchored" data-anchor-id="ponti-tra-categorie-e-numeri"><span class="header-section-number">16.4</span> Ponti tra categorie e numeri</h2>
-<p>Abbiamo esplorato le variabili categoriali e quelle numeriche come se fossero mondi separati, ma in realtà dialogano costantemente tra loro. Quando stratifichiamo una variabile numerica in base a delle categorie (come i punteggi BDI per gruppo clinico), costruiamo un ponte: utilizziamo strumenti per i dati numerici (come KDE e boxplot), ma organizziamo il confronto attraverso le categorie.</p>
-<p>Allo stesso modo, quando si discretizza una variabile continua in classi (come abbiamo fatto con i cutoff del BDI), si traducono le quantità in categorie per semplificare la comunicazione. Ogni approccio ha i suoi meriti: le categorie facilitano la comprensione immediata, ma perdono informazioni; le quantità continue, invece, preservano i dettagli, ma richiedono una maggiore alfabetizzazione statistica.</p>
-<p>Un’analisi esplorativa efficace utilizza entrambe le prospettive in modo complementare, scegliendo la rappresentazione più adatta alla domanda che stiamo ponendo.</p>
-</section>
-<section id="riflessioni-conclusive" class="level2 unnumbered unlisted">
-<h2 class="unnumbered unlisted anchored" data-anchor-id="riflessioni-conclusive">Riflessioni conclusive</h2>
-<p>L’analisi univariata è il fondamento di ogni analisi più complessa. Prima di costruire modelli multivariati e di testare ipotesi formali, è necessario comprendere a fondo ciascuna variabile: come si distribuisce, dove si concentra, quanto varia e quali anomalie presenta. Tale conoscenza non emerge dall’applicazione meccanica di tecniche standardizzate, ma dalla scelta ragionata tra molti strumenti complementari.</p>
-<p>Per le variabili categoriali, abbiamo visto come le tabelle di contingenza rivelino i pattern di associazione, come le proporzioni permettano di effettuare confronti tra gruppi di dimensioni diverse e come i grafici a barre e i mosaic plot traducano i numeri in una percezione visiva immediata.</p>
-<p>Per le variabili numeriche, abbiamo esplorato il dilemma tra precisione e interpretabilità: le eCDF sono complete, ma poco intuitive; gli istogrammi dipendono dalla scelta dei bin; le KDE introducono assunzioni di smoothness. Abbiamo scoperto che i boxplot sacrificano i dettagli in favore della robustezza, mentre i violin plot tentano di preservare entrambi.</p>
-<p>La competenza nell’analisi esplorativa non consiste nel ricordare quale grafico utilizzare in una determinata situazione, ma nello sviluppare un’intuizione su quale aspetto della distribuzione vogliamo evidenziare in un determinato momento. Vogliamo mostrare la forma completa o riassumere con indici robusti? Vogliamo confrontare i gruppi evidenziandone le sovrapposizioni o le separazioni? Vogliamo comunicare con chi ha familiarità con le distribuzioni o con un pubblico generico?</p>
-<p>Queste domande non hanno risposte universali. L’analisi esplorativa è un dialogo iterativo con i dati, in cui si provano diverse rappresentazioni finché non emerge un’immagine coerente del fenomeno che si sta studiando. Solo allora saremo pronti per l’analisi inferenziale, ma questa è un’altra storia.</p>
-</section>
-<section id="esercizi" class="level2 unnumbered unlisted">
-<h2 class="unnumbered unlisted anchored" data-anchor-id="esercizi">Esercizi</h2>
-<div class="callout callout-style-default callout-important callout-titled" title="Esercizio 1: Dataset penguins">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Esercizio 1: Dataset penguins
+<span class="screen-reader-only">Avviso</span>Errore comune
 </div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p><strong>Obiettivo</strong>: Esplorare relazioni tra variabili categoriali e numeriche nel dataset penguins.</p>
-<p><strong>Consegne</strong>:</p>
-<ol type="1">
-<li><p>Crea una tabella di contingenza tra <code>species</code> e <code>sex</code>. Calcola proporzioni di riga e colonna. Cosa ti dice il risultato sul rapporto tra generi nelle diverse specie?</p></li>
-<li><p>Costruisci un mosaic plot tra <code>island</code> e <code>sex</code>. Le proporzioni di genere variano significativamente tra isole?</p></li>
-<li><p>Visualizza la distribuzione di <code>body_mass_g</code> (massa corporea) con:</p>
+<p>Non partire dalla media. Inizia chiedendoti se i valori sono plausibili.</p>
+<p>Una media può essere calcolata anche quando una variabile contiene codici errati, valori fuori scala o valori mancanti trattati in modo scorretto.</p>
+</div>
+</div>
+</section><section id="variabili-categoriali-contare-prima-di-interpretare" class="level2" data-number="15.5"><h2 data-number="15.5" class="anchored" data-anchor-id="variabili-categoriali-contare-prima-di-interpretare">
+<span class="header-section-number">15.5</span> Variabili categoriali: contare prima di interpretare</h2>
+<p>Una variabile categoriale assegna ogni osservazione a una categoria. Esempi tipici sono il genere, il gruppo sperimentale, la diagnosi, la condizione o l’anno di corso.</p>
+<p>La prima analisi da effettuare è il conteggio delle categorie.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress_sonno</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span><span class="op">(</span><span class="va">genere</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["genere"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"Altro/non dichiarato","2":"3"},{"1":"F","2":"69"},{"1":"M","2":"48"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>I conteggi assoluti sono utili, ma spesso vogliamo anche le proporzioni.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress_sonno</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span><span class="op">(</span><span class="va">genere</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>proporzione <span class="op">=</span> <span class="va">n</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["genere"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]},{"label":["proporzione"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"Altro/non dichiarato","2":"3","3":"0.025"},{"1":"F","2":"69","3":"0.575"},{"1":"M","2":"48","3":"0.400"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Le proporzioni aiutano a comprendere la composizione del campione. Tuttavia, non risolvono da sole il problema della rappresentatività. Se il campione è di convenienza, una proporzione descrive <strong>questi dati</strong>, non necessariamente la popolazione degli studenti universitari.</p>
+<section id="grafico-a-barre" class="level3" data-number="15.5.1"><h3 data-number="15.5.1" class="anchored" data-anchor-id="grafico-a-barre">
+<span class="header-section-number">15.5.1</span> Grafico a barre</h3>
+<p>Per una singola variabile categoriale, il grafico più semplice è il grafico a barre.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">stress_sonno</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">genere</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="st">"Genere dichiarato"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Numero di studenti"</span>,</span>
+<span>    title <span class="op">=</span> <span class="st">"Quante osservazioni ci sono in ciascuna categoria?"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><a href="03_exploring_univariate_data_files/figure-html/barplot-gender-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Distribuzione del genere dichiarato nel campione didattico."><img src="03_exploring_univariate_data_files/figure-html/barplot-gender-1.png" class="img-fluid figure-img" width="672" alt="Distribuzione del genere dichiarato nel campione didattico."></a></p>
+<figcaption>Distribuzione del genere dichiarato nel campione didattico.</figcaption></figure>
+</div>
+</div>
+</div>
+<p>Questo grafico risponde a una domanda descrittiva: qual è la composizione del campione rispetto a questa variabile?</p>
+<p>Non risponde a domande causali e non è sufficiente per stabilire se il campione sia rappresentativo.</p>
+</section><section id="due-variabili-categoriali" class="level3" data-number="15.5.2"><h3 data-number="15.5.2" class="anchored" data-anchor-id="due-variabili-categoriali">
+<span class="header-section-number">15.5.2</span> Due variabili categoriali</h3>
+<p>A volte, vogliamo vedere come due variabili categoriali interagiscono tra loro. Per esempio, potremmo chiederci come si distribuiscono gli anni di corso nei diversi gruppi di genere.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress_sonno</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span><span class="op">(</span><span class="va">genere</span>, <span class="va">anno</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["genere"],"name":[1],"type":["chr"],"align":["left"]},{"label":["anno"],"name":[2],"type":["chr"],"align":["left"]},{"label":["n"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"Altro/non dichiarato","2":"Primo","3":"2"},{"1":"Altro/non dichiarato","2":"Terzo","3":"1"},{"1":"F","2":"Primo","3":"29"},{"1":"F","2":"Secondo","3":"27"},{"1":"F","2":"Terzo","3":"13"},{"1":"M","2":"Primo","3":"24"},{"1":"M","2":"Secondo","3":"16"},{"1":"M","2":"Terzo","3":"8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">stress_sonno</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">genere</span>, fill <span class="op">=</span> <span class="va">anno</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"fill"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="st">"Genere dichiarato"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Proporzione"</span>,</span>
+<span>    fill <span class="op">=</span> <span class="st">"Anno di corso"</span>,</span>
+<span>    title <span class="op">=</span> <span class="st">"La composizione per anno è simile nei gruppi?"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><a href="03_exploring_univariate_data_files/figure-html/barplot-gender-year-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Distribuzione dell’anno di corso per genere dichiarato."><img src="03_exploring_univariate_data_files/figure-html/barplot-gender-year-1.png" class="img-fluid figure-img" width="672" alt="Distribuzione dell’anno di corso per genere dichiarato."></a></p>
+<figcaption>Distribuzione dell’anno di corso per genere dichiarato.</figcaption></figure>
+</div>
+</div>
+</div>
+<p>Usando l’opzione <code>position = "fill"</code>, tutte le barre hanno la stessa altezza. Questo rende più facile il confronto delle proporzioni interne, ma nasconde il numero assoluto di osservazioni in ciascun gruppo. Per questo motivo, quando le numerosità sono molto diverse, è opportuno considerare sia i conteggi sia le proporzioni.</p>
+</section></section><section id="variabili-numeriche-guardare-forma-centro-e-variabilità" class="level2" data-number="15.6"><h2 data-number="15.6" class="anchored" data-anchor-id="variabili-numeriche-guardare-forma-centro-e-variabilità">
+<span class="header-section-number">15.6</span> Variabili numeriche: guardare forma, centro e variabilità</h2>
+<p>Una variabile numerica assegna a ogni osservazione un valore su una scala quantitativa. Esempi di variabili numeriche sono i punteggi di scala, i tempi di reazione, le ore di sonno, l’età o il numero di errori.</p>
+<p>Le prime domande da porsi riguardo a una variabile numerica sono:</p>
 <ul>
-<li>Un istogramma per l’intero campione</li>
-<li>Curve KDE sovrapposte per ciascuna specie</li>
-<li>Violin plot stratificati per specie e genere</li>
-</ul></li>
-<li><p><strong>Domanda di riflessione</strong>: La massa corporea mostra pattern chiari legati a specie e genere? Quali visualizzazioni sono più efficaci per comunicare questo risultato?</p></li>
-</ol>
-<p><strong>Suggerimento</strong>: Usa <code>position = position_dodge()</code> nei violin plot per affiancare maschi e femmine all’interno di ogni specie.</p>
+<li>quali sono i valori minimo e massimo?</li>
+<li>dove si concentrano i valori?</li>
+<li>la distribuzione è simmetrica o asimmetrica?</li>
+<li>Ci sono valori molto lontani dagli altri?</li>
+<li>la media è un riassunto sensato o sarebbe meglio usare la mediana e i quartili?</li>
+</ul>
+<section id="riassunti-numerici-iniziali" class="level3" data-number="15.6.1"><h3 data-number="15.6.1" class="anchored" data-anchor-id="riassunti-numerici-iniziali">
+<span class="header-section-number">15.6.1</span> Riassunti numerici iniziali</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress_sonno</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
+<span>    n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">sonno_ore</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    missing <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">sonno_ore</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    minimo <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">sonno_ore</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    q25 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">sonno_ore</span>, <span class="fl">.25</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    mediana <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">sonno_ore</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    media <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">sonno_ore</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    q75 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">sonno_ore</span>, <span class="fl">.75</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    massimo <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">sonno_ore</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["n"],"name":[1],"type":["int"],"align":["right"]},{"label":["missing"],"name":[2],"type":["int"],"align":["right"]},{"label":["minimo"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["q25"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["mediana"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["media"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["q75"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["massimo"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"117","2":"3","3":"4.3","4":"6.4","5":"7.1","6":"7.075214","7":"7.8","8":"9.8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
 </div>
 </div>
 </div>
-<div class="callout callout-style-default callout-important callout-titled" title="Esercizio 2: SWLS e rete sociale">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<p>Questa tabella non sostituisce il grafico. È utile per farsi un’idea iniziale: quante osservazioni sono disponibili, qual è l’intervallo dei valori e quanto la media differisce dalla mediana.</p>
+</section><section id="istogramma" class="level3" data-number="15.6.2"><h3 data-number="15.6.2" class="anchored" data-anchor-id="istogramma">
+<span class="header-section-number">15.6.2</span> Istogramma</h3>
+<p>L’istogramma mostra la forma della distribuzione raggruppando i valori in intervalli.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">stress_sonno</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">sonno_ore</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>binwidth <span class="op">=</span> <span class="fl">0.5</span>, boundary <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="st">"Ore medie di sonno per notte"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Numero di studenti"</span>,</span>
+<span>    title <span class="op">=</span> <span class="st">"Dove si concentrano le ore di sonno?"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><a href="03_exploring_univariate_data_files/figure-html/histogram-sleep-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Distribuzione delle ore medie di sonno."><img src="03_exploring_univariate_data_files/figure-html/histogram-sleep-1.png" class="img-fluid figure-img" width="672" alt="Distribuzione delle ore medie di sonno."></a></p>
+<figcaption>Distribuzione delle ore medie di sonno.</figcaption></figure>
+</div>
+</div>
+</div>
+<p>L’istogramma è sensibile alla scelta dell’ampiezza dei bin. Modificare il parametro “binwidth” può rendere la distribuzione più frastagliata o più liscia. Per questo motivo, l’istogramma deve essere considerato uno strumento esplorativo e non un’immagine definitiva della realtà.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">stress_sonno</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">sonno_ore</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>binwidth <span class="op">=</span> <span class="fl">1</span>, boundary <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="st">"Ore medie di sonno per notte"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Numero di studenti"</span>,</span>
+<span>    title <span class="op">=</span> <span class="st">"Stessi dati, bin più larghi"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><a href="03_exploring_univariate_data_files/figure-html/histogram-sleep-binwidths-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="La scelta del binwidth può modificare l’aspetto dell’istogramma."><img src="03_exploring_univariate_data_files/figure-html/histogram-sleep-binwidths-1.png" class="img-fluid figure-img" width="672" alt="La scelta del binwidth può modificare l’aspetto dell’istogramma."></a></p>
+<figcaption>La scelta del binwidth può modificare l’aspetto dell’istogramma.</figcaption></figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Esercizio 2: SWLS e rete sociale
+<span class="screen-reader-only">Nota</span>Cosa osservare in un istogramma
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Quando guardi un istogramma, chiediti:</p>
+<ul>
+<li>la distribuzione presenta un solo picco o più picchi?</li>
+<li>è circa simmetrica o asimmetrica?</li>
+<li>ci sono valori isolati?</li>
+<li>ci sono limiti artificiali dovuti alla scala di misura?</li>
+<li>la forma suggerisce che una media possa essere fuorviante?</li>
+</ul>
+</div>
+</div>
+</section><section id="boxplot" class="level3" data-number="15.6.3"><h3 data-number="15.6.3" class="anchored" data-anchor-id="boxplot">
+<span class="header-section-number">15.6.3</span> Boxplot</h3>
+<p>Il boxplot riassume la distribuzione dei dati utilizzando la mediana, i quartili e i valori potenzialmente estremi.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">stress_sonno</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">sonno_ore</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">geom_boxplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Ore medie di sonno per notte"</span>,</span>
+<span>    title <span class="op">=</span> <span class="st">"Mediana, quartili e valori estremi"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><a href="03_exploring_univariate_data_files/figure-html/boxplot-sleep-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Boxplot delle ore medie di sonno."><img src="03_exploring_univariate_data_files/figure-html/boxplot-sleep-1.png" class="img-fluid figure-img" width="672" alt="Boxplot delle ore medie di sonno."></a></p>
+<figcaption>Boxplot delle ore medie di sonno.</figcaption></figure>
+</div>
+</div>
+</div>
+<p>Il boxplot è compatto e robusto, ma fornisce meno dettagli sulla forma. Per questo motivo, è utile come complemento dell’istogramma e non come suo sostituto.</p>
+</section></section><section id="variabili-ordinali-numeri-che-non-sono-sempre-quantità-continue" class="level2" data-number="15.7"><h2 data-number="15.7" class="anchored" data-anchor-id="variabili-ordinali-numeri-che-non-sono-sempre-quantità-continue">
+<span class="header-section-number">15.7</span> Variabili ordinali: numeri che non sono sempre quantità continue</h2>
+<p>Molte variabili psicologiche vengono raccolte tramite scale di risposta ordinate, ad esempio da 1 a 5 o da “per niente” a “moltissimo”. Questi valori sono numeri, ma non sempre è possibile trattarli come misure continue senza riflettere.</p>
+<p>Nel nostro esempio, “qualità del sonno” va da 1 a 5. Possiamo contare le sue frequenze come se si trattasse di una variabile categoriale ordinata.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress_sonno</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span><span class="op">(</span><span class="va">qualita_sonno</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["qualita_sonno"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"1","2":"9"},{"1":"2","2":"18"},{"1":"3","2":"47"},{"1":"4","2":"35"},{"1":"5","2":"9"},{"1":"NA","2":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">stress_sonno</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">qualita_sonno</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="st">"Qualità soggettiva del sonno"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Numero di studenti"</span>,</span>
+<span>    title <span class="op">=</span> <span class="st">"Come si distribuiscono le risposte ordinali?"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><a href="03_exploring_univariate_data_files/figure-html/barplot-sleep-quality-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6" title="Distribuzione della qualità soggettiva del sonno."><img src="03_exploring_univariate_data_files/figure-html/barplot-sleep-quality-1.png" class="img-fluid figure-img" width="672" alt="Distribuzione della qualità soggettiva del sonno."></a></p>
+<figcaption>Distribuzione della qualità soggettiva del sonno.</figcaption></figure>
+</div>
+</div>
+</div>
+<p>Per scale ordinali con pochi livelli, un grafico a barre è spesso più leggibile di un istogramma. La scelta del grafico deve seguire il significato della variabile, non soltanto il modo in cui R la codifica.</p>
+</section><section id="confrontare-una-variabile-numerica-tra-gruppi" class="level2" data-number="15.8"><h2 data-number="15.8" class="anchored" data-anchor-id="confrontare-una-variabile-numerica-tra-gruppi">
+<span class="header-section-number">15.8</span> Confrontare una variabile numerica tra gruppi</h2>
+<p>L’esplorazione univariata può includere un primo confronto descrittivo tra i gruppi. Per esempio, si può osservare la distribuzione delle ore di sonno nei diversi anni di corso.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress_sonno</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">anno</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
+<span>    n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">sonno_ore</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    mediana <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">sonno_ore</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    media <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">sonno_ore</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    q25 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">sonno_ore</span>, <span class="fl">.25</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    q75 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">sonno_ore</span>, <span class="fl">.75</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    .groups <span class="op">=</span> <span class="st">"drop"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["anno"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]},{"label":["mediana"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["media"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["q25"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["q75"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"Primo","2":"53","3":"6.90","4":"6.903774","5":"6.300","6":"7.70"},{"1":"Secondo","2":"42","3":"7.10","4":"6.969048","5":"6.325","6":"7.65"},{"1":"Terzo","2":"22","3":"7.85","4":"7.690909","5":"6.900","6":"8.30"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">stress_sonno</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">anno</span>, y <span class="op">=</span> <span class="va">sonno_ore</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">geom_boxplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="st">"Anno di corso"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Ore medie di sonno per notte"</span>,</span>
+<span>    title <span class="op">=</span> <span class="st">"La distribuzione del sonno cambia tra anni di corso?"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><a href="03_exploring_univariate_data_files/figure-html/boxplot-sleep-by-year-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7" title="Ore medie di sonno per anno di corso."><img src="03_exploring_univariate_data_files/figure-html/boxplot-sleep-by-year-1.png" class="img-fluid figure-img" width="672" alt="Ore medie di sonno per anno di corso."></a></p>
+<figcaption>Ore medie di sonno per anno di corso.</figcaption></figure>
+</div>
+</div>
+</div>
+<p>Questo grafico può suggerire delle differenze tra i vari gruppi, ma non dimostra che l’anno di corso sia la causa delle differenze nel sonno. Ci potrebbero essere molte altre variabili in gioco: il carico di lavoro, l’età, il lavoro part-time, la salute, il periodo dell’anno o la selezione del campione.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Avviso</span>Non saltare alla causalità
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Un boxplot tra gruppi può mostrare differenze descrittive. Tuttavia, ciò non è sufficiente per concludere che il gruppo abbia prodotto tali differenze.</p>
+<p>La distinzione tra associazione e causalità verrà ripresa nel capitolo dedicato.</p>
+</div>
+</div>
+</section><section id="quale-grafico-scegliere" class="level2" data-number="15.9"><h2 data-number="15.9" class="anchored" data-anchor-id="quale-grafico-scegliere">
+<span class="header-section-number">15.9</span> Quale grafico scegliere?</h2>
+<p>Non esiste un grafico migliore in assoluto. Esiste un grafico più adatto alla domanda che stai ponendo.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead><tr class="header">
+<th>Situazione</th>
+<th>Prima scelta ragionevole</th>
+<th>Domanda a cui risponde</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>Una variabile categoriale</td>
+<td>Grafico a barre</td>
+<td>Quante osservazioni ci sono in ogni categoria?</td>
+</tr>
+<tr class="even">
+<td>Due variabili categoriali</td>
+<td>Barre proporzionali o tabella</td>
+<td>Le proporzioni cambiano tra gruppi?</td>
+</tr>
+<tr class="odd">
+<td>Una variabile numerica</td>
+<td>Istogramma</td>
+<td>Qual è la forma della distribuzione?</td>
+</tr>
+<tr class="even">
+<td>Variabile numerica con valori estremi</td>
+<td>Boxplot</td>
+<td>Ci sono valori lontani dal centro?</td>
+</tr>
+<tr class="odd">
+<td>Variabile ordinale con pochi livelli</td>
+<td>Grafico a barre</td>
+<td>Come si distribuiscono le risposte?</td>
+</tr>
+<tr class="even">
+<td>Numerica per gruppi</td>
+<td>Boxplot o punti + boxplot</td>
+<td>Le distribuzioni differiscono tra gruppi?</td>
+</tr>
+</tbody>
+</table>
+<p>I grafici più complessi, come i density plot, i violin plot o i beeswarm plot, possono essere utili, ma non devono diventare obbligatori. Prima è necessario saper leggere bene i grafici semplici.</p>
+</section><section id="usare-lai-con-criterio" class="level2" data-number="15.10"><h2 data-number="15.10" class="anchored" data-anchor-id="usare-lai-con-criterio">
+<span class="header-section-number">15.10</span> Usare l’AI con criterio</h2>
+<p>Gli strumenti di IA possono generare rapidamente codice per tabelle e grafici. Questo è utile, ma non esime gli studenti dalle loro responsabilità.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Consiglio</span>Cosa puoi chiedere all’AI
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Puoi chiedere, per esempio:</p>
+<blockquote class="blockquote">
+<p>Scrivi codice R con <code>ggplot2</code> per visualizzare la distribuzione delle ore di sonno e controllare se ci sono valori mancanti.</p>
+</blockquote>
+<p>Oppure:</p>
+<blockquote class="blockquote">
+<p>Spiega riga per riga questo codice <code>dplyr</code> e dimmi quali osservazioni vengono escluse.</p>
+</blockquote>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Attenzione</span>Cosa devi controllare tu
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Quando l’AI propone del codice o delle interpretazioni, è sempre necessario controllare:</p>
+<ul>
+<li>se la variabile esiste davvero nel dataset;</li>
+<li>se il grafico è adatto al tipo di variabile;</li>
+<li>se i valori mancanti vengono eliminati automaticamente;</li>
+<li>se il codice trasforma una variabile ordinale in numerica senza discuterne la possibilità;</li>
+<li>se l’interpretazione confonde descrizione, associazione e causalità;</li>
+<li>se il testo prodotto dall’AI va oltre le informazioni fornite dai dati.</li>
+</ul>
+</div>
+</div>
+<p>Un buon esercizio consiste nel chiedere all’AI di produrre un grafico e poi scrivere una spiegazione di tre frasi.</p>
+<ol type="1">
+<li>che cosa rappresenta ogni asse;</li>
+<li>quale è il pattern principale che si osserva;</li>
+<li>quale conclusione sarebbe invece prematura.</li>
+</ol></section><section id="cosa-portare-al-capitolo-successivo" class="level2" data-number="15.11"><h2 data-number="15.11" class="anchored" data-anchor-id="cosa-portare-al-capitolo-successivo">
+<span class="header-section-number">15.11</span> Cosa portare al capitolo successivo</h2>
+<p>Dopo l’esplorazione univariata, dovresti avere un’idea più chiara di ciascuna variabile:</p>
+<ul>
+<li>quali valori assume;</li>
+<li>quali valori mancano;</li>
+<li>quale forma ha la distribuzione;</li>
+<li>quali categorie sono frequenti o rare;</li>
+<li>quali grafici sono più appropriati;</li>
+<li>quali decisioni richiedono documentazione.</li>
+</ul>
+<p>Nel capitolo sulla visualizzazione dei dati, riprenderemo questi strumenti da una prospettiva più generale: non solo quale grafico produrre, ma anche come costruire grafici che aiutino a capire senza distorcere.</p>
+</section><section id="esercizi" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="esercizi">Esercizi</h2>
+<div class="callout callout-style-default callout-important callout-titled" title="Esercizio 1: leggere una variabile categoriale">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Importante</span>Esercizio 1: leggere una variabile categoriale
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p><strong>Contesto</strong>: Analizzerai dati sulla <em>Satisfaction With Life Scale</em> (SWLS) e sulla <em>Lubben Social Network Scale</em> (LSNS-6), che misura la qualità delle relazioni sociali distinguendo tra famiglia e amici.</p>
-<p><strong>Variabili</strong>:</p>
-<ul>
-<li><code>swls</code>: Punteggio totale soddisfazione di vita (5–35)</li>
-<li><code>lsns_total</code>: Punteggio rete sociale totale (0–30)</li>
-<li><code>lsns_family</code>: Sottoscala famiglia (0–15)</li>
-<li><code>lsns_friends</code>: Sottoscala amici (0–15)</li>
-<li><code>gender</code>: Genere (<code>M</code>, <code>F</code>)</li>
-<li><code>school_type</code>: Tipo scuola superiore (liceo classico/scientifico vs.&nbsp;altri)</li>
-</ul>
-<p><strong>Consegne</strong>:</p>
+<p>Usa il dataset <code>stress_sonno</code> creato nel capitolo.</p>
 <ol type="1">
-<li><strong>Esplorazione categoriale</strong>:
-<ul>
-<li>Tabella di contingenza <code>gender</code> × <code>school_type</code></li>
-<li>Grafico a barre della distribuzione di <code>school_type</code></li>
-</ul></li>
-<li><strong>Esplorazione numerica</strong>:
-<ul>
-<li>Istogrammi di <code>swls</code>, <code>lsns_total</code>, <code>lsns_family</code>, <code>lsns_friends</code></li>
-<li>Per ciascuna variabile, calcola: media, mediana, <span class="math inline">\(q_{0.25}\)</span>, <span class="math inline">\(q_{0.75}\)</span>, min, max</li>
-<li>Costruisci eCDF per <code>swls</code></li>
-</ul></li>
-<li><strong>Confronti stratificati</strong>:
-<ul>
-<li>Boxplot di <code>swls</code> stratificato per <code>gender</code></li>
-<li>Violin plot di <code>lsns_total</code> stratificato per <code>school_type</code></li>
-<li>KDE sovrapposte di <code>lsns_family</code> vs.&nbsp;<code>lsns_friends</code> (sulla stessa scala)</li>
-</ul></li>
-<li><strong>Domanda di ricerca</strong>: La soddisfazione di vita (<code>swls</code>) è maggiore in chi ha punteggi elevati sulla rete sociale familiare o amicale? Usa visualizzazioni appropriate per investigare (Suggerimento: potresti categorizzare <code>lsns_family</code> e <code>lsns_friends</code> in “basso”/“alto” rispetto alla mediana).</li>
+<li>Conta le frequenze della variabile <code>anno</code>.</li>
+<li>Calcola le proporzioni.</li>
+<li>Costruisci un grafico a barre.</li>
+<li>Scrivi due frasi: una descrittiva e una che dica quale conclusione non puoi trarre da questo grafico.</li>
 </ol>
-<p><strong>File</strong>: <code>swls_lsns_students.csv</code></p>
 </div>
 </div>
 </div>
-</section>
-<section id="punti-chiave" class="level2 unnumbered unlisted">
-<h2 class="unnumbered unlisted anchored" data-anchor-id="punti-chiave">Punti chiave</h2>
+<div class="callout callout-style-default callout-important callout-titled" title="Esercizio 2: leggere una variabile numerica">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Importante</span>Esercizio 2: leggere una variabile numerica
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Esplora la variabile <code>stress</code>.</p>
+<ol type="1">
+<li>Calcola minimo, massimo, media e mediana.</li>
+<li>Costruisci un istogramma.</li>
+<li>Costruisci un boxplot.</li>
+<li>La media sembra un riassunto adeguato? Motiva la risposta guardando la distribuzione.</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled" title="Esercizio 3: controllare codice prodotto con AI">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Importante</span>Esercizio 3: controllare codice prodotto con AI
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Chiedi a uno strumento di AI:</p>
+<blockquote class="blockquote">
+<p>Scrivi codice R per visualizzare la distribuzione di <code>qualita_sonno</code>.</p>
+</blockquote>
+<p>Poi controlla:</p>
+<ol type="1">
+<li>Il codice tratta <code>qualita_sonno</code> come variabile ordinale o come continua?</li>
+<li>Il grafico scelto è appropriato?</li>
+<li>I valori mancanti sono gestiti in modo esplicito?</li>
+<li>L’interpretazione proposta resta descrittiva o suggerisce conclusioni non giustificate?</li>
+</ol>
+</div>
+</div>
+</div>
+</section><section id="punti-chiave" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="punti-chiave">Punti chiave</h2>
 <div class="callout callout-style-default callout-tip no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Consiglio</span>📌 Da ricordare
+<span class="screen-reader-only">Consiglio</span>Da ricordare
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Variabili categoriali</strong>:</p>
 <ul>
-<li>Le tabelle di contingenza rivelano pattern di co-occorrenza</li>
-<li>Proporzioni di riga vs.&nbsp;colonna rispondono a domande diverse</li>
-<li>Grafici a barre: impilate (conteggi), fill (proporzioni), dodge (confronti)</li>
-<li>Mosaic plot: simultaneamente dimensione e composizione</li>
-</ul>
-<p><strong>Variabili numeriche</strong>:</p>
-<ul>
-<li>eCDF: precisa ma poco intuitiva</li>
-<li>Istogrammi: intuitivi ma sensibili alla scelta dei bin</li>
-<li>KDE: liscia ma introduce assunzioni (bandwidth critico)</li>
-<li>Boxplot: robusto ma perde dettagli della forma</li>
-<li>Violin plot: unisce robustezza e dettaglio</li>
-</ul>
-<p><strong>Principi generali</strong>:</p>
-<ul>
-<li>Nessuna visualizzazione è “la migliore” in assoluto</li>
-<li>Scelta guidata dalla domanda e dal pubblico</li>
-<li>Usa multiple rappresentazioni complementari</li>
-<li>Bimodalità, asimmetria, outlier vanno sempre investigati</li>
+<li>Prima di cercare relazioni tra variabili, esplora ogni variabile da sola.</li>
+<li>Per le variabili categoriali, inizia da conteggi e proporzioni.</li>
+<li>Per le variabili numeriche, guarda forma, centro, variabilità e valori estremi.</li>
+<li>Per variabili ordinali con pochi livelli, spesso un grafico a barre è più adatto di un istogramma.</li>
+<li>Nessun grafico parla da solo: va interpretato in relazione alla domanda di ricerca, al disegno dello studio e alla misurazione.</li>
+<li>L’AI può aiutare a scrivere codice, ma sei tu a dover controllare se il codice e l’interpretazione sono appropriati.</li>
 </ul>
 </div>
 </div>
-<p>In uno dei capitoli successivi esploreremo le relazioni <em>bivariate</em>, scoprendo come due variabili co-variano e quali pattern emergono dalla loro interazione.</p>
-</section>
-<section id="bibliografia" class="level2 unnumbered unlisted">
-<h2 class="unnumbered unlisted anchored" data-anchor-id="bibliografia">Bibliografia</h2>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
-<div id="ref-zetsche_2019future" class="csl-entry" role="listitem">
-Zetsche, U., Buerkner, P.-C., &amp; Renneberg, B. (2019). Future expectations in clinical depression: biased or realistic? <em>Journal of Abnormal Psychology</em>, <em>128</em>(7), 678–688.
-</div>
-</div>
-</section>
-
-</main> <!-- /main -->
-<script id="quarto-html-after-body" type="application/javascript">
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right
     if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
@@ -1449,7 +1338,7 @@ Zetsche, U., Buerkner, P.-C., &amp; Renneberg, B. (2019). Future expectations in
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/ccaudek\.github\.io\/utet-eda\/");
+        var filterRegex = new RegExp("^(?:https?:)?//ccaudek\.github\.io/utet-prob/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -1782,34 +1671,30 @@ Zetsche, U., Buerkner, P.-C., &amp; Renneberg, B. (2019). Future expectations in
       }
     }
   });
-  </script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
-      <a href="../../chapters/eda/02_data_cleaning.html" class="pagination-link" aria-label="Flusso di lavoro per la pulizia dei dati">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Flusso di lavoro per la pulizia dei dati</span></span>
+  </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="../../chapters/eda/02_data_cleaning.html" class="pagination-link" aria-label="Pulizia dei dati">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulizia dei dati</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../chapters/eda/05_data_visualization_principles.html" class="pagination-link" aria-label="Principi della visualizzazione scientifica">
-        <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Principi della visualizzazione scientifica</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../chapters/eda/05_data_visualization_principles.html" class="pagination-link" aria-label="Principi della visualizzazione dei dati">
+        <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Principi della visualizzazione dei dati</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer">
-  <div class="nav-footer">
+<footer class="footer"><div class="nav-footer">
     <div class="nav-footer-left">
 <p><strong>Analisi esplorativa dei dati (EDA)</strong> — Modulo del progetto UTET a supporto del manuale <em>Inferenza bayesiana in psicologia: Ragionare con l’incertezza</em>.</p>
 </div>   
     <div class="nav-footer-center">
-      &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/eda/03_exploring_univariate_data.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></div>
+
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/eda/03_exploring_univariate_data.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div><div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Preferenze cookie</a></div></div>
     <div class="nav-footer-right">
 <p>Realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
 </div>
   </div>
-</footer>
-<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+</footer><script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {
@@ -1841,8 +1726,6 @@ Zetsche, U., Buerkner, P.-C., &amp; Renneberg, B. (2019). Future expectations in
   
 })();
           </script>
-
-
 
 
 <script src="../../site_libs/quarto-html/zenscroll-min.js"></script>

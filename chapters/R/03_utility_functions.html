@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>8&nbsp; Funzioni di utilità – Analisi esplorativa dei dati in psicologia</title>
+<title>8&nbsp; Dal file alla tabella controllata – Analisi esplorativa dei dati in psicologia</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -58,27 +58,7 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-  margin-bottom: 0em;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -88,36 +68,38 @@ div.csl-indent {
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../chapters/R/04_r_programming.html" rel="next">
+<link href="../../chapters/R/05_dplyr.html" rel="next">
 <link href="../../chapters/R/02_environment.html" rel="prev">
 <link href="../../style/gauss.png" rel="icon" type="image/png">
+<script src="../../site_libs/cookie-consent/cookie-consent.js"></script>
+<link href="../../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-0a6b7249c26820e032cb0bd839ff02b1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-bd31b91f9ddb1a75e3744ba9797c8182.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-662b1d839dd28a08d17be9d78b753e45.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-bd31b91f9ddb1a75e3744ba9797c8182.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-a0bb4f8876326eb7771edc79fa342270.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-7c5efe83671fda2688731f9f1d4acab0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-a0bb4f8876326eb7771edc79fa342270.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-353ec92dc31bcb37568820202c74e1ec.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-ca56530e1a7dc3e4b2cbddadeb71310c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-353ec92dc31bcb37568820202c74e1ec.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
-  "copy-button": false,
+  "copy-button": true,
   "collapse-after": 3,
   "panel-placement": "start",
-  "type": "textbox",
+  "type": "overlay",
   "limit": 50,
   "keyboard-shortcut": [
     "f",
     "/",
     "s"
   ],
-  "show-item-context": false,
+  "show-item-context": true,
   "language": {
     "search-no-results-text": "Nessun risultato",
     "search-matching-documents-text": "documenti trovati",
@@ -134,17 +116,41 @@ div.csl-indent {
 }</script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-QT5S3P9D31"></script>
 
-<script type="text/javascript">
+<script type="text/plain" cookie-consent="tracking">
 
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 </script>
+
+<script type="text/javascript" charset="UTF-8">
+document.addEventListener('DOMContentLoaded', function () {
+cookieconsent.run({
+  "notice_banner_type":"headline",
+  "consent_type":"express",
+  "palette":"light",
+  "language":"en",
+  "page_load_consent_levels":["strictly-necessary"],
+  "notice_banner_reject_button_hide":false,
+  "preferences_center_close_button_hide":false,
+  "website_name":""
+  ,
+"language":"it"
+  });
+});
+</script> 
+  
 <style>html{ scroll-behavior: smooth; }</style>
 
 
-<link rel="stylesheet" href="../../style/custom.css">
+<meta property="og:title" content="8&nbsp; Dal file alla tabella controllata – Analisi esplorativa dei dati in psicologia">
+<meta property="og:description" content="">
+<meta property="og:site_name" content="Analisi esplorativa dei dati in psicologia">
+<meta name="twitter:title" content="8&nbsp; Dal file alla tabella controllata – Analisi esplorativa dei dati in psicologia">
+<meta name="twitter:description" content="">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://ccaudek.github.io/utet-eda/chapters/R/03_utility_functions.html">
 </head>
 
 <body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
@@ -290,7 +296,8 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
       }
     };
     const authorPrefersDark = false;
-    const darkModeDefault = authorPrefersDark;
+    const queryPrefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    const darkModeDefault = queryPrefersDark.matches;
       document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
       document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
     let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
@@ -303,6 +310,14 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
       toggleGiscusIfUsed(toAlternate, darkModeDefault);
       window.dispatchEvent(new Event('resize'));
     };
+    queryPrefersDark.addEventListener("change", e => {
+      if(window.localStorage.getItem("quarto-color-scheme") !== null)
+        return;
+      const alternate = e.matches
+      toggleColorMode(alternate);
+      localAlternateSentinel = e.matches ? 'alternate' : 'default'; // this is used alongside local storage!
+      toggleGiscusIfUsed(alternate, darkModeDefault);
+    });
     // Switch to dark mode if need be
     if (hasAlternateSentinel()) {
       toggleColorMode(true);
@@ -318,7 +333,7 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/R/introduction_r_lang.html">R</a></li><li class="breadcrumb-item"><a href="../../chapters/R/03_utility_functions.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Funzioni di utilità</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/R/introduction_r_lang.html">R</a></li><li class="breadcrumb-item"><a href="../../chapters/R/03_utility_functions.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Dal file alla tabella controllata</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Ricerca" onclick="window.quartoOpenSearch();">
@@ -335,21 +350,17 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
     <div class="sidebar-title mb-0 py-0">
       <a href="../../">Analisi esplorativa dei dati in psicologia</a> 
         <div class="sidebar-tools-main tools-wide">
-    <a href="https://github.com/ccaudek/utet-eda/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/ccaudek/utet-eda/" title="Eseguire il codice" class="quarto-navigation-tool px-1" aria-label="Eseguire il codice"><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Attiva/disattiva la modalità oscura"><i class="bi"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Attiva/disattiva la modalità lettore">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
   </div>
 </a>
+    <div id="quarto-search" class="quarto-navigation-tool px-1" title="Ricerca"></div>
 </div>
     </div>
       </div>
-        <div class="mt-2 flex-shrink-0 align-items-center">
-        <div class="sidebar-search">
-        <div id="quarto-search" class="" title="Ricerca"></div>
-        </div>
-        </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
@@ -382,7 +393,7 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/03_design.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Campionamento, metodologia sperimentale e studi osservazionali</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Disegno di ricerca: quali conclusioni sono giustificate dai dati?</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -411,49 +422,43 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/01_r_syntax.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Un approccio moderno all’analisi dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sintassi minima per leggere codice R</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/02_environment.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">L’ambiente di programmazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Ambiente di lavoro e progetti R</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/03_utility_functions.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Funzioni di utilità</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../chapters/R/04_r_programming.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Programmazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Dal file alla tabella controllata</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/05_dplyr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Usare <code>dplyr</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Trasformare i dati con <code>dplyr</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/06_ggplot2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Visualizzazione dei dati con ggplot2</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Visualizzare i dati con <code>ggplot2</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/07_quarto.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Quarto</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quarto</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/08_r_packages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Pacchetti</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Pacchetti</span></span></a>
   </div>
 </li>
       </ul>
@@ -470,55 +475,55 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/01_project_structure.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Il ciclo di vita di un progetto di analisi dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Organizzare un progetto di analisi dei dati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/02_data_cleaning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Flusso di lavoro per la pulizia dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulizia dei dati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/03_exploring_univariate_data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Esplorare distribuzioni univariate</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Esplorare una variabile alla volta</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/05_data_visualization_principles.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Principi della visualizzazione scientifica</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Principi della visualizzazione dei dati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/06_loc_scale.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Indicatori di tendenza centrale e variabilità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Indicatori di tendenza centrale e variabilità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/07_introduction_normal_distribution.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Introduzione alla distribuzione normale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Introduzione alla distribuzione normale</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/08_correlation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Relazioni tra variabili</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Relazioni tra variabili</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/09_causality_intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Dalla correlazione alla causalità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Dalla correlazione alla causalità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/11_outlier.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Outlier</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Valori inattesi e outlier</span></span></a>
   </div>
 </li>
       </ul>
@@ -546,14 +551,27 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="2">
     <h2 id="toc-title">Sommario</h2>
    
   <ul class="collapse">
-  <li><a href="#importare-dati-in-r-con-rioimport" id="toc-importare-dati-in-r-con-rioimport" class="nav-link active" data-scroll-target="#importare-dati-in-r-con-rioimport"><span class="header-section-number">8.1</span> Importare dati in R con <code>rio::import()</code></a></li>
-  <li><a href="#utilizzare-percorsi-relativi-con-herehere" id="toc-utilizzare-percorsi-relativi-con-herehere" class="nav-link" data-scroll-target="#utilizzare-percorsi-relativi-con-herehere"><span class="header-section-number">8.2</span> Utilizzare percorsi relativi con <code>here::here()</code></a></li>
-  <li><a href="#funzioni-principali-e-loro-utilizzo" id="toc-funzioni-principali-e-loro-utilizzo" class="nav-link" data-scroll-target="#funzioni-principali-e-loro-utilizzo"><span class="header-section-number">8.3</span> Funzioni principali e loro utilizzo</a></li>
-  <li><a href="#illustrazione" id="toc-illustrazione" class="nav-link" data-scroll-target="#illustrazione"><span class="header-section-number">8.4</span> Illustrazione</a></li>
+  <li><a href="#obiettivi-del-capitolo" id="toc-obiettivi-del-capitolo" class="nav-link active" data-scroll-target="#obiettivi-del-capitolo"><span class="header-section-number">8.1</span> Obiettivi del capitolo</a></li>
+  <li><a href="#il-flusso-minimo" id="toc-il-flusso-minimo" class="nav-link" data-scroll-target="#il-flusso-minimo"><span class="header-section-number">8.2</span> Il flusso minimo</a></li>
+  <li><a href="#dove-devono-stare-i-dati" id="toc-dove-devono-stare-i-dati" class="nav-link" data-scroll-target="#dove-devono-stare-i-dati"><span class="header-section-number">8.3</span> Dove devono stare i dati</a></li>
+  <li><a href="#importare-dati-con-rioimport" id="toc-importare-dati-con-rioimport" class="nav-link" data-scroll-target="#importare-dati-con-rioimport"><span class="header-section-number">8.4</span> Importare dati con <code>rio::import()</code></a></li>
+  <li><a href="#controllo-1-il-file-importato-è-quello-giusto" id="toc-controllo-1-il-file-importato-è-quello-giusto" class="nav-link" data-scroll-target="#controllo-1-il-file-importato-è-quello-giusto"><span class="header-section-number">8.5</span> Controllo 1: il file importato è quello giusto?</a></li>
+  <li><a href="#controllo-2-quante-righe-e-quante-colonne-ci-sono" id="toc-controllo-2-quante-righe-e-quante-colonne-ci-sono" class="nav-link" data-scroll-target="#controllo-2-quante-righe-e-quante-colonne-ci-sono"><span class="header-section-number">8.6</span> Controllo 2: quante righe e quante colonne ci sono?</a></li>
+  <li><a href="#controllo-3-come-si-chiamano-le-variabili" id="toc-controllo-3-come-si-chiamano-le-variabili" class="nav-link" data-scroll-target="#controllo-3-come-si-chiamano-le-variabili"><span class="header-section-number">8.7</span> Controllo 3: come si chiamano le variabili?</a></li>
+  <li><a href="#controllo-4-che-tipo-di-variabili-abbiamo" id="toc-controllo-4-che-tipo-di-variabili-abbiamo" class="nav-link" data-scroll-target="#controllo-4-che-tipo-di-variabili-abbiamo"><span class="header-section-number">8.8</span> Controllo 4: che tipo di variabili abbiamo?</a></li>
+  <li><a href="#controllo-5-ci-sono-valori-mancanti" id="toc-controllo-5-ci-sono-valori-mancanti" class="nav-link" data-scroll-target="#controllo-5-ci-sono-valori-mancanti"><span class="header-section-number">8.9</span> Controllo 5: ci sono valori mancanti?</a></li>
+  <li><a href="#controllo-6-i-valori-sono-plausibili" id="toc-controllo-6-i-valori-sono-plausibili" class="nav-link" data-scroll-target="#controllo-6-i-valori-sono-plausibili"><span class="header-section-number">8.10</span> Controllo 6: i valori sono plausibili?</a></li>
+  <li><a href="#esportare-dati-con-rioexport" id="toc-esportare-dati-con-rioexport" class="nav-link" data-scroll-target="#esportare-dati-con-rioexport"><span class="header-section-number">8.11</span> Esportare dati con <code>rio::export()</code></a></li>
+  <li><a href="#checklist-dopo-limportazione" id="toc-checklist-dopo-limportazione" class="nav-link" data-scroll-target="#checklist-dopo-limportazione"><span class="header-section-number">8.12</span> Checklist dopo l’importazione</a></li>
+  <li><a href="#usare-lai-con-criterio" id="toc-usare-lai-con-criterio" class="nav-link" data-scroll-target="#usare-lai-con-criterio"><span class="header-section-number">8.13</span> Usare l’AI con criterio</a></li>
+  <li><a href="#esempio-guidato-stress-accademico-e-sonno" id="toc-esempio-guidato-stress-accademico-e-sonno" class="nav-link" data-scroll-target="#esempio-guidato-stress-accademico-e-sonno"><span class="header-section-number">8.14</span> Esempio guidato: stress accademico e sonno</a></li>
+  <li><a href="#errori-frequenti" id="toc-errori-frequenti" class="nav-link" data-scroll-target="#errori-frequenti"><span class="header-section-number">8.15</span> Errori frequenti</a></li>
+  <li><a href="#esercizi" id="toc-esercizi" class="nav-link" data-scroll-target="#esercizi"><span class="header-section-number">8.16</span> Esercizi</a></li>
+  <li><a href="#cosa-portare-al-capitolo-successivo" id="toc-cosa-portare-al-capitolo-successivo" class="nav-link" data-scroll-target="#cosa-portare-al-capitolo-successivo"><span class="header-section-number">8.17</span> Cosa portare al capitolo successivo</a></li>
   </ul>
 <div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/R/03_utility_functions.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
     </div>
@@ -561,9 +579,9 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 <main class="content" id="quarto-document-content">
 
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/R/introduction_r_lang.html">R</a></li><li class="breadcrumb-item"><a href="../../chapters/R/03_utility_functions.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Funzioni di utilità</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/R/introduction_r_lang.html">R</a></li><li class="breadcrumb-item"><a href="../../chapters/R/03_utility_functions.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Dal file alla tabella controllata</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-r-programming" class="quarto-section-identifier"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Funzioni di utilità</span></span></h1>
+<h1 class="title"><span id="sec-r-programming" class="quarto-section-identifier"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Dal file alla tabella controllata</span></span></h1>
 </div>
 
 
@@ -580,582 +598,440 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 </header>
 
 
-<section id="introduzione" class="level2 unnumbered unlisted">
-<h2 class="unnumbered unlisted anchored" data-anchor-id="introduzione">Introduzione</h2>
-<p>In questo capitolo, esploreremo le principali funzioni di utilità in R per l’importazione di dati da file esterni e la raccolta di statistiche descrittive, fornendo una panoramica generale sui data frame.</p>
-<section id="panoramica-del-capitolo" class="level3 unnumbered unlisted">
-<h3 class="unnumbered unlisted anchored" data-anchor-id="panoramica-del-capitolo">Panoramica del capitolo</h3>
-<ul>
-<li>Conoscere e sapere utilizzare le principali funzioni di utilità di R.</li>
-<li>Sapere come importare un data set in R e esportare un data set in un file esterno.</li>
-<li>Usare i percorsi relativi rispetto alla radice del progetto con <code>here::here()</code>.</li>
-</ul>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<section id="perché-questo-capitolo-esiste" class="level2 unnumbered unlisted">
+<h2 class="unnumbered unlisted anchored" data-anchor-id="perché-questo-capitolo-esiste">Perché questo capitolo esiste</h2>
+<p>Prima di calcolare statistiche, costruire grafici o stimare modelli, è necessario assicurarsi che i dati siano stati caricati correttamente.</p>
+<p>Spesso, gli errori nelle analisi derivano da problemi semplici: il file letto non è quello giusto, una variabile numerica è stata importata come testo, i valori mancanti non sono stati riconosciuti o il codice funziona solo sul computer di chi lo ha scritto.</p>
+<p>In questo capitolo non costruiremo un catalogo di funzioni R. Impareremo una routine minima:</p>
+<blockquote class="blockquote">
+<p>importare un file, ispezionare la tabella, controllare che i dati abbiano senso, salvare una versione elaborata quando necessario.</p>
+</blockquote>
+<p>L’AI può suggerire il codice per molti di questi passaggi. Tuttavia, non può sapere da sola se il file importato è quello corretto, se le colonne hanno il significato atteso o se i valori osservati sono plausibili per la domanda di ricerca.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Idea guida">
+<div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Consiglio</span>Prerequisiti
+<span class="screen-reader-only">Nota</span>Idea guida
 </div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
+<p>Un dataset importato non è ancora pronto per l’analisi. Prima di utilizzarlo, dobbiamo controllarlo.</p>
+</div>
+</div>
+</section>
+<section id="obiettivi-del-capitolo" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="obiettivi-del-capitolo"><span class="header-section-number">8.1</span> Obiettivi del capitolo</h2>
+<p>Al termine del capitolo dovresti sapere:</p>
 <ul>
-<li>Consultare <a href="https://rafalab.dfci.harvard.edu/dsbook-part-1/">Introduction to Data Science: Data Wrangling and Visualization with R</a> <span class="citation" data-cites="irizarry2024introduction">(<a href="#ref-irizarry2024introduction" role="doc-biblioref">Irizarry, 2024</a>)</span></li>
-<li>Leggere <a href="https://r4ds.hadley.nz/">R for Data Science (2e)</a> <span class="citation" data-cites="wickham2023r">(<a href="#ref-wickham2023r" role="doc-biblioref">Wickham et al., 2023</a>)</span>.</li>
+<li>importare un file utilizzando percorsi relativi al progetto;</li>
+<li>distinguere i dati originali da quelli elaborati;</li>
+<li>controllare le dimensioni, i nomi delle colonne e le prime righe di una tabella;</li>
+<li>riconoscere il tipo delle variabili principali;</li>
+<li>individuare i valori mancanti;</li>
+<li>controllare le categorie e i valori inattesi;</li>
+<li>esportare un dataset elaborato senza sovrascrivere i dati originali;</li>
+<li>verificare il codice prodotto con l’intelligenza artificiale.</li>
 </ul>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-caution callout-titled" title="Preparazione del Notebook">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Attenzione</span>Preparazione del Notebook
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"code"</span>, <span class="st">"_common.R"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">source</span>()</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load packages</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">"pacman"</span>)) <span class="fu">install.packages</span>(<span class="st">"pacman"</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyr)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</div>
-</div>
-</div>
 </section>
-</section>
-<section id="importare-dati-in-r-con-rioimport" class="level2" data-number="8.1">
-<h2 data-number="8.1" class="anchored" data-anchor-id="importare-dati-in-r-con-rioimport"><span class="header-section-number">8.1</span> Importare dati in R con <code>rio::import()</code></h2>
-<p>Prima di analizzare i dati, è necessario importarli in R.</p>
-<section id="il-problema-tanti-formati-ununica-soluzione" class="level3" data-number="8.1.1">
-<h3 data-number="8.1.1" class="anchored" data-anchor-id="il-problema-tanti-formati-ununica-soluzione"><span class="header-section-number">8.1.1</span> Il problema: tanti formati, un’unica soluzione</h3>
-<p>Nella ricerca psicologica i dati possono essere forniti in molti formati:</p>
-<ul>
-<li>File Excel (<code>.xlsx</code>) da questionari compilati in laboratorio,</li>
-<li>CSV (<code>.csv</code>) da piattaforme online come Qualtrics,</li>
-<li>File SPSS (<code>.sav</code>) per confrontare studi precedenti,</li>
-<li>Solo testo (<code>.txt</code>) da esperimenti comportamentali.</li>
-</ul>
-<p>Invece di imparare funzioni diverse, una specifica per ciascun formato, il pacchetto <strong>rio</strong> offre <strong>un solo comando universale</strong> per le importazioni.</p>
-</section>
-<section id="come-funziona-import" class="level3" data-number="8.1.2">
-<h3 data-number="8.1.2" class="anchored" data-anchor-id="come-funziona-import"><span class="header-section-number">8.1.2</span> Come funziona <code>import()</code></h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Carica il pacchetto (installalo prima con install.packages("rio"))</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rio)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Importa un file CSV da una cartella "dati" nel tuo progetto</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>risposte <span class="ot">&lt;-</span> rio<span class="sc">::</span><span class="fu">import</span>(<span class="st">"dati/questionario.csv"</span>)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Importa un foglio Excel con i tempi di reazione</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>tempi_reazione <span class="ot">&lt;-</span> rio<span class="sc">::</span><span class="fu">import</span>(<span class="st">"dati/esperimento1.xlsx"</span>)</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Importa un file SPSS con dati demografici</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>dati_demografici <span class="ot">&lt;-</span> rio<span class="sc">::</span><span class="fu">import</span>(<span class="st">"dati/partecipanti.sav"</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Perché è utile:</strong></p>
+<section id="il-flusso-minimo" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="il-flusso-minimo"><span class="header-section-number">8.2</span> Il flusso minimo</h2>
+<p>Quando riceviamo un file di dati, possiamo sempre seguire la stessa sequenza:</p>
 <ol type="1">
-<li>riconosce <strong>automaticamente</strong> il formato dal nome del file;</li>
-<li>traduce i dati in un formato R pronto per l’analisi (<code>data.frame</code>);</li>
-<li>conserva le etichette delle variabili (cruciale per questionari!).</li>
+<li><strong>trovare il file</strong> dentro il progetto;</li>
+<li><strong>importarlo</strong> in R;</li>
+<li><strong>guardare la struttura</strong> del dataset;</li>
+<li><strong>controllare le variabili</strong> più importanti;</li>
+<li><strong>identificare problemi evidenti</strong>;</li>
+<li><strong>salvare una versione elaborata</strong>, se abbiamo fatto modifiche.</li>
 </ol>
+<p>In forma schematica:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Importare</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>stress_sonno <span class="ot">&lt;-</span> rio<span class="sc">::</span><span class="fu">import</span>(</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"raw"</span>, <span class="st">"stress_sonno.csv"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Controlli iniziali</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(stress_sonno)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(stress_sonno)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(stress_sonno)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(stress_sonno)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Valori mancanti e categorie</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(stress_sonno))</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(stress_sonno<span class="sc">$</span>genere, <span class="at">useNA =</span> <span class="st">"ifany"</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(stress_sonno)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Questo codice non rappresenta ancora un’analisi statistica. Si tratta di una verifica preliminare che ci permette di capire se la tabella che useremo per l’EDA è coerente con quanto pensiamo di avere.</p>
 </section>
-<section id="esportare-dati-con-rioexport" class="level3" data-number="8.1.3">
-<h3 data-number="8.1.3" class="anchored" data-anchor-id="esportare-dati-con-rioexport"><span class="header-section-number">8.1.3</span> Esportare dati con <code>rio::export()</code></h3>
-<p>Dopo aver pulito i dati, è possibile salvarli in qualsiasi formato usando <code>rio::export()</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>rio<span class="sc">::</span><span class="fu">export</span>(risposte, <span class="st">"dati/cleaned/dati_puliti.xlsx"</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>rio<span class="sc">::</span><span class="fu">export</span>(tempi_reazione, <span class="st">"dati/cleaned/tempi_reazione.sav"</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-</section>
-<section id="utilizzare-percorsi-relativi-con-herehere" class="level2" data-number="8.2">
-<h2 data-number="8.2" class="anchored" data-anchor-id="utilizzare-percorsi-relativi-con-herehere"><span class="header-section-number">8.2</span> Utilizzare percorsi relativi con <code>here::here()</code></h2>
-<p>Quando importiamo i dati da file esterni in R, succede spesso di commettere uno dei tre errori seguenti. Vediamo come eviarli.</p>
-<ol type="1">
-<li><p><strong>Percatori sbagliati</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># SBAGLIATO (il file non è nella cartella di lavoro)</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">import</span>(<span class="st">"questionario.csv"</span>)  </span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># CORRETTO: usa percorsi relativi o il pacchetto 'here'</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">import</span>(<span class="st">"dati/raw/questionario.csv"</span>)  </span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div></li>
-<li><p><strong>File aperti in altri programmi</strong><br>
-“Errore: non posso aprire il file” → Chiudi Excel/SPSS e riprova</p></li>
-<li><p><strong>Codifica caratteri strani</strong><br>
-Se vedi � nei testi, specifica l’encoding:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">import</span>(<span class="st">"dati/testo.txt"</span>, <span class="at">encoding =</span> <span class="st">"UTF-8"</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div></li>
-</ol>
-<section id="evitare-percorsi-assoluti" class="level3" data-number="8.2.1">
-<h3 data-number="8.2.1" class="anchored" data-anchor-id="evitare-percorsi-assoluti"><span class="header-section-number">8.2.1</span> Evitare percorsi assoluti</h3>
-<p>Come vedremo meglio nel <a href="../eda/01_project_structure.html" class="quarto-xref"><span>Capitolo 14</span></a>, il primo passo di un progetto di analisi dei dati è l’organizzazione dei file in cartelle con una struttura chiara:</p>
-<pre><code>tuo_progetto/
-├── dati/
-│   ├── raw/        # Dati originali
-│   └── cleaned/    # Dati elaborati
-├── script/
-└── rapporti/</code></pre>
-<p><strong>Tutti i file e le cartelle devono essere contenuti nella directory del progetto.</strong></p>
-<p>Il pacchetto <strong>here</strong> rende l’importazione dei dati più semplice, evitando problemi dovuti a percorsi assoluti che possono cambiare se si modifica la directory di lavoro o si sposta il progetto.</p>
-<p>La funzione <code>here()</code> crea <strong>percorsi relativi a partire dalla radice del progetto</strong> (cioè dalla cartella che contiene il file <code>.Rproj</code> o da dove viene inizializzato il progetto RStudio).</p>
-<p><strong>Esempio di utilizzo combinato con <code>rio::import()</code>:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rio)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Percorso robusto al file csv</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>dati <span class="ot">&lt;-</span> <span class="fu">import</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"dati.csv"</span>))</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Percorso robusto al file Excel</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>dati_excel <span class="ot">&lt;-</span> <span class="fu">import</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"dati.xlsx"</span>))</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<p>In questo modo, l’importazione diventa indipendente dalla cartella di lavoro attuale e il codice sarà più facilmente condivisibile e riproducibile.</p>
-<p><strong>Vantaggi:</strong></p>
-<ul>
-<li><strong>Semplicità</strong>: <code>rio::import()</code> riconosce automaticamente il tipo di file.</li>
-<li><strong>Robustezza</strong>: <code>here::here()</code> garantisce che il percorso sia sempre corretto, indipendentemente da dove viene eseguito lo script.</li>
-</ul>
-<p>Questa combinazione rende le analisi riproducibili e consente di collaborare facilmente con altri ricercatori o studenti.</p>
-</section>
-</section>
-<section id="funzioni-principali-e-loro-utilizzo" class="level2" data-number="8.3">
-<h2 data-number="8.3" class="anchored" data-anchor-id="funzioni-principali-e-loro-utilizzo"><span class="header-section-number">8.3</span> Funzioni principali e loro utilizzo</h2>
-<p>R offre una serie di funzioni per esplorare rapidamente i dati e comprenderne la struttura prima di passare a manipolazioni più avanzate.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 45%">
-<col style="width: 54%">
-</colgroup>
-<thead>
-<tr class="header">
-<th><strong>Funzione</strong></th>
-<th><strong>Descrizione</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>summary()</code></td>
-<td>Restituisce statistiche descrittive di base per ogni colonna di un data frame. Per le colonne numeriche, calcola valori come il minimo, massimo, media, mediana, primo e terzo quartile, e il numero di valori mancanti (se presenti). Per le colonne non numeriche, restituisce il tipo di dati (carattere, logico) e il conteggio delle categorie. <strong>Esempio:</strong> <code>summary(iris)</code> restituisce una sintesi delle colonne del dataset <code>iris</code>.</td>
-</tr>
-<tr class="even">
-<td><code>str()</code> e <code>glimpse()</code></td>
-<td>Forniscono una rappresentazione sintetica delle informazioni di un data frame, come dimensione, nomi delle colonne, tipi di dati e valori iniziali. La funzione <code>str()</code> fa parte della configurazione base di R (pacchetto <code>utils</code>), mentre <code>glimpse()</code> è inclusa in <code>dplyr</code> (pacchetto <code>tidyverse</code>). <strong>Esempio:</strong> <code>str(mtcars)</code> o <code>glimpse(mtcars)</code>.</td>
-</tr>
-<tr class="odd">
-<td><code>head()</code> e <code>tail()</code></td>
-<td>Permettono di visualizzare rispettivamente le prime o ultime righe di un data frame. Utile per una rapida ispezione del contenuto. Si può specificare il numero di righe da mostrare (es. <code>head(df, 10)</code>), altrimenti il valore predefinito è sei righe. <strong>Esempio:</strong> <code>head(iris)</code> per vedere le prime righe del dataset <code>iris</code>.</td>
-</tr>
-<tr class="even">
-<td><code>View()</code> e <code>view()</code></td>
-<td>Visualizzano un data frame in una finestra grafica tipo foglio di calcolo all’interno di RStudio. La funzione <code>View()</code> è parte della configurazione base di R, mentre <code>view()</code> è un alias fornito da <code>tibble</code> (pacchetto <code>tidyverse</code>). Utile per piccoli data frame, ma poco pratico per dataset di grandi dimensioni. <strong>Esempio:</strong> <code>View(iris)</code> apre il dataset <code>iris</code> nel visualizzatore di RStudio.</td>
-</tr>
-<tr class="odd">
-<td><code>unique()</code></td>
-<td>Restituisce i valori unici presenti in una colonna o in un vettore. <strong>Esempio:</strong> <code>unique(iris$Species)</code> restituisce le specie uniche nel dataset <code>iris</code>.</td>
-</tr>
-<tr class="even">
-<td><code>names()</code></td>
-<td>Restituisce i nomi delle colonne di un data frame. <strong>Esempio:</strong> <code>names(mtcars)</code> restituisce i nomi delle colonne del dataset <code>mtcars</code>.</td>
-</tr>
-<tr class="odd">
-<td><code>class()</code></td>
-<td>Indica il tipo di dato di un oggetto in R, come <code>numeric</code>, <code>character</code>, <code>logical</code>, o <code>data.frame</code>. <strong>Esempio:</strong> <code>class(iris)</code> restituisce <code>data.frame</code>.</td>
-</tr>
-<tr class="even">
-<td><code>length()</code></td>
-<td>Restituisce il numero di elementi di un oggetto. Per i data frame, restituisce il numero di colonne. <strong>Esempio:</strong> <code>length(iris)</code> restituisce 5 (colonne).</td>
-</tr>
-<tr class="odd">
-<td><code>nrow()</code> e <code>ncol()</code></td>
-<td>Restituiscono rispettivamente il numero di righe e colonne di un data frame. <strong>Esempio:</strong> <code>nrow(iris)</code> restituisce 150 (righe), mentre <code>ncol(iris)</code> restituisce 5 (colonne).</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="illustrazione" class="level2" data-number="8.4">
-<h2 data-number="8.4" class="anchored" data-anchor-id="illustrazione"><span class="header-section-number">8.4</span> Illustrazione</h2>
-<p>Immagina di dover analizzare i dati del tuo esperimento sul sonno e la memoria, salvati nel file <code>msleep.csv</code>. La struttura del tuo progetto RStudio è organizzata così:</p>
-<pre><code>mio_esperimento/
-├── mio_esperimento.Rproj
+<section id="dove-devono-stare-i-dati" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="dove-devono-stare-i-dati"><span class="header-section-number">8.3</span> Dove devono stare i dati</h2>
+<p>Un progetto dovrebbe distinguere almeno tra dati originali, dati elaborati, codice e risultati:</p>
+<pre class="text"><code>progetto_stress_sonno/
+├── progetto_stress_sonno.Rproj
 ├── data/
-│   └── msleep.csv
-├── script/
-│   └── analisi.R
-└── output/</code></pre>
-<p>La prima cosa da fare è caricare i pacchetti necessari:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rio)    <span class="co"># Per importare i dati</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)   <span class="co"># Per gestire i percorsi in modo affidabile</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<p>A questo punto possiamo importare i dati:</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>msleep <span class="ot">&lt;-</span> rio<span class="sc">::</span><span class="fu">import</span>(</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  here<span class="sc">::</span><span class="fu">here</span>(  <span class="co"># Costruisce il percorso automaticamente</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"data"</span>,    <span class="co"># Cartella dei dati</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"msleep.csv"</span>  <span class="co"># Nome del file</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Controlli post-importazione (fondamentali!)</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(msleep)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                         name      genus  vore        order conservation</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1                    Cheetah   Acinonyx carni    Carnivora           lc</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2                 Owl monkey      Aotus  omni     Primates             </span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3            Mountain beaver Aplodontia herbi     Rodentia           nt</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 Greater short-tailed shrew    Blarina  omni Soricomorpha           lc</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5                        Cow        Bos herbi Artiodactyla domesticated</span></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6           Three-toed sloth   Bradypus herbi       Pilosa             </span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   sleep_total sleep_rem sleep_cycle awake brainwt  bodywt</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1        12.1        NA          NA  11.9      NA  50.000</span></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2        17.0       1.8          NA   7.0 0.01550   0.480</span></span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3        14.4       2.4          NA   9.6      NA   1.350</span></span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4        14.9       2.3       0.133   9.1 0.00029   0.019</span></span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5         4.0       0.7       0.667  20.0 0.42300 600.000</span></span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6        14.4       2.2       0.767   9.6      NA   3.850</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(msleep)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 'data.frame':    83 obs. of  11 variables:</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ name        : chr  "Cheetah" "Owl monkey" "Mountain beaver" "Greater short-tailed shrew" ...</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ genus       : chr  "Acinonyx" "Aotus" "Aplodontia" "Blarina" ...</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ vore        : chr  "carni" "omni" "herbi" "omni" ...</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ order       : chr  "Carnivora" "Primates" "Rodentia" "Soricomorpha" ...</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ conservation: chr  "lc" "" "nt" "lc" ...</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ sleep_total : num  12.1 17 14.4 14.9 4 14.4 8.7 7 10.1 3 ...</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ sleep_rem   : num  NA 1.8 2.4 2.3 0.7 2.2 1.4 NA 2.9 NA ...</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ sleep_cycle : num  NA NA NA 0.133 0.667 ...</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ awake       : num  11.9 7 9.6 9.1 20 9.6 15.3 17 13.9 21 ...</span></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ brainwt     : num  NA 0.0155 NA 0.00029 0.423 NA NA NA 0.07 0.0982 ...</span></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ bodywt      : num  50 0.48 1.35 0.019 600 ...</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(msleep)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Rows: 83</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: 11</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ name         &lt;chr&gt; "Cheetah", "Owl monkey", "Mountain beaver", "Greater shor…</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ genus        &lt;chr&gt; "Acinonyx", "Aotus", "Aplodontia", "Blarina", "Bos", "Bra…</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ vore         &lt;chr&gt; "carni", "omni", "herbi", "omni", "herbi", "herbi", "carn…</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ order        &lt;chr&gt; "Carnivora", "Primates", "Rodentia", "Soricomorpha", "Art…</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ conservation &lt;chr&gt; "lc", "", "nt", "lc", "domesticated", "", "vu", "", "dome…</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ sleep_total  &lt;dbl&gt; 12.1, 17.0, 14.4, 14.9, 4.0, 14.4, 8.7, 7.0, 10.1, 3.0, 5…</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ sleep_rem    &lt;dbl&gt; NA, 1.8, 2.4, 2.3, 0.7, 2.2, 1.4, NA, 2.9, NA, 0.6, 0.8, …</span></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ sleep_cycle  &lt;dbl&gt; NA, NA, NA, 0.133, 0.667, 0.767, 0.383, NA, 0.333, NA, NA…</span></span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ awake        &lt;dbl&gt; 11.9, 7.0, 9.6, 9.1, 20.0, 9.6, 15.3, 17.0, 13.9, 21.0, 1…</span></span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ brainwt      &lt;dbl&gt; NA, 0.01550, NA, 0.00029, 0.42300, NA, NA, NA, 0.07000, 0…</span></span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ bodywt       &lt;dbl&gt; 50.000, 0.480, 1.350, 0.019, 600.000, 3.850, 20.490, 0.04…</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(msleep)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] "name"         "genus"        "vore"         "order"        "conservation"</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [6] "sleep_total"  "sleep_rem"    "sleep_cycle"  "awake"        "brainwt"     </span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [11] "bodywt"</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(msleep)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 83 11</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p><strong>Errori comuni e soluzioni.</strong></p>
-<ol type="1">
-<li><p><strong>“File not found”</strong>:</p>
+│   ├── raw/
+│   │   └── stress_sonno_originale.csv
+│   └── processed/
+│       └── stress_sonno_controllato.csv
+├── code/
+│   └── 01_controllo_dati.R
+└── report.qmd</code></pre>
+<p>La distinzione più importante è questa:</p>
 <ul>
-<li>Verifica che:
-<ul>
-<li>il file sia realmente in <code>data/</code>;</li>
-<li>il nome del file sia esatto (attenzione a .csv vs .CSV);</li>
-<li><strong>non ci siano spazi nel nome del file</strong>.</li>
-</ul></li>
-</ul></li>
-<li><p><strong>Pacchetti non installati</strong>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Esegui una volta</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"rio"</span>)</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"here"</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div></li>
-<li><p><strong>Progetto non aperto</strong>:</p>
-<ul>
-<li>Assicurati di aver aperto il file <code>.Rproj</code> prima di iniziare.</li>
-</ul></li>
-</ol>
-<p>Esaminiamo le modalità della variabile qualitativa <code>vore</code>:</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(msleep<span class="sc">$</span>vore)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "carni"   "omni"    "herbi"   ""        "insecti"</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Se vogliamo la numerosità di ciascuna categoria, possiamo usare <code>table()</code>:</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(msleep<span class="sc">$</span>vore)</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;           carni   herbi insecti    omni </span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       7      19      32       5      20</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Si noti che <code>table()</code> esclude i dati mancanti.</p>
-<p>Stampiamo i nomi delle colonne del data frame:</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(msleep)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] "name"         "genus"        "vore"         "order"        "conservation"</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [6] "sleep_total"  "sleep_rem"    "sleep_cycle"  "awake"        "brainwt"     </span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [11] "bodywt"</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Esaminiamo il tipo di variabile della colonna <code>vore</code>:</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(msleep<span class="sc">$</span>vore)</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "character"</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Le dimensioni del data frame sono date da:</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(msleep)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 83 11</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>laddove il primo valore è il numero di righe e il secondo valore è il numero di colonne.</p>
-<p>Il numero di elementi di un vettore è dato da:</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(msleep<span class="sc">$</span>vore)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 83</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>In alternativa, possiamo usare <code>nrow()</code></p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(msleep)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 83</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>per il numero di righe e <code>ncol()</code></p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ncol</span>(msleep)</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 11</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>per il numero di colonne. In maniera equivalente:</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(msleep)[<span class="dv">2</span>]</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 11</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="callout callout-style-default callout-tip callout-titled" title="Esercizio">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Consiglio</span>Esercizio
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>In questo esercizio, utilizzerai R per esplorare i dati raccolti con il questionario <strong>Satisfaction With Life Scale (SWLS)</strong> dagli studenti del tuo gruppo TPV. L’obiettivo è familiarizzare con le funzioni di base di R per caricare, visualizzare e manipolare i dati.</p>
-<p><strong>Parte 1: operazioni manuali</strong></p>
-<ol type="1">
-<li><strong>Creazione e gestione degli oggetti in R</strong>
-<ul>
-<li>Scrivi su carta i comandi R che creerebbero un oggetto chiamato <code>swls_scores</code> contenente i punteggi di 10 studenti.</li>
-<li>Quali sono le regole per assegnare un nome a un oggetto in R?</li>
-</ul></li>
-<li><strong>Visualizzazione dei dati</strong>
-<ul>
-<li>Scrivi il comando R per visualizzare il contenuto dell’oggetto <code>swls_scores</code>.</li>
-<li>Come puoi visualizzare solo i primi 5 valori del vettore?</li>
-</ul></li>
-<li><strong>Esplorazione della struttura dei dati</strong>
-<ul>
-<li>Scrivi i comandi R per verificare il tipo di dati contenuti in <code>swls_scores</code>.</li>
-<li>Come puoi verificare quanti elementi contiene?</li>
-</ul></li>
-</ol>
-<p><strong>Parte 2: esecuzione in R</strong></p>
-<ol start="4" type="1">
-<li><strong>Creazione del dataset in R</strong>
-<ul>
-<li>Inserisci i dati in un oggetto chiamato <code>swls_scores</code> in R.</li>
-</ul></li>
-<li><strong>Verifica della struttura dei dati</strong>
-<ul>
-<li>Usa le funzioni <code>str()</code>, <code>class()</code>, <code>length()</code>, <code>nrow()</code>, <code>ncol()</code> su <code>swls_scores</code>.</li>
-<li>Annota i risultati e spiega a parole loro significato.</li>
-</ul></li>
-<li><strong>Visualizzazione dei dati</strong>
-<ul>
-<li>Usa <code>head()</code> e <code>tail()</code> per esplorare i dati.<br>
-</li>
-<li>Qual è la differenza tra le due funzioni?</li>
-</ul></li>
-<li><strong>Identificazione dei valori unici</strong>
-<ul>
-<li>Usa <code>unique(swls_scores)</code> per individuare i punteggi distinti.</li>
-</ul></li>
-<li><strong>Creazione di una tabella con i dati</strong>
-<ul>
-<li>Trasforma <code>swls_scores</code> in un data frame con una colonna <code>"Punteggio"</code> e una colonna <code>"Studente"</code> (numerata da 1 a 10).</li>
-</ul></li>
-<li><strong>Esportazione dei dati</strong>
-<ul>
-<li>Salva il data frame in un file CSV chiamato <code>"swls_data.csv"</code> usando <code>write.csv()</code>.</li>
-</ul></li>
-</ol>
-<p><strong>Consegna</strong></p>
-<ul>
-<li>Scrivi le risposte della <strong>Parte 1</strong> su carta.</li>
-<li>Scrivi il codice e i risultati della <strong>Parte 2</strong> in un file <code>.R</code> e invialo come consegna.</li>
+<li><code>data/raw/</code>: dati originali, da non modificare;</li>
+<li><code>data/processed/</code>: dati elaborati o puliti;</li>
+<li><code>code/</code> o file <code>.qmd</code>: codice che documenta le operazioni eseguite.</li>
 </ul>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-tip callout-titled" title="Soluzione">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout callout-style-default callout-important callout-titled" title="Regola pratica">
+<div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Consiglio</span>Soluzione
+<span class="screen-reader-only">Importante</span>Regola pratica
 </div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p><strong>Parte 1: operazioni manuali</strong></p>
+<p>Non modificate mai direttamente i dati originali. Conservate una copia intatta in <code>data/raw/</code> e salvate eventuali versioni elaborate in <code>data/processed/</code>.</p>
+</div>
+</div>
+</section>
+<section id="importare-dati-con-rioimport" class="level2" data-number="8.4">
+<h2 data-number="8.4" class="anchored" data-anchor-id="importare-dati-con-rioimport"><span class="header-section-number">8.4</span> Importare dati con <code>rio::import()</code></h2>
+<p>Nella ricerca psicologica i dati possono arrivare in formati diversi: <code>.csv</code>, <code>.xlsx</code>, <code>.sav</code>, <code>.txt</code>. Il pacchetto <code>rio</code> permette di importarli con un comando uniforme.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>stress_sonno <span class="ot">&lt;-</span> rio<span class="sc">::</span><span class="fu">import</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"raw"</span>, <span class="st">"stress_sonno.csv"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>La funzione <code>here::here()</code> costruisce il percorso a partire dalla cartella principale del progetto. In questo modo il codice non dipende dal Desktop, dal nome dell’utente o dalla posizione del progetto su un singolo computer.</p>
+<p>Lo stesso schema può essere usato con file Excel o SPSS:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>questionario <span class="ot">&lt;-</span> rio<span class="sc">::</span><span class="fu">import</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"raw"</span>, <span class="st">"questionario.xlsx"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>archivio_spss <span class="ot">&lt;-</span> rio<span class="sc">::</span><span class="fu">import</span>(</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"raw"</span>, <span class="st">"archivio_studio.sav"</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-warning callout-titled" title="Errore comune">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Avviso</span>Errore comune
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Un errore come <code>file not found</code> significa quasi sempre che il percorso è sbagliato, il nome del file non corrisponde esattamente oppure il progetto R non è stato aperto dalla cartella corretta.</p>
+</div>
+</div>
+</section>
+<section id="controllo-1-il-file-importato-è-quello-giusto" class="level2" data-number="8.5">
+<h2 data-number="8.5" class="anchored" data-anchor-id="controllo-1-il-file-importato-è-quello-giusto"><span class="header-section-number">8.5</span> Controllo 1: il file importato è quello giusto?</h2>
+<p>Dopo l’importazione, la prima domanda è:</p>
+<blockquote class="blockquote">
+<p>Questo oggetto contiene davvero i dati che mi aspettavo?</p>
+</blockquote>
+<p>Per rispondere, guardiamo le prime righe:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(stress_sonno)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Possiamo anche aprire la tabella nel visualizzatore di RStudio/Posit:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">View</span>(stress_sonno)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>View()</code> è utile per dare un’occhiata veloce, ma non sostituisce i controlli scritti nel codice. Un controllo scritto è riproducibile, un’occhiata manuale no.</p>
+</section>
+<section id="controllo-2-quante-righe-e-quante-colonne-ci-sono" class="level2" data-number="8.6">
+<h2 data-number="8.6" class="anchored" data-anchor-id="controllo-2-quante-righe-e-quante-colonne-ci-sono"><span class="header-section-number">8.6</span> Controllo 2: quante righe e quante colonne ci sono?</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(stress_sonno)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(stress_sonno)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ncol</span>(stress_sonno)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>dim()</code> restituisce prima il numero di righe e poi il numero di colonne. Se uno studio dovrebbe avere 120 partecipanti e 8 variabili, ci aspettiamo un risultato simile a:</p>
+<pre class="text"><code>[1] 120   8</code></pre>
+<p>Se troviamo una sola colonna, molte più righe del previsto o un numero inatteso di partecipanti, dobbiamo fermarci e capire che cosa è successo.</p>
+</section>
+<section id="controllo-3-come-si-chiamano-le-variabili" class="level2" data-number="8.7">
+<h2 data-number="8.7" class="anchored" data-anchor-id="controllo-3-come-si-chiamano-le-variabili"><span class="header-section-number">8.7</span> Controllo 3: come si chiamano le variabili?</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(stress_sonno)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Nomi chiari rendono il codice più leggibile. Nomi come <code>Q1</code>, <code>Q2</code>, <code>VAR0003</code> o <code>X...4</code> richiedono attenzione: spesso provengono da esportazioni automatiche e devono essere documentati o rinominati.</p>
+<p>Per ora, l’obiettivo non è pulire tutti i nomi, ma controllarli prima di utilizzarli.</p>
+</section>
+<section id="controllo-4-che-tipo-di-variabili-abbiamo" class="level2" data-number="8.8">
+<h2 data-number="8.8" class="anchored" data-anchor-id="controllo-4-che-tipo-di-variabili-abbiamo"><span class="header-section-number">8.8</span> Controllo 4: che tipo di variabili abbiamo?</h2>
+<p>Una variabile può essere letta da R come numero, testo, fattore, data o valore logico. Se il tipo è sbagliato, anche l’analisi successiva può essere sbagliata.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(stress_sonno)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(stress_sonno)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Possiamo anche controllare una singola variabile:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(stress_sonno<span class="sc">$</span>stress)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(stress_sonno<span class="sc">$</span>genere)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Esempi di problemi frequenti:</p>
+<ul>
+<li><code>eta</code> dovrebbe essere numerica, ma è stata importata come testo;</li>
+<li><code>genere</code> contiene scritture diverse della stessa categoria;</li>
+<li><code>data_compilazione</code> dovrebbe essere una data, ma è stata importata come testo;</li>
+<li>una scala Likert è numerica nel file, ma va interpretata come risposta ordinale.</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled" title="Collegamento con la misurazione">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Collegamento con la misurazione
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Il tipo di variabile in R non corrisponde automaticamente al significato psicologico della misura. Una scala Likert può essere codificata con numeri, ma questi numeri rappresentano risposte ordinate. Il controllo tecnico deve sempre essere collegato a quello concettuale.</p>
+</div>
+</div>
+</section>
+<section id="controllo-5-ci-sono-valori-mancanti" class="level2" data-number="8.9">
+<h2 data-number="8.9" class="anchored" data-anchor-id="controllo-5-ci-sono-valori-mancanti"><span class="header-section-number">8.9</span> Controllo 5: ci sono valori mancanti?</h2>
+<p>In R i valori mancanti sono rappresentati da <code>NA</code>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(stress_sonno))</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Per una singola variabile:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(stress_sonno<span class="sc">$</span>qualita_sonno))</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">is.na</span>(stress_sonno<span class="sc">$</span>qualita_sonno))</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>La prima riga conta i valori mancanti. La seconda calcola la proporzione di valori mancanti.</p>
+<p>I valori mancanti non sono solo un problema tecnico. Possono indicare domande saltate, prove non registrate, risposte sensibili o codifiche speciali come <code>999</code> o <code>-99</code>.</p>
+<div class="callout callout-style-default callout-important callout-titled" title="Prima di usare `na.rm = TRUE`">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Importante</span>Prima di usare <code>na.rm = TRUE</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Quando un codice ignora i valori mancanti, bisogna sapere quanti sono, dove si trovano e perché mancano.</p>
+</div>
+</div>
+</section>
+<section id="controllo-6-i-valori-sono-plausibili" class="level2" data-number="8.10">
+<h2 data-number="8.10" class="anchored" data-anchor-id="controllo-6-i-valori-sono-plausibili"><span class="header-section-number">8.10</span> Controllo 6: i valori sono plausibili?</h2>
+<p>Per variabili numeriche:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(stress_sonno<span class="sc">$</span>stress)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(stress_sonno<span class="sc">$</span>ore_sonno)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Per variabili categoriali:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(stress_sonno<span class="sc">$</span>genere, <span class="at">useNA =</span> <span class="st">"ifany"</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(stress_sonno<span class="sc">$</span>condizione, <span class="at">useNA =</span> <span class="st">"ifany"</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Esempi di segnali d’allarme:</p>
+<ul>
+<li>una variabile <code>eta</code> contiene il valore <code>222</code>;</li>
+<li>una variabile <code>ore_sonno</code> contiene valori negativi;</li>
+<li>una scala da 1 a 7 contiene il valore 9;</li>
+<li>la categoria <code>femmina</code> compare anche come <code>F</code>, <code>Femmina</code>, <code>female</code>;</li>
+<li>una condizione sperimentale attesa non compare.</li>
+</ul>
+<div class="callout callout-style-default callout-warning callout-titled" title="Errore comune">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Avviso</span>Errore comune
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Il fatto che il codice funzioni non significa che i dati siano corretti. R può calcolare una media anche su valori impossibili.</p>
+</div>
+</div>
+</section>
+<section id="esportare-dati-con-rioexport" class="level2" data-number="8.11">
+<h2 data-number="8.11" class="anchored" data-anchor-id="esportare-dati-con-rioexport"><span class="header-section-number">8.11</span> Esportare dati con <code>rio::export()</code></h2>
+<p>Dopo aver controllato o modificato un dataset, possiamo salvarlo.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>rio<span class="sc">::</span><span class="fu">export</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  stress_sonno,</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"processed"</span>, <span class="st">"stress_sonno_controllato.csv"</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>La regola è salvare il risultato in una cartella diversa da quella dei dati originali:</p>
+<pre class="text"><code>data/raw/stress_sonno_originale.csv
+data/processed/stress_sonno_controllato.csv</code></pre>
+<p>In questo modo il file originale resta intatto.</p>
+</section>
+<section id="checklist-dopo-limportazione" class="level2" data-number="8.12">
+<h2 data-number="8.12" class="anchored" data-anchor-id="checklist-dopo-limportazione"><span class="header-section-number">8.12</span> Checklist dopo l’importazione</h2>
+<p>Ogni volta che importate un dataset, potete usare questa checklist:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Dimensioni</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(dati)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ncol</span>(dati)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Prime righe e nomi</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dati)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(dati)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Struttura</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dati)</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co"># oppure</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="co"># dplyr::glimpse(dati)</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Valori mancanti</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(dati))</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Variabili numeriche principali</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(dati<span class="sc">$</span>variabile_numerica)</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Variabili categoriali principali</span></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(dati<span class="sc">$</span>variabile_categoriale, <span class="at">useNA =</span> <span class="st">"ifany"</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Sostituite <code>dati</code>, <code>variabile_numerica</code> e <code>variabile_categoriale</code> con i nomi reali del vostro dataset.</p>
+</section>
+<section id="usare-lai-con-criterio" class="level2" data-number="8.13">
+<h2 data-number="8.13" class="anchored" data-anchor-id="usare-lai-con-criterio"><span class="header-section-number">8.13</span> Usare l’AI con criterio</h2>
+<p>L’AI può generare codice utile. Per esempio, possiamo chiedere:</p>
+<blockquote class="blockquote">
+<p>Ho un file <code>stress_sonno.csv</code> nella cartella <code>data/raw/</code> di un progetto R. Scrivi codice R per importarlo con <code>rio</code>, controllare dimensioni, nomi delle colonne, tipi delle variabili e valori mancanti.</p>
+</blockquote>
+<p>Una risposta utile potrebbe essere:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>stress_sonno <span class="ot">&lt;-</span> rio<span class="sc">::</span><span class="fu">import</span>(</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"raw"</span>, <span class="st">"stress_sonno.csv"</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(stress_sonno)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(stress_sonno)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(stress_sonno)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(stress_sonno))</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Dopo aver ricevuto codice dall’AI, dovete verificare:</p>
 <ol type="1">
-<li><strong>Creazione e gestione degli oggetti in R</strong>
-<ul>
-<li><p>Consideriamo dei valori di risposta arbitrari. Il comando per creare l’oggetto <code>swls_scores</code> è:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>swls_scores <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">16</span>, <span class="dv">23</span>, <span class="dv">25</span>, <span class="dv">11</span>, <span class="dv">7</span>, <span class="dv">20</span>, <span class="dv">25</span>, <span class="dv">15</span>, <span class="dv">27</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div></li>
-<li><p>Regole per assegnare un nome a un oggetto in R:</p>
-<ul>
-<li>Non può iniziare con un numero.</li>
-<li>Non può contenere spazi o caratteri speciali (tranne <code>_</code> e <code>.</code>).</li>
-<li>Non deve avere lo stesso nome di funzioni già esistenti.</li>
-</ul></li>
-</ul></li>
-<li><strong>Visualizzazione dei dati</strong>
-<ul>
-<li><p>Per visualizzare il contenuto:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>swls_scores</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div></li>
-<li><p>Per visualizzare solo i primi 5 valori:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(swls_scores, <span class="dv">5</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div></li>
-</ul></li>
-<li><strong>Esplorazione della struttura dei dati</strong>
-<ul>
-<li><p>Per verificare il tipo di dati:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(swls_scores)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div></li>
-<li><p>Per verificare il numero di elementi:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(swls_scores)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div></li>
-</ul></li>
+<li>il percorso del file è corretto?</li>
+<li>il nome dell’oggetto creato è chiaro?</li>
+<li>le funzioni usate richiedono pacchetti?</li>
+<li>il codice mostra davvero le informazioni necessarie?</li>
+<li>i risultati ottenuti sono plausibili rispetto allo studio?</li>
 </ol>
-<p><strong>Parte 2: esecuzione in R</strong></p>
-<ol start="4" type="1">
-<li><p><strong>Creazione del dataset in R</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>swls_scores <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">16</span>, <span class="dv">23</span>, <span class="dv">25</span>, <span class="dv">11</span>, <span class="dv">7</span>, <span class="dv">20</span>, <span class="dv">25</span>, <span class="dv">15</span>, <span class="dv">27</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div></li>
-<li><p><strong>Verifica della struttura dei dati</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(swls_scores)</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(swls_scores)</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(swls_scores)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<ul>
-<li><code>str()</code> mostra che <code>swls_scores</code> è un vettore numerico.</li>
-<li><code>class()</code> conferma che è di tipo <code>"numeric"</code>.</li>
-<li><code>length()</code> indica che il vettore ha 10 elementi.</li>
-</ul></li>
-<li><p><strong>Visualizzazione dei dati</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(swls_scores)</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(swls_scores)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<ul>
-<li><code>head()</code> mostra i primi 6 elementi, <code>tail()</code> gli ultimi 6.</li>
-</ul></li>
-<li><p><strong>Identificazione dei valori unici</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(swls_scores)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<ul>
-<li>Restituisce: <code>7, 11, 15, 16, 20, 23, 25, 27</code>.</li>
-</ul></li>
-<li><p><strong>Creazione di una tabella con i dati</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>df_swls <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Studente =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">Punteggio =</span> swls_scores)</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>df_swls</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div></li>
-<li><p><strong>Esportazione dei dati</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(df_swls, <span class="st">"swls_data.csv"</span>, <span class="at">row.names=</span><span class="cn">FALSE</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div></li>
-</ol>
-<p><strong>Conclusione</strong></p>
-<p>Questi esercizi hanno introdotto i comandi di base per creare, visualizzare e manipolare dati in R.</p>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled" title="Informazioni sull'ambiente di sviluppo">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout callout-style-default callout-important callout-titled" title="Responsabilità dello studente">
+<div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Nota</span>Informazioni sull’ambiente di sviluppo
+<span class="screen-reader-only">Importante</span>Responsabilità dello studente
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>L’uso dell’AI per generare il codice di importazione e controllo è accettabile. Consegnare i risultati senza sapere quali file sono stati importati, quali variabili sono state lette e quali problemi sono emersi, no.</p>
+</div>
+</div>
+</section>
+<section id="esempio-guidato-stress-accademico-e-sonno" class="level2" data-number="8.14">
+<h2 data-number="8.14" class="anchored" data-anchor-id="esempio-guidato-stress-accademico-e-sonno"><span class="header-section-number">8.14</span> Esempio guidato: stress accademico e sonno</h2>
+<p>Immaginiamo di voler analizzare uno studio su stress accademico e qualità del sonno. Il file originale si chiama <code>stress_sonno_originale.csv</code> e si trova in <code>data/raw/</code>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>stress_sonno <span class="ot">&lt;-</span> rio<span class="sc">::</span><span class="fu">import</span>(</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"raw"</span>, <span class="st">"stress_sonno_originale.csv"</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(stress_sonno)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(stress_sonno)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(stress_sonno)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(stress_sonno))</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(stress_sonno<span class="sc">$</span>stress)</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(stress_sonno<span class="sc">$</span>qualita_sonno)</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(stress_sonno<span class="sc">$</span>genere, <span class="at">useNA =</span> <span class="st">"ifany"</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Dopo questi controlli, dovremmo essere in grado di rispondere a domande semplici:</p>
+<ul>
+<li>il numero di righe corrisponde al numero atteso di partecipanti?</li>
+<li>le variabili principali sono presenti?</li>
+<li>i tipi delle variabili sono coerenti?</li>
+<li>ci sono valori mancanti?</li>
+<li>i valori minimi e massimi sono plausibili?</li>
+<li>le categorie sono scritte in modo coerente?</li>
+</ul>
+<p>Solo a questo punto ha senso passare a trasformazioni, grafici e statistiche descrittive.</p>
+</section>
+<section id="errori-frequenti" class="level2" data-number="8.15">
+<h2 data-number="8.15" class="anchored" data-anchor-id="errori-frequenti"><span class="header-section-number">8.15</span> Errori frequenti</h2>
+<section id="il-file-non-viene-trovato" class="level3" data-number="8.15.1">
+<h3 data-number="8.15.1" class="anchored" data-anchor-id="il-file-non-viene-trovato"><span class="header-section-number">8.15.1</span> Il file non viene trovato</h3>
+<p>Verificate che il progetto <code>.Rproj</code> sia aperto, che il file sia nella cartella indicata, che il nome sia scritto nello stesso modo e che l’estensione sia corretta.</p>
+</section>
+<section id="il-dataset-ha-una-sola-colonna" class="level3" data-number="8.15.2">
+<h3 data-number="8.15.2" class="anchored" data-anchor-id="il-dataset-ha-una-sola-colonna"><span class="header-section-number">8.15.2</span> Il dataset ha una sola colonna</h3>
+<p>Può succedere che i file CSV utilizzino un separatore diverso da quello atteso. Se dopo l’importazione il dataset ha una sola colonna, non procedere con l’analisi.</p>
+</section>
+<section id="una-variabile-numerica-è-stata-letta-come-testo" class="level3" data-number="8.15.3">
+<h3 data-number="8.15.3" class="anchored" data-anchor-id="una-variabile-numerica-è-stata-letta-come-testo"><span class="header-section-number">8.15.3</span> Una variabile numerica è stata letta come testo</h3>
+<p>Possibili cause sono i separatori decimali, i caratteri non numerici o le codifiche dei valori mancanti, come <code>missing</code>, <code>non risponde</code>, <code>999</code> o <code>-99</code>.</p>
+</section>
+<section id="i-valori-mancanti-non-sono-riconosciuti" class="level3" data-number="8.15.4">
+<h3 data-number="8.15.4" class="anchored" data-anchor-id="i-valori-mancanti-non-sono-riconosciuti"><span class="header-section-number">8.15.4</span> I valori mancanti non sono riconosciuti</h3>
+<p>Solo <code>NA</code> è riconosciuto da R come valore mancante. Altre codifiche devono essere trasformate esplicitamente, dopo aver verificato il codebook o la documentazione dello studio.</p>
+</section>
+</section>
+<section id="esercizi" class="level2" data-number="8.16">
+<h2 data-number="8.16" class="anchored" data-anchor-id="esercizi"><span class="header-section-number">8.16</span> Esercizi</h2>
+<div class="callout callout-style-default callout-tip callout-titled" title="Esercizio 1: leggere un codice">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Consiglio</span>Esercizio 1: leggere un codice
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; R version 4.6.0 (2026-04-24)</span></span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Platform: aarch64-apple-darwin23</span></span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Running under: macOS Tahoe 26.5.1</span></span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Matrix products: default</span></span>
-<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib </span></span>
-<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1</span></span>
-<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; locale:</span></span>
-<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] C.UTF-8/UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8</span></span>
-<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; time zone: Europe/Rome</span></span>
-<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tzcode source: internal</span></span>
-<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; attached base packages:</span></span>
-<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
-<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; other attached packages:</span></span>
-<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] ragg_1.5.2            tinytable_0.17.0      withr_3.0.3          </span></span>
-<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [4] systemfonts_1.3.2     patchwork_1.3.2       ggdist_3.3.3         </span></span>
-<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [7] tidybayes_3.0.7       bayesplot_1.15.0      ggplot2_4.0.3        </span></span>
-<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [10] reliabilitydiag_0.2.1 priorsense_1.2.0      posterior_1.7.0      </span></span>
-<span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [13] loo_2.10.0            rstan_2.32.7          StanHeaders_2.32.10  </span></span>
-<span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [16] brms_2.23.0           Rcpp_1.1.1-1.1        sessioninfo_1.2.4    </span></span>
-<span id="cb37-26"><a href="#cb37-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [19] conflicted_1.2.0      janitor_2.2.1         matrixStats_1.5.0    </span></span>
-<span id="cb37-27"><a href="#cb37-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [22] modelr_0.1.11         tibble_3.3.1          dplyr_1.2.1          </span></span>
-<span id="cb37-28"><a href="#cb37-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [25] tidyr_1.3.2           rio_1.3.0             here_1.0.2           </span></span>
-<span id="cb37-29"><a href="#cb37-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb37-30"><a href="#cb37-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span id="cb37-31"><a href="#cb37-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] svUnit_1.0.8          tidyselect_1.2.1      farver_2.1.2         </span></span>
-<span id="cb37-32"><a href="#cb37-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [4] R.utils_2.13.0        S7_0.2.2              fastmap_1.2.0        </span></span>
-<span id="cb37-33"><a href="#cb37-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [7] tensorA_0.36.2.1      pacman_0.5.1          digest_0.6.39        </span></span>
-<span id="cb37-34"><a href="#cb37-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [10] timechange_0.4.0      estimability_2.0.0    lifecycle_1.0.5      </span></span>
-<span id="cb37-35"><a href="#cb37-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [13] magrittr_2.0.5        compiler_4.6.0        rlang_1.2.0          </span></span>
-<span id="cb37-36"><a href="#cb37-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [16] tools_4.6.0           data.table_1.18.4     knitr_1.51           </span></span>
-<span id="cb37-37"><a href="#cb37-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [19] bridgesampling_1.2-1  htmlwidgets_1.6.4     pkgbuild_1.4.8       </span></span>
-<span id="cb37-38"><a href="#cb37-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [22] curl_7.1.0            RColorBrewer_1.1-3    abind_1.4-8          </span></span>
-<span id="cb37-39"><a href="#cb37-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [25] purrr_1.2.2           R.oo_1.27.1           grid_4.6.0           </span></span>
-<span id="cb37-40"><a href="#cb37-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [28] stats4_4.6.0          xtable_1.8-8          inline_0.3.21        </span></span>
-<span id="cb37-41"><a href="#cb37-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [31] emmeans_2.0.3         scales_1.4.0          cli_3.6.6            </span></span>
-<span id="cb37-42"><a href="#cb37-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [34] mvtnorm_1.4-1         rmarkdown_2.31        generics_0.1.4       </span></span>
-<span id="cb37-43"><a href="#cb37-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [37] otel_0.2.0            RcppParallel_5.1.11-2 cachem_1.1.0         </span></span>
-<span id="cb37-44"><a href="#cb37-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [40] stringr_1.6.0         parallel_4.6.0        vctrs_0.7.3          </span></span>
-<span id="cb37-45"><a href="#cb37-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [43] V8_8.2.0              Matrix_1.7-5          jsonlite_2.0.0       </span></span>
-<span id="cb37-46"><a href="#cb37-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [46] arrayhelpers_1.1-1    glue_1.8.1            codetools_0.2-20     </span></span>
-<span id="cb37-47"><a href="#cb37-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [49] distributional_0.8.1  lubridate_1.9.5       stringi_1.8.7        </span></span>
-<span id="cb37-48"><a href="#cb37-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [52] gtable_0.3.6          QuickJSR_1.10.0       pillar_1.11.1        </span></span>
-<span id="cb37-49"><a href="#cb37-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [55] htmltools_0.5.9       Brobdingnag_1.2-9     R6_2.6.1             </span></span>
-<span id="cb37-50"><a href="#cb37-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [58] textshaping_1.0.5     rprojroot_2.1.1       evaluate_1.0.5       </span></span>
-<span id="cb37-51"><a href="#cb37-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [61] lattice_0.22-9        R.methodsS3_1.8.2     backports_1.5.1      </span></span>
-<span id="cb37-52"><a href="#cb37-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [64] memoise_2.0.1         broom_1.0.13          snakecase_0.11.1     </span></span>
-<span id="cb37-53"><a href="#cb37-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [67] rstantools_2.6.0      coda_0.19-4.1         gridExtra_2.3.1      </span></span>
-<span id="cb37-54"><a href="#cb37-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [70] nlme_3.1-169          checkmate_2.3.4       xfun_0.59            </span></span>
-<span id="cb37-55"><a href="#cb37-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [73] pkgconfig_2.0.3</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>L’AI ha prodotto questo codice:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>dati <span class="ot">&lt;-</span> rio<span class="sc">::</span><span class="fu">import</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"raw"</span>, <span class="st">"questionario.csv"</span>))</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(dati)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(dati)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(dati)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(dati))</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(dati)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Rispondete: quale file viene importato? Dove deve trovarsi? Quale oggetto viene creato? Quali controlli vengono eseguiti? Quale controllo aggiungereste per una variabile categoriale?</p>
 </div>
 </div>
 </div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Esercizio 2: diagnosticare un problema">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Consiglio</span>Esercizio 2: diagnosticare un problema
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Uno studente importa un file e ottiene un dataset con 1 colonna e 250 righe. Il questionario, però, dovrebbe avere 30 variabili.</p>
+<p>Perché questo risultato è sospetto? Quale controllo ha permesso di accorgersene? Quali possibili cause potreste verificare?</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Esercizio 3: usare l'AI con controllo">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Consiglio</span>Esercizio 3: usare l’AI con controllo
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Chiedete a un sistema di AI di scrivere codice R per importare un file chiamato <code>swls.csv</code>, contenuto in <code>data/raw/</code>, e per controllare nomi, dimensioni, tipi di variabili e valori mancanti.</p>
+<p>Poi valutate la risposta: il codice usa percorsi relativi? Importa il file dalla cartella giusta? Include controlli sufficienti? Sapete spiegare ogni riga?</p>
+</div>
+</div>
+</div>
+</section>
+<section id="cosa-portare-al-capitolo-successivo" class="level2" data-number="8.17">
+<h2 data-number="8.17" class="anchored" data-anchor-id="cosa-portare-al-capitolo-successivo"><span class="header-section-number">8.17</span> Cosa portare al capitolo successivo</h2>
+<p>Prima di trasformare i dati con <code>dplyr</code>, dobbiamo assicurarci che la tabella importata sia affidabile. In particolare, dobbiamo aver controllato:</p>
+<ul>
+<li>il file letto;</li>
+<li>quante righe e colonne contiene;</li>
+<li>come si chiamano le variabili;</li>
+<li>che tipo di variabili sono state importate;</li>
+<li>quanti valori mancanti ci sono;</li>
+<li>se i valori osservati sono plausibili;</li>
+<li>dove viene salvata una eventuale versione elaborata.</li>
+</ul>
+<p>Il capitolo successivo utilizzerà questi dati per selezionare le variabili, filtrare le righe, creare nuove colonne e riassumere le informazioni. Tutte queste operazioni hanno senso solo se la tabella di partenza è stata controllata.</p>
 </section>
 <section id="bibliografia" class="level2 unnumbered unlisted">
 <h2 class="unnumbered unlisted anchored" data-anchor-id="bibliografia">Bibliografia</h2>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
-<div id="ref-irizarry2024introduction" class="csl-entry" role="listitem">
-Irizarry, R. A. (2024). <em>Introduction to Data Science: Data Wrangling and Visualization with R</em>. CRC Press.
-</div>
-<div id="ref-wickham2023r" class="csl-entry" role="listitem">
-Wickham, H., Çetinkaya-Rundel, M., &amp; Grolemund, G. (2023). <em>R for data science</em>. " O’Reilly Media, Inc.".
-</div>
-</div>
 </section>
 
 </main> <!-- /main -->
@@ -1245,7 +1121,7 @@ Wickham, H., Çetinkaya-Rundel, M., &amp; Grolemund, G. (2023). <em>R for data s
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/ccaudek\.github\.io\/utet-eda\/");
+        var filterRegex = new RegExp("^(?:https?:)?//ccaudek\.github\.io/utet-prob/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -1581,13 +1457,13 @@ Wickham, H., Çetinkaya-Rundel, M., &amp; Grolemund, G. (2023). <em>R for data s
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../chapters/R/02_environment.html" class="pagination-link" aria-label="L'ambiente di programmazione">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">L’ambiente di programmazione</span></span>
+      <a href="../../chapters/R/02_environment.html" class="pagination-link" aria-label="Ambiente di lavoro e progetti R">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Ambiente di lavoro e progetti R</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../chapters/R/04_r_programming.html" class="pagination-link" aria-label="Programmazione">
-        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Programmazione</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../chapters/R/05_dplyr.html" class="pagination-link" aria-label="Trasformare i dati con `dplyr`">
+        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Trasformare i dati con <code>dplyr</code></span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -1598,8 +1474,8 @@ Wickham, H., Çetinkaya-Rundel, M., &amp; Grolemund, G. (2023). <em>R for data s
 <p><strong>Analisi esplorativa dei dati (EDA)</strong> — Modulo del progetto UTET a supporto del manuale <em>Inferenza bayesiana in psicologia: Ragionare con l’incertezza</em>.</p>
 </div>   
     <div class="nav-footer-center">
-      &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/R/03_utility_functions.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></div>
+
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/R/03_utility_functions.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div><div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Preferenze cookie</a></div></div>
     <div class="nav-footer-right">
 <p>Realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
 </div>

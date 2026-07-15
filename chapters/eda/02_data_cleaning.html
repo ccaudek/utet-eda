@@ -1,13 +1,10 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
-
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.9.38">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-
-
-<title>15&nbsp; Flusso di lavoro per la pulizia dei dati – Analisi esplorativa dei dati in psicologia</title>
+<title>14&nbsp; Pulizia dei dati – Analisi esplorativa dei dati in psicologia</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -58,28 +55,7 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-  margin-bottom: 0em;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
-
+</style>
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../../site_libs/quarto-nav/headroom.min.js"></script>
@@ -91,33 +67,34 @@ div.csl-indent {
 <link href="../../chapters/eda/03_exploring_univariate_data.html" rel="next">
 <link href="../../chapters/eda/01_project_structure.html" rel="prev">
 <link href="../../style/gauss.png" rel="icon" type="image/png">
+<script src="../../site_libs/cookie-consent/cookie-consent.js"></script>
+<link href="../../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-0a6b7249c26820e032cb0bd839ff02b1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-bd31b91f9ddb1a75e3744ba9797c8182.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-662b1d839dd28a08d17be9d78b753e45.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-bd31b91f9ddb1a75e3744ba9797c8182.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-a0bb4f8876326eb7771edc79fa342270.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-7c5efe83671fda2688731f9f1d4acab0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-a0bb4f8876326eb7771edc79fa342270.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
-<script id="quarto-search-options" type="application/json">{
+<link href="../../site_libs/bootstrap/bootstrap-353ec92dc31bcb37568820202c74e1ec.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-ca56530e1a7dc3e4b2cbddadeb71310c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-353ec92dc31bcb37568820202c74e1ec.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
-  "copy-button": false,
+  "copy-button": true,
   "collapse-after": 3,
   "panel-placement": "start",
-  "type": "textbox",
+  "type": "overlay",
   "limit": 50,
   "keyboard-shortcut": [
     "f",
     "/",
     "s"
   ],
-  "show-item-context": false,
+  "show-item-context": true,
   "language": {
     "search-no-results-text": "Nessun risultato",
     "search-matching-documents-text": "documenti trovati",
@@ -131,22 +108,38 @@ div.csl-indent {
     "search-submit-button-title": "Inviare",
     "search-label": "Ricerca"
   }
-}</script>
-<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-QT5S3P9D31"></script>
-
-<script type="text/javascript">
+}</script><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-QT5S3P9D31"></script><script type="text/plain" cookie-consent="tracking">
 
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
-</script>
-<style>html{ scroll-behavior: smooth; }</style>
-
-
-<link rel="stylesheet" href="../../style/custom.css">
+</script><script type="text/javascript" charset="UTF-8">
+document.addEventListener('DOMContentLoaded', function () {
+cookieconsent.run({
+  "notice_banner_type":"headline",
+  "consent_type":"express",
+  "palette":"light",
+  "language":"en",
+  "page_load_consent_levels":["strictly-necessary"],
+  "notice_banner_reject_button_hide":false,
+  "preferences_center_close_button_hide":false,
+  "website_name":""
+  ,
+"language":"it"
+  });
+});
+</script><style>html{ scroll-behavior: smooth; }</style>
+<link href="../../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="../../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<meta property="og:title" content="14&nbsp; Pulizia dei dati – Analisi esplorativa dei dati in psicologia">
+<meta property="og:description" content="Dai dati grezzi a un dataset documentato">
+<meta property="og:site_name" content="Analisi esplorativa dei dati in psicologia">
+<meta name="twitter:title" content="14&nbsp; Pulizia dei dati – Analisi esplorativa dei dati in psicologia">
+<meta name="twitter:description" content="Dai dati grezzi a un dataset documentato">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://ccaudek.github.io/utet-eda/chapters/eda/02_data_cleaning.html">
 </head>
-
 <body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
       const mode = bsSheetEl.getAttribute("data-mode");
@@ -290,7 +283,8 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
       }
     };
     const authorPrefersDark = false;
-    const darkModeDefault = authorPrefersDark;
+    const queryPrefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    const darkModeDefault = queryPrefersDark.matches;
       document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
       document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
     let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
@@ -303,6 +297,14 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
       toggleGiscusIfUsed(toAlternate, darkModeDefault);
       window.dispatchEvent(new Event('resize'));
     };
+    queryPrefersDark.addEventListener("change", e => {
+      if(window.localStorage.getItem("quarto-color-scheme") !== null)
+        return;
+      const alternate = e.matches
+      toggleColorMode(alternate);
+      localAlternateSentinel = e.matches ? 'alternate' : 'default'; // this is used alongside local storage!
+      toggleGiscusIfUsed(alternate, darkModeDefault);
+    });
     // Switch to dark mode if need be
     if (hasAlternateSentinel()) {
       toggleColorMode(true);
@@ -312,47 +314,37 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
   </script>
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav">
-    <div class="container-fluid d-flex">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/02_data_cleaning.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Flusso di lavoro per la pulizia dei dati</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/02_data_cleaning.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulizia dei dati</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Ricerca" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
-  </nav>
-</header>
-<!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="../../">Analisi esplorativa dei dati in psicologia</a> 
         <div class="sidebar-tools-main tools-wide">
-    <a href="https://github.com/ccaudek/utet-eda/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/ccaudek/utet-eda/" title="Eseguire il codice" class="quarto-navigation-tool px-1" aria-label="Eseguire il codice"><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Attiva/disattiva la modalità oscura"><i class="bi"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Attiva/disattiva la modalità lettore">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
   </div>
 </a>
+    <div id="quarto-search" class="quarto-navigation-tool px-1" title="Ricerca"></div>
 </div>
     </div>
       </div>
-        <div class="mt-2 flex-shrink-0 align-items-center">
-        <div class="sidebar-search">
-        <div id="quarto-search" class="" title="Ricerca"></div>
-        </div>
-        </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Analisi esplorativa dei dati in psicologia</span></span></a>
@@ -372,8 +364,8 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/02_key_notions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Concetti chiave</span></span></a>
@@ -382,7 +374,7 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/03_design.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Campionamento, metodologia sperimentale e studi osservazionali</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Disegno di ricerca: quali conclusioni sono giustificate dai dati?</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -398,7 +390,7 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../chapters/R/introduction_r_lang.html" class="sidebar-item-text sidebar-link">
@@ -407,57 +399,51 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/01_r_syntax.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Un approccio moderno all’analisi dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sintassi minima per leggere codice R</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/02_environment.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">L’ambiente di programmazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Ambiente di lavoro e progetti R</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/03_utility_functions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Funzioni di utilità</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../chapters/R/04_r_programming.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Programmazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Dal file alla tabella controllata</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/05_dplyr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Usare <code>dplyr</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Trasformare i dati con <code>dplyr</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/06_ggplot2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Visualizzazione dei dati con ggplot2</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Visualizzare i dati con <code>ggplot2</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/07_quarto.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Quarto</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quarto</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/08_r_packages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Pacchetti</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Pacchetti</span></span></a>
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../chapters/eda/introduction_eda.html" class="sidebar-item-text sidebar-link">
@@ -466,63 +452,63 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/01_project_structure.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Il ciclo di vita di un progetto di analisi dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Organizzare un progetto di analisi dei dati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/02_data_cleaning.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Flusso di lavoro per la pulizia dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulizia dei dati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/03_exploring_univariate_data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Esplorare distribuzioni univariate</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Esplorare una variabile alla volta</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/05_data_visualization_principles.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Principi della visualizzazione scientifica</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Principi della visualizzazione dei dati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/06_loc_scale.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Indicatori di tendenza centrale e variabilità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Indicatori di tendenza centrale e variabilità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/07_introduction_normal_distribution.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Introduzione alla distribuzione normale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Introduzione alla distribuzione normale</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/08_correlation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Relazioni tra variabili</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Relazioni tra variabili</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/09_causality_intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Dalla correlazione alla causalità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Dalla correlazione alla causalità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/11_outlier.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Outlier</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Valori inattesi e outlier</span></span></a>
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
@@ -531,45 +517,42 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/epiloque/epiloque.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Considerazioni conclusive</span></a>
   </div>
 </li>
       </ul>
-  </li>
+</li>
     </ul>
-    </div>
-</nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Sommario</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="2"><h2 id="toc-title">Sommario</h2>
    
   <ul class="collapse">
-  <li><a href="#perché-la-pulizia-dei-dati-è-cruciale" id="toc-perché-la-pulizia-dei-dati-è-cruciale" class="nav-link active" data-scroll-target="#perché-la-pulizia-dei-dati-è-cruciale">Perché la pulizia dei dati è cruciale</a></li>
-  <li><a href="#un-framework-operativo-in-quattro-fasi" id="toc-un-framework-operativo-in-quattro-fasi" class="nav-link" data-scroll-target="#un-framework-operativo-in-quattro-fasi"><span class="header-section-number">15.1</span> Un framework operativo in quattro fasi</a></li>
-  <li><a href="#checklist-operativa" id="toc-checklist-operativa" class="nav-link" data-scroll-target="#checklist-operativa"><span class="header-section-number">15.2</span> Checklist operativa</a></li>
-  <li><a href="#caso-di-studio-questionario-di-math-self-efficacy" id="toc-caso-di-studio-questionario-di-math-self-efficacy" class="nav-link" data-scroll-target="#caso-di-studio-questionario-di-math-self-efficacy"><span class="header-section-number">15.3</span> Caso di studio: questionario di <em>Math Self-Efficacy</em></a></li>
-  <li><a href="#sec-ispeziona" id="toc-sec-ispeziona" class="nav-link" data-scroll-target="#sec-ispeziona"><span class="header-section-number">15.4</span> FASE 1 · Ispeziona</a></li>
-  <li><a href="#sec-pulisci" id="toc-sec-pulisci" class="nav-link" data-scroll-target="#sec-pulisci"><span class="header-section-number">15.5</span> FASE 2 · Pulisci</a></li>
-  <li><a href="#sec-valida" id="toc-sec-valida" class="nav-link" data-scroll-target="#sec-valida"><span class="header-section-number">15.6</span> FASE 3 · Valida</a></li>
-  <li><a href="#sec-documenta" id="toc-sec-documenta" class="nav-link" data-scroll-target="#sec-documenta"><span class="header-section-number">15.7</span> FASE 4 · Documenta</a></li>
-  <li><a href="#criteri-di-qualità-finale" id="toc-criteri-di-qualità-finale" class="nav-link" data-scroll-target="#criteri-di-qualità-finale"><span class="header-section-number">15.8</span> Criteri di qualità finale</a></li>
-  </ul>
-<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/eda/02_data_cleaning.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
+<li><a href="#perch%C3%A9-questo-capitolo" id="toc-perché-questo-capitolo" class="nav-link active" data-scroll-target="#perch%C3%A9-questo-capitolo"><span class="header-section-number">14.1</span> Perché questo capitolo</a></li>
+  <li><a href="#la-logica-generale-quattro-fasi" id="toc-la-logica-generale-quattro-fasi" class="nav-link" data-scroll-target="#la-logica-generale-quattro-fasi"><span class="header-section-number">14.2</span> La logica generale: quattro fasi</a></li>
+  <li><a href="#un-esempio-ricorrente-stress-e-sonno" id="toc-un-esempio-ricorrente-stress-e-sonno" class="nav-link" data-scroll-target="#un-esempio-ricorrente-stress-e-sonno"><span class="header-section-number">14.3</span> Un esempio ricorrente: stress e sonno</a></li>
+  <li><a href="#prima-regola-separare-dati-grezzi-e-dati-puliti" id="toc-prima-regola-separare-dati-grezzi-e-dati-puliti" class="nav-link" data-scroll-target="#prima-regola-separare-dati-grezzi-e-dati-puliti"><span class="header-section-number">14.4</span> Prima regola: separare dati grezzi e dati puliti</a></li>
+  <li><a href="#fase-1-ispeziona" id="toc-fase-1-ispeziona" class="nav-link" data-scroll-target="#fase-1-ispeziona"><span class="header-section-number">14.5</span> Fase 1: ispeziona</a></li>
+  <li><a href="#fase-2-pulisci" id="toc-fase-2-pulisci" class="nav-link" data-scroll-target="#fase-2-pulisci"><span class="header-section-number">14.6</span> Fase 2: pulisci</a></li>
+  <li><a href="#fase-3-valida" id="toc-fase-3-valida" class="nav-link" data-scroll-target="#fase-3-valida"><span class="header-section-number">14.7</span> Fase 3: valida</a></li>
+  <li><a href="#fase-4-documenta" id="toc-fase-4-documenta" class="nav-link" data-scroll-target="#fase-4-documenta"><span class="header-section-number">14.8</span> Fase 4: documenta</a></li>
+  <li><a href="#usare-lai-con-criterio" id="toc-usare-lai-con-criterio" class="nav-link" data-scroll-target="#usare-lai-con-criterio"><span class="header-section-number">14.9</span> Usare l’AI con criterio</a></li>
+  <li><a href="#checklist-finale" id="toc-checklist-finale" class="nav-link" data-scroll-target="#checklist-finale"><span class="header-section-number">14.10</span> Checklist finale</a></li>
+  <li><a href="#collegamento-con-il-capitolo-successivo" id="toc-collegamento-con-il-capitolo-successivo" class="nav-link" data-scroll-target="#collegamento-con-il-capitolo-successivo"><span class="header-section-number">14.11</span> Collegamento con il capitolo successivo</a></li>
+  </ul><div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/eda/02_data_cleaning.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/02_data_cleaning.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Flusso di lavoro per la pulizia dei dati</span></a></li></ol></nav>
-<div class="quarto-title">
-<h1 class="title"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Flusso di lavoro per la pulizia dei dati</span></h1>
-<p class="subtitle lead">Dal caos al dataset analizzabile</p>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/02_data_cleaning.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulizia dei dati</span></a></li></ol></nav><div class="quarto-title">
+<h1 class="title">
+<span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulizia dei dati</span>
+</h1>
+<p class="subtitle lead">Dai dati grezzi a un dataset documentato</p>
 </div>
 
 
@@ -583,16 +566,11 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
   
 
 
-</header>
-
-
-<section id="perché-la-pulizia-dei-dati-è-cruciale" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="perché-la-pulizia-dei-dati-è-cruciale">Perché la pulizia dei dati è cruciale</h2>
-<blockquote class="blockquote">
-<p><em>“Data scientists spend 80% of their time cleaning data and 20% complaining about cleaning data.”</em> — Anonimo (ma tristemente accurato)</p>
-</blockquote>
-<p>Sebbene la fase più gratificante di un’analisi sia quella di trarre conclusioni e rispondere alle domande di ricerca, è innegabile che la parte più sostanziosa del lavoro risieda nella preparazione e nella pulizia dei dati. Questo passaggio, talvolta considerato “di routine”, è in realtà il fondamento di qualsiasi studio valido, poiché ne determina in modo decisivo la qualità, l’affidabilità e la chiarezza interpretativa.</p>
-<p>Trascurare o svolgere frettolosamente la pulizia dei dati può compromettere l’intero processo analitico. Un dataset non accuratamente curato può generare risultati distorti, introdurre errori difficili da individuare a posteriori e, soprattutto, portare a conclusioni fuorvianti o errate. Investire tempo in questa fase non è quindi una mera formalità, ma una scelta metodologica essenziale per garantire rigore e credibilità ai propri risultati.</p>
+</header><section id="perché-questo-capitolo" class="level2" data-number="14.1"><h2 data-number="14.1" class="anchored" data-anchor-id="perché-questo-capitolo">
+<span class="header-section-number">14.1</span> Perché questo capitolo</h2>
+<p>L’analisi esplorativa dei dati precede la creazione di grafici e statistiche descrittive. Inizia quando apriamo un file e ci chiediamo se i dati in esso contenuti sono comprensibili, coerenti e pertinenti alla domanda di ricerca.</p>
+<p>La pulizia dei dati non è una fase puramente tecnica. Ogni correzione, esclusione, ricodifica o trasformazione è una <strong>decisione metodologica</strong>. Alcune decisioni sono semplici, come correggere un nome di variabile scritto in modo incoerente. Altre decisioni sono più delicate, come ad esempio cosa fare con i valori mancanti, le risposte impossibili o le osservazioni duplicate.</p>
+<p>In questo capitolo useremo un principio semplice:</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -603,651 +581,427 @@ gtag('config', 'G-QT5S3P9D31', { 'anonymize_ip': true});
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Non modificare mai i dati originali.</strong> Lavora esclusivamente su copie e conserva sempre i dati grezzi intatti nella cartella <code>data/raw/</code>.</p>
+<p><strong>Non modificare mai i dati grezzi.</strong></p>
+<p>I dati originali devono restare intatti. Tutte le trasformazioni devono essere eseguite tramite codice e salvate in un nuovo file documentato.</p>
 </div>
 </div>
-</section>
-<section id="prerequisiti" class="level2 unnumbered unlisted">
-<h2 class="unnumbered unlisted anchored" data-anchor-id="prerequisiti">Prerequisiti</h2>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Consiglio</span>Letture consigliate
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
+<p>Al termine del capitolo dovresti essere in grado di:</p>
 <ul>
-<li>Lewis, C. — <a href="https://cghlewis.com/blog/data_clean_03/">Cleaning sample data in standardized way</a>.</li>
-<li><span class="citation" data-cites="buchanan2021getting">Buchanan et al. (<a href="#ref-buchanan2021getting" role="doc-biblioref">2021</a>)</span> — <a href="https://journals.sagepub.com/doi/full/10.1177/2515245920928007">Getting Started Creating Data Dictionaries: How to Create a Shareable Data Set</a>.</li>
-<li><a href="https://datamgmtinedresearch.com/document#document-dictionary"><em>Data Management in Large-Scale Education Research</em></a> — capitolo “Documentation”.</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-caution callout-titled" title="Preparazione del Notebook">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Attenzione</span>Preparazione del Notebook
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"code"</span>, <span class="st">"_common.R"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">source</span>()</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load packages</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">"pacman"</span>)) <span class="fu">install.packages</span>(<span class="st">"pacman"</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(janitor, skimr, pointblank, mice, labelled, stringr)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="un-framework-operativo-in-quattro-fasi" class="level2" data-number="15.1">
-<h2 data-number="15.1" class="anchored" data-anchor-id="un-framework-operativo-in-quattro-fasi"><span class="header-section-number">15.1</span> Un framework operativo in quattro fasi</h2>
-<p>Per affrontare in modo sistematico la fase di pulizia dei dati, non ci limiteremo a un elenco frammentario di operazioni, ma adotteremo un <strong>quadro strutturato organizzato in quattro macro-fasi</strong>:</p>
-<ol type="1">
-<li><strong>Ispeziona</strong>: comprendere la struttura, il contenuto e le caratteristiche iniziali del dataset.</li>
-<li><strong>Pulisci</strong>: correggere errori strutturali, formati errati e incongruenze semantiche.</li>
-<li><strong>Valida</strong>: verificare che i dati rispettino vincoli, regole di dominio e coerenza interna.</li>
-<li><strong>Documenta</strong>: garantire trasparenza, riproducibilità e facilità di manutenzione futura.</li>
-</ol>
+<li>distinguere i dati grezzi da quelli puliti;</li>
+<li>ispezionare la struttura iniziale di un dataset;</li>
+<li>riconoscere i problemi più comuni dei dati;</li>
+<li>applicare semplici operazioni di pulizia;</li>
+<li>verificare che il dataset pulito sia coerente;</li>
+<li>documentare le decisioni prese durante la pulizia;</li>
+<li>valutare criticamente il codice di pulizia prodotto con l’aiuto dell’AI.</li>
+</ul></section><section id="la-logica-generale-quattro-fasi" class="level2" data-number="14.2"><h2 data-number="14.2" class="anchored" data-anchor-id="la-logica-generale-quattro-fasi">
+<span class="header-section-number">14.2</span> La logica generale: quattro fasi</h2>
+<p>Useremo una sequenza in quattro fasi.</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
 <col style="width: 33%">
 </colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Fase</th>
-<th style="text-align: left;">Obiettivo principale</th>
-<th style="text-align: left;">Strumenti e approcci tipici</th>
-</tr>
-</thead>
+<thead><tr class="header">
+<th>Fase</th>
+<th>Domanda guida</th>
+<th>Obiettivo</th>
+</tr></thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;"><strong>Ispeziona</strong></td>
-<td style="text-align: left;">Acquisire una comprensione iniziale della struttura e dei contenuti dei dati.</td>
-<td style="text-align: left;"><code>glimpse()</code>, <code>skim()</code>, <code>summary()</code>, esplorazione visiva.</td>
+<td><strong>Ispeziona</strong></td>
+<td>Che cosa contiene il file?</td>
+<td>Capire struttura, variabili, tipi di dato e problemi iniziali.</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;"><strong>Pulisci</strong></td>
-<td style="text-align: left;">Correggere errori formali, standardizzare valori e risolvere problemi di qualità.</td>
-<td style="text-align: left;"><code>janitor</code>, <code>dplyr</code>/<code>tidyr</code>, tecniche di imputazione (es. <code>mice</code>).</td>
+<td><strong>Pulisci</strong></td>
+<td>Che cosa deve essere corretto?</td>
+<td>Rinominare, ricodificare, gestire duplicati, missing e formati errati.</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;"><strong>Valida</strong></td>
-<td style="text-align: left;">Assicurarsi che i dati puliti rispettino regole di business e vincoli attesi.</td>
-<td style="text-align: left;">Pacchetto <code>pointblank</code>, assertazioni logiche, controlli incrociati.</td>
+<td><strong>Valida</strong></td>
+<td>Il dataset è coerente?</td>
+<td>Controllare che i valori rispettino vincoli plausibili.</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;"><strong>Documenta</strong></td>
-<td style="text-align: left;">Rendere esplicite tutte le trasformazioni e le scelte effettuate per garantire riproducibilità.</td>
-<td style="text-align: left;">README del progetto, dizionario dati, commenti nel codice, script annotati.</td>
+<td><strong>Documenta</strong></td>
+<td>Che cosa è stato fatto?</td>
+<td>Rendere esplicite e riproducibili tutte le decisioni.</td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="checklist-operativa" class="level2" data-number="15.2">
-<h2 data-number="15.2" class="anchored" data-anchor-id="checklist-operativa"><span class="header-section-number">15.2</span> Checklist operativa</h2>
-<p>Prima di procedere con l’analisi dei dati, è fondamentale condurre una verifica sistematica della loro qualità. Il controllo può essere organizzato attorno ai seguenti ambiti chiave:</p>
-<div class="callout callout-style-default callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Nota</span>Checklist di data cleaning
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><strong>Struttura</strong> Verificare che il dataset abbia la forma attesa: numero di righe e colonne conforme alle previsioni, nomi delle variabili chiari, consistenti e ben formattati, e file salvato in un formato corretto e leggibile.</p>
-<p><strong>Completezza</strong> Identificare e gestire dati duplicati, valori mancanti (sia espliciti che impliciti) e record incompleti o parziali che potrebbero inficiare l’analisi.</p>
-<p><strong>Validità</strong> Accertarsi che ogni variabile sia del tipo corretto (numerico, testuale, data, ecc.), che i valori rientrino in intervalli o range plausibili, e che le categorie utilizzate siano tutte valide e coerenti.</p>
-<p><strong>Coerenza</strong> Controllare l’uniformità nelle unità di misura, la consistenza nei formati di data e ora, e l’effettiva univocità degli identificatori.</p>
-<p><strong>Privacy e etica</strong> Applicare i necessari trattamenti per la protezione dei dati personali, rimuovendo o anonimizzando le informazioni identificative, e garantire la conformità con il consenso informato ottenuto e con la normativa vigente, come il GDPR.</p>
-</div>
-</div>
-</section>
-<section id="caso-di-studio-questionario-di-math-self-efficacy" class="level2" data-number="15.3">
-<h2 data-number="15.3" class="anchored" data-anchor-id="caso-di-studio-questionario-di-math-self-efficacy"><span class="header-section-number">15.3</span> Caso di studio: questionario di <em>Math Self-Efficacy</em></h2>
-<p>Per illustrare in pratica il processo di pulizia dei dati, utilizzeremo un dataset realistico proveniente da uno <strong>studio longitudinale randomizzato e controllato (RCT)</strong>. La ricerca ha coinvolto diverse scuole, assegnate casualmente a un gruppo di trattamento o di controllo, ed è stato somministrato un questionario per valutare l’autoefficacia in matematica, composto da quattro item con risposte su scala Likert da 1 a 4.</p>
-<p>I dati, raccolti inizialmente su carta e successivamente digitalizzati, presentano le tipiche imperfezioni di questo tipo di acquisizione. Il nostro obiettivo è applicare il framework presentato per pulire e preparare i dati della <strong>prima rilevazione</strong> dello studio.</p>
-<section id="struttura-del-progetto" class="level3" data-number="15.3.1">
-<h3 data-number="15.3.1" class="anchored" data-anchor-id="struttura-del-progetto"><span class="header-section-number">15.3.1</span> Struttura del progetto</h3>
-<p>Il lavoro è organizzato per garantire trasparenza e riproducibilità:</p>
-<pre><code>project/
-├── data/
-│   ├── raw/        # Dati originali e immutabili
-│   └── processed/  # Dataset puliti e pronti per l'analisi
-├── scripts/
-│   └── 01_data_cleaning.R  # Codice di pulizia
-└── README.md                # Documentazione del progetto</code></pre>
-</section>
-</section>
-<section id="sec-ispeziona" class="level2" data-number="15.4">
-<h2 data-number="15.4" class="anchored" data-anchor-id="sec-ispeziona"><span class="header-section-number">15.4</span> FASE 1 · Ispeziona</h2>
-<section id="importazione-e-primo-controllo" class="level3" data-number="15.4.1">
-<h3 data-number="15.4.1" class="anchored" data-anchor-id="importazione-e-primo-controllo"><span class="header-section-number">15.4.1</span> Importazione e primo controllo</h3>
-<p>Il primo passo consiste nell’importare i dati grezzi e osservarne la struttura di base.</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>svy_raw <span class="ot">&lt;-</span> rio<span class="sc">::</span><span class="fu">import</span>(</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"w1_mathproj_stu_svy_raw.csv"</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(svy_raw)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Rows: 6</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: 7</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ stu_id      &lt;int&gt; 1347, 1368, 1377, 1387, 1347, 1399</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ svy_date    &lt;IDate&gt; 2023-02-13, 2023-02-13, 2023-02-13, 2023-02-13, 2023-02-14…</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ grade_level &lt;int&gt; 9, 10, 9, 11, 9, 12</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ math1       &lt;int&gt; 2, 3, 4, 3, 2, 4</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ math2       &lt;chr&gt; "1", "2", "\n4", "3", "2", "1"</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ math3       &lt;int&gt; 3, 2, 4, NA, 4, 3</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ math4       &lt;int&gt; 3, 2, 4, NA, 2, 1</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>In questa fase è utile porsi alcune domande guida: il numero di osservazioni è plausibile rispetto al disegno di studio? Le variabili presenti corrispondono a quelle previste dal questionario? I tipi di dato (numerico, testuale, data) sono quelli attesi?</p>
-</section>
-<section id="esplorazione-sintetica" class="level3" data-number="15.4.2">
-<h3 data-number="15.4.2" class="anchored" data-anchor-id="esplorazione-sintetica"><span class="header-section-number">15.4.2</span> Esplorazione sintetica</h3>
-<p>Per avere una panoramica più dettagliata si utilizza una funzione di riepilogo esplorativo.</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">skim</span>(svy_raw)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small">
-<caption>Data summary</caption>
+<p>Questa sequenza non va intesa come una ricetta rigida. Nella pratica si torna spesso indietro: un controllo può rivelare un problema che richiede una nuova correzione. L’importante è che il processo sia trasparente.</p>
+</section><section id="un-esempio-ricorrente-stress-e-sonno" class="level2" data-number="14.3"><h2 data-number="14.3" class="anchored" data-anchor-id="un-esempio-ricorrente-stress-e-sonno">
+<span class="header-section-number">14.3</span> Un esempio ricorrente: stress e sonno</h2>
+<p>Supponiamo di aver raccolto dati da studenti universitari per studiare la relazione tra stress accademico e qualità del sonno. Il file grezzo contiene una riga per ogni studente e le seguenti variabili:</p>
+<table class="caption-top table">
+<thead><tr class="header">
+<th>Variabile</th>
+<th>Significato atteso</th>
+</tr></thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Name</td>
-<td style="text-align: left;">svy_raw</td>
+<td><code>id</code></td>
+<td>Identificatore anonimo dello studente</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Number of rows</td>
-<td style="text-align: left;">6</td>
+<td><code>eta</code></td>
+<td>Età in anni</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Number of columns</td>
-<td style="text-align: left;">7</td>
+<td><code>genere</code></td>
+<td>Categoria dichiarata dallo studente</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">_______________________</td>
-<td style="text-align: left;"></td>
+<td><code>stress</code></td>
+<td>Punteggio di stress accademico, da 1 a 10</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Column type frequency:</td>
-<td style="text-align: left;"></td>
+<td><code>sonno_ore</code></td>
+<td>Ore medie di sonno per notte</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">character</td>
-<td style="text-align: left;">1</td>
+<td><code>qualita_sonno</code></td>
+<td>Valutazione soggettiva del sonno, da 1 a 5</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Date</td>
-<td style="text-align: left;">1</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">numeric</td>
-<td style="text-align: left;">5</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">________________________</td>
-<td style="text-align: left;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Group variables</td>
-<td style="text-align: left;">None</td>
+<td><code>data_compilazione</code></td>
+<td>Data di compilazione del questionario</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Variable type: character</strong></p>
-<table class="caption-top table table-sm table-striped small">
-<colgroup>
-<col style="width: 19%">
-<col style="width: 13%">
-<col style="width: 19%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 8%">
-<col style="width: 12%">
-<col style="width: 15%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;">skim_variable</th>
-<th style="text-align: right;">n_missing</th>
-<th style="text-align: right;">complete_rate</th>
-<th style="text-align: right;">min</th>
-<th style="text-align: right;">max</th>
-<th style="text-align: right;">empty</th>
-<th style="text-align: right;">n_unique</th>
-<th style="text-align: right;">whitespace</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">math2</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">0</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Variable type: Date</strong></p>
-<table class="caption-top table table-sm table-striped small">
-<colgroup>
-<col style="width: 17%">
-<col style="width: 12%">
-<col style="width: 17%">
-<col style="width: 13%">
-<col style="width: 13%">
-<col style="width: 13%">
-<col style="width: 11%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;">skim_variable</th>
-<th style="text-align: right;">n_missing</th>
-<th style="text-align: right;">complete_rate</th>
-<th style="text-align: left;">min</th>
-<th style="text-align: left;">max</th>
-<th style="text-align: left;">median</th>
-<th style="text-align: right;">n_unique</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">svy_date</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: left;">2023-02-13</td>
-<td style="text-align: left;">2023-02-14</td>
-<td style="text-align: left;">2023-02-13</td>
-<td style="text-align: right;">2</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Variable type: numeric</strong></p>
-<table class="caption-top table table-sm table-striped small">
-<colgroup>
-<col style="width: 15%">
-<col style="width: 11%">
-<col style="width: 15%">
-<col style="width: 7%">
-<col style="width: 6%">
-<col style="width: 5%">
-<col style="width: 8%">
-<col style="width: 7%">
-<col style="width: 8%">
-<col style="width: 5%">
-<col style="width: 6%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;">skim_variable</th>
-<th style="text-align: right;">n_missing</th>
-<th style="text-align: right;">complete_rate</th>
-<th style="text-align: right;">mean</th>
-<th style="text-align: right;">sd</th>
-<th style="text-align: right;">p0</th>
-<th style="text-align: right;">p25</th>
-<th style="text-align: right;">p50</th>
-<th style="text-align: right;">p75</th>
-<th style="text-align: right;">p100</th>
-<th style="text-align: left;">hist</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">stu_id</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">1370.8</td>
-<td style="text-align: right;">21.15</td>
-<td style="text-align: right;">1347</td>
-<td style="text-align: right;">1352.25</td>
-<td style="text-align: right;">1372.5</td>
-<td style="text-align: right;">1384.50</td>
-<td style="text-align: right;">1399</td>
-<td style="text-align: left;">▇▁▇▃▃</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">grade_level</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">10.0</td>
-<td style="text-align: right;">1.26</td>
-<td style="text-align: right;">9</td>
-<td style="text-align: right;">9.00</td>
-<td style="text-align: right;">9.5</td>
-<td style="text-align: right;">10.75</td>
-<td style="text-align: right;">12</td>
-<td style="text-align: left;">▇▂▁▂▂</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">math1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">3.0</td>
-<td style="text-align: right;">0.89</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">2.25</td>
-<td style="text-align: right;">3.0</td>
-<td style="text-align: right;">3.75</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: left;">▇▁▇▁▇</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">math3</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0.83</td>
-<td style="text-align: right;">3.2</td>
-<td style="text-align: right;">0.84</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">3.00</td>
-<td style="text-align: right;">3.0</td>
-<td style="text-align: right;">4.00</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: left;">▃▁▇▁▇</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">math4</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0.83</td>
-<td style="text-align: right;">2.4</td>
-<td style="text-align: right;">1.14</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">2.00</td>
-<td style="text-align: right;">2.0</td>
-<td style="text-align: right;">3.00</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: left;">▃▇▁▃▃</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>È importante prestare attenzione a: quantità e distribuzione dei valori mancanti; valori minimi e massimi di ciascuna variabile; eventuali pattern insoliti o sospetti.</p>
+<p>Questo esempio ci accompagnerà nei capitoli successivi: prima controlleremo il dataset, poi esploreremo le singole variabili, visualizzeremo le distribuzioni, esamineremo la variabilità e, infine, studieremo le associazioni tra le variabili.</p>
+</section><section id="prima-regola-separare-dati-grezzi-e-dati-puliti" class="level2" data-number="14.4"><h2 data-number="14.4" class="anchored" data-anchor-id="prima-regola-separare-dati-grezzi-e-dati-puliti">
+<span class="header-section-number">14.4</span> Prima regola: separare dati grezzi e dati puliti</h2>
+<p>Una struttura minima del progetto potrebbe essere:</p>
+<pre class="text"><code>progetto_eda/
+├── data_raw/       # dati originali, mai modificati
+├── data_clean/     # dati puliti prodotti dal codice
+├── reports/        # file Quarto e report finali
+└── scripts/        # eventuali script R separati</code></pre>
+<p>I dati grezzi devono essere conservati in <code>data_raw/</code>. Il dataset pulito deve essere salvato in <code>data_clean/</code>. In questo modo, se qualcosa va storto, è sempre possibile ricostruire il percorso dall’inizio.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Avviso</span>Segnali di allarme comuni
+<span class="screen-reader-only">Avviso</span>Errore comune
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Durante l’ispezione, alcuni elementi richiedono particolare cautela:</p>
+<p>Aprire un file <code>.csv</code> in Excel, correggere qualche cella manualmente e salvare il file sopra quello originale sembra un’operazione veloce, ma rende difficile verificare l’analisi.</p>
+<p>La domanda da porsi è: <strong>Un’altra persona potrebbe ricostruire esattamente ciò che ho fatto?</strong></p>
+</div>
+</div>
+</section><section id="fase-1-ispeziona" class="level2" data-number="14.5"><h2 data-number="14.5" class="anchored" data-anchor-id="fase-1-ispeziona">
+<span class="header-section-number">14.5</span> Fase 1: ispeziona</h2>
+<p>La prima cosa da fare è guardare il dataset senza modificarlo.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://readr.tidyverse.org">readr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">stress_raw</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="st">"data_raw/stress_sonno.csv"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">stress_raw</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>In questa fase non cerchiamo ancora di correggere tutto. Cerchiamo piuttosto di capire che cosa abbiamo davanti.</p>
+<p>Domande utili:</p>
 <ul>
-<li>Nomi di colonne generici (es. <code>X1</code>, <code>V2</code>);</li>
-<li>Presenza di righe duplicate identiche;</li>
-<li>Uso di codici speciali per indicare valori mancanti (es. <code>999</code>, <code>-99</code>, <code>"NULL"</code>);</li>
-<li>Date importate come testo anziché come oggetti data.</li>
+<li>Il numero di righe è plausibile?</li>
+<li>Le variabili attese sono presenti?</li>
+<li>I nomi delle colonne sono comprensibili?</li>
+<li>Le variabili numeriche sono state importate come numeriche?</li>
+<li>Le categorie sono scritte in modo coerente?</li>
+<li>Ci sono codici speciali per i valori mancanti, come <code>999</code>, <code>-99</code>, <code>NA</code>, <code>N/A</code>, <code>non so</code>?</li>
+</ul>
+<p>Un controllo iniziale può essere effettuato con funzioni semplici.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">stress_raw</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">stress_raw</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">stress_raw</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">stress_raw</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Se usi pacchetti come <code>skimr</code>, puoi ottenere una panoramica più ricca.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">skimr</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/skimr/reference/skim.html">skim</a></span><span class="op">(</span><span class="va">stress_raw</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Che cosa guardare subito
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Durante l’ispezione iniziale presta attenzione soprattutto a:</p>
+<ul>
+<li>valori mancanti;</li>
+<li>valori impossibili, come <code>stress = 99</code> su una scala da 1 a 10;</li>
+<li>categorie duplicate per errore, come <code>F</code>, <code>femmina</code>, <code>Femmina</code>;</li>
+<li>date lette come testo;</li>
+<li>variabili numeriche lette come caratteri;</li>
+<li>righe duplicate;</li>
+<li>colonne che contengono informazioni identificative.</li>
 </ul>
 </div>
 </div>
-</section>
-</section>
-<section id="sec-pulisci" class="level2" data-number="15.5">
-<h2 data-number="15.5" class="anchored" data-anchor-id="sec-pulisci"><span class="header-section-number">15.5</span> FASE 2 · Pulisci</h2>
-<p>La pulizia deve essere eseguita seguendo un <strong>ordine logico</strong>, per evitare di introdurre nuovi errori durante la correzione di quelli esistenti.</p>
-<section id="gestione-dei-duplicati" class="level3" data-number="15.5.1">
-<h3 data-number="15.5.1" class="anchored" data-anchor-id="gestione-dei-duplicati"><span class="header-section-number">15.5.1</span> Gestione dei duplicati</h3>
-<p>Se presenti record duplicati, è necessario definirne una gestione esplicita.</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>svy <span class="ot">&lt;-</span> svy_raw <span class="sc">|&gt;</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(svy_date) <span class="sc">|&gt;</span>           <span class="co"># Ordina per data</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(stu_id, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>) <span class="co"># Mantiene l'ultima osservazione per ID</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+</section><section id="fase-2-pulisci" class="level2" data-number="14.6"><h2 data-number="14.6" class="anchored" data-anchor-id="fase-2-pulisci">
+<span class="header-section-number">14.6</span> Fase 2: pulisci</h2>
+<p>Dopo l’ispezione si costruisce una versione pulita del dataset. La pulizia deve avvenire tramite codice, non manualmente.</p>
+<section id="rinominare-le-variabili" class="level3" data-number="14.6.1"><h3 data-number="14.6.1" class="anchored" data-anchor-id="rinominare-le-variabili">
+<span class="header-section-number">14.6.1</span> Rinominare le variabili</h3>
+<p>I nomi chiari riducono gli errori. È utile usare nomi brevi, descrittivi e coerenti.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress</span> <span class="op">&lt;-</span> <span class="va">stress_raw</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">janitor</span><span class="fu">::</span><span class="fu"><a href="https://sfirke.github.io/janitor/reference/clean_names.html">clean_names</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p><strong>Decisione documentata</strong>: in questo caso si è scelto di conservare il record più recente per ogni studente, ordinando per data di compilazione.</p>
-</section>
-<section id="standardizzazione-dei-nomi-delle-variabili" class="level3" data-number="15.5.2">
-<h3 data-number="15.5.2" class="anchored" data-anchor-id="standardizzazione-dei-nomi-delle-variabili"><span class="header-section-number">15.5.2</span> Standardizzazione dei nomi delle variabili</h3>
-<p>Utilizzare nomi chiari e coerenti migliora la leggibilità e previene errori.</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>svy <span class="ot">&lt;-</span> svy <span class="sc">|&gt;</span> janitor<span class="sc">::</span><span class="fu">clean_names</span>()</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Dopo questa operazione è opportuno controllare i nuovi nomi.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">stress</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Il risultato sarà un set di nomi in formato snake_case, tutti in minuscolo e privi di caratteri speciali.</p>
-</section>
-<section id="de-identificazione" class="level3" data-number="15.5.3">
-<h3 data-number="15.5.3" class="anchored" data-anchor-id="de-identificazione"><span class="header-section-number">15.5.3</span> De-identificazione</h3>
-<p>La protezione della privacy è un passaggio imprescindibile. Vanno rimosse tutte le informazioni potenzialmente identificative prima di procedere con l’analisi.</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>svy <span class="ot">&lt;-</span> svy <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">-</span>svy_date)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+</section><section id="eliminare-informazioni-identificative" class="level3" data-number="14.6.2"><h3 data-number="14.6.2" class="anchored" data-anchor-id="eliminare-informazioni-identificative">
+<span class="header-section-number">14.6.2</span> Eliminare informazioni identificative</h3>
+<p>Se il dataset contiene nomi, indirizzi email, matricole o altre informazioni personali, queste devono essere rimosse o sostituite da identificatori anonimi prima dell’analisi.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress</span> <span class="op">&lt;-</span> <span class="va">stress</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">email</span>, <span class="op">-</span><span class="va">nome</span>, <span class="op">-</span><span class="va">cognome</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</section>
-<section id="correzione-dei-tipi-di-dato-e-dei-valori" class="level3" data-number="15.5.4">
-<h3 data-number="15.5.4" class="anchored" data-anchor-id="correzione-dei-tipi-di-dato-e-dei-valori"><span class="header-section-number">15.5.4</span> Correzione dei tipi di dato e dei valori</h3>
-<p>A volte i valori necessitano di pulizia, ad esempio rimuovendo caratteri di formattazione indesiderati.</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>svy <span class="ot">&lt;-</span> svy <span class="sc">|&gt;</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">math2 =</span> <span class="fu">str_remove_all</span>(math2, <span class="st">"</span><span class="sc">\\</span><span class="st">n"</span>), <span class="co"># Rimuove interruzioni di riga</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">math2 =</span> <span class="fu">as.numeric</span>(math2)             <span class="co"># Converte in numero</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Naturalmente questo codice è solo un esempio: le colonne da rimuovere dipendono dal dataset reale.</p>
+</section><section id="gestire-duplicati" class="level3" data-number="14.6.3"><h3 data-number="14.6.3" class="anchored" data-anchor-id="gestire-duplicati">
+<span class="header-section-number">14.6.3</span> Gestire duplicati</h3>
+<p>I duplicati non devono essere eliminati automaticamente. Bisogna prima capire perché esistono.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">n</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</section>
-<section id="gestione-dei-valori-mancanti" class="level3" data-number="15.5.5">
-<h3 data-number="15.5.5" class="anchored" data-anchor-id="gestione-dei-valori-mancanti"><span class="header-section-number">15.5.5</span> Gestione dei valori mancanti</h3>
-<p>Nel nostro caso i valori mancanti sono pochi e il pattern è plausibilmente <em>Missing at Random</em> (MAR).<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Si procede con un’imputazione singola tramite <em>Predictive Mean Matching</em> (PMM).<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>imputed <span class="ot">&lt;-</span> <span class="fu">mice</span>(</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  svy <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">"math"</span>)),</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">m =</span> <span class="dv">1</span>, <span class="at">method =</span> <span class="st">"pmm"</span>, <span class="at">seed =</span> <span class="dv">123</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  iter imp variable</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   1   1  math3  math4</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   2   1  math3  math4</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   3   1  math3  math4</span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   4   1  math3  math4</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   5   1  math3  math4</span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>math_cols <span class="ot">&lt;-</span> svy <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">"math"</span>)) <span class="sc">|&gt;</span> <span class="fu">names</span>()</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>svy[ , math_cols] <span class="ot">&lt;-</span> <span class="fu">complete</span>(imputed) <span class="sc">|&gt;</span> <span class="fu">round</span>()</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Se uno studente ha compilato il questionario due volte, dobbiamo decidere quale riga conservare. Per esempio, potremmo tenere in considerazione l’ultima compilazione.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress</span> <span class="op">&lt;-</span> <span class="va">stress</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">data_compilazione</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html">distinct</a></span><span class="op">(</span><span class="va">id</span>, .keep_all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<p>Questa scelta deve essere documentata. Non è sufficiente scrivere il codice, ma è necessario spiegare perché è stata presa quella decisione.</p>
+</section><section id="ricodificare-valori-incoerenti" class="level3" data-number="14.6.4"><h3 data-number="14.6.4" class="anchored" data-anchor-id="ricodificare-valori-incoerenti">
+<span class="header-section-number">14.6.4</span> Ricodificare valori incoerenti</h3>
+<p>Spesso i dati provenienti dai questionari contengono categorie scritte in modi diversi.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress</span> <span class="op">&lt;-</span> <span class="va">stress</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>    genere <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html">case_when</a></span><span class="op">(</span></span>
+<span>      <span class="va">genere</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"F"</span>, <span class="st">"f"</span>, <span class="st">"Femmina"</span>, <span class="st">"femmina"</span><span class="op">)</span> <span class="op">~</span> <span class="st">"femmina"</span>,</span>
+<span>      <span class="va">genere</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"M"</span>, <span class="st">"m"</span>, <span class="st">"Maschio"</span>, <span class="st">"maschio"</span><span class="op">)</span> <span class="op">~</span> <span class="st">"maschio"</span>,</span>
+<span>      <span class="cn">TRUE</span> <span class="op">~</span> <span class="st">"altro_o_non_indicato"</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Dopo ogni ricodifica è necessario controllare il risultato.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span><span class="op">(</span><span class="va">genere</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section><section id="gestire-valori-mancanti" class="level3" data-number="14.6.5"><h3 data-number="14.6.5" class="anchored" data-anchor-id="gestire-valori-mancanti">
+<span class="header-section-number">14.6.5</span> Gestire valori mancanti</h3>
+<p>I valori mancanti sono una delle parti più delicate della pulizia dei dati. Non indicano sempre la stessa cosa. Una risposta mancante può indicare che lo studente ha saltato la domanda, che la domanda non era pertinente, che c’è stato un errore di inserimento o che il dato è stato rimosso per motivi di privacy.</p>
+<p>Prima di decidere come procedere, è necessario quantificare il problema.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="op">(</span><span class="op">)</span>, <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>A volte i valori mancanti sono codificati con numeri o stringhe particolari.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress</span> <span class="op">&lt;-</span> <span class="va">stress</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>    stress <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/na_if.html">na_if</a></span><span class="op">(</span><span class="va">stress</span>, <span class="fl">999</span><span class="op">)</span>,</span>
+<span>    sonno_ore <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/na_if.html">na_if</a></span><span class="op">(</span><span class="va">sonno_ore</span>, <span class="op">-</span><span class="fl">99</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Attenzione</span>Non cancellare i missing troppo presto
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Molte funzioni R eliminano automaticamente i casi con valori mancanti o richiedono opzioni come <code>na.rm = TRUE</code>.</p>
+<p>Prima di eliminare osservazioni, chiediti:</p>
+<ul>
+<li>quanti casi sto perdendo?</li>
+<li>i casi eliminati sono simili agli altri?</li>
+<li>la perdita di dati può modificare le conclusioni?</li>
+<li>devo dichiarare questa scelta nel report?</li>
+</ul>
+</div>
+</div>
+<p>Per un capitolo introduttivo è sufficiente sapere che esistono diverse strategie: l’esclusione dei casi incompleti, l’analisi dei pattern di missing, l’imputazione semplice e l’imputazione multipla. La scelta dipende dal disegno dello studio, dalla quantità di dati mancanti e dalla plausibilità delle assunzioni.</p>
+<p>In questa sede, l’aspetto più importante non è imparare una tecnica avanzata di imputazione, ma non considerare i valori mancanti come un dettaglio trascurabile.</p>
+</section></section><section id="fase-3-valida" class="level2" data-number="14.7"><h2 data-number="14.7" class="anchored" data-anchor-id="fase-3-valida">
+<span class="header-section-number">14.7</span> Fase 3: valida</h2>
+<p>Dopo la pulizia, è necessario verificare che il dataset rispetti vincoli plausibili.</p>
+<p>Per esempio:</p>
+<ul>
+<li>
+<code>stress</code> deve essere compreso tra 1 e 10;</li>
+<li>
+<code>qualita_sonno</code> deve essere compresa tra 1 e 5;</li>
+<li>
+<code>sonno_ore</code> non deve essere negativa;</li>
+<li>ogni <code>id</code> dovrebbe comparire una sola volta;</li>
+<li>le categorie di <code>genere</code> dovrebbero essere quelle previste.</li>
+</ul>
+<p>Alcuni controlli possono essere eseguiti con semplici filtri.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">stress</span> <span class="op">&lt;</span> <span class="fl">1</span> <span class="op">|</span> <span class="va">stress</span> <span class="op">&gt;</span> <span class="fl">10</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">stress</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">sonno_ore</span> <span class="op">&lt;</span> <span class="fl">0</span> <span class="op">|</span> <span class="va">sonno_ore</span> <span class="op">&gt;</span> <span class="fl">16</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Possiamo anche sintetizzare i controlli in una piccola tabella.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
+<span>    n <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    id_duplicati <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html">n_distinct</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span>,</span>
+<span>    stress_fuori_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">stress</span> <span class="op">&lt;</span> <span class="fl">1</span> <span class="op">|</span> <span class="va">stress</span> <span class="op">&gt;</span> <span class="fl">10</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    sonno_fuori_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">sonno_ore</span> <span class="op">&lt;</span> <span class="fl">0</span> <span class="op">|</span> <span class="va">sonno_ore</span> <span class="op">&gt;</span> <span class="fl">16</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    missing_stress <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">stress</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    missing_sonno <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">sonno_ore</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Per progetti più complessi, è possibile utilizzare pacchetti dedicati alla validazione dei dati. Per questo percorso introduttivo, però, è più importante acquisire l’abitudine al controllo piuttosto che conoscere molti strumenti.</p>
+</section><section id="fase-4-documenta" class="level2" data-number="14.8"><h2 data-number="14.8" class="anchored" data-anchor-id="fase-4-documenta">
+<span class="header-section-number">14.8</span> Fase 4: documenta</h2>
+<p>La documentazione è parte integrante della pulizia, non un’aggiunta finale.</p>
+<p>Per ogni trasformazione importante, il report o lo script dovrebbe spiegare:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead><tr class="header">
+<th>Decisione</th>
+<th>Che cosa documentare</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>Rimozione di duplicati</td>
+<td>Quale criterio è stato usato?</td>
+</tr>
+<tr class="even">
+<td>Ricodifica di categorie</td>
+<td>Quali valori sono stati uniti o rinominati?</td>
+</tr>
+<tr class="odd">
+<td>Gestione dei missing</td>
+<td>Quanti valori mancavano? Come sono stati trattati?</td>
+</tr>
+<tr class="even">
+<td>Esclusione di osservazioni</td>
+<td>Quanti casi sono stati rimossi? Perché?</td>
+</tr>
+<tr class="odd">
+<td>Rimozione di identificatori</td>
+<td>Quali informazioni personali sono state eliminate?</td>
+</tr>
+<tr class="even">
+<td>Salvataggio del dataset pulito</td>
+<td>Dove si trova il file finale?</td>
+</tr>
+</tbody>
+</table>
+<p>Un esempio di annotazione nel report potrebbe essere il seguente.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Esempio di decisione documentata
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Nel dataset grezzo erano presenti 3 studenti con due compilazioni del questionario. Per ciascuno di questi studenti è stata conservata la compilazione più recente, identificata tramite <code>data_compilazione</code>. Dopo questa operazione il dataset contiene una sola riga per studente.</p>
+</div>
+</div>
+<p>Il dataset pulito può essere salvato in <code>data_clean/</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/write_delim.html">write_csv</a></span><span class="op">(</span><span class="va">stress</span>, <span class="st">"data_clean/stress_sonno_clean.csv"</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section><section id="usare-lai-con-criterio" class="level2" data-number="14.9"><h2 data-number="14.9" class="anchored" data-anchor-id="usare-lai-con-criterio">
+<span class="header-section-number">14.9</span> Usare l’AI con criterio</h2>
+<p>L’intelligenza artificiale può essere molto utile per la pulizia dei dati. Può suggerire il codice per importare i file, individuare i duplicati, ricodificare le categorie, calcolare i valori mancanti o produrre controlli di validazione.</p>
+<p>Tuttavia, non può decidere al posto tuo il significato di una risposta mancante, se una riga duplicata sia un errore o se un valore estremo sia impossibile o solo raro.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Consiglio</span>Quando è appropriata l’imputazione multipla?
+<span class="screen-reader-only">Consiglio</span>Prompt utile
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>✔ Per quantità moderate di dati mancanti<br>
-✔ Quando esistono altre variabili correlate per la stima<br>
-✘ Non è adatta se i dati mancanti sono eccessivi<br>
-✘ Va evitata con campioni di dimensioni molto ridotte</p>
+<p>Puoi chiedere all’AI:</p>
+<blockquote class="blockquote">
+<p>Ho un dataset con variabili <code>id</code>, <code>stress</code>, <code>sonno_ore</code>, <code>qualita_sonno</code> e <code>genere</code>. Scrivi il codice R con <code>dplyr</code> per controllare duplicati, valori mancanti e valori fuori range. Non eliminare nulla automaticamente: produci solo tabelle di controllo.</p>
+</blockquote>
+<p>Questo prompt è migliore di:</p>
+<blockquote class="blockquote">
+<p>Pulisci il dataset.</p>
+</blockquote>
+<p>perché chiede controlli espliciti e impedisce trasformazioni automatiche non documentate.</p>
 </div>
 </div>
-</section>
-<section id="aggiunta-di-metadati-ed-etichette" class="level3" data-number="15.5.6">
-<h3 data-number="15.5.6" class="anchored" data-anchor-id="aggiunta-di-metadati-ed-etichette"><span class="header-section-number">15.5.6</span> Aggiunta di metadati ed etichette</h3>
-<p>Arricchire il dataset con metadati lo rende autoesplicativo e più facile da utilizzare nel tempo.</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>svy <span class="ot">&lt;-</span> svy <span class="sc">|&gt;</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_variable_labels</span>(</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">math1 =</span> <span class="st">"Math self-efficacy: item 1"</span>,</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">math2 =</span> <span class="st">"Math self-efficacy: item 2"</span>,</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">math3 =</span> <span class="st">"Math self-efficacy: item 3"</span>,</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">math4 =</span> <span class="st">"Math self-efficacy: item 4"</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-</section>
-<section id="sec-valida" class="level2" data-number="15.6">
-<h2 data-number="15.6" class="anchored" data-anchor-id="sec-valida"><span class="header-section-number">15.6</span> FASE 3 · Valida</h2>
-<p>La validazione consente di verificare formalmente che i dati puliti rispettino i vincoli attesi, prevenendo errori che potrebbero compromettere le analisi successive.</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>agent <span class="ot">&lt;-</span> <span class="fu">create_agent</span>(svy) <span class="sc">|&gt;</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rows_distinct</span>(<span class="fu">vars</span>(stu_id)) <span class="sc">|&gt;</span>          <span class="co"># Gli ID devono essere univoci</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">col_vals_between</span>(<span class="fu">vars</span>(math1<span class="sc">:</span>math4), <span class="dv">1</span>, <span class="dv">4</span>) <span class="sc">|&gt;</span>  <span class="co"># I punteggi devono essere tra 1 e 4</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">interrogate</span>()</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Interpretazione dei risultati:</p>
+<p>Dopo aver ricevuto il codice dall’AI, controlla sempre:</p>
 <ul>
-<li><strong>PASS</strong> → Il dato soddisfa il vincolo e può essere utilizzato.</li>
-<li><strong>FAIL</strong> → È necessario interrompere il processo, individuare la causa del fallimento e correggere il problema.</li>
-</ul>
-</section>
-<section id="sec-documenta" class="level2" data-number="15.7">
-<h2 data-number="15.7" class="anchored" data-anchor-id="sec-documenta"><span class="header-section-number">15.7</span> FASE 4 · Documenta</h2>
-<p>La documentazione non è un’aggiunta opzionale, ma una <strong>parte integrante e cruciale</strong> del processo di pulizia. Comprende la creazione di dataset puliti in formati appropriati (es. <code>.csv</code>, <code>.rds</code>), un dizionario dati dettagliato e un file README che registri tutte le decisioni e le trasformazioni effettuate.</p>
-<p>Un dataset senza una documentazione adeguata diventa rapidamente <strong>inutilizzabile e incomprensibile</strong>, anche per il suo stesso creatore.</p>
-</section>
-<section id="criteri-di-qualità-finale" class="level2" data-number="15.8">
-<h2 data-number="15.8" class="anchored" data-anchor-id="criteri-di-qualità-finale"><span class="header-section-number">15.8</span> Criteri di qualità finale</h2>
-<p>Prima di considerare conclusa la fase di pulizia e di passare all’analisi, assicurati che il tuo dataset soddisfi i seguenti criteri:</p>
+<li>quali righe vengono eliminate;</li>
+<li>quali variabili vengono trasformate;</li>
+<li>quali valori vengono ricodificati;</li>
+<li>se i missing vengono rimossi senza avviso;</li>
+<li>se il codice modifica i dati grezzi;</li>
+<li>se il risultato viene salvato in un nuovo file.</li>
+</ul></section><section id="checklist-finale" class="level2" data-number="14.10"><h2 data-number="14.10" class="anchored" data-anchor-id="checklist-finale">
+<span class="header-section-number">14.10</span> Checklist finale</h2>
+<p>Prima di passare all’analisi esplorativa vera e propria, verifica che:</p>
 <ul>
-<li>✅ <strong>Completo</strong>: gestione appropriata di missing e duplicati.</li>
-<li>✅ <strong>Valido</strong>: i valori rientrano nei range e nelle categorie attese.</li>
-<li>✅ <strong>Coerente</strong>: uniformità di formati, unità di misura e identificatori.</li>
-<li>✅ <strong>De-identificato</strong>: rimozione di informazioni personali sensibili.</li>
-<li>✅ <strong>Documentato</strong>: tutte le scelte sono registrate e riproducibili.</li>
-<li>✅ <strong>Analizzabile</strong>: il dataset è pronto per essere utilizzato nei modelli statistici.</li>
+<li>i dati grezzi siano conservati senza modifiche;</li>
+<li>il dataset pulito sia stato prodotto tramite codice;</li>
+<li>i nomi delle variabili siano chiari e coerenti;</li>
+<li>i tipi di dato siano appropriati;</li>
+<li>i duplicati siano stati controllati;</li>
+<li>i valori mancanti siano stati quantificati;</li>
+<li>i valori fuori range siano stati identificati;</li>
+<li>eventuali esclusioni o ricodifiche siano documentate;</li>
+<li>il dataset pulito sia salvato in una cartella separata;</li>
+<li>il report permetta a un’altra persona di ricostruire il processo.</li>
 </ul>
-<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Consiglio</span>Messaggio chiave
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ul>
-<li>La pulizia dei dati <strong>non è una perdita di tempo</strong>; è il fondamento di un’analisi robusta e credibile.</li>
-<li>Un errore non documentato è molto più pericoloso di un errore esplicito, perché rischia di passare inosservato.</li>
-<li>Un dataset di qualità è, per definizione, <strong>pulito, validato, documentato e riproducibile</strong>.</li>
-</ul>
-</div>
-</div>
-</section>
-<section id="riflessioni-conclusive" class="level2 unnumbered unlisted">
-<h2 class="unnumbered unlisted anchored" data-anchor-id="riflessioni-conclusive">Riflessioni conclusive</h2>
-<p>Nel processo di analisi dei dati, la fase di pulizia e pre-elaborazione è cruciale per garantire la qualità e l’integrità dei risultati finali. Sebbene questa fase possa sembrare meno interessante rispetto all’analisi vera e propria, essa costituisce la base su cui si costruiscono tutte le successive elaborazioni e interpretazioni. Attraverso una serie di passaggi strutturati, come quelli illustrati in questo capitolo, è possibile trasformare dati grezzi e disordinati in un dataset pulito, coerente e pronto per l’analisi. La cura nella gestione dei dati, dalla rimozione di duplicati alla creazione di un dizionario dei dati, è fondamentale per ottenere risultati affidabili e riproducibili.</p>
-<p><strong>Prossimo capitolo</strong>: utilizzeremo questi dati puliti per l’<strong>analisi esplorativa vera e propria</strong>, alla ricerca di pattern, anomalie e ipotesi.</p>
-<div class="callout callout-style-default callout-note callout-titled" title="Informazioni sull'ambiente di sviluppo">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Nota</span>Informazioni sull’ambiente di sviluppo
+<span class="screen-reader-only">Importante</span>Messaggio chiave
 </div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-8" class="callout-8-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; R version 4.6.0 (2026-04-24)</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Platform: aarch64-apple-darwin23</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Running under: macOS Tahoe 26.5.1</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Matrix products: default</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib </span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; locale:</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] C.UTF-8/UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8</span></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; time zone: Europe/Rome</span></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tzcode source: internal</span></span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; attached base packages:</span></span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; other attached packages:</span></span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] stringr_1.6.0         labelled_2.16.0       mice_3.19.0          </span></span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [4] pointblank_0.12.3     skimr_2.2.2           ragg_1.5.2           </span></span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [7] tinytable_0.17.0      withr_3.0.3           systemfonts_1.3.2    </span></span>
-<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [10] patchwork_1.3.2       ggdist_3.3.3          tidybayes_3.0.7      </span></span>
-<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [13] bayesplot_1.15.0      ggplot2_4.0.3         reliabilitydiag_0.2.1</span></span>
-<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [16] priorsense_1.2.0      posterior_1.7.0       loo_2.10.0           </span></span>
-<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [19] rstan_2.32.7          StanHeaders_2.32.10   brms_2.23.0          </span></span>
-<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [22] Rcpp_1.1.1-1.1        sessioninfo_1.2.4     conflicted_1.2.0     </span></span>
-<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [25] janitor_2.2.1         matrixStats_1.5.0     modelr_0.1.11        </span></span>
-<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [28] tibble_3.3.1          dplyr_1.2.1           tidyr_1.3.2          </span></span>
-<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [31] rio_1.3.0             here_1.0.2           </span></span>
-<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] RColorBrewer_1.1-3    tensorA_0.36.2.1      jsonlite_2.0.0       </span></span>
-<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [4] shape_1.4.6.1         magrittr_2.0.5        estimability_2.0.0   </span></span>
-<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [7] jomo_2.7-6            farver_2.1.2          nloptr_2.2.1         </span></span>
-<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [10] rmarkdown_2.31        vctrs_0.7.3           memoise_2.0.1        </span></span>
-<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [13] minqa_1.2.8           base64enc_0.1-6       htmltools_0.5.9      </span></span>
-<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [16] forcats_1.0.1         distributional_0.8.1  curl_7.1.0           </span></span>
-<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [19] haven_2.5.5           broom_1.0.13          mitml_0.4-5          </span></span>
-<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [22] htmlwidgets_1.6.4     emmeans_2.0.3         lubridate_1.9.5      </span></span>
-<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [25] cachem_1.1.0          lifecycle_1.0.5       iterators_1.0.14     </span></span>
-<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [28] pkgconfig_2.0.3       Matrix_1.7-5          R6_2.6.1             </span></span>
-<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [31] fastmap_1.2.0         rbibutils_2.4.1       snakecase_0.11.1     </span></span>
-<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [34] digest_0.6.39         rprojroot_2.1.1       textshaping_1.0.5    </span></span>
-<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [37] timechange_0.4.0      abind_1.4-8           compiler_4.6.0       </span></span>
-<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [40] S7_0.2.2              backports_1.5.1       inline_0.3.21        </span></span>
-<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [43] QuickJSR_1.10.0       pkgbuild_1.4.8        R.utils_2.13.0       </span></span>
-<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [46] pan_2.0               MASS_7.3-65           tools_4.6.0          </span></span>
-<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [49] otel_0.2.0            nnet_7.3-20           R.oo_1.27.1          </span></span>
-<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [52] glue_1.8.1            nlme_3.1-169          grid_4.6.0           </span></span>
-<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [55] checkmate_2.3.4       generics_0.1.4        gtable_0.3.6         </span></span>
-<span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [58] R.methodsS3_1.8.2     data.table_1.18.4     hms_1.1.4            </span></span>
-<span id="cb12-53"><a href="#cb12-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [61] foreach_1.5.2         pillar_1.11.1         splines_4.6.0        </span></span>
-<span id="cb12-54"><a href="#cb12-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [64] lattice_0.22-9        survival_3.8-6        tidyselect_1.2.1     </span></span>
-<span id="cb12-55"><a href="#cb12-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [67] knitr_1.51            reformulas_0.4.4      arrayhelpers_1.1-1   </span></span>
-<span id="cb12-56"><a href="#cb12-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [70] gridExtra_2.3.1       V8_8.2.0              stats4_4.6.0         </span></span>
-<span id="cb12-57"><a href="#cb12-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [73] xfun_0.59             bridgesampling_1.2-1  stringi_1.8.7        </span></span>
-<span id="cb12-58"><a href="#cb12-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [76] yaml_2.3.12           pacman_0.5.1          boot_1.3-32          </span></span>
-<span id="cb12-59"><a href="#cb12-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [79] evaluate_1.0.5        codetools_0.2-20      cli_3.6.6            </span></span>
-<span id="cb12-60"><a href="#cb12-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [82] blastula_0.3.6        RcppParallel_5.1.11-2 rpart_4.1.27         </span></span>
-<span id="cb12-61"><a href="#cb12-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [85] xtable_1.8-8          Rdpack_2.6.6          repr_1.1.7           </span></span>
-<span id="cb12-62"><a href="#cb12-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [88] coda_0.19-4.1         svUnit_1.0.8          parallel_4.6.0       </span></span>
-<span id="cb12-63"><a href="#cb12-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [91] rstantools_2.6.0      Brobdingnag_1.2-9     lme4_2.0-1           </span></span>
-<span id="cb12-64"><a href="#cb12-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [94] glmnet_5.0            mvtnorm_1.4-1         scales_1.4.0         </span></span>
-<span id="cb12-65"><a href="#cb12-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [97] purrr_1.2.2           rlang_1.2.0</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Pulire i dati non significa renderli “belli” o eliminare ciò che disturba. Significa costruire un dataset che sia coerente con la domanda di ricerca, controllabile da altri e adatto alle analisi successive.</p>
 </div>
 </div>
-</div>
-</div>
-</section>
-<section id="bibliografia" class="level2 unnumbered unlisted">
-<h2 class="unnumbered unlisted anchored" data-anchor-id="bibliografia">Bibliografia</h2>
+</section><section id="collegamento-con-il-capitolo-successivo" class="level2" data-number="14.11"><h2 data-number="14.11" class="anchored" data-anchor-id="collegamento-con-il-capitolo-successivo">
+<span class="header-section-number">14.11</span> Collegamento con il capitolo successivo</h2>
+<p>Nel prossimo capitolo useremo il dataset pulito per iniziare l’analisi esplorativa vera e propria. Inizieremo analizzando una variabile alla volta: distribuzioni, frequenze, valori mancanti, valori inattesi e primi segnali di struttura nei dati.</p>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
-<div id="ref-buchanan2021getting" class="csl-entry" role="listitem">
-Buchanan, E. M., Crain, S. E., Cunningham, A. L., Johnson, H. R., Stash, H., Papadatou-Pastou, M., Isager, P. M., Carlsson, R., &amp; Aczel, B. (2021). Getting started creating data dictionaries: How to create a shareable data set. <em>Advances in Methods and Practices in Psychological Science</em>, <em>4</em>(1), 2515245920928007.
-</div>
-</div>
-</section>
-<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
-<hr>
-<ol>
-<li id="fn1"><p><strong>MAR (Missing at Random)</strong>: i dati mancano secondo un pattern spiegabile con le informazioni che abbiamo. Esempio concreto: se gli studenti più giovani tendono a saltare le domande più difficili, i valori mancanti dipendono dall’età (che è osservata nel dataset), non dal contenuto della risposta mancante stessa. Questo è importante perché permette di usare le variabili osservate (età, risposte ad altri item) per stimare ragionevolmente i valori mancanti. Al contrario, se i dati mancassero in modo completamente casuale (MCAR) o dipendessero dal valore non osservato stesso (MNAR), servirebbero strategie diverse.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p><strong>PMM (Predictive Mean Matching)</strong>: tecnica che imputa ogni valore mancante cercando nel dataset osservazioni “vicine” con caratteristiche simili. Funziona così: (1) si costruisce un modello predittivo usando le risposte complete, (2) per ogni caso con dato mancante, si identificano i 3-5 casi osservati con predizioni più simili, (3) si estrae casualmente uno di questi valori reali e si usa come imputazione. Questo approccio ha due vantaggi: garantisce che i valori imputati siano plausibili (perché provengono da risposte reali) e preserva meglio la variabilità naturale dei dati rispetto a metodi più semplici come la sostituzione con la media.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-</ol>
-</section>
-
-</main> <!-- /main -->
-<script id="quarto-html-after-body" type="application/javascript">
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right
     if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
@@ -1333,7 +1087,7 @@ Buchanan, E. M., Crain, S. E., Cunningham, A. L., Johnson, H. R., Stash, H., Pap
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/ccaudek\.github\.io\/utet-eda\/");
+        var filterRegex = new RegExp("^(?:https?:)?//ccaudek\.github\.io/utet-prob/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -1666,35 +1420,30 @@ Buchanan, E. M., Crain, S. E., Cunningham, A. L., Johnson, H. R., Stash, H., Pap
       }
     }
   });
-  </script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
-      <a href="../../chapters/eda/01_project_structure.html" class="pagination-link" aria-label="Il ciclo di vita di un progetto di analisi dei dati">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Il ciclo di vita di un progetto di analisi dei dati</span></span>
+  </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="../../chapters/eda/01_project_structure.html" class="pagination-link" aria-label="Organizzare un progetto di analisi dei dati">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Organizzare un progetto di analisi dei dati</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../chapters/eda/03_exploring_univariate_data.html" class="pagination-link" aria-label="Esplorare distribuzioni univariate">
-        <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Esplorare distribuzioni univariate</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../chapters/eda/03_exploring_univariate_data.html" class="pagination-link" aria-label="Esplorare una variabile alla volta">
+        <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Esplorare una variabile alla volta</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer">
-  <div class="nav-footer">
+<footer class="footer"><div class="nav-footer">
     <div class="nav-footer-left">
 <p><strong>Analisi esplorativa dei dati (EDA)</strong> — Modulo del progetto UTET a supporto del manuale <em>Inferenza bayesiana in psicologia: Ragionare con l’incertezza</em>.</p>
 </div>   
     <div class="nav-footer-center">
-      &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/eda/02_data_cleaning.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></div>
+
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/eda/02_data_cleaning.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div><div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Preferenze cookie</a></div></div>
     <div class="nav-footer-right">
 <p>Realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
 </div>
   </div>
 </footer>
-
-
 
 
 <script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
