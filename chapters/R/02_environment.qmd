@@ -1,207 +1,295 @@
-# L'ambiente di programmazione {#sec-r-environment}
+# Ambiente di lavoro e progetti R {#sec-r-environment}
 
-## Introduzione {.unnumbered .unlisted}
+## Perché questo capitolo viene prima dell'analisi
 
-Programmare presuppone necessariamente un ambiente di programmazione. Una cattiva gestione di questo ambiente può causare il malfunzionamento degli script, rendendo fondamentale imparare a gestirlo correttamente.
+Spesso, quando un'analisi non funziona, il problema non è una formula statistica. Spesso il problema è molto più semplice: il file dei dati non si trova nella cartella giusta, il percorso è scritto in modo diverso sul computer di un'altra persona, un pacchetto non è stato caricato o il codice dipende da oggetti rimasti in memoria da una sessione precedente.
 
-> **Nota**: In R, il termine "ambiente" ha un significato specifico, riferendosi allo spazio di lavoro in cui gli oggetti vengono memorizzati durante una sessione. In questo capitolo, tuttavia, il termine si riferisce allo stato complessivo del tuo computer mentre programmi, inclusa l'organizzazione dei file, la versione di R che stai usando e altre impostazioni.
+Per questo motivo, prima di imparare a trasformare o visualizzare i dati, è necessario imparare a organizzare l'ambiente di lavoro.
 
-L'ambiente può influenzare persino il comportamento delle funzioni più basilari. Considera il seguente esempio:
+In questo capitolo useremo il termine "ambiente" in senso pratico: il progetto, le cartelle, i file, la sessione di R, i pacchetti caricati e le condizioni che permettono di eseguire di nuovo un'analisi.
 
-```r
-print(1:9)
+L'idea centrale è semplice:
+
+> Un'analisi è davvero utile solo se può essere capita, controllata e riprodotta.
+
+Questo vale anche quando il codice è stato scritto con l'aiuto dell'AI. L'AI può suggerire comandi, correggere errori e proporre strutture di progetto, ma non può sapere da sola dove si trovano i vostri file, quale versione dei dati state utilizzando, quali passaggi avete già eseguito e quali scelte devono essere documentate.
+
+## Obiettivi del capitolo
+
+Alla fine del capitolo dovreste sapere:
+
+- riconoscere la differenza tra file, cartelle e progetto;
+- creare o aprire un progetto R in RStudio/Posit;
+- usare nomi di file leggibili e robusti;
+- distinguere percorsi assoluti e percorsi relativi;
+- capire perché `setwd()` va evitato nei documenti condivisi;
+- usare una struttura semplice per organizzare dati, codice e risultati;
+- controllare se un'analisi può essere rieseguita da zero.
+
+Non è necessario memorizzare ogni dettaglio tecnico. È invece importante sviluppare una buona abitudine: **analisi deve essere inserita in una cartella di progetto ben organizzata**.
+
+## Il progetto come unità di lavoro
+
+Un progetto di analisi non è un singolo file. Si tratta di una piccola unità di ricerca che contiene almeno:
+
+- i dati;
+- il codice;
+- il testo che spiega le scelte fatte;
+- gli output prodotti dall'analisi.
+
+In RStudio/Posit, un progetto R è una cartella che contiene un file con estensione `.Rproj`. Aprire quel file significa dire a R: "questa è la cartella principale del mio lavoro".
+
+Una struttura minima può essere questa:
+
+```text
+progetto_stress_sonno/
+├── progetto_stress_sonno.Rproj
+├── data/
+│   ├── raw/
+│   │   └── stress_sonno_originale.csv
+│   └── processed/
+│       └── stress_sonno_pulito.csv
+├── code/
+│   └── 01_pulizia_dati.R
+├── output/
+│   └── grafico_sonno.png
+└── report.qmd
 ```
 
-Questo potrebbe produrre il seguente output:
+Non tutti i progetti devono avere esattamente questa struttura. L'importante è che la struttura sia chiara e stabile. Chi apre il progetto deve poter capire rapidamente dove si trovano i dati originali, il codice e i risultati.
 
-```
-[1] 1 2 3 4 5 6 7 8 9
-```
-
-Tuttavia, modificando l'opzione di larghezza in R, il comportamento cambia:
-
-```r
-# Dopo aver modificato options(width)
-options(width = 10)
-print(1:9)
-```
-
-In questo caso, l'output potrebbe essere:
-
-```
-[1] 1 2 3
-[4] 4 5 6
-[7] 7 8 9
-```
-
-La differenza è dovuta a un’opzione dell’ambiente, `width`, che regola il numero massimo di caratteri visualizzati per ogni riga. 
-
-::: {.callout-tip collapse=true}
-## Prerequisiti
-
-- Leggere il capitolo 3, "Setting Up Your Data Science Project", del libro [Veridical Data Science](https://vdsbook.com) [@yu2024veridical].
-- Leggere il @sec-apx-shell della dispensa.
+::: {.callout-tip title="Regola pratica"}
+Create una cartella separata per ogni progetto. Non lavorate in una cartella generica chiamata `Desktop`, `Download` o `R`.
 :::
 
-::: {.callout-caution collapse=true title="Preparazione del Notebook"}
+## Nomi di file semplici
 
-```{r}
-here::here("code", "_common.R") |> 
-  source()
+I nomi dei file devono essere facili da leggere per gli esseri umani e facili da gestire per il computer.
 
-# Load packages
-if (!requireNamespace("pacman")) install.packages("pacman")
-pacman::p_load(tidyr)
-```
-:::
+Usate:
 
+- lettere minuscole;
+- numeri;
+- trattini bassi `_` o trattini `-`;
+- date nel formato `YYYY-MM-DD`, quando servono.
 
-## File system
+Evitate:
 
-Prima di iniziare a organizzare un progetto in R, è fondamentale seguire alcune linee guida per strutturare e nominare i file in modo efficace. Spesso si tende a sottovalutare l'importanza di una buona organizzazione, ma adottare un sistema coerente può far risparmiare tempo prezioso nella ricerca e gestione dei progetti passati. Danielle Navarro ha creato una [presentazione](https://djnavarro.net/slides-project-structure/#1) sulla struttura dei progetti, nella quale propone tre principi fondamentali per la gestione dei file:
-
-- essere gentili con le macchine;
-- essere gentili con gli esseri umani;
-- facilitare l'ordinamento e la ricerca.
-
-### Essere gentili con le macchine
-
-Le macchine possono confondersi con spazi, caratteri speciali (come `^.*?+|$"`), e lettere accentate. Per evitare problemi:
-
-- usa solo lettere minuscole, numeri, trattini `_` o `-`;
-- evita caratteri speciali e spazi nei nomi dei file;
-- evita le lettere accentate;
-- usa estensioni coerenti, come `.R` per gli script R.
+- spazi;
+- accenti;
+- caratteri speciali;
+- nomi vaghi come `file1.csv`, `nuovo.csv`, `analisi_finale_vera.R`.
 
 Esempi:
 
-```bash
-# Buono
-progetto01_analisi_dati.R
+```text
+# Meglio
+2026-03-15_stress_sonno_raw.csv
+01_pulizia_dati.R
+02_grafici_eda.qmd
 
-# Cattivo
-Progetto "Analisi Dati".R
+# Peggio
+Dati Stress Sonno.csv
+analisi finale.R
+nuovo file corretto 2.csv
 ```
 
-### Essere gentili con gli umani
+Questa regola può sembrare banale, ma permette di evitare molti errori. Inoltre, rende più semplice chiedere aiuto all'AI: un nome chiaro permette di descrivere meglio il problema e di controllare più facilmente il codice suggerito.
 
-Gli esseri umani hanno bisogno di contesto. Evita nomi vaghi e usa descrizioni significative.
+## Percorsi assoluti e relativi
 
-```bash
-# Buono
-analisi01_statistiche_descrittive.R
-note02_intro_modello.docx
+Un percorso indica la posizione di un file.
 
-# Cattivo
-01.R
-appunti.docx
+Un **percorso assoluto** descrive la posizione completa del file nel computer:
+
+```text
+/Users/maria/Desktop/progetto_stress_sonno/data/raw/stress_sonno_originale.csv
 ```
 
-::: {.callout-important}
-Evitate categoricamente l'uso di spazi nei nomi di file, cartelle o oggetti in R. Anche se il sistema operativo potrebbe consentirlo, questa pratica può generare problemi futuri, complicare il debugging e rendere il codice meno leggibile e portabile. Per evitare questi inconvenienti, adottate sempre nomi privi di spazi, preferendo separatori come trattini bassi (`_`) o trattini (`-`).
+oppure, su Windows:
+
+```text
+C:/Users/Maria/Desktop/progetto_stress_sonno/data/raw/stress_sonno_originale.csv
+```
+
+Il problema è che un percorso assoluto funziona solo su quel computer. Se il progetto viene spostato, condiviso o aperto da un'altra persona, il codice probabilmente non funzionerà più.
+
+Un **percorso relativo** descrive invece la posizione del file rispetto alla cartella principale del progetto:
+
+```text
+data/raw/stress_sonno_originale.csv
+```
+
+Questo percorso è più robusto. Funziona finché la struttura interna del progetto rimane la stessa.
+
+::: {.callout-important title="Da ricordare"}
+Nei progetti condivisi, nei report Quarto e negli esercizi, utilizzate percorsi relativi. Evitate i percorsi che contengono il nome del vostro computer, il nome del vostro utente o il nome del vostro desktop.
 :::
 
-### Facilitare l’ordinamento e la ricerca
+## Evitare `setwd()` nei file condivisi
 
-Se i nomi dei file includono date, usa sempre il formato `YYYY-MM-DD` per permettere un ordinamento automatico.
-
-```bash
-# Buono
-2024-01-01_analisi.R
-2024-02-15_riassunto.docx
-
-# Cattivo
-1-gennaio-2024.R
-riassunto-15-02-2024.docx
-```
-
-Se devi ordinare i file in base a qualcosa di diverso dalle date, usa numeri con lo zero iniziale per mantenere l’ordine.
-
-```bash
-reading01_shakespeare_romeo-and-juliet.docx
-reading02_shakespeare_romeo-and-juliet.docx
-...
-reading11_shakespeare_romeo-and-juliet.docx
-notes01_shakespeare_romeo-and-juliet.docx
-...
-```
-
-## Versioni di R e pacchetti
-
-Aggiornare regolarmente R e i pacchetti è essenziale per evitare bug e sfruttare le nuove funzionalità. Ecco alcune buone pratiche:
-
-1. Esegui `update.packages()` ogni poche settimane per aggiornare i pacchetti.
-2. Aggiorna la versione di R ogni pochi mesi. Su Windows puoi usare il pacchetto `installr`, mentre su altri sistemi puoi scaricare l'ultima versione dal sito ufficiale di R.
-3. Mantieni aggiornato anche il sistema operativo.
-
-## Progetti in R
-
-Se hai seguito i consigli finora, avrai creato una cartella per tutti i tuoi progetti di programmazione e la tua installazione di R sarà aggiornata. Ora è il momento di organizzare i tuoi progetti in R.
-
-### Percorsi assoluti e relativi
-
-Un percorso assoluto parte dalla directory principale del tuo computer (ad esempio, `/` su Linux/MacOS o `C:/` su Windows) e indica in modo completo e univoco la posizione di un file o di una cartella. Un percorso relativo, invece, parte dalla directory corrente del progetto o dalla directory di lavoro impostata e descrive la posizione di un file in relazione a questa.
-
-Ad esempio, il percorso assoluto del file utilizzato per generare questa pagina HTML potrebbe essere ottenuto così:
-
-```{r}
-fs::path_abs("05_environment.qmd")
-```
-
-## Funzione `here()`
-
-Se il progetto si trova nella cartella `psicometria`, possiamo utilizzare la funzione `here()` del pacchetto **here** per indicare la posizione del file `05_environment.qmd` in modo relativo. Ecco un esempio:
-
-```{r}
-file.exists(here::here("chapters", "R", "07_environment.qmd"))
-```
-
-In questo caso, il file `07_environment.qmd` è contenuto nella cartella `chapters/R`, che si trova all'interno della directory principale del progetto. Grazie a `here()`, non è necessario specificare manualmente la posizione del progetto: questa funzione identifica automaticamente la directory principale e consente di indicare solo il percorso relativo del file rispetto ad essa. In altre parole, puoi riferirti al file `07_environment.qmd` semplicemente fornendo il percorso relativo **all'interno della struttura del progetto**, lasciando a `here()` il compito di gestire il contesto globale. 
-
-### Perché preferire i percorsi relativi?
-
-L’utilizzo di percorsi relativi con `here()` offre numerosi vantaggi:
-
-1. **Portabilità**: il codice diventa più semplice da condividere, poiché non dipende dalla struttura delle directory specifica del computer su cui è stato scritto.
-2. **Organizzazione**: favorisce una struttura chiara e coerente all’interno del progetto, rendendo più facile individuare e accedere ai file.
-3. **Affidabilità**: riduce il rischio di errori dovuti a percorsi assoluti errati, soprattutto quando il progetto viene spostato o condiviso.
-
-### Buone pratiche
-
-- **Usare sempre percorsi relativi**: questo assicura che il progetto sia facilmente eseguibile su altri sistemi senza necessità di modifiche ai percorsi.
-- **Impostare una struttura coerente del progetto**: organizzare i file in cartelle ben definite (ad esempio, `data`, `scripts`, `outputs`) facilita l’uso di percorsi relativi.
-
-In sintesi, specificare i percorsi relativi rispetto alla directory principale del progetto è una buona pratica essenziale per garantire portabilità, organizzazione e riproducibilità del lavoro.
-
-### Creare un progetto in R
-
-Un progetto R è semplicemente una cartella con un file `.Rproj`. Puoi crearne uno con RStudio o con il pacchetto `usethis`.
-
-**In RStudio**:
-
-1. Vai su `File > New Project`.
-2. Seleziona `New Directory > New Project`.
-3. Dai un nome al progetto e scegli la sua posizione.
-
-**Con `usethis`**:
+In molti tutorial si trova un comando come questo:
 
 ```r
-usethis::create_project("path/alla/cartella")
+setwd("/Users/maria/Desktop/progetto_stress_sonno")
 ```
 
-Esempio:
+Questo comando cambia manualmente la cartella di lavoro. Può sembrare comodo, ma rende il codice fragile: funzionerà sul computer di Maria, ma non su quello di Luca o Giulia.
+
+In un progetto R ben organizzato, di solito non è necessario usare la funzione `setwd()`. Aprendo il file `.Rproj`, RStudio/Posit riconosce la cartella principale del progetto.
+
+Quando dobbiamo indicare un file all'interno del progetto, possiamo usare un percorso relativo:
 
 ```r
-usethis::create_project("/Users/corrado/_repositories/psicometria")
+readr::read_csv("data/raw/stress_sonno_originale.csv")
 ```
 
-Vedremo nel @sec-eda-proj-structure come organizzare i file all'interno di un progetto.
+In alternativa, si può usare il pacchetto `here`, che costruisce percorsi a partire dalla radice del progetto:
 
-
-::: {.callout-note collapse=true title="Informazioni sull'ambiente di sviluppo"}
-```{r}
-sessionInfo()
+```r
+readr::read_csv(here::here("data", "raw", "stress_sonno_originale.csv"))
 ```
+
+La seconda forma è spesso più sicura quando il progetto contiene molti file e cartelle.
+
+## Dati originali e dati modificati
+
+Una buona abitudine è non modificare mai direttamente i dati originali.
+
+Distinguete tra:
+
+- `data/raw/`: dati originali, così come sono stati ricevuti o scaricati;
+- `data/processed/`: dati puliti o trasformati;
+- `code/`: script che spiegano come si passa dai dati originali ai dati modificati.
+
+Per esempio:
+
+```text
+data/raw/stress_sonno_originale.csv
+```
+
+può essere importato, controllato, corretto e salvato come:
+
+```text
+data/processed/stress_sonno_pulito.csv
+```
+
+L'obiettivo non è creare molte cartelle. Il punto è poter rispondere a questa domanda:
+
+> Da dove provengono questi dati e quali trasformazioni sono state effettuate?
+
+Questa domanda è più importante della sintassi. È una domanda metodologica.
+
+## La sessione di R
+
+Quando lavorate in R, create oggetti nella memoria della sessione: dataset, vettori, risultati, grafici, modelli. Questi oggetti vivono temporaneamente nello spazio di lavoro.
+
+Un errore frequente è scrivere codice che funziona solo perché alcuni oggetti sono già presenti in memoria. In quel caso, il codice sembra corretto, ma non è davvero riproducibile.
+
+Per controllare il vostro lavoro, fate spesso questa prova:
+
+1. riavviate R;
+2. eseguite il documento o lo script dall'inizio;
+3. verificate che non ci siano errori.
+
+In RStudio/Posit, potete riavviare R da:
+
+```text
+Session > Restart R
+```
+
+Poi rieseguite il codice. Se qualcosa si rompe, significa che il documento dipendeva da passaggi non espliciti.
+
+::: {.callout-tip title="Controllo minimo di riproducibilità"}
+Prima di consegnare un esercizio o un report, riavviate R ed eseguite tutto da capo. Se il documento non funziona dopo il riavvio, non è ancora riproducibile.
 :::
 
-## Bibliografia {.unnumbered .unlisted}
+## Pacchetti: installare e caricare
+
+I pacchetti estendono R con nuove funzioni. Per utilizzarli, è necessario distinguere due operazioni.
+
+Installare un pacchetto significa scaricarlo sul computer:
+
+```r
+install.packages("tidyverse")
+```
+
+Caricare un pacchetto significa renderlo disponibile nella sessione corrente:
+
+```r
+library(tidyverse)
+```
+
+L'installazione di solito si effettua una sola volta. Il caricamento, invece, va effettuato ogni volta che si apre una nuova sessione o si esegue un nuovo documento.
+
+Per rendere più chiaro da quale pacchetto proviene una funzione, si può usare la forma:
+
+```r
+readr::read_csv("data/raw/stress_sonno_originale.csv")
+```
+
+In questo caso, `read_csv()` è la funzione e `readr` è il pacchetto.
+
+## Controlli iniziali su un progetto
+
+Quando aprite un progetto, prima di analizzare i dati, effettuate alcuni controlli semplici.
+
+```r
+# Dove si trova la cartella di lavoro?
+getwd()
+
+# Quali file ci sono nella cartella principale?
+list.files()
+
+# Il file dei dati esiste?
+file.exists("data/raw/stress_sonno_originale.csv")
+```
+
+Se usate `here`:
+
+```r
+here::here()
+file.exists(here::here("data", "raw", "stress_sonno_originale.csv"))
+```
+
+Questi comandi non sono analisi statistiche. Sono controlli di orientamento.  Servono a evitare errori prima che diventino difficili da individuare.
+
+## Usare l'AI con criterio
+
+L'AI è molto utile per risolvere problemi legati all'ambiente di lavoro. Potete chiederle, per esempio:
+
+> Sto lavorando in un progetto R con cartelle `data/raw`, `data/processed` e `code`. Scrivi un esempio di codice per importare un file CSV da `data/raw` usando un percorso relativo.
+
+Oppure:
+
+> Questo codice funziona sul mio computer, ma non su quello di un collega". Controlla se ci sono percorsi assoluti o dipendenze dall'ambiente locale.
+
+Ci sono però cose che dovete controllare voi:
+
+- il nome del file è corretto?
+- il file si trova davvero nella cartella indicata?
+- il codice usa percorsi relativi o assoluti?
+- il pacchetto richiesto è installato e caricato?
+- il progetto funziona dopo aver riavviato R?
+
+::: {.callout-warning title="Errore frequente"}
+L'AI può generare nomi di file, cartelle o variabili plausibili ma inesistenti. Non copiate il codice senza prima aver verificato che corrisponda alla struttura reale del vostro progetto.
+:::
+
+## Cosa portare ai capitoli successivi
+
+Nei capitoli successivi useremo R per importare, trasformare, riassumere e visualizzare i dati. Prima di procedere, è essenziale che ogni analisi abbia una casa: una cartella di progetto con nomi chiari, percorsi relativi e un documento che possa essere rieseguito.
+
+La sintassi di R è importante, ma non sufficiente. Un'analisi ordinata richiede anche una struttura ben organizzata.
+
+Prima di procedere, verificate di saper eseguire le seguenti operazioni:
+
+- aprire un progetto R;
+- trovare la cartella principale del progetto;
+- indicare un file con un percorso relativo;
+- distinguere i dati originali da quelli modificati;
+- riavviare R ed eseguire tutto da capo.
+- Spiegare a parole dove si trovano i dati e come vengono usati.
+
+Se siete in grado di fare tutto questo, allora siete pronti a usare R non solo come calcolatrice, ma anche come ambiente per un'analisi trasparente e riproducibile.
+

@@ -1,384 +1,397 @@
 # Dalla descrizione alla spiegazione {#sec-key-notions-cogn-models}
 
 ::: {.callout-note appearance="minimal"}
-Questo capitolo potrebbe sembrare fuori luogo in un sito dedicato all'analisi esplorativa dei dati. Perché parlare di modelli cognitivi quando stiamo ancora imparando a calcolare le medie e a visualizzare le distribuzioni?
+Nei capitoli precedenti abbiamo chiarito tre passaggi preliminari: i dati derivano da una domanda di ricerca, da un disegno di studio e da una procedura di misurazione. Ora introduciamo un quarto passaggio: perché i dati mostrano determinati pattern?
 
-La risposta sta in una distinzione fondamentale che attraversa l'intera ricerca psicologica: la differenza tra "descrizione" e "spiegazione" di un fenomeno. L'EDA, che abbiamo presentato nei capitoli precedenti, è uno strumento potente per la descrizione: ci dice cosa accade nei dati. Ma la psicologia, in quanto scienza, aspira a qualcosa di più: *capire perché accade*.
+L'analisi esplorativa dei dati aiuta a capire cosa accade: distribuzioni, differenze, associazioni, valori anomali e tendenze. La psicologia, però, non si limita a descrivere i pattern. Vuole anche proporre delle spiegazioni: quali processi cognitivi, affettivi, comportamentali o sociali potrebbero aver generato quei dati?
 
-Questo capitolo introduce l'idea che, per passare dalla descrizione alla spiegazione, sono necessari dei *modelli*, ovvero delle rappresentazioni formali dei meccanismi che generano il comportamento osservato. Non è necessario padroneggiare questi strumenti ora, ma è importante comprendere la direzione verso cui ci stiamo muovendo.  L'inferenza bayesiana, trattata nel manuale *Inferenza bayesiana in psicologia: Ragionare con l'incertezza*, fornisce il framework per stimare i parametri di questi modelli e valutare quale spiegazione sia più plausibile alla luce dei dati.
-
-In altre parole: l'EDA ci mostra i pattern, i modelli spiegano cosa li produce, e l'inferenza bayesiana ci permette di scegliere tra spiegazioni alternative. Questo capitolo anticipa il terzo elemento, preparando il terreno per il passaggio al manuale principale.
+Questo capitolo introduce l'idea di modello come ponte tra descrizione e spiegazione. Non si tratta di un capitolo di modellazione computazionale avanzata. Piuttosto, serve a preparare il terreno: prima di stimare un modello con R, `brms` o `cmdstan`, dobbiamo capire che cosa significa usare un modello per rappresentare un processo psicologico.
 :::
 
-## Obiettivi del capitolo {.unnumbered .unlisted}
+Il messaggio centrale è semplice:
 
-- Comprendere la distinzione tra modelli descrittivi e modelli meccanicistici.
-- Riconoscere il ruolo dei modelli formali nella costruzione di teorie psicologiche.
-- Vedere come l'inferenza bayesiana si collega alla valutazione dei modelli.
+> L'EDA mostra i pattern nei dati; i modelli propongono un meccanismo che potrebbe averli generati; l'inferenza bayesiana aiuta a valutare quanto quel meccanismo sia plausibile alla luce dei dati.
 
-::: {.callout-tip collapse=true}
-## Prerequisiti
+Questa idea collega la prima parte del modulo, dedicata ai fondamenti, ai capitoli successivi su R, l'EDA e la modellazione bayesiana. In questa fase non useremo ancora tecniche di stima, ma costruiremo il lessico necessario per comprendere il passaggio da una descrizione empirica a una spiegazione teorica.
 
-- Consulta *Why is the Rescorla-Wagner model so influential?* [@soto2023rescorla].
+### Panoramica del capitolo {.unnumbered .unlisted}
+
+In questo capitolo imparerai a:
+
+- distinguere descrizione, predizione e spiegazione;
+- capire che cosa intendiamo per modello in psicologia;
+- riconoscere la differenza tra modelli descrittivi, predittivi ed esplicativi;
+- comprendere perche' molti processi psicologici richiedono variabili latenti;
+- vedere in che senso alcuni modelli cognitivi possono essere meccanicistici;
+- collegare EDA, modelli e inferenza bayesiana;
+- interpretare esempi come Rescorla-Wagner e Drift Diffusion Model senza doverli ancora stimare.
+
+::: {.callout-tip collapse=true title="Prerequisiti"}
+Per seguire questo capitolo e' utile avere chiari i concetti introdotti nei capitoli precedenti:
+
+- fenomeno psicologico e domanda di ricerca;
+- unita' statistiche, variabili e dati osservati;
+- campione, popolazione e generalizzazione;
+- costrutti, indicatori, validita' ed errore di misura.
+
+Letture facoltative per chi desidera approfondire:
+
+- @soto2023rescorla, sul ruolo del modello di Rescorla-Wagner nella psicologia dell'apprendimento;
+- @marr2010vision, sui livelli di analisi nei sistemi cognitivi;
+- @bechtel2009looking e @povich_mechanistic_2025, sulla spiegazione meccanicistica.
+
+Queste letture non sono necessarie per comprendere il capitolo. Sono indicate solo per chi vuole collocare la discussione in un quadro teorico piu' ampio.
 :::
 
-::: {.callout-caution collapse=true title="Preparazione del Notebook"}
+## Perche' parlare di modelli in un companion su EDA e R?
 
-```{r}
-here::here("code", "_common.R") |> 
-  source()
+A prima vista, un capitolo sui modelli cognitivi può sembrare fuori luogo. Stiamo ancora imparando a organizzare i dati, a descrivere le variabili e a costruire i grafici. Perché introdurre già il tema della modellazione?
 
-# Load packages
-if (!requireNamespace("pacman")) install.packages("pacman")
-pacman::p_load(rtdists)
-```
+La ragione è didattica. Senza modelli, l'analisi dei dati rischia di ridursi a una serie di operazioni tecniche: calcolare una media, confrontare gruppi, stimare una correlazione, produrre un grafico. Queste operazioni sono utili, ma non bastano per fare inferenza psicologica.
+
+Consideriamo una domanda già usata nei capitoli precedenti:
+
+> Gli studenti universitari che riportano livelli più alti di stress accademico dormono peggio?
+
+L'EDA puo' aiutarci a descrivere i dati:
+
+- la distribuzione dei punteggi di stress;
+- la distribuzione delle ore di sonno;
+- la relazione tra stress e qualità del sonno;
+- eventuali sottogruppi o valori anomali.
+
+Se, per esempio, scopriamo che gli studenti più stressati dormono meno, abbiamo identificato un pattern. Tuttavia, il pattern non è ancora una spiegazione. Possiamo chiederci:
+
+- lo stress riduce il sonno?
+- il cattivo sonno aumenta la percezione dello stress?
+- entrambi dipendono da una terza variabile, come il carico di lavoro, l'ansia o le abitudini digitali?
+- lo stesso pattern emerge per tutti gli studenti o solo per alcuni sottogruppi?
+
+Queste domande richiedono qualcosa in più di una semplice descrizione. Richiedono un'ipotesi sul processo che genera i dati. In altre parole, richiedono un modello.
+
+::: {.callout-important title="Idea guida"}
+Un modello non è solo una formula. È una rappresentazione esplicita di come pensiamo che un fenomeno psicologico sia organizzato e di quali processi possano produrre i dati osservati.
 :::
 
-## Modelli fenomenologici: descrivere senza spiegare
+## Descrivere, predire, spiegare
 
-I **modelli fenomenologici** si limitano a descrivere le relazioni osservabili tra le variabili psicologiche, spesso ricorrendo a formule matematiche o rappresentazioni statistiche. Un esempio classico è la legge psicofisica che descrive la relazione tra stimolazione sensoriale e risposta percepita. Sebbene questi modelli possano essere estremamente predittivi, non forniscono informazioni sul "come" e sul "perché" un certo fenomeno si verifica. Non specificano, cioè, le entità e le attività organizzate che lo generano (per esempio, i meccanismi cognitivi, i neuroni o i moduli funzionali).
+Nella pratica della ricerca psicologica, descrizione, predizione e spiegazione sono spesso intrecciate. Tuttavia, è utile distinguerle.
 
-Come sottolineato da @povich_mechanistic_2025, i modelli fenomenologici possono essere accurati, compatti e persino predittivi, ma non necessariamente esplicativi. Questi modelli non sono in grado di rispondere a domande controfattuali del tipo "che cosa succederebbe se...?" e non permettono un controllo diretto sul fenomeno. Questa limitazione si rivela particolarmente problematica in un'epoca in cui la replicabilità richiede non solo la constatazione di un effetto, ma anche la comprensione delle sue condizioni causali e contestuali.
+### Descrivere
 
-## Dai modelli meccanicistici alla modellazione computazionale
+Descrivere significa riassumere ciò che osserviamo nei dati.
 
-Un **modello meccanicistico** cerca di rappresentare le componenti causali di un fenomeno. Secondo una definizione ampiamente condivisa, un meccanismo è "una collezione organizzata di entità e attività che produce o mantiene un certo fenomeno" [@bechtel2009looking]. I modelli meccanicistici hanno l'obiettivo di descrivere questi meccanismi, specificando il modo in cui le componenti interagiscono per generare il comportamento osservato.
+Esempi:
 
-Nel contesto della psicologia, i modelli meccanicistici vanno oltre la semplice descrizione delle correlazioni osservabili. Questi modelli cercano di identificare le strutture cognitive, i processi neurali, le dinamiche corpo-ambiente o le interazioni tra i diversi livelli (funzionale, computazionale e implementazionale). Un esempio ben noto è il modello della *long-term potentiation* (LTP) nella memoria, che spiega come le variazioni dei recettori NMDA e AMPA e della concentrazione di ioni calcio e magnesio determinano il rafforzamento sinaptico, un chiaro esempio di spiegazione meccanicistica.
+- la media delle ore di sonno è 6,4;
+- la distribuzione dei punteggi di stress è asimmetrica;
+- stress e qualità del sonno sono negativamente associati;
+- alcuni studenti presentano valori molto estremi.
 
-Oggi, molti modelli meccanicistici in psicologia sono implementati come modelli computazionali, ovvero rappresentazioni formali che simulano i processi interni ipotizzati. Attraverso la simulazione e la stima dei parametri, questi modelli permettono di inferire il funzionamento dei meccanismi sottostanti a partire dal comportamento osservabile. I modelli computazionali soddisfano i criteri della spiegazione meccanicistica quando forniscono informazioni su entità ipotetiche (come credenze, soglie decisionali, accumulo di evidenza) e sulle loro interazioni causali.
+La descrizione è il compito principale dell'EDA. Una buona descrizione non è banale: permette di controllare la qualità dei dati, individuare pattern inattesi e formulare domande più precise.
 
-## Differenza epistemica: distinguere tra spiegazione e predizione
+### Predire
 
-Un aspetto cruciale per distinguere tra spiegazioni fenomenologiche e meccanicistiche risiede nel fatto che solo queste ultime soddisfano i criteri propri del *potere esplicativo genuino*. Come evidenzia @povich_mechanistic_2025, un modello esplicativo deve permettere di:
+Predire significa usare alcune informazioni per anticiparne altre.
 
-* rispondere a **domande controfattuali** ("Cosa accadrebbe se alterassimo questa specifica componente?");
-* fornire la **base teorica** per manipolare o controllare attivamente il fenomeno.
+Esempi:
 
-Questi criteri sono essenziali per affrontare la crisi della replicabilità nella ricerca. Limitarsi a sapere *che* un effetto si manifesta in determinate condizioni è di scarsa utilità pratica se non si comprende *perché* esso si verifica e *quali meccanismi sottostanti* ne determinano la stabilità o la variabilità al mutare del contesto.
+- usare il punteggio di stress per prevedere la qualità del sonno;
+- usare età, genere e carico di studio per prevedere il numero di ore dormite;
+- usare i tempi di reazione e l'accuratezza per classificare i partecipanti o le condizioni sperimentali.
 
-## Cosa rende un modello *meccanicistico*?
+Un modello predittivo può essere molto utile anche se non spiega davvero il processo sottostante. Per esempio, un algoritmo può prevedere bene quali studenti dormiranno meno, ma non può spiegarci il perché.
 
-Una fonte frequente di equivoci è l'idea che un modello, per essere considerato meccanicistico, debba necessariamente assomigliare a una macchina con parti concrete (come i neuroni o le aree cerebrali) e connessioni materiali tra di esse. Questa visione, tuttavia, è una semplificazione ingannevole.
+### Spiegare
 
-Ciò che qualifica un modello come meccanicistico non è la sua forma visiva o metaforica, ma la sua capacità di rappresentare l'organizzazione causale del processo che genera un certo fenomeno. Un modello può essere espresso mediante equazioni matematiche, algoritmi, reti neurali o simulazioni computazionali e, nonostante ciò, fornire una spiegazione meccanicistica se specifica in che modo le componenti di un sistema interagiscono per produrre l'effetto osservato.
+Spiegare significa proporre un processo generativo, ovvero un insieme di componenti, relazioni e assunzioni che rende comprensibile il modello osservato.
 
-Per approfondire questa distinzione, è utile richiamare i tre livelli di analisi proposti da @marr2010vision, un punto di riferimento classico nella psicologia cognitiva computazionale:
+Esempi:
 
-* **Livello computazionale**: *cosa* fa il sistema e *perché* – qual è il problema che risolve e quale logica lo guida.
-* **Livello algoritmico**: *come* lo fa – quali rappresentazioni interne e quali procedure di trasformazione (algoritmi) utilizza.
-* **Livello implementativo**: *con quali mezzi fisici* è realizzato – ad esempio, attraverso circuiti neurali o hardware.
+- lo stress potrebbe aumentare la ruminazione serale, che a sua volta riduce la qualità del sonno;
+- la privazione di sonno potrebbe ridurre il controllo attentivo, aumentando gli errori e i tempi di reazione.
+- Un compito difficile potrebbe rallentare l'accumulo di prove prima di una decisione.
 
-Questa tripartizione chiarisce che un modello può essere meccanicistico anche senza descrivere direttamente il substrato biologico, purché specifichi in modo formale come un sistema risolve un dato problema e quali regole governano il funzionamento delle sue componenti.
+La spiegazione richiede di andare oltre la superficie dei dati. Chiede quali processi non direttamente osservabili potrebbero aver prodotto le osservazioni disponibili.
 
-In psicologia, modelli computazionali che operano a livello algoritmico o computazionale, come il modello di Rescorla-Wagner o il *Drift Diffusion Model* (DDM), sono pienamente compatibili con un approccio meccanicistico, anche se non rappresentano esplicitamente l'implementazione biologica.
+| Domanda | Tipo di lavoro | Esempio |
+|---|---|---|
+| Che cosa osserviamo? | Descrizione | Gli studenti più stressati dormono meno. |
+| Possiamo anticipare un esito? | Predizione | Dato lo stress, prevediamo la qualita' del sonno. |
+| Quale processo ha generato il pattern? | Spiegazione | La ruminazione media l'effetto dello stress sul sonno. |
 
-Questi modelli sono “meccanicistici” perché:
+::: {.callout-tip title="Errore comune"}
+Una predizione accurata non è automaticamente una spiegazione. Un modello può prevedere bene senza rappresentare il meccanismo psicologico che genera il comportamento.
+:::
 
-* **definiscono entità funzionali** (ad esempio, valore atteso, evidenza accumulata);
-* **specificano le regole di interazione** tra tali entità (aggiornamento, integrazione, superamento di soglie);
-* **generano il comportamento osservato** come esito di queste interazioni dinamiche.
+## Che cos'e' un modello?
 
-In sintesi, non è la forma del modello a determinarne lo statuto meccanicistico, ma la funzione esplicativa che esso assolve all'interno di una teoria. I sistemi dinamici, i modelli bayesiani gerarchici, le reti neurali artificiali e le architetture simboliche possono tutti contribuire a spiegazioni meccanicistiche, a condizione che mostrino **come un dato comportamento emerga dall'organizzazione e dall'interazione di componenti definite**.
+Nel linguaggio comune, il termine *modello* può indicare molte cose: un esempio da imitare, una miniatura, uno schema, una formula, una simulazione. In psicologia, un modello è una rappresentazione semplificata di un fenomeno.
 
-## Perché i modelli meccanicistici rafforzano la riproducibilità
+Un buon modello non copia la realtà in tutti i suoi dettagli. Se lo facesse, sarebbe inutile quanto la realtà stessa. Un modello seleziona alcuni aspetti considerati rilevanti e li organizza in modo esplicito.
 
-La crisi della riproducibilità può essere vista come **il sintomo di un’eccessiva fiducia nei modelli fenomenologici che mancano di profondità esplicativa**. I modelli meccanicistici, al contrario:
+Per esempio, un modello del rapporto tra stress e sonno potrebbe includere:
 
-* esplicitano gli assunti causali e strutturali;
-* permettono verifiche controfattuali e manipolazioni;
-* chiariscono quando e perché un effetto dovrebbe ripetersi o variare;
-* sono meno vulnerabili al *cherry picking* e agli *effetti di contesto* non dichiarati;
-* i modelli computazionali meccanicistici, come il DDM o il modello di Rescorla-Wagner, consentono di simulare e verificare quantitativamente le ipotesi sui meccanismi interni, rendendo l'inferenza psicologica più trasparente e replicabile.
+- una variabile osservata: punteggio di stress;
+- una variabile osservata: qualità del sonno;
+- una variabile latente: ruminazione;
+- un'assunzione: lo stress aumenta la ruminazione;
+- un'altra assunzione: la ruminazione riduce la qualità del sonno;
+- una componente di errore: non tutto il sonno è spiegato dallo stress e dalla ruminazione.
 
-In breve, un modello meccanicistico non si limita a dire che "A predice B". Mostra anche come *A produce B* e in quali condizioni questo accade.
+Anche un modello molto semplice comporta delle assunzioni. Esplicitare queste assunzioni è uno dei principali vantaggi della modellazione.
 
-<!-- ## Esempi di modelli computazionali meccanicistici -->
+::: {.callout-note title="Modelli e semplificazione"}
+Un modello è sempre una semplificazione. La domanda non è: "Il modello è vero in senso assoluto?". La domanda più utile è: "Il modello rende esplicite assunzioni plausibili e ci aiuta a comprendere i dati meglio delle alternative disponibili?".
+:::
 
-<!-- Nel contesto della psicologia cognitiva e della neuroscienza computazionale, molti modelli meccanicistici assumono la forma di modelli computazionali. Questi modelli non si limitano a correlare input e output, ma simulano i processi interni che trasformano gli input (es. stimoli) in output (es. risposte comportamentali), ipotizzando una dinamica causale tra variabili latenti e osservabili. -->
+## Modelli descrittivi, predittivi ed esplicativi
 
+Possiamo distinguere tre famiglie di modelli. La distinzione non è rigida, ma aiuta a capire quali domande stiamo ponendo.
 
-<!-- ### Il modello di Rescorla-Wagner: apprendimento associativo come aggiornamento predittivo -->
+### Modelli descrittivi
 
-<!-- Uno dei modelli più influenti nello studio dell'apprendimento è il modello di Rescorla-Wagner. Questo modello descrive come gli individui apprendano le associazioni tra stimoli e risposte sulla base dell'errore di previsione. L'apprendimento avviene aggiornando le aspettative di ricompensa in base alle esperienze passate, utilizzando due parametri fondamentali: -->
+Un modello descrittivo riassume la struttura osservata nei dati. Per esempio, una retta di regressione può descrivere la relazione tra stress e ore di sonno. Se la retta ha pendenza negativa, possiamo affermare che, nel campione osservato, valori più alti di stress tendono a essere associati a un minor numero di ore di sonno.
 
-<!-- - *$\alpha$ (tasso di apprendimento)*: determina quanto l'errore di previsione influisce sull'aggiornamento dell'aspettativa. -->
-<!-- - *$\beta$ (temperatura della scelta)*: regola la probabilità di selezionare l'opzione con il valore atteso più alto rispetto a esplorare alternative. -->
+Questo tipo di modello è utile, ma di per sé non spiega il perché della relazione. Potrebbe descrivere una relazione causale, una relazione indiretta, un effetto di confondimento o una coincidenza dovuta al campione.
 
-<!-- #### L'apprendimento associativo -->
+### Modelli predittivi
 
-<!-- L'apprendimento per rinforzo studia come le persone imparano a massimizzare le ricompense in ambienti in cui la scelta ottimale è inizialmente sconosciuta. Immaginiamo un partecipante che deve scegliere ripetutamente tra due slot machine, ricevendo ricompense con probabilità diverse per ogni macchina. L'obiettivo è massimizzare le vincite nel tempo. -->
+Un modello predittivo è costruito per anticipare valori non ancora osservati. In psicologia applicata, può essere utile per individuare gli studenti a rischio, prevedere le ricadute cliniche, stimare le prestazioni future o classificare i profili comportamentali.
 
-<!-- Per illustrare il modello, si usa spesso la metafora delle slot machine. Nel caso più semplice, si immagina un agente che svolge il compito con $n$ tentativi, due slot machine e probabilità di ricompensa fisse $\mu = [0.2, 0.8]$. -->
+La qualità di un modello predittivo si valuta soprattutto chiedendosi se funziona su dati nuovi. Tuttavia, anche un buon modello predittivo può restare opaco dal punto di vista teorico.
 
-<!-- #### Regola di apprendimento per rinforzo ($\delta$-rule) -->
+### Modelli esplicativi
 
-<!-- Il modello di Rescorla-Wagner descrive l'apprendimento come un processo basato sull'errore di previsione. L'aggiornamento del valore di uno stimolo avviene secondo la seguente equazione: -->
+Un modello esplicativo cerca di rappresentare un processo. Non si limita a dire che due variabili sono associate, ma propone un'organizzazione causale o funzionale che possa generare il comportamento osservato.
 
-<!-- $$ -->
-<!-- V_{s,t} = V_{s,t-1} + \alpha (r_{t-1} - V_{s,t-1}) -->
-<!-- $$ -->
+In psicologia cognitiva, molti modelli esplicativi introducono processi non osservabili direttamente, come l'attenzione, la memoria di lavoro, le aspettative, le credenze, l'evidenza accumulata, le soglie decisionali e il valore atteso. Questi elementi non sono dati grezzi. Si tratta di componenti teoriche che aiutano a spiegare perché certe risposte sono state osservate.
 
-<!-- dove: -->
+| Tipo di modello | Domanda principale | Criterio di utilita' |
+|---|---|---|
+| Descrittivo | Che pattern osserviamo? | Riassume bene i dati disponibili. |
+| Predittivo | Che cosa accadra' in dati nuovi? | Prevede bene casi non ancora osservati. |
+| Esplicativo | Quale processo genera il pattern? | Rende plausibile un meccanismo. |
 
-<!-- - $V_{s,t}$ è il valore atteso dello stimolo $s$ al tempo $t$. -->
-<!-- - $r_{t-1}$ è la ricompensa ottenuta alla prova precedente. -->
-<!-- - $\alpha$ (tra 0 e 1) è il tasso di apprendimento, che determina la velocità con cui l'agente aggiorna le proprie aspettative. -->
+## Variabili osservate e variabili latenti
 
-<!-- Se il valore di $\alpha$ è alto, l'apprendimento sarà rapido, mentre se è basso, l'agente si baserà maggiormente sulle esperienze passate. -->
+Un punto cruciale per la psicologia è che molti fenomeni di interesse non sono direttamente osservabili. Non osserviamo direttamente lo stress, l'ansia, l'attenzione, la motivazione, le aspettative o il controllo cognitivo. Osserviamo invece risposte, tempi, scelte, punteggi, errori, valutazioni o misure fisiologiche.
 
-<!-- #### Modello di scelta Softmax -->
+Per questo motivo, i modelli psicologici spesso distinguono tra:
 
-<!-- Dopo aver aggiornato i valori attesi delle opzioni, il partecipante deve scegliere tra esse. -->
+- variabili osservate, ovvero valori registrati nei dati;
+- variabili latenti, ovvero componenti teoriche non osservate direttamente, ma inferite dai dati.
 
-<!-- Due strategie possibili sono: -->
+Nel capitolo sulla misurazione abbiamo rappresentato questa idea con:
 
-<!-- - *sfruttamento*: selezionare sempre l'opzione con il valore più alto; -->
-<!-- - *esplorazione*: scegliere occasionalmente un'opzione con un valore più basso per verificare se potrebbe essere migliore. -->
+$$
+y = z + \varepsilon_y,
+$$
+dove $y$ e' il dato osservato, $z$ e' il costrutto teorico e $\varepsilon_y$ e' l'errore di misura.
 
-<!-- Per modellare questo comportamento si usa la funzione Softmax: -->
+Un modello estende questa logica. Non si limita a dire che un indicatore misura un costrutto, ma specifica anche come il costrutto, insieme ad altri processi, possa generare le osservazioni.
 
-<!-- $$ -->
-<!-- p(s) = \frac{\exp(\beta \cdot V_{s})}{\sum_i \exp(\beta \cdot V_{i})}, -->
-<!-- $$ -->
+::: {.callout-important title="Collegamento con la misurazione"}
+La modellazione non elimina il problema della misurazione. Al contrario, lo rende più esplicito: dobbiamo chiarire quali parti del modello sono osservabili, quali sono latenti e quali assunzioni collegano le une alle altre.
+:::
 
-<!-- dove $\beta$ è un parametro che determina il grado di esplorazione: -->
+## Modelli meccanicistici: spiegare come funziona un processo
 
-<!-- - $\beta = 0$: scelta completamente casuale. -->
-<!-- - $\beta \to \infty$: scelta deterministica dell'opzione con il valore più alto. -->
+Un modello è detto meccanicistico quando cerca di rappresentare le componenti e le relazioni che producono un fenomeno. In una formulazione classica, un meccanismo è una collezione organizzata di entità e attività che produce o mantiene un fenomeno [@bechtel2009looking].
 
-<!-- Un individuo con $\beta$ alto sceglierà quasi sempre l'opzione con il valore atteso più elevato, mentre con un $\beta$ basso esplorerà più frequentemente. -->
+In psicologia, questa idea va interpretata con cautela. Un modello meccanicistico non deve necessariamente descrivere neuroni, circuiti cerebrali o parti fisiche osservabili. Può anche rappresentare componenti funzionali, come:
 
+- valori attesi;
+- aspettative;
+- segnali di errore;
+- evidenza accumulata;
+- soglie decisionali;
+- processi di memoria o attenzione.
 
-<!-- #### Simulazione dell'apprendimento con il modello di Rescorla-Wagner -->
+Ciò che importa è che il modello spieghi come queste componenti interagiscono tra loro per produrre il comportamento.
 
-<!-- Possiamo ora simulare questo processo in R. La funzione seguente implementa la regola di aggiornamento dell’aspettativa sulla base dell’errore di previsione: -->
+Ciò che conta è che il modello spieghi come queste componenti interagiscono tra loro per produrre il comportamento.
 
-<!-- ```{r} -->
-<!-- update_rw <- function(value, alpha=0.15, lambda=1) { -->
-<!--   value + alpha * (lambda - value) -->
-<!-- } -->
-<!-- ``` -->
+Per esempio, consideriamo un compito decisionale in cui una persona deve scegliere rapidamente tra due alternative. Una descrizione dei dati potrebbe indicare che una determinata condizione produce tempi di reazione più lunghi. Un modello meccanicistico potrebbe invece proporre che la condizione rallenta l'accumulo di evidenza o induce una strategia più cauta. Le due spiegazioni hanno implicazioni diverse, anche se entrambe possono produrre tempi più lunghi.
 
-<!-- Simuliamo ora l'apprendimento per 40 prove, assumendo che il partecipante riceva sempre una ricompensa: -->
+::: {.callout-tip title="Domanda diagnostica"}
+Per capire se un modello ha ambizioni esplicative, chiediti se il modello si limita a dire che una variabile predice un'altra o se propone come il comportamento emerge dall'interazione di componenti definite.
+:::
 
-<!-- ```{r} -->
-<!-- n_trials <- 40 -->
-<!-- strength <- numeric(n_trials) -->
-<!-- for(trial in 2:n_trials) { -->
-<!--   strength[trial] <- update_rw(strength[trial-1]) -->
-<!-- } -->
-<!-- plot(1:n_trials, strength, type = 'l', ylim = c(0,1), xlab = "Prove", ylab = "Aspettativa di ricompensa") -->
-<!-- ``` -->
+## I livelli di analisi di Marr
 
-<!-- L'aspettativa di ricompensa aumenta progressivamente fino a stabilizzarsi. -->
+Un modo utile per collocare i modelli cognitivi e' la distinzione proposta da @marr2010vision tra tre livelli di analisi.
 
+1. **Livello computazionale**: quale problema deve risolvere il sistema e perché?
+2. **Livello algoritmico**: quali rappresentazioni e procedure usa il sistema per risolverlo?
+3. **Livello implementativo**: con quali mezzi fisici il processo viene realizzato?
 
-<!-- #### Estinzione dell'associazione -->
+Questa distinzione è importante perché evita un equivoco. Un modello cognitivo può essere esplicativo anche se non descrive direttamente il cervello. Per esempio, un modello può spiegare una decisione a livello algoritmico rappresentando come una persona accumula le prove nel tempo, senza specificare tutti i dettagli neurali del processo.
 
-<!-- Modificando il valore del rinforzo, possiamo anche simulare l’estinzione dell’apprendimento. Se dopo 25 prove la ricompensa non viene più fornita, il valore associato allo stimolo diminuisce gradualmente: -->
+| Livello | Domanda | Esempio |
+|---|---|---|
+| Computazionale | Qual è il problema? | Decidere quale alternativa è più probabile. |
+| Algoritmico | Come viene risolto? | Accumulare evidenza fino a una soglia. |
+| Implementativo | Dove e come è realizzato? | Circuiti neurali coinvolti nella decisione. |
 
-<!-- ```{r} -->
-<!-- n_trials <- 50                 -->
-<!-- strength <- numeric(n_trials) -->
-<!-- lambda <- 1 -->
+::: {.callout-note title="Perche' e' utile per questo corso"}
+Nei companion operativi, invece, lavoreremo soprattutto con rappresentazioni formali e statistiche. Non sempre ci occuperemo di implementazione neurale. Ciò non rende i modelli meno importanti: spesso, infatti, la domanda psicologica principale riguarda il livello computazionale o algoritmico.
+:::
 
-<!-- for(trial in 2:n_trials) { -->
-<!--   if(trial > 25) { -->
-<!--     lambda <- 0 -->
-<!--   } -->
-<!--   strength[trial] <- update_rw(value = strength[trial-1], lambda = lambda) -->
-<!-- } -->
+## Due esempi: apprendimento e decisione
 
-<!-- plot(1:n_trials, strength, type = 'l', ylim = c(0,1), xlab = "Prove", ylab = "Aspettativa di ricompensa") -->
-<!-- ``` -->
+Non è necessario padroneggiare ora i modelli computazionali. Tuttavia, due esempi possono aiutare a comprendere la differenza tra una descrizione e una spiegazione formale.
 
-<!-- L'associazione si estingue gradualmente quando il rinforzo viene rimosso. -->
+### Il modello di Rescorla-Wagner
 
+Il modello di Rescorla-Wagner è un modello di apprendimento associativo. L'idea centrale è che l'apprendimento dipenda dall'errore di previsione: impariamo di più quando ciò che accade è diverso da ciò che ci aspettavamo.
 
-<!-- #### Implementazione della regola Softmax -->
+In termini intuitivi:
 
-<!-- Per simulare le scelte di un partecipante utilizziamo la funzione Softmax: -->
+- se un evento è sorprendente, aggiorniamo molto le nostre aspettative.
+- se un evento è già previsto, aggiorniamo poco;
+- la rapidità con cui avviene l'aggiornamento dipende da un parametro di apprendimento.
 
-<!-- ```{r} -->
-<!-- softmax <- function(beta, x) { -->
-<!--   1 / (1 + exp(-beta * x)) -->
-<!-- } -->
+Il punto didattico non è imparare l'equazione. Il punto è vedere che il modello non si limita a dire che esperienza e comportamento sono associati. Propone un meccanismo: l'aspettativa cambia nel tempo in funzione dell'errore di previsione.
 
-<!-- beta <- 5 -->
-<!-- x <- seq(-1, 1, length.out = 100) -->
-<!-- y <- softmax(beta, x) -->
-<!-- plot(x, y, type = 'l', xlab = "Valore (A) - valore (B)", ylab = "p(scelta = A)") -->
-<!-- ``` -->
+### Il Drift Diffusion Model
 
-<!-- La funzione mostra che: -->
+Il Drift Diffusion Model (DDM) è un modello dei processi decisionali in compiti a due alternative. L'idea centrale è che, prima di rispondere, una persona accumuli prove a favore di una delle due risposte fino al raggiungimento di una soglia.
 
-<!-- 1. la probabilità di scegliere un'opzione aumenta con il suo valore atteso; -->
-<!-- 2. con $\beta$ elevato, il partecipante sceglie quasi sempre l'opzione migliore; -->
-<!-- 3. con $\beta$ basso, le scelte sono più casuali. -->
+Il modello distingue diverse componenti del comportamento:
 
+- la qualità dell'informazione disponibile;
+- la velocità con cui l'evidenza viene accumulata;
+- la cautela della persona nel prendere una decisione.
+- il tempo necessario per percepire lo stimolo e produrre la risposta;
+- eventuali bias iniziali verso una risposta.
 
-<!-- #### Verifica e applicazioni del modello -->
+Questa distinzione è utile perché lo stesso dato osservato può avere spiegazioni diverse. Tempi di reazione più lunghi possono indicare un'elaborazione più lenta, una strategia più cauta, un segnale più ambiguo o una combinazione di questi fattori.
 
-<!-- Quello descritto è il meccanismo generatore dei dati ipotizzato dal modello di Rescorla-Wagner. Per testare il modello, è necessario stimare i parametri $\alpha$ e $\beta$, e confrontare le previsioni del modello con i dati osservati. Tuttavia, in questo corso non affronteremo il problema della stima dei parametri del modello di Rescorla-Wagner. L'obiettivo principale è comprendere cosa significhi formalizzare quantitativamente un modello psicologico e in che modo questo approccio si differenzi da una semplice analisi delle associazioni tra variabili. -->
+::: {.callout-note title="Esempio concettuale"}
+Supponiamo che, in un compito attentivo, gli studenti sotto stress rispondano più lentamente. Una descrizione potrebbe essere: "Il gruppo stressato ha tempi di reazione più lunghi". Un modello cognitivo potrebbe invece chiedersi: perché rispondono più lentamente? Accumulano evidenza più lentamente? Adottano soglie decisionali più alte? Impiegano più tempo nelle fasi percettive e motorie?
+:::
 
-<!-- In sintesi, il modello di Rescorla-Wagner rappresenta uno strumento essenziale per lo studio dell'apprendimento associativo. Attraverso la simulazione dell'aggiornamento delle aspettative e delle strategie decisionali, possiamo descrivere il comportamento di individui che apprendono in contesti di rinforzo. Questo modello ha trovato applicazione in numerosi ambiti della psicologia cognitiva e delle neuroscienze, contribuendo alla comprensione dei processi di apprendimento e decisione. -->
+## Perché i modelli aiutano la riproducibilità
 
+La crisi della riproducibilità in psicologia ha mostrato che non basta osservare un effetto statisticamente significativo. Dobbiamo anche capire quando, perché e in quali condizioni un effetto dovrebbe ripresentarsi.
 
-<!-- ### Il Drift Diffusion Model (DDM) -->
+I modelli esplicativi possono essere d'aiuto perché:
 
-<!-- Il processo decisionale è uno dei temi centrali della psicologia cognitiva e delle neuroscienze. Ogni giorno prendiamo decisioni, dalle più semplici alle più complesse, influenzate da fattori come la percezione, la memoria, l’attenzione e il contesto in cui ci troviamo. Una domanda fondamentale è: *Come prendiamo decisioni in condizioni di incertezza?*   -->
+- rendono esplicite le assunzioni teoriche;
+- chiariscono quali processi dovrebbero generare il comportamento;
+- permettono di formulare previsioni più precise.
+- aiutano a distinguere spiegazioni alternative;
+- rendono più trasparente il rapporto tra teoria, dati e inferenza.
 
-<!-- Uno dei modelli più utilizzati per rispondere a questa domanda è il *Drift Diffusion Model (DDM)*, un modello matematico che descrive il processo di accumulo delle informazioni fino alla presa di una decisione. Questo modello consente di quantificare e comprendere i meccanismi alla base delle scelte umane. -->
+Ciò non significa che ogni modello esplicativo sia corretto. Un modello può essere sbagliato, troppo semplice o mal specificato. Tuttavia, un modello esplicito è criticabile: possiamo discutere le sue assunzioni, confrontarlo con alternative, verificare le sue previsioni e comprendere i suoi limiti.
 
+::: {.callout-warning title="Errore comune"}
+Formalizzare un'idea non la rende automaticamente vera. Un modello matematico può essere elegante, ma comunque inadeguato. La formalizzazione è utile perché rende le assunzioni visibili, non perché garantisca la verità del modello.
+:::
 
-<!-- #### Cos’è il Drift Diffusion Model? -->
+## Il collegamento con l'inferenza bayesiana
 
-<!-- Il DDM descrive come le persone raccolgono informazioni nel tempo per prendere una decisione tra due alternative. Immagina di dover stabilire se un punto si sta muovendo verso destra o verso sinistra. Non hai una risposta immediata, ma accumuli informazioni (o "evidenza") nel tempo fino a quando non sei abbastanza sicuro per scegliere.   -->
+In questo contesto, l'inferenza bayesiana si inserisce naturalmente. Un modello psicologico contiene delle assunzioni sui processi che generano i dati. L'inferenza bayesiana consente di aggiornare la plausibilità dei valori dei parametri e, talvolta, dei modelli alternativi, alla luce delle osservazioni.
 
-<!-- Questo processo è influenzato da vari fattori, come la chiarezza delle prove disponibili e l’incertezza associata alla decisione. -->
+In forma molto generale, il ragionamento è questo:
 
-<!-- #### Come funziona il processo di accumulo dell’evidenza? -->
+1. formulare un modello, ovvero una rappresentazione del processo che potrebbe generare i dati;
+2) specifichiamo quali parti sono osservate e quali sono latenti;
+3) esprimere l'incertezza sui parametri del modello;
+4) osserviamo i dati;
+5) aggiorniamo la nostra incertezza alla luce dei dati;
+6. Verifichiamo se il modello riproduce gli aspetti più importanti dei dati osservati.
 
-<!-- Il processo decisionale può essere paragonato a un *accumulo graduale di informazioni* a favore di una delle due opzioni disponibili. Ecco come funziona: -->
+In questo capitolo non ci soffermiamo sui dettagli tecnici di questi passaggi. Li anticipiamo solo dal punto di vista concettuale. Nei moduli successivi, soprattutto nel modulo operativo con `brms` e `cmdstan`, questi passaggi diventeranno procedure concrete.
 
-<!-- 1. *Raccolta delle informazioni.* Ogni nuova informazione che ricevi si accumula a favore di una delle due alternative. Ad esempio, se stai cercando di determinare la direzione del movimento di un punto, ogni piccolo dettaglio visivo ti aiuta ad avvicinarti a una decisione. -->
+::: {.callout-important title="Ponte con il manuale bayesiano"}
+Nel manuale principale, l'inferenza bayesiana viene presentata come un metodo per gestire l'incertezza. Qui aggiungiamo un tassello: l'incertezza riguarda anche i processi che hanno generato i dati e non solo i valori numerici dei parametri.
+:::
 
-<!-- 2. *Velocità di accumulo (Drift rate).* La velocità con cui raccogli le informazioni dipende dalla qualità del segnale. Se le prove sono chiare e forti, l’accumulo sarà veloce. Se invece sono ambigue, il processo sarà più lento. -->
+## Il ruolo dell'EDA prima della modellazione
 
-<!-- 3. *Rumore e incertezza.* Durante l’accumulo, c’è sempre una componente casuale o "rumore", che può causare fluttuazioni nel processo. Questo significa che l’informazione non si accumula in modo perfettamente lineare, ma può oscillare a causa di fattori casuali. -->
+Se i modelli sono così importanti, perché dedicare tanto spazio all'EDA?
 
-<!-- 4. *Soglie decisionali.* Prima di iniziare il compito, ci sono due "soglie" che rappresentano i punti di decisione. Quando l’evidenza accumulata raggiunge una di queste soglie, si prende la decisione corrispondente. -->
+Perché una buona modellazione richiede una buona comprensione preliminare dei dati. L'EDA aiuta a:
 
-<!-- 5. *Tempo di reazione.* Il tempo impiegato per raggiungere una delle soglie è il *tempo di reazione*. Se le informazioni sono chiare, la decisione sarà rapida; se sono ambigue, il tempo sarà più lungo. -->
+- verificare che i dati siano coerenti con la domanda di ricerca;
+- individuare valori mancanti, errori o anomalie;
+- osservare la forma delle distribuzioni;
+- individuare differenze tra sottogruppi;
+- riconoscere associazioni inattese;
+- formulare ipotesi sui processi sottostanti;
+- verificare se un modello plausibile dovrebbe includere determinate variabili o determinate strutture.
 
-<!-- Una metafora utile per comprendere questo processo è quella di *un secchio che si riempie goccia dopo goccia*: ogni informazione raccolta corrisponde a una goccia. Quando il livello d’acqua supera una soglia, si prende la decisione. -->
+L'EDA non è un passaggio inferiore rispetto alla modellazione. È un lavoro preliminare che permette di costruire modelli più sensati.
 
+::: {.callout-tip title="Collegamento con i capitoli successivi"}
+Quando nei capitoli EDA esploreremo distribuzioni, medie, variabilità, correlazioni e outlier, non lo faremo solo per produrre riassunti. Lo faremo per imparare a riconoscere quali pattern necessitano di una spiegazione e quali assunzioni un modello deve rispettare.
+:::
 
-<!-- #### I parametri del DDM -->
+## Una sequenza di lavoro
 
-<!-- Il DDM è caratterizzato da quattro parametri principali che descrivono diversi aspetti del processo decisionale. -->
+Possiamo ora riassumere il percorso che collega i capitoli di questa prima parte.
 
-<!-- 1. *Tasso di drift ($v$).* Rappresenta la velocità con cui l’evidenza si accumula a favore di una decisione. Valori più alti indicano un processo decisionale più efficiente, mentre valori più bassi suggeriscono un’accumulazione lenta e incerta. -->
+1. **Fenomeno**: scegliamo un fenomeno psicologico da comprendere.
+2. **Domanda**: trasformiamo il fenomeno in una domanda empirica.
+3. **Disegno**: decidiamo come raccogliere dati coerenti con la domanda.
+4. **Misurazione**: traduciamo costrutti teorici in indicatori osservabili.
+5. **EDA**: descriviamo i dati e individuiamo pattern.
+6. **Modello**: proponiamo un processo che potrebbe generare quei pattern.
+7. **Inferenza**: valutiamo il modello alla luce dei dati e dell'incertezza.
 
-<!-- 2. *Separazione delle soglie ($a$).* Indica la distanza tra le due soglie decisionali. Valori più alti corrispondono a decisioni più caute (tempi di reazione più lunghi ma minore probabilità di errore), mentre valori più bassi indicano decisioni più rapide ma potenzialmente meno accurate. -->
+Questa sequenza non è sempre lineare. Spesso l'analisi esplorativa dei dati (EDA) fa emergere problemi di misurazione, un modello suggerisce una nuova raccolta dati o un risultato inatteso richiede di riformulare la domanda iniziale. Tuttavia, come mappa didattica, questa sequenza aiuta a collocare ogni parte del progetto.
 
-<!-- 3. *Tempo di non-decisione ($t_0$).* Corrisponde al tempo necessario per processi che precedono e seguono l’accumulo di evidenza, come la percezione dello stimolo e l’esecuzione della risposta. Questo tempo è indipendente dall’accumulo delle informazioni. -->
+## Cosa portare al capitolo successivo
 
-<!-- 4. *Bias iniziale ($z$).* Definisce il punto di partenza del processo di accumulo. Se è equidistante tra le due soglie, la decisione è imparziale. Se invece è spostato verso una delle due soglie, significa che la persona ha una predisposizione a scegliere una delle due alternative. -->
+Da questo capitolo dovresti ricavare quattro idee.
 
+1. **Descrivere non significa spiegare.**  
+   Un pattern nei dati è un punto di partenza, non una conclusione finale.
 
-<!-- #### Il compromesso tra velocità e accuratezza -->
+2. **Un modello rende esplicite le assunzioni.**  
+   Ogni modello seleziona alcune componenti del fenomeno e propone delle relazioni tra di esse.
 
-<!-- Uno degli aspetti più interessanti del DDM è il *compromesso tra velocità e accuratezza*: -->
+3. **In psicologia molte variabili importanti sono latenti.**  
+   I dati osservati sono indicatori parziali di processi non direttamente osservabili.
 
-<!-- - se una persona desidera rispondere rapidamente, può *abbassare le soglie decisionali*, ma questo aumenta la probabilità di errore;   -->
-<!-- - se invece punta a una maggiore accuratezza, può *aumentare la distanza tra le soglie*, rendendo il processo più lento ma più affidabile. -->
+4. **L'inferenza bayesiana valuta modelli in condizioni di incertezza.**  
+   Non elimina le assunzioni, ma permette di ragionare in modo esplicito su di esse.
 
-<!-- Questo compromesso è evidente in compiti sperimentali come:   -->
+Nei capitoli successivi passeremo alla parte operativa del companion. Impareremo a usare R non come fine a sé stesso, ma come strumento per organizzare, esplorare e interrogare i dati psicologici.
 
-<!-- - il *compito di Stroop*, dove bisogna ignorare un’informazione interferente (es. leggere il colore di una parola e non il significato della parola stessa);   -->
-<!-- - il *compito di decisione lessicale*, in cui si deve determinare se una stringa di lettere è una parola esistente o meno.   -->
+::: {.callout-important collapse="true" title="Problemi"}
 
-<!-- Il DDM permette di capire se le differenze nei tempi di reazione tra gruppi dipendono da una strategia più cauta (maggiore $a$) o da una difficoltà nell’accumulare evidenza (minore $v$). -->
-
-
-<!-- #### Perché è importante il DDM? -->
-
-<!-- Il DDM è uno strumento potente perché permette di *quantificare* aspetti del processo decisionale che altrimenti sarebbero difficili da misurare, come la velocità di accumulo dell’evidenza o l’effetto del rumore sulla decisione.   -->
-
-<!-- È stato applicato in numerosi ambiti, tra cui: -->
-
-<!-- - *compiti percettivi e decisionali*: studi sulla discriminazione di stimoli visivi e uditivi; -->
-<!-- - *processi di controllo cognitivo*: analisi delle differenze individuali nella regolazione dell’impulsività; -->
-<!-- - *psicopatologia*: esplorazione delle alterazioni nel processo decisionale in condizioni come depressione, ansia e schizofrenia. -->
-
-<!-- Il *Drift Diffusion Model* offre dunque una rappresentazione chiara e quantitativa del processo decisionale in condizioni di incertezza. Descrivendo l’accumulo graduale delle informazioni e il raggiungimento delle soglie decisionali, il modello ci aiuta a comprendere il compromesso tra velocità e accuratezza e i fattori che influenzano le scelte.   -->
-
-<!-- L’applicazione del DDM in psicologia cognitiva e neuroscienze permette di studiare non solo il comportamento umano, ma anche i meccanismi neurali che regolano il processo decisionale. -->
-
-
-<!-- #### Simulazione del DDM -->
-
-<!-- Una delle potenzialità del DDM è la possibilità di simulare dati sintetici per confrontare le predizioni del modello con dati empirici. In R, possiamo generare una simulazione semplificata del modello utilizzando pacchetti dedicati come `rtdists` o `brms`.  -->
-
-<!-- Un esempio di codice per simulare dati con parametri definiti: -->
-
-<!-- ```{r} -->
-<!-- # Nuova configurazione dei parametri -->
-<!-- a <- 1.2   # Separazione delle soglie (aumentato) -->
-<!-- v <- 0.3   # Tasso di drift -->
-<!-- t0 <- 0.2  # Tempo di non-decisione -->
-<!-- z <- 0.5   # Bias iniziale (deve essere tra 0 e 1) -->
-
-<!-- # Generazione dei dati -->
-<!-- sim_data <- rdiffusion(n = 1000, a = a, v = v, t0 = t0, z = z) -->
-<!-- ``` -->
-
-<!-- Questa funzione genera 1000 decisioni simulate, ciascuna con un tempo di reazione (rt) e una risposta (response) che dipendono dai parametri impostati. -->
-
-<!-- ```{r} -->
-<!-- # Visualizzazione dei tempi di reazione -->
-<!-- hist( -->
-<!--   sim_data$rt,  -->
-<!--   breaks = 30,  -->
-<!--   main = "Distribuzione dei tempi di reazione",  -->
-<!--   xlab = "RT (s)" -->
-<!-- ) -->
-<!-- ``` -->
-
-<!-- Questo codice genera una distribuzione di tempi di reazione e scelte coerenti con le ipotesi del DDM, permettendo di esplorare l'effetto delle variazioni dei parametri sul comportamento del modello. -->
-
-<!-- In sintesi, il Drift Diffusion Model fornisce un quadro teorico potente per l'analisi del processo decisionale in psicologia cognitiva. Modellando il tempo di reazione e la probabilità di risposta in termini di parametri interpretabili, il DDM permette di distinguere tra strategie decisionali e difficoltà cognitive, superando i limiti di un'analisi puramente descrittiva. Grazie alla sua capacità di catturare la dinamica dei processi decisionali, il DDM è oggi uno degli strumenti più utilizzati per studiare il comportamento umano in contesti sperimentali e applicativi. -->
-
-## Riflessioni conclusive {.unnumbered .unlisted}
-
-La crisi di replicabilità che attanaglia la psicologia contemporanea richiede un profondo ripensamento metodologico, volto a superare i modelli puramente descrittivi in favore di paradigmi meccanicistici e computazionali. A differenza dei primi, questi ultimi non si accontentano di predire esiti comportamentali, ma mirano a identificare i processi algoritmici e i meccanismi latenti che li generano. In tal modo, trasformano domande di ricerca generiche in ipotesi formalizzate e rigorosamente verificabili, tracciando un percorso causale dall'organizzazione interna del sistema al comportamento osservabile.
-
-L'adozione di un approccio computazionale in psicologia cognitiva consente di superare i limiti intrinseci dell'analisi descrittiva, fornendo un quadro matematico solido per valutare ipotesi sui processi mentali. L’integrazione di modelli di apprendimento e modelli decisionali, in particolare, permette di costruire rappresentazioni unificate e più profonde dei sistemi cognitivi che sottendono il comportamento umano, con ricadute concrete sia nella ricerca di base che in ambito applicativo e clinico.
-
-Questa prospettiva si colloca organicamente nel quadro emergente della psichiatria computazionale e della modellazione bayesiana della cognizione, il cui obiettivo ultimo non è meramente descrittivo, ma inferenziale: individuare quali processi interni risultino più plausibili alla luce dei dati osservati. La formalizzazione computazionale non solo accresce il potere esplicativo dei modelli, ma potenzia anche la capacità di inferenza e generalizzazione, due pilastri fondamentali per lo sviluppo di una scienza psicologica cumulativa, robusta e realmente replicabile.
-
-<!-- In questo capitolo abbiamo introdotto due modelli fondamentali: il modello Rescorla-Wagner e il modello Drift Diffusion model.  -->
-
-<!-- Il modello di Rescorla-Wagner illustra come l'apprendimento associativo derivi da un aggiornamento incrementale delle aspettative, guidato dall'errore di previsione. La sua forza risiede nella capacità di quantificare parametri psicologicamente significativi, come il tasso di apprendimento (α), che riflette la sensibilità individuale alle discrepanze tra aspettative e realtà. L'aggiunta della funzione softmax permette di modellare il conflitto tra esplorazione e sfruttamento, catturando la variabilità adattiva del comportamento. -->
-
-<!-- Parallelamente, il Drift Diffusion Model (DDM) scompone la decisione in un processo dinamico di accumulo di evidenza, in cui parametri come la velocità di elaborazione (drift rate), la cautela decisionale (threshold separation) e i tempi non decisionali (non-decision time) permettono di distinguere componenti cognitive diverse. Questo approccio supera le descrizioni statiche, rivelando come diverse strategie emergano dall'interazione tra vincoli computazionali e contesto. -->
-
-<!-- Entrambi i modelli evidenziano il valore della formalizzazione matematica nello studio dei processi cognitivi. Il modello di Rescorla-Wagner è particolarmente utile per comprendere come gli individui apprendano e aggiornino le proprie credenze sulla base dell'esperienza, mentre il DDM fornisce una rappresentazione più dettagliata delle dinamiche della presa di decisione e del compromesso tra velocità e accuratezza. -->
-
-::: {.callout-important collapse="true" title="Problemi" }
-
-1. Che cosa descrive il modello di Rescorla-Wagner?
-2. Qual è il ruolo del parametro α nel modello di Rescorla-Wagner? 
-3. Quale funzione matematica viene utilizzata per modellare il bilanciamento tra esplorazione ed esploitazione nel modello di Rescorla-Wagner?
-4. Quali sono i principali parametri del Drift Diffusion Model (DDM)? 
-5. In che modo il DDM spiega il compromesso tra velocità e accuratezza nelle decisioni? 
+1. In che cosa differiscono descrizione, predizione e spiegazione?
+2. Perche' una correlazione tra stress e sonno non e' automaticamente una spiegazione?
+3. Che cosa significa dire che una variabile psicologica e' latente?
+4. Perche' un modello predittivo accurato potrebbe non essere esplicativo?
+5. Qual e' l'idea centrale del modello di Rescorla-Wagner?
+6. Qual e' l'idea centrale del Drift Diffusion Model?
+7. In che modo l'EDA prepara la costruzione di un modello?
+8. Perche' l'inferenza bayesiana si collega naturalmente alla modellazione?
 
 :::
 
 ::: {.callout-tip title="Soluzioni" collapse="true"}
 
-1. Il modello di Rescorla-Wagner descrive come gli individui apprendano le associazioni tra stimoli e risposte in base all’errore di previsione. L’aspettativa di ricompensa viene aggiornata attraverso l’esperienza, con un processo regolato dal tasso di apprendimento ($\alpha$). 
+1. La descrizione riassume cio' che osserviamo nei dati; la predizione usa alcune informazioni per anticiparne altre; la spiegazione propone un processo che potrebbe aver generato il pattern osservato.
 
-2. Il parametro $\alpha$ (tasso di apprendimento) determina quanto velocemente un individuo aggiorna le proprie aspettative in base all’errore di previsione. Se $\alpha$ è alto, l’apprendimento è rapido; se è basso, l’individuo si basa maggiormente sulle esperienze passate.
+2. Una correlazione indica che due variabili variano insieme, ma non chiarisce il processo che produce la relazione. Lo stress potrebbe influenzare il sonno, il sonno potrebbe influenzare lo stress, oppure entrambi potrebbero dipendere da altre variabili.
 
-3. La funzione Softmax viene utilizzata per modellare il bilanciamento tra esplorazione e sfruttamento. Essa regola la probabilità di scegliere un’opzione in base al valore atteso e alla temperatura della scelta ($\beta$).  
+3. Una variabile latente e' una componente teorica non osservata direttamente, come ansia, attenzione, motivazione o ruminazione. La inferiamo attraverso indicatori osservabili, come risposte, punteggi, tempi di reazione o scelte.
 
-4. I principali parametri del DDM sono:
+4. Un modello puo' prevedere bene perche' sfrutta regolarita' statistiche nei dati, senza rappresentare il meccanismo psicologico che produce quelle regolarita'. Accuratezza predittiva e potere esplicativo non coincidono necessariamente.
 
-   - *tasso di drift ($v$)*: velocità con cui viene accumulata l’evidenza; 
-   - *separazione delle soglie ($a$)*: distanza tra le soglie decisionali;  
-   - *tempo di non-decisione ($t_0$)*: tempo impiegato per processi indipendenti dall’accumulo dell’evidenza;  
-   - *bias iniziale ($z$)*: punto di partenza dell’accumulo dell’evidenza.  
+5. Il modello di Rescorla-Wagner descrive l'apprendimento come aggiornamento delle aspettative sulla base dell'errore di previsione. Quando cio' che accade e' diverso da cio' che ci aspettavamo, l'apprendimento e' maggiore.
 
-5. Il DDM spiega il compromesso tra velocità e accuratezza attraverso la separazione delle soglie decisionali ($a$). Se le soglie sono più vicine, le decisioni sono più rapide ma meno accurate; se sono più distanti, le decisioni sono più lente ma più precise.  
-:::
+6. Il Drift Diffusion Model descrive alcune decisioni come un processo di accumulo graduale di evidenza fino al raggiungimento di una soglia decisionale. Permette di distinguere componenti come velocita' di accumulo, cautela decisionale e tempo di non-decisione.
 
-::: {.callout-note collapse=true title="Informazioni sull'ambiente di sviluppo"}
-```{r}
-sessionInfo()
-```
+7. L'EDA permette di capire come sono fatti i dati, individuare anomalie, osservare distribuzioni e associazioni, e formulare ipotesi sui processi che potrebbero aver prodotto i pattern osservati.
+
+8. L'inferenza bayesiana consente di aggiornare l'incertezza sui parametri, e talvolta sui modelli, alla luce dei dati. Questo la rende adatta a una prospettiva in cui i modelli sono ipotesi esplicite sui processi generatori dei dati.
+
 :::
 
 ## Bibliografia {.unnumbered .unlisted}

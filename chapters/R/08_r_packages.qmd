@@ -2,64 +2,311 @@
 
 ## Introduzione {.unnumbered .unlisted}
 
-I pacchetti R sono estensioni del linguaggio di programmazione statistica R. Questi pacchetti forniscono una raccolta di risorse che possono essere utilizzate per ampliare le funzionalità di base di R. Ogni pacchetto generalmente include:
+In R, molte analisi non si effettuano utilizzando esclusivamente le funzioni già disponibili al momento dell'installazione. Si utilizzano anche i pacchetti, ovvero raccolte di funzioni, dati e documentazione preparate da altri utenti o gruppi di ricerca.
 
-- **codice**: funzioni e script scritti in R (e talvolta in altri linguaggi come C++ o Fortran) che implementano specifiche analisi o strumenti.
-- **dati**: dataset di esempio o utili per testare e dimostrare le funzionalità del pacchetto.
-- **documentazione**: file descrittivi che spiegano come utilizzare il pacchetto, spesso in formato manuale o vignette (tutorial pratici).
+Per uno studente che inizia a lavorare con R, i pacchetti non sono un argomento secondario dal punto di vista tecnico. I pacchetti fanno parte del modo in cui un'analisi diventa comprensibile e riproducibile. Quando leggiamo un codice, dobbiamo sapere non solo cosa fa, ma anche da quale pacchetto provengono le funzioni che usa.
 
-I pacchetti R sono distribuiti e installati attraverso repository centralizzati, il più noto dei quali è CRAN (*Comprehensive R Archive Network*). CRAN garantisce la qualità e l’affidabilità dei pacchetti, sottoponendoli a controlli rigorosi prima della pubblicazione. 
+Questo è ancora più importante quando il codice viene suggerito da un sistema di IA. L'AI può suggerire funzioni corrette, ma può anche:
 
-La vasta disponibilità di pacchetti è una delle ragioni principali della popolarità di R.
+- usare pacchetti non installati;
+- mescolare funzioni provenienti da pacchetti diversi.
+- usare funzioni che hanno lo stesso nome, ma significati diversi;
+- suggerire soluzioni più complicate del necessario;
+- dimenticare di caricare il pacchetto richiesto.
 
-::: {.callout-tip collapse=true}
-## Prerequisiti
+In questo capitolo non faremo un catalogo dei pacchetti R, ma impareremo solo ciò che serve per lavorare in modo ordinato: **installare**, **caricare**, **riconoscere** e **documentare** i pacchetti usati in un'analisi.
 
-- Consultare [Introduction to Data Science: Data Wrangling and Visualization with R](https://rafalab.dfci.harvard.edu/dsbook-part-1/) [@irizarry2024introduction]
-- Leggere [R for Data Science (2e)](https://r4ds.hadley.nz/).
+## Cosa imparerai
+
+Alla fine del capitolo dovresti essere in grado di:
+
+- distinguere tra installare e caricare un pacchetto;
+- capire da quale pacchetto proviene una funzione;
+- interpretare errori comuni legati ai pacchetti;
+- usare la forma `pacchetto::funzione()` quando rende il codice più chiaro;
+- controllare il codice prodotto con AI prima di usarlo in un report Quarto.
+
+## Che cos'è un pacchetto R
+
+Un pacchetto R è un'estensione di R. In genere contiene:
+
+- **funzioni**, cioè comandi già pronti per svolgere operazioni specifiche;
+- **dataset**, spesso usati come esempi;
+- **documentazione**, che spiega come usare le funzioni;
+- talvolta **vignette**, cioè guide pratiche più estese.
+
+Per esempio, nel percorso di questo modulo useremo spesso pacchetti come:
+
+- `dplyr`, per trasformare e riassumere dati;
+- `ggplot2`, per costruire grafici;
+- `readr` o `rio`, per importare dati;
+- `tibble`, per lavorare con tabelle ordinate;
+- `quarto`, non come pacchetto principale di analisi, ma come ambiente per collegare testo, codice e risultati.
+
+Non è necessario conoscere molti pacchetti. È più importante conoscere bene pochi strumenti e saperli usare in modo appropriato.
+
+::: {.callout-note}
+## Idea chiave
+
+Un pacchetto non è una magia esterna a R, ma codice scritto da qualcuno e distribuito in modo che altri possano utilizzarlo. Usare un pacchetto significa quindi affidarsi a uno strumento e per questo motivo è importante sapere quale strumento si sta utilizzando.
 :::
 
-## Installare i pacchetti R
+## Installare e caricare: due operazioni diverse
 
-Quando installi R, vengono installati automaticamente alcuni pacchetti base. Tuttavia, hai la possibilità di aggiungere ulteriori pacchetti che trovi utili per i tuoi scopi. Questi pacchetti sono memorizzati sui server di R (mirror), e l’installazione di un nuovo pacchetto richiede una connessione internet al mirror CRAN che hai scelto durante l'installazione di R.
+Un errore molto comune è confondere **installare** e **caricare** un pacchetto.
 
-Per installare un pacchetto, utilizza il comando:
+| Operazione | Quando si fa | Cosa significa |
+|---|---|---|
+| `install.packages()` | Di solito una sola volta | Scarica e installa il pacchetto sul computer |
+| `library()` | Ogni volta che inizi una nuova sessione di lavoro | Rende disponibili le funzioni del pacchetto |
 
-```R
-install.packages("<nome_pacchetto>")
+Per installare un pacchetto si usa:
+
+```r
+install.packages("dplyr")
 ```
 
-Sostituisci `<nome_pacchetto>` con il nome del pacchetto che desideri installare. Ad esempio, se vuoi installare il pacchetto **rio** (utile per importare i dati in R), puoi digitare:
+Le virgolette sono necessarie perché `"dplyr"` è il nome del pacchetto da scaricare.
 
-```R
-install.packages("rio")   # Non dimenticare le virgolette!
+Dopo averlo installato, per usarlo in una sessione di lavoro si scrive:
+
+```r
+library(dplyr)
 ```
 
-## Caricamento di un pacchetto
+In questo caso le virgolette non sono necessarie.
 
-Ogni volta che avvii una nuova sessione di R, se desideri utilizzare un pacchetto, devi caricarlo manualmente. Questo si fa con il comando `library()`. Ad esempio, dopo aver installato **rio**, per utilizzarlo digita:
+::: {.callout-important}
+## Da ricordare
 
-```R
-library(rio)   # Nota: le virgolette non sono necessarie, ma puoi usarle se preferisci.
+Installare un pacchetto non basta. Dopo l'installazione, il pacchetto deve essere caricato con `library()` ogni volta che apri una nuova sessione di R o renderizzi un documento Quarto.
+:::
+
+## Dove mettere `library()` in un documento Quarto
+
+In un report Quarto è buona pratica caricare i pacchetti all'inizio del documento, in un chunk dedicato. In questo modo il lettore capisce subito da quali strumenti dipende l'analisi.
+
+Per esempio:
+
+```{r}
+#| label: packages-load
+#| message: false
+#| warning: false
+
+library(dplyr)
+library(ggplot2)
+library(readr)
 ```
 
-## Utilizzo delle funzioni di un pacchetto senza caricarlo
+Le opzioni `message: false` e `warning: false` evitano che il documento mostri messaggi tecnici non necessari. Tuttavia, durante il lavoro è utile leggere quei messaggi almeno una volta: a volte contengono indicazioni importanti.
 
-Se hai bisogno di utilizzare una funzione specifica di un pacchetto, ma sai che la userai solo una volta, puoi evitare di caricare l'intero pacchetto con `library()`. Ad esempio, invece di scrivere:
+## Usare una funzione senza caricare tutto il pacchetto
 
-```R
-library(nome_pacchetto)
-funzione_specifica(x = 2, sd = 3)
+A volte, però, vogliamo usare una sola funzione di un pacchetto. In questi casi, è possibile scrivere il nome del pacchetto, due punti doppi e poi il nome della funzione.
+
+```r
+readr::read_csv("data/questionario.csv")
 ```
 
-puoi accedere direttamente alla funzione usando l’operatore `::`, come indicato di segtuito:
+La forma generale è:
 
-```R
-nome_pacchetto::funzione_specifica(x = 2, sd = 3)
+```r
+pacchetto::funzione(argomenti)
 ```
 
-Questo approccio è utile per funzioni che usi raramente o una sola volta. Personalmente, utilizzo `::` anche quando ho già caricato il pacchetto, per ricordare ad un "me futuro" da quale pacchetto proviene una determinata funzione. Questo può rendere il codice più leggibile e comprensibile nel tempo.
+Questa forma è utile perché rende esplicita l'origine della funzione. Per esempio, se scriviamo:
 
+```r
+dplyr::filter(dati, gruppo == "sperimentale")
+```
+
+chi legge il codice capisce subito che `filter()` viene dal pacchetto `dplyr`.
+
+Questo può essere importante perché pacchetti diversi possono contenere funzioni con lo stesso nome. Se R trova due funzioni con lo stesso nome, userà quella caricata più di recente. La forma `pacchetto::funzione()` elimina l'ambiguità.
+
+::: {.callout-tip}
+## Una buona abitudine
+
+Quando il codice è breve e ha uno scopo didattico, è sufficiente scrivere  `library(dplyr)` e poi `filter()`. Quando si vuole evitare ambiguità o si usa una funzione rara, `dplyr::filter()` rende il codice più trasparente.
+:::
+
+## Errori comuni
+
+Gli errori legati ai pacchetti sono frequenti, soprattutto all'inizio. Alcuni messaggi possono rivelarsi più utili di quanto sembrino.
+
+### Il pacchetto non è installato
+
+Se scrivi:
+
+```r
+library(dplyr)
+```
+
+e R risponde con un errore simile a:
+
+```text
+there is no package called 'dplyr'
+```
+
+significa che il pacchetto non è installato sul computer. La soluzione è:
+
+```r
+install.packages("dplyr")
+```
+
+Poi puoi caricarlo:
+
+```r
+library(dplyr)
+```
+
+### Il pacchetto è installato ma non caricato
+
+Se scrivi:
+
+```r
+filter(dati, stress > 3)
+```
+
+e R dice che non trova la funzione, può essere che il pacchetto non sia stato caricato. In questo caso devi aggiungere:
+
+```r
+library(dplyr)
+```
+
+oppure usare la forma esplicita:
+
+```r
+dplyr::filter(dati, stress > 3)
+```
+
+### Una funzione ha lo stesso nome in pacchetti diversi
+
+A volte R segnala che una funzione è stata "mascherata" da un altro pacchetto. Ciò accade quando due pacchetti contengono funzioni con lo stesso nome.
+
+Non è necessariamente un problema. Tuttavia, è un segnale: devi sapere quale funzione stai utilizzando. In caso di dubbio, usa `pacchetto::funzione()`.
+
+## Pacchetti e AI
+
+L'AI può essere molto utile quando si lavora con i pacchetti. Può suggerire il pacchetto da utilizzare, spiegare un errore, riscrivere una pipeline o proporre un'alternativa più semplice.
+
+Tuttavia, non devi accettare il codice senza prima controllarlo.
+
+::: {.callout-warning}
+## Usare l'AI con criterio
+
+Quando l'AI propone il codice R, controlla sempre:
+
+1. i pacchetti richiesti sono indicati chiaramente?
+2. sono già installati e caricati?
+3. le funzioni esistono davvero?
+4. il codice usa pacchetti coerenti con il resto del progetto?
+5. esiste una soluzione più semplice che utilizzi gli strumenti che già conosci?
+:::
+
+Un buon prompt non si limita a chiedere: "scrivi il codice". Chiede un codice leggibile, coerente con gli strumenti che conosci e facile da controllare.
+
+Per esempio:
+
+> Scrivi codice R usando dplyr e ggplot2, senza introdurre pacchetti aggiuntivi se non sono necessari. Commenta brevemente ogni passaggio.
+
+Oppure:
+
+> Questo codice usa pacchetti che non conosco. Puoi riscriverlo usando solo dplyr, ggplot2 e readr?
+
+Questi prompt aiutano a evitare codice inutilmente complesso.
+
+## Pacchetti e riproducibilità
+
+Un'analisi è riproducibile se un'altra persona può eseguirla e ottenere gli stessi risultati. I pacchetti fanno parte di questa riproducibilità.
+
+Per chiarire quali fattori influenzano un'analisi, è utile:
+
+- caricare i pacchetti all'inizio del documento;
+- evitare pacchetti non necessari;
+- usare `pacchetto::funzione()` quando c'è ambiguità;
+- indicare nel testo quali strumenti principali sono stati utilizzati;
+- non consegnare un documento che funziona solo perché alcuni pacchetti sono caricati "per caso" nella propria sessione.
+
+Alla fine di un'analisi più complessa può essere utile registrare le informazioni sulla sessione di lavoro:
+
+```r
+sessionInfo()
+```
+
+Questa funzione mostra la versione di R e dei pacchetti caricati. Non è sempre necessario includerla in un report didattico breve, ma è utile sapere che esiste.
+
+## Una struttura minima per i tuoi report
+
+Nei lavori di questo modulo, puoi usare una struttura semplice:
+
+```{r}
+#| label: packages-template
+#| message: false
+#| warning: false
+
+library(dplyr)
+library(ggplot2)
+library(readr)
+```
+
+Poi, quando usi una funzione meno comune, puoi rendere esplicito il pacchetto:
+
+```r
+readr::read_csv("data/questionario.csv")
+```
+
+Questa combinazione è spesso sufficiente: pochi pacchetti caricati all'inizio e uso esplicito di `pacchetto::funzione()` quando serve chiarezza.
+
+## Checklist
+
+Prima di consegnare un file Quarto, chiediti:
+
+- il documento parte da una sessione pulita?
+- tutti i pacchetti necessari sono caricati nel chunk iniziale?
+- ci sono pacchetti installati ma mai usati?
+- il codice introduce pacchetti non spiegati?
+- il documento si renderizza senza errori?
+- sono in grado di spiegare perché sto usando quei pacchetti?
+
+Se la risposta a una di queste domande è negativa, il problema non è soltanto tecnico. Si tratta di un problema di trasparenza dell'analisi.
+
+## Esercizi
+
+1. In un documento Quarto trovi questo codice:
+
+   ```r
+   library(dplyr)
+   dati |> filter(stress > 3)
+   ```
+
+   Spiega che cosa fa `library(dplyr)` e perché è necessario.
+
+2. L'AI ti propone questo codice:
+
+   ```r
+   janitor::clean_names(dati)
+   ```
+
+   Che cosa devi controllare prima di usarlo?
+
+3. Riscrivi il codice seguente usando la forma `pacchetto::funzione()`:
+
+   ```r
+   read_csv("data/questionario.csv")
+   ```
+
+4. Un compagno ti consegna un file Quarto che funziona sul suo computer ma non sul tuo. Il messaggio di errore dice che manca un pacchetto. Quali passaggi faresti per diagnosticare il problema?
+
+5. Chiedi a un sistema di AI di scrivere una breve analisi con R. Poi controlla se ha introdotto pacchetti non necessari. Riscrivi il prompt chiedendo di usare solo i pacchetti già usati nel corso.
+
+## Per approfondire {.unnumbered}
+
+Per approfondire l'uso dei pacchetti e del tidyverse, puoi consultare:
+
+- [R for Data Science (2e)](https://r4ds.hadley.nz/)
+- [Introduction to Data Science: Data Wrangling and Visualization with R](https://rafalab.dfci.harvard.edu/dsbook-part-1/) [@irizarry2024introduction]
+
+Queste risorse sono utili, ma non sono prerequisiti per seguire il capitolo.
 
 ## Bibliografia {.unnumbered}
-

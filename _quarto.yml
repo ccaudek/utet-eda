@@ -71,9 +71,9 @@ book:
         - chapters/R/01_r_syntax.qmd
         - chapters/R/02_environment.qmd
         - chapters/R/03_utility_functions.qmd
-        - chapters/R/04_r_programming.qmd
         - chapters/R/05_dplyr.qmd
         - chapters/R/06_ggplot2.qmd
+        # - chapters/R/04_r_programming.qmd
         - chapters/R/07_quarto.qmd
         - chapters/R/08_r_packages.qmd
 
@@ -102,15 +102,22 @@ link-citations: true
 
 format:
   html:
+    highlight-style: arrow
+
     theme:
-      light: cosmo
-      dark: darkly
-    css: style/custom.css
+      light:
+        - cosmo
+        - style/custom.scss
+      dark:
+        - darkly
+        - style/custom.scss
+        - style/custom-dark.scss
 
     respect-user-color-scheme: true
     canonical-url: true
 
     toc: true
+    toc-location: right
     toc-depth: 2
     toc-title: "Sommario"
     toc-expand: 2
@@ -121,7 +128,7 @@ format:
     code-summary: "Mostra/Nascondi codice"
     code-copy: hover
     code-link: true
-    code-overflow: scroll
+    code-overflow: wrap
     code-block-bg: true
 
     fig-responsive: true
@@ -137,23 +144,69 @@ format:
 
     link-external-icon: true
     link-external-newwindow: true
-    link-external-filter: "^(?:https?:)?//ccaudek\\.github\\.io/utet-eda/"
+    link-external-filter: "^(?:https?:)?//ccaudek\\.github\\.io/utet-prob/"
 
-    html-math-method:
+    html-math-method: 
       method: mathjax
-      url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+      mathjax:
+        config: TeX-AMS_CHTML
+        options:
+          font: "Latin-Modern"
+
+
+  pdf:
+    documentclass: scrbook
+    classoption:
+      - a4paper
+      - 11pt
+      - open=any            # i capitoli non iniziano forzatamente a pagina dispari
+                            # (evita pagine bianche: sensato per un PDF letto a schermo;
+                            # per la stampa tipografica rimuovere questa riga)
+    pdf-engine: lualatex    
+    mainfont: "Libertinus Serif"   # copertura IAST completa; alternative: "Gentium Plus",
+    sansfont: "Libertinus Sans"    # "EB Garamond", "Charis SIL"
+    lang: it                # se non è già a livello di progetto: attiva sillabazione
+                            # italiana e traduce "Indice", "Capitolo", ecc.
+    toc: true
+    toc-depth: 2
+    number-sections: true
+
+    colorlinks: true
+    linkcolor: MidnightBlue    # più sobrio del blu acceso predefinito
+    citecolor: MidnightBlue
+    urlcolor: MidnightBlue
+
+    geometry:
+      - top=25mm
+      - bottom=25mm
+      - inner=30mm           # con scrbook (twoside) inner/outer è più corretto
+      - outer=25mm           # di left/right: il margine interno assorbe la rilegatura
+
+    include-in-header:
+      text: |
+        \usepackage[automark]{scrlayer-scrpage}  % testatine correnti (capitolo/sezione)
+        \clubpenalty=10000                        % niente righe orfane
+        \widowpenalty=10000                       % niente righe vedove
+
 
 execute:
   freeze: auto
+  cache: false
+
   echo: true
   warning: false
   message: false
-  fig.width: 6
+  error: false
+
+  fig.width: 6.5
   fig.asp: 0.618
   fig.retina: 2
   fig.align: center
   fig.show: hold
+
   options:
-    width: 120
-    pillar.width: Inf
-    tibble.width: Inf
+    width: 90
+    pillar.width: 90
+    tibble.width: 90
+
+

@@ -1,838 +1,430 @@
 # Relazioni tra variabili {#sec-correlation}
 
 ::: {.callout-note appearance="minimal"}
-L'analisi delle associazioni tra variabili è un'operazione fondamentale nell'ambito della ricerca psicologica, ma nonostante la sua apparente semplicità, rappresenta uno degli aspetti più controversi e metodologicamente complessi. Sebbene possa sembrare un passaggio naturale successivo all'analisi univariata, questo processo solleva numerose questioni concettuali e pratiche che richiedono un'attenta riflessione.  
+Nell'EDA non ci interessa soltanto sapere come è fatta una variabile presa da sola. Vogliamo anche capire se due variabili cambiano insieme: per esempio, gli studenti che riportano più stress dormono meno? Chi dorme meno mostra punteggi più alti di disagio? La correlazione aiuta a descrivere queste associazioni, ma non basta a spiegarne il motivo.
 :::
 
 ### Panoramica del capitolo {.unnumbered .unlisted}
 
-- Comprendere e calcolare la covarianza, la correlazione di Pearson e la correlazione di Spearman. 
-- Correlazione e associazioni non lineari.
+In questo capitolo impareremo a:
 
-::: {.callout-tip collapse=true}
-## Prerequisiti
+- distinguere associazione, correlazione e causalità;
+- leggere uno scatterplot prima di calcolare un coefficiente;
+- interpretare la direzione, la forma e la forza di una relazione;
+- calcolare e interpretare la correlazione di Pearson e di Spearman;
+- riconoscere le situazioni in cui la correlazione può essere fuorviante.
+- usare l'AI per produrre codice senza delegare l'interpretazione.
 
-- Leggere l'introduzione dell'articolo "The curious case of the cross-sectional correlation" [@hamaker2024curious].
+::: {.callout-tip title="Idea guida"}
+Prima di calcolare una correlazione, è sempre necessario esaminare i dati. Un coefficiente riassume una nuvola di punti, ma non può sostituirla.
 :::
 
-::: {.callout-caution collapse=true title="Preparazione del Notebook"}
+## Perche studiare relazioni tra variabili?
+
+Molte domande psicologiche riguardano le relazioni tra variabili:
+
+- lo stress accademico è associato alla qualità del sonno?
+- il supporto sociale è associato a sintomi depressivi meno intensi?
+- Il tempo di reazione aumenta quando il compito diventa più difficile?
+- due scale psicometriche che dovrebbero misurare lo stesso costrutto producono punteggi simili?
+
+Queste domande sono diverse da quelle univariate viste nei capitoli precedenti. Non ci si chiede più soltanto:
+
+> Che forma ha questa distribuzione?
+
+Ma anche:
+
+> Come cambiano insieme due variabili?
+
+Questa domanda è importante, ma va formulata con cautela. Una relazione statistica può essere un indizio, non una spiegazione completa. In particolare, una correlazione non dimostra che una variabile causi l'altra. Questo punto sarà ripreso nel capitolo successivo sulla causalità.
+
+## Associazione, correlazione, causalita
+
+Nel linguaggio comune, spesso usiamo i termini "relazione", "associazione" e "correlazione" come se fossero sinonimi. Nel lavoro scientifico, invece, è meglio distinguerle.
+
+- "Associazione" è il termine più generale: conoscere una variabile ci dice qualcosa, almeno in parte, sull'altra.
+- "Correlazione" è una misura specifica dell'associazione, di solito riferita alla tendenza di due variabili numeriche a variare insieme.
+- La causalità riguarda una domanda diversa: cosa accadrebbe a una variabile se intervenissimo sull'altra?
+
+Per esempio, se gli studenti che dormono meno riportano più stress, c'è un'associazione. Tuttavia, da questa associazione non possiamo ancora dedurre se lo stress riduce il sonno, se il sonno ridotto aumenta lo stress, se entrambe le variabili dipendono da un terzo fattore o se tutte e tre le spiegazioni sono parzialmente vere.
+
+::: {.callout-warning title="Correlazione non significa causalità"}
+La correlazione descrive come due variabili si presentano insieme nei dati osservati. La causalità richiede una domanda diversa: cosa cambierebbe se potessimo modificare una variabile mantenendo sotto controllo il resto?
+:::
+
+## Un esempio ricorrente: stress e sonno
+
+Useremo un piccolo dataset didattico. Ogni riga rappresenta uno studente. Le variabili principali sono:
+
+- `stress`: punteggio di stress accademico, da 0 a 40;
+- `sonno`: ore medie di sonno per notte;
+- `supporto`: supporto sociale percepito, da 0 a 30;
+- `anno`: anno di corso.
 
 ```{r}
-here::here("code", "_common.R") |> 
-  source()
-
-# Load packages
-if (!requireNamespace("pacman")) install.packages("pacman")
-pacman::p_load(readr)
-```
-:::
-
-## È utile conoscere le associazioni tra variabili?
-
-Storicamente, in psicologia, l'analisi delle associazioni tra variabili è stata spesso considerata come l'obiettivo finale del processo di ricerca. Questa visione affonda le sue radici nel pensiero di Karl Pearson, il quale sosteneva che la spiegazione scientifica si esaurisse una volta delineate le associazioni tra le variabili osservate. @pearson1911_grammar_part1 affermava:  
-
-> "Quanto spesso, quando è stato osservato un nuovo fenomeno, sentiamo che viene posta la domanda: 'qual è la sua causa?'. Questa è una domanda a cui potrebbe essere assolutamente impossibile rispondere. Invece, può essere più facile rispondere alla domanda: 'in che misura altri fenomeni sono associati con esso?'. Dalla risposta a questa seconda domanda possono risultare molte preziose conoscenze."  
-
-Sebbene sia indubbio che calcolare le associazioni tra variabili sia relativamente semplice, è altrettanto evidente che la nostra comprensione di un fenomeno non può dipendere unicamente dalle correlazioni. **Le associazioni non implicano causalità** e possono risultare fuorvianti se interpretate in modo superficiale.
-
-::: {.callout-warning title="Correlazione ≠ Causalità"}
-Un esempio emblematico è l'associazione tra il numero di scarpe e le abilità matematiche nei bambini: la correlazione è molto forte, ma se controlliamo per la variabile "età", l'associazione scompare completamente. Il numero di scarpe non influisce sulle abilità matematiche: è l'età il vero fattore causale sottostante.
-
-Questo esempio illustra un problema generale: in psicologia, trovare correlazioni forti tra variabili non è necessariamente informativo riguardo ai meccanismi causali sottostanti. Serve sempre un modello teorico che guidi l'interpretazione.
-:::
-
-In questo capitolo ci concentreremo sugli *strumenti statistici* per descrivere e quantificare le associazioni lineari tra variabili: covarianza, correlazione di Pearson, correlazione di Spearman. Nel @sec-causality-intro affronteremo invece la questione più profonda: come distinguere tra correlazione spuria e relazione causale, e quali strumenti concettuali (controfattuali, confondimento, randomizzazione) ci aiutano a fare inferenza causale anche quando non possiamo condurre esperimenti.
-
-## Terminologia
-
-La discussione dei metodi utilizzati per individuare le relazioni causali sarà trattata successivamente. In questo capitolo, ci concentreremo sui concetti statistici fondamentali necessari per descrivere le associazioni lineari tra variabili. È importante sottolineare che, sebbene esistano indici statistici per quantificare associazioni non lineari, la maggior parte degli psicologi si limita all'utilizzo di indici lineari.
-
-Nel linguaggio comune, termini come "dipendenza", "associazione" e "correlazione" vengono spesso usati in modo intercambiabile. Tuttavia, da un punto di vista tecnico, è importante distinguere questi concetti:
-
-1. **Associazione**: questo termine indica una relazione generale tra variabili, dove la conoscenza del valore di una variabile fornisce informazioni su un'altra.
-2. **Correlazione**: descrive una relazione specifica e quantificabile, indicando se due variabili tendono a variare insieme in modo sistematico. Ad esempio, in una correlazione positiva, se $X > \mu_X$, è probabile che anche $Y > \mu_Y$. La correlazione specifica il segno e l'intensità di una relazione lineare.
-3. **Dipendenza**: indica una relazione causale tra le variabili, dove la variazione della variabile causale porta probabilisticamente alla variazione della variabile dipendente.
-
-È cruciale comprendere che non tutte le associazioni sono correlazioni e, soprattutto, che la correlazione non implica necessariamente causalità. Questa distinzione è fondamentale per interpretare correttamente i dati e evitare conclusioni errate sulle relazioni tra variabili.
-
-In questo capitolo, esamineremo due misure statistiche fondamentali per valutare la relazione lineare tra due variabili: la covarianza e la correlazione. Questi indici ci permettono di descrivere il grado e la direzione dell'**associazione lineare** tra variabili, quantificando come queste variano congiuntamente.
-
-
-## Analisi della relazione tra due misure della depressione
-
-L'obiettivo di questo esempio è esaminare la relazione tra due scale psicometriche che misurano la depressione: il *Beck Depression Inventory II* (BDI-II) e la *Center for Epidemiologic Studies Depression Scale* (CES-D). Lo studio di @zetsche_2019future ha indagato se le aspettative negative possano costituire un meccanismo centrale nel mantenimento e nella reiterazione della depressione. In particolare, i ricercatori hanno confrontato 30 soggetti con almeno un episodio depressivo maggiore e 37 individui senza diagnosi depressiva.
-
-**Strumenti di misurazione:**
-
-- *BDI-II:* strumento di autovalutazione che misura l'intensità dei sintomi depressivi riscontrati nelle ultime due settimane. Composto da 21 item, ciascuno valutato su una scala da 0 a 3, fornisce una stima della gravità della depressione.
-
-- *CES-D:* scala anch'essa di autovalutazione, progettata per quantificare i sintomi depressivi sperimentati nella settimana precedente, principalmente in popolazioni generali, con particolare attenzione ad adolescenti e giovani adulti.
-
-Poiché entrambi gli strumenti mirano a misurare lo stesso costrutto, è ragionevole aspettarsi una relazione lineare tra i punteggi ottenuti, pur riconoscendo che errori di misurazione e unità di misura diverse possono generare discrepanze.
-
-Per verificare la relazione tra i punteggi BDI-II e CES-D, i dati sono stati processati come segue:
-
-```{r}
-# Leggi i dati dal file CSV
-df <- rio::import(here::here("data", "data.mood.csv"))
-
-# Seleziona le colonne di interesse
-df <- df |>
-  dplyr::select("esm_id", "group", "bdi", "cesd_sum")
-
-# Rimuovi righe duplicate e casi con valori mancanti in 'bdi'
-df <- df[!duplicated(df), ]
-df <- df[!is.na(df$bdi), ]
+#| label: corr-packages
+#| message: false
+#| warning: false
+library(dplyr)
+library(ggplot2)
 ```
 
-Successivamente, è stato realizzato un grafico a dispersione (*scatterplot*) in cui i valori del BDI-II sono stati posti sull'asse delle ascisse e quelli del CES-D sull'asse delle ordinate. Ogni punto rappresenta un partecipante, suddiviso per gruppo (soggetti depressi e controlli). L'aggiunta di una retta di regressione, ottenuta mediante un modello lineare, consente di valutare visivamente la tendenza di associazione tra le due misure.
-
 ```{r}
-#| echo: false
-#| label: fig-cesd-bdi2
-# Separazione dei dati per gruppo
-mdd_data <- df[df$group == "mdd", ]
-ctl_data <- df[df$group == "ctl", ]
+#| label: corr-data
+set.seed(42)
 
-# Calcolo dei coefficienti di regressione lineare
-coeff_combined <- lm(cesd_sum ~ bdi, data = df)$coefficients
+n <- 120
 
-# Funzione per la retta di regressione
-line_combined <- function(x) coeff_combined[1] + coeff_combined[2] * x
-
-# Generazione dei valori x per la retta
-x_values <- seq(min(df$bdi), max(df$bdi), length.out = 100)
-
-# Etichette leggibili
-df <- df %>%
-  dplyr::mutate(group_label = dplyr::recode(group,
-                                            mdd = "Pazienti",
-                                            ctl = "Controlli"),
-                group_label = factor(group_label, levels = c("Pazienti","Controlli")))
-
-# Sotto-palette dai tuoi colori
-group_colors <- c(
-  "Pazienti"  = "#4477AA",
-  "Controlli" = "#228833"
-)
-
-# Regressione combinata
-coeff_combined <- lm(cesd_sum ~ bdi, data = df)$coefficients
-line_combined  <- function(x) coeff_combined[1] + coeff_combined[2] * x
-x_values <- seq(min(df$bdi, na.rm = TRUE), max(df$bdi, na.rm = TRUE), length.out = 100)
-
-# Medie per gruppo (saltando gruppi assenti)
-means_df <- df %>%
-  dplyr::group_by(group_label) %>%
-  dplyr::summarise(
-    mean_bdi  = mean(bdi, na.rm = TRUE),
-    mean_cesd = mean(cesd_sum, na.rm = TRUE),
-    .groups = "drop"
+eda_stress <- tibble::tibble(
+  id = seq_len(n),
+  anno = sample(c("Primo", "Secondo", "Terzo"), n, replace = TRUE),
+  supporto = round(rnorm(n, mean = 20, sd = 5), 1),
+  stress = round(28 - 0.45 * supporto + rnorm(n, mean = 0, sd = 5), 1),
+  sonno = round(8.2 - 0.09 * stress + rnorm(n, mean = 0, sd = 0.7), 1)
+) |>
+  mutate(
+    supporto = pmax(pmin(supporto, 30), 0),
+    stress = pmax(pmin(stress, 40), 0),
+    sonno = pmax(pmin(sonno, 10), 3)
   )
 
-ggplot(df, aes(x = bdi, y = cesd_sum, color = group_label)) +
-  geom_point(alpha = 0.8) +
-  # retta combinata (colore fissato, p.es. quello dei Pazienti)
-  geom_line(
-  data = data.frame(x = x_values, y = line_combined(x_values)),
-  aes(x = x, y = y),
-  inherit.aes = FALSE,
-  linetype = "dashed",
-  color = group_colors["Pazienti"]
-) +
-  # linee delle medie per i gruppi presenti
-  geom_vline(data = means_df, aes(xintercept = mean_bdi, color = group_label),
-             alpha = 0.2, show.legend = FALSE) +
-  geom_hline(data = means_df, aes(yintercept = mean_cesd, color = group_label),
-             alpha = 0.2, show.legend = FALSE) +
-  scale_color_manual(values = group_colors, drop = FALSE) +
-  labs(x = "BDI-II", y = "CES-D", color = "Gruppo")
+glimpse(eda_stress)
 ```
 
-**Interpretazione dei risultati:** il grafico a dispersione evidenzia una tendenza approssimativamente lineare tra i punteggi del BDI-II e della CES-D, indicando che, in linea teorica, le due scale sono associate nel misurare il livello di depressione. Tuttavia, la presenza di una certa dispersione dei dati rispetto alla retta ideale sottolinea l'influenza degli errori di misurazione e della natura arbitraria delle unità di misura utilizzate. Per una valutazione più accurata della relazione, è necessario ricorrere a indici statistici in grado di quantificare sia la forza che la direzione dell'associazione.
+Questo dataset è artificiale. È stato creato solo per mostrare il ragionamento.
 
+## Prima il grafico: lo scatterplot
 
-## Covarianza
-
-Iniziamo a considerare il più importante di tali indici, chiamato *covarianza*. In realtà la definizione di questo indice non ci sorprenderà più di tanto in quanto, in una forma solo apparentemente diversa, l'abbiamo già incontrata in precedenza. Ci ricordiamo infatti che la varianza di una generica variabile $X$ è definita come la media degli scarti quadratici di ciascuna osservazione dalla media:
-
-$$
-S_{XX} = \frac{1}{n} \sum_{i=1}^n(X_i - \bar{X}) (X_i - \bar{X}). 
-$$ {#eq-cov-x-x}
-
-La varianza viene talvolta descritta come la "covarianza di una variabile con sé stessa". Adesso facciamo un passo ulteriore. Invece di valutare la dispersione di una sola variabile, ci chiediamo come due variabili $X$ e $Y$ "variano insieme" (co-variano). È facile capire come una risposta a tale domanda possa essere fornita da una semplice trasformazione della formula precedente che diventa:
-
-$$
-S_{XY} = \frac{1}{n} \sum_{i=1}^n(X_i - \bar{X}) (Y_i - \bar{Y}).
-$$ {#eq-cov-def}
-
-L'@eq-cov-def ci fornisce la definizione della covarianza.
-
-
-### Interpretazione
-
-Per capire il significato dell'@eq-cov-def, supponiamo di dividere il grafico precedente in quattro quadranti definiti da una retta verticale passante per la media dei valori BDI-II e da una retta orizzontale passante per la media dei valori CES-D. Numeriamo i quadranti partendo da quello in basso a sinistra e muovendoci in senso antiorario.
-
-Se prevalgono punti nel I e III quadrante, allora la nuvola di punti avrà un andamento crescente (per cui a valori bassi di $X$ tendono ad associarsi valori bassi di $Y$ e a valori elevati di $X$ tendono ad associarsi valori elevati di $Y$) e la covarianza avrà segno positivo. Mentre se prevalgono punti nel II e IV quadrante la nuvola di punti avrà un andamento decrescente (per cui a valori bassi di $X$ tendono ad associarsi valori elevati di $Y$ e a valori elevati di $X$ tendono ad associarsi valori bassi di $Y$) e la covarianza avrà segno negativo. Dunque, il segno della covarianza ci informa sulla direzione della relazione lineare tra due variabili: l'associazione lineare si dice positiva se la covarianza è positiva, negativa se la covarianza è negativa.
-
-
-::: {#exercise-covariance .callout .exercise collapse="true" collapsed="true"}
-#### Esempio.
-
-Implementiamo l'@eq-cov-def in R.
+Quando le variabili sono numeriche, il primo strumento da utilizzare è quasi sempre lo **scatterplot**. Ogni punto rappresenta un caso. La posizione del punto indica il valore della prima variabile sull'asse orizzontale e della seconda variabile sull'asse verticale.
 
 ```{r}
-cov_value <- function(x, y) {
-  mean_x <- sum(x) / length(x)
-  mean_y <- sum(y) / length(y)
-
-  sub_x <- x - mean_x
-  sub_y <- y - mean_y
-
-  sum_value <- sum(sub_y * sub_x)
-  denom <- length(x)
-
-  cov <- sum_value / denom
-  return(cov)
-}
+#| label: corr-stress-sonno-plot
+#| fig-cap: "Relazione tra stress accademico e ore di sonno. Ogni punto rappresenta uno studente."
+ggplot(eda_stress, aes(x = stress, y = sonno)) +
+  geom_point(alpha = 0.7) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(
+    x = "Stress accademico",
+    y = "Ore di sonno",
+    title = "Stress e sonno"
+  )
 ```
 
-Per i dati mostrati nel diagramma, la covarianza tra BDI-II e CESD è 207.4
+Prima di calcolare qualsiasi indice, è necessario porsi alcune domande:
 
-```{r}
-x <- df$bdi
-y <- df$cesd_sum
+1. **Direzione**: la relazione sembra positiva o negativa?
+2. **Forma**: la relazione sembra approssimativamente lineare?
+3. **Forza**: i punti sono vicini a una tendenza comune o molto dispersi?
+4. **Anomalie**: ci sono punti isolati che potrebbero influenzare in modo rilevante il risultato?
+5. **Gruppi**: ci sono sottogruppi che dovrebbero essere distinti?
 
-cov_value(x, y)
-```
+Nel grafico precedente, la relazione sembra negativa: a valori più alti di stress tendono a corrispondere meno ore di sonno. Tuttavia, la relazione non è perfetta: studenti con lo stesso livello di stress possono dormire un numero diverso di ore.
 
-Oppure, in maniera più semplice:
+## Descrivere la relazione: direzione, forma e forza
 
-```{r}
-mean((x - mean(x)) * (y - mean(y)))
-```
+Una relazione tra due variabili può essere descritta utilizzando tre concetti.
 
-Lo stesso risultato si ottiene con la funzione `cov`:
+### Direzione
 
-```{r}
-cov(x, y) * (length(x) - 1) / length(x)
-```
+Una relazione è **positiva** quando valori alti di una variabile tendono ad accompagnarsi a valori alti dell'altra. È **negativa** quando valori alti di una variabile tendono ad accompagnarsi a valori bassi dell'altra.
 
-La funzione `cov(x, y)` calcola la covarianza tra due array, `x` e `y` utilizzando $n-1$ al denominatore.
+### Forma
+
+Una relazione è **lineare** quando puo essere riassunta abbastanza bene da una linea retta. Molte relazioni psicologiche, però, non sono perfettamente lineari: possono essere curve, avere soglie, appiattirsi o cambiare direzione.
+
+### Forza
+
+Una relazione è più forte quando i punti sono vicini a una tendenza comune. È più debole quando i punti sono molto dispersi.
+
+::: {.callout-important title="Il coefficiente di correlazione di Pearson riassume  la forza di una relazione lineare"}
+La correlazione di Pearson riassume soprattutto la forza di una relazione lineare. Se la relazione non è lineare, se ci sono gruppi nascosti o se pochi punti estremi dominano il grafico, il coefficiente può essere poco informativo.
 :::
 
+## La covarianza: variare insieme
 
-## Correlazione
+La **covarianza** e una prima misura del fatto che due variabili variano insieme.  L'idea è semplice: si osserva se gli scarti dalla media di una variabile tendono ad avere lo stesso segno degli scarti dalla media dell'altra.
 
-La direzione della relazione tra le variabili è indicata dal segno della covarianza, ma il valore assoluto di questo indice non fornisce informazioni utili poiché dipende dall'unità di misura delle variabili. Ad esempio, considerando l'altezza e il peso delle persone, la covarianza sarà più grande se l'altezza è misurata in millimetri e il peso in grammi, rispetto al caso in cui l'altezza è in metri e il peso in chilogrammi. Pertanto, per descrivere la forza e la direzione della relazione lineare tra due variabili in modo adimensionale, si utilizza l'indice di correlazione.
-
-La correlazione è ottenuta standardizzando la covarianza tramite la divisione delle deviazioni standard ($s_X$, $s_Y$) delle due variabili:
-
-$$ 
-r = \frac{S_{XY}}{S_X S_Y}. 
-$$ {#eq-cor-def}
-
-La quantità che si ottiene dall'@eq-cor-def viene chiamata *correlazione* di Bravais-Pearson (dal nome degli autori che, indipendentemente l'uno dall'altro, l'hanno introdotta).
-
-In maniera equivalente, per una lista di coppie di valori $(x_1, y_1), \dots, (x_n, y_n)$, il coefficiente di correlazione è definito come la media del prodotto dei valori standardizzati:
+La covarianza campionaria tra due variabili $X$ e $Y$ e:
 
 $$
-r = \frac{1}{n} \sum_{i=1}^{n} \left( \frac{x_i - \bar{x}}{\sigma_x} \right) \left( \frac{y_i - \bar{y}}{\sigma_y} \right),
-$$ {#eq-cor-def2}
+s_{XY} = \frac{1}{n - 1} \sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y}).
+$$
 
-dove $\bar{x}$ e $\bar{y}$ rappresentano, rispettivamente, le medie dei valori $x$ e $y$, e $\sigma_x$ e $\sigma_y$ sono le rispettive deviazioni standard.
-
-Nell'@eq-cor-def2, i valori $x_i$ e $y_i$ vengono prima standardizzati sottraendo la media e dividendo per la deviazione standard, e poi si calcola la media del prodotto di questi valori standardizzati.
-
-
-### Proprietà
-
-Il coefficiente di correlazione ha le seguenti proprietà:
-
--   ha lo stesso segno della covarianza, dato che si ottiene dividendo la covarianza per due numeri positivi;
--   è un numero puro, cioè non dipende dall'unità di misura delle variabili;
--   assume valori compresi tra -1 e +1.
-
-
-### Interpretazione  
-
-All'indice di correlazione possiamo assegnare la seguente interpretazione:
-
-1.  $r_{XY} = -1$ $\rightarrow$ perfetta relazione negativa: tutti i punti si trovano esattamente su una retta con pendenza negativa (dal quadrante in alto a sinistra al quadrante in basso a destra);
-2.  $r_{XY} = +1$ $\rightarrow$ perfetta relazione positiva: tutti i punti si trovano esattamente su una retta con pendenza positiva (dal quadrante in basso a sinistra al quadrante in alto a destra);
-3.  $-1 < r_{XY} < +1$ $\rightarrow$ presenza di una relazione lineare di intensità diversa;
-4.  $r_{XY} = 0$ $\rightarrow$ assenza di relazione lineare tra $X$ e $Y$.
-
-
-::: {#exercise-correlation .callout .exercise collapse="true" collapsed="true"}
-#### Esempio.
-
-Per i dati riportati nel diagramma della @fig-cesd-bdi2, la covarianza è 207.4. Il segno positivo della covarianza ci dice che tra le due variabili c'è un'associazione lineare positiva. Per capire quale sia l'intensità della relazione lineare calcoliamo la correlazione. Essendo le deviazioni standard del BDI-II e del CES-D rispettavamente uguali a 15.37 e 14.93, la correlazione diventa uguale a $\frac{207.426}{15.38 \cdot 14.93} = 0.904.$ Tale valore è prossimo a 1.0, il che vuol dire che i punti del diagramma a dispersione non si discostano troppo da una retta con una pendenza positiva.
-
-Troviamo la correlazione con la funzione `corrcoef()`:
+Se i valori sopra la media di $X$ tendono ad accompagnarsi a valori sopra la media di $Y$, e i valori sotto la media di $X$ a valori sotto la media di $Y$, la covarianza è positiva. Se accade il contrario, la covarianza è negativa.
 
 ```{r}
-cor(x, y)
+#| label: corr-covariance
+cov(eda_stress$stress, eda_stress$sonno)
 ```
 
-Replichiamo il risultato implementando l'@eq-cor-def:
+Nel nostro esempio, la covarianza è negativa, coerentemente con lo scatterplot: un livello più alto di stress tende ad accompagnarsi a un numero inferiore di ore di sonno.
+
+La covarianza, però, ha un limite: dipende dalle unità di misura. Cambiare la scala di una variabile modifica anche il valore numerico della covarianza. Per questo motivo, nella pratica, si usa più spesso la correlazione.
+
+## La correlazione di Pearson
+
+La **correlazione di Pearson** è una versione standardizzata della covarianza. Assume valori compresi tra -1 e +1.
+
+$$
+r = \frac{s_{XY}}{s_X s_Y}.
+$$
+
+Il valore di $r$ indica:
+
+- il **segno** della relazione lineare: positivo o negativo;
+- la **forza** della relazione lineare;
+- non le unità di misura, perché il coefficiente è standardizzato.
 
 ```{r}
-s_xy <- mean((x - mean(x)) * (y - mean(y)))
-s_x <- sqrt(mean((x - mean(x))^2)) # Deviazione standard popolazione
-s_y <- sqrt(mean((y - mean(y))^2)) # Deviazione standard popolazione
-r_xy <- s_xy / (s_x * s_y)
-print(r_xy)
+#| label: corr-pearson
+cor(eda_stress$stress, eda_stress$sonno)
 ```
 
-Un altro modo ancora per trovare la correlazione tra i punteggi BDI-II e CESD è quello di applicare l'@eq-cor-def2:
+Un valore vicino a -1 indica una relazione lineare negativa molto forte. Un valore vicino a +1 indica una relazione lineare positiva molto forte. Un valore vicino a 0 indica l'assenza di una relazione lineare, ma non necessariamente l'assenza di una relazione in generale.
 
-```{r}
-z_x <- (x - mean(x)) / sqrt(mean((x - mean(x))^2)) 
-# Standardizzazione con deviazione standard popolazione
-z_y <- (y - mean(y)) / sqrt(mean((y - mean(y))^2)) 
-# Standardizzazione con deviazione standard popolazione
-mean(z_x * z_y)
-```
+::: {.callout-note title="Come interpretare la grandezza di r?"}
+Non esiste una soglia universale per stabilire se una correlazione è "piccola", "media" o "grande". Il suo significato dipende dal contesto, dalla qualità della misura, dalla variabilità del campione, dal disegno della ricerca e dalla teoria psicologica.
 :::
 
+### Leggere il coefficiente insieme al grafico
 
-::: {#exercise-correlation-2 .callout .exercise collapse="true" collapsed="true"}
-#### Esempio - Gender bias.
+Il coefficiente di correlazione è utile, ma non deve mai essere letto da solo. Nel report EDA, è consigliabile accompagnarlo sempre con uno scatterplot e con un'interpretazione prudente.
 
-Un uso interessante delle correlazioni viene fatto in un recente articolo di [Guilbeault et al. (2024)](https://www.nature.com/articles/s41586-024-07068-x). Il concetto di "gender bias" si riferisce alla tendenza sistematica di favorire un sesso rispetto all'altro, spesso a scapito delle donne. Lo studio di Guilbeault et al. (2024) analizza come le immagini online influenzino la diffusione su vasta scala di questo preconcetto di genere.
+```{r}
+#| label: corr-summary-table
+eda_stress |>
+  summarise(
+    n = n(),
+    r_stress_sonno = cor(stress, sonno),
+    media_stress = mean(stress),
+    media_sonno = mean(sonno)
+  )
+```
 
-Attraverso un vasto insieme di immagini e testi raccolti online, gli autori dimostrano che sia le misurazioni basate sulle immagini che quelle basate sui testi catturano la frequenza con cui varie categorie sociali sono associate a rappresentazioni di genere, valutate su una scala da -1 (femminile) a 1 (maschile), con 0 che indica una neutralità di genere. Questo consente di quantificare il preconcetto di genere come una forma di bias statistico lungo tre dimensioni: la tendenza delle categorie sociali ad associarsi a un genere specifico nelle immagini e nei testi, la rappresentazione relativa delle donne rispetto agli uomini in tutte le categorie sociali nelle immagini e nei testi, e il confronto tra le associazioni di genere nei dati delle immagini e dei testi con la distribuzione empirica delle donne e degli uomini nella società. Il lavoro di Guilbeault et al. (2024) evidenzia che il preconcetto di genere è molto più evidente nelle immagini rispetto ai testi, come mostrato nel pannello C della figura. 
+Una formulazione corretta potrebbe essere:
 
-Si noti che, nel grafico del pannello C della figura, ogni punto può essere interpretato come una misura di correlazione. La misura utilizzata da Guilbeault et al. (2024) riflette il grado di associazione tra le categorie sociali e le rappresentazioni di genere presenti nelle immagini e nei testi analizzati. Quando la misura è vicina a +1, indica una forte associazione positiva tra una categoria sociale specifica e una rappresentazione di genere maschile, mentre un valore vicino a -1 indica una forte associazione negativa con una rappresentazione di genere femminile. Un valore di 0, invece, suggerisce che non vi è alcuna associazione tra la categoria sociale considerata e un genere specifico, indicando una sorta di neutralità di genere. In sostanza, questa misura di frequenza può essere interpretata come una correlazione che riflette la tendenza delle categorie sociali a essere rappresentate in un modo o nell'altro nelle immagini e nei testi analizzati, rispetto ai concetti di genere femminile e maschile.
-
-![Il preconcetto di genere è più prevalente nelle immagini online (da Google Immagini) e nei testi online (da Google News). A. La correlazione tra le associazioni di genere nelle immagini da Google Immagini e nei testi da Google News per tutte le categorie sociali (n = 2.986), organizzate per decili. B. La forza dell'associazione di genere in queste immagini e testi online per tutte le categorie (n = 2.986), suddivisa in base al fatto che queste categorie siano inclinate verso il femminile o il maschile. C. Le associazioni di genere per un campione di occupazioni secondo queste immagini e testi online; questo campione è stato selezionato manualmente per evidenziare i tipi di categorie sociali e preconcetti di genere esaminati. (Figura tratta da Guilbeault et al. (2024)).](../../figures/gender_bias_1.png)
-
-:::
-
+> Nel campione osservato, lo stress accademico e le ore di sonno mostrano un'associazione lineare negativa: gli studenti con punteggi più alti di stress tendono a dormire meno. Tale associazione, tuttavia, non dimostra che lo stress causi una riduzione del sonno.
 
 ## Correlazione di Spearman
 
-Un'alternativa per valutare la relazione lineare tra due variabili è il coefficiente di correlazione di Spearman, che si basa esclusivamente sull'ordine dei dati e non sugli specifici valori. Questo indice di associazione è particolarmente adatto quando gli psicologi sono in grado di misurare solo le relazioni di ordine tra diverse modalità di risposta dei soggetti, ma non l'intensità della risposta stessa. Tali variabili psicologiche che presentano questa caratteristica sono definite come "ordinali".
+La correlazione di Pearson è sensibile alla forma della relazione e ai valori estremi. Quando la relazione è monotona, ma non lineare, oppure quando le variabili sono ordinali, può essere utile la **correlazione di Spearman**.
 
-::: {.callout-note}
-È importante ricordare che, nel caso di una variabile ordinale, non è possibile utilizzare le statistiche descrittive convenzionali come la media e la varianza per sintetizzare le osservazioni. Tuttavia, è possibile riassumere le osservazioni attraverso una distribuzione di frequenze delle diverse modalità di risposta. Come abbiamo appena visto, la direzione e l'intensità dell'associazione tra due variabili ordinali possono essere descritte utilizzando il coefficiente di correlazione di Spearman.
-:::
-
-
-::: {#exercise-correlation-spearman .callout .exercise collapse="true" collapsed="true"}
-#### Esempio.
-
-Per fornire un esempio, consideriamo due variabili di scala ordinale e calcoliamo la correlazione di Spearman tra di esse.
+Spearman non lavora direttamente sui valori originali, ma sui loro ranghi. Per questo motivo, la correlazione di Spearman descrive se, al crescere di una variabile, l'altra tende ad aumentare o diminuire, senza richiedere una relazione lineare perfetta.
 
 ```{r}
-cor.test(c(1, 2, 3, 4, 5), c(5, 6, 7, 8, 7), method = "spearman")
+#| label: corr-spearman
+cor(eda_stress$stress, eda_stress$sonno, method = "spearman")
 ```
-:::
 
+Nel nostro esempio, i coefficienti di Pearson e Spearman sono simili, perché la relazione è abbastanza regolare. In altri casi, invece, possono differire di più.
 
-## Oltre la correlazione e la covarianza: quando l’associazione tra variabili è più complessa
+## Quando Pearson puo ingannare
 
-In questo capitolo abbiamo introdotto due misure fondamentali per descrivere la relazione tra due variabili: *covarianza* e *correlazione*. La covarianza fornisce un’indicazione del modo in cui due variabili si discostano congiuntamente dalle proprie medie, mentre la correlazione ne standardizza i valori, permettendo un confronto più immediato tra diverse coppie di variabili e garantendo un indice compreso tra -1 e +1. Una correlazione vicina a +1 indica una forte relazione lineare positiva, vicina a -1 una forte relazione lineare negativa, mentre un valore vicino a 0 segnala l’assenza di una chiara relazione lineare.
+La correlazione di Pearson è utile, ma riassume solo un aspetto dei dati. Esaminiamo tre casi in cui il coefficiente può essere fuorviante.
 
-Tuttavia, è cruciale comprendere che la correlazione descrive esclusivamente *la dimensione lineare* della relazione tra due variabili. Questo significa che una correlazione nulla (pari a zero) non implica affatto che non vi sia alcuna relazione tra le variabili, ma semplicemente che non esiste una relazione lineare. Possono esistere relazioni non lineari anche molto forti, non catturate da questo indice. Inoltre, altre situazioni possono trarre in inganno, come nei casi in cui i dati siano raggruppati in sottogruppi con proprietà differenti o siano frutto di particolari processi di selezione.
+### Relazioni non lineari
 
-
-### Correlazione nulla e relazioni non lineari
-
-Una correlazione pari a zero può nascondere relazioni non lineari anche molto marcate. Per esempio, se una variabile Y aumenta solo quando X è molto alta o molto bassa, ma rimane costante per valori intermedi di X, questa curva a “U” può generare una correlazione vicina allo zero, pur esistendo un forte legame non lineare.
-
-Un esempio illustrativo è fornito dal cosiddetto *Datasaurus Dozen*, un insieme di tredici dataset con la stessa media, deviazione standard e correlazione tra le variabili, ma con distribuzioni visivamente e strutturalmente molto diverse. In ognuno di questi dataset la correlazione di Pearson è pari a zero, ma l’ispezione grafica rivela pattern e forme ben definite. Questo ci ricorda che è sempre bene accompagnare le misure numeriche con una visualizzazione grafica dei dati.
+Una correlazione vicina a zero non implica necessariamente l'assenza di una relazione. Consideriamo, ad esempio, una relazione a U: i valori intermedi di stress possono associarsi a un certo esito, mentre i valori molto bassi e molto alti possono associarsi a esiti diversi.
 
 ```{r}
-datasaurus_data <- read.csv("../../data/datasaurus.csv")
-
-datasaurus_summary <- datasaurus_data %>%
-  group_by(dataset) %>%
-  summarise(
-    x_count = n(),
-    x_mean = mean(x, na.rm = TRUE),
-    x_std = sd(x, na.rm = TRUE),
-    y_count = n(),
-    y_mean = mean(y, na.rm = TRUE),
-    y_std = sd(y, na.rm = TRUE)
-  )
-
-datasaurus_summary
-```
-
-```{r fig.asp=1}
-datasaurus_data |>
-  ggplot(aes(x = x, y = y)) +
-  geom_point(alpha = 0.7) +
-  facet_wrap(~dataset, nrow = 4, ncol = 4) +
-  labs(x = NULL, y = NULL)
-```
-
-Tutti questi esempi rafforzano l’idea che l’assenza di correlazione lineare non significa assenza di relazione: potremmo avere strutture curve, pattern complessi o punti anomali (outlier) capaci di modificare radicalmente la forma della relazione tra le variabili.
-
-Oltre alle relazioni non lineari, esistono situazioni in cui la correlazione, da sola, **può fornire un’immagine distorta dei dati**. Tra queste ricordiamo due fenomeni noti come il *paradosso di Simpson* e il *paradosso di Berkson*.
-
-### Paradosso di Simpson
-
-Il paradosso di Simpson si verifica quando, osservando i dati raggruppati per sottogruppi, si nota una certa relazione tra due variabili, ma aggregando i dati di tutti i sottogruppi insieme, emerge una relazione opposta. In altre parole, una tendenza presente all'interno di ciascun gruppo può scomparire o trasformarsi nel suo opposto quando i dati vengono combinati senza tenere conto della struttura dei sottogruppi.
-
-Supponiamo di analizzare la relazione tra il voto di laurea ($X$) e la performance in un successivo programma di specializzazione ($Y$) in due dipartimenti universitari, A e B. All'interno di ciascun dipartimento, osserviamo una relazione positiva: gli studenti con voti di laurea più alti tendono, in media, a ottenere performance migliori nella specializzazione. Tuttavia, i due dipartimenti differiscono sistematicamente nei livelli medi:
-
-* il **Dipartimento A** ha voti di laurea mediamente più bassi, ma performance nella specializzazione generalmente più elevate;
-* il **Dipartimento B** ha voti di laurea mediamente più alti, ma performance nella specializzazione leggermente inferiori.
-
-Quando i dati vengono aggregati ignorando l’appartenenza dipartimentale, queste differenze strutturali dominano la relazione globale, producendo una correlazione complessiva negativa tra $X$ e $Y$.
-
-Questo fenomeno non è un'anomalia statistica, ma il risultato dell'interazione tra variabili confondenti e differenze sistematiche tra i gruppi.
-
-Ecco come possiamo simulare questi dati in R:
-
-```{r}
+#| label: corr-nonlinear-data
 set.seed(123)
+nonlinear <- tibble::tibble(
+  attivazione = seq(-3, 3, length.out = 120),
+  prestazione = 8 - attivazione^2 + rnorm(120, 0, 0.7)
+)
 
-# Numero di osservazioni per dipartimento
-n <- 100
-
-# Dipartimento A:
-# Voti di laurea (X) più bassi, ma performance (Y) più alta.
-# Creiamo un legame positivo tra X e Y all'interno di A.
-X_A <- rnorm(n, mean = 50, sd = 5)    # Voti laurea mediamente più bassi
-Y_A <- X_A + rnorm(n, mean = 20, sd = 5) # Performance alta e correlata positivamente con X
-
-# Dipartimento B:
-# Voti di laurea (X) più alti, ma performance (Y) più bassa.
-# Anche qui creiamo un legame positivo tra X e Y all'interno di B, 
-# ma con un offset tale che globalmente i voti alti coincidano con performance minori.
-X_B <- rnorm(n, mean = 60, sd = 5)    # Voti laurea mediamente più alti
-Y_B <- X_B - rnorm(n, mean = 10, sd = 5) # Performance più bassa ma comunque correlata positivamente con X all’interno di B
-
-# Creiamo un dataframe con tutti i dati
-dipartimento <- c(rep("A", n), rep("B", n))
-X <- c(X_A, X_B)
-Y <- c(Y_A, Y_B)
-dati <- data.frame(dipartimento, X, Y)
-
-# Correlazioni all'interno dei dipartimenti
-cat("Correlazione nel Dipartimento A:", cor(X_A, Y_A), "\n")
-cat("Correlazione nel Dipartimento B:", cor(X_B, Y_B), "\n")
-
-# Correlazione sull'intero dataset (senza distinguere i dipartimenti)
-cat("Correlazione globale:", cor(X, Y), "\n")
+cor(nonlinear$attivazione, nonlinear$prestazione)
 ```
 
 ```{r}
-# Visualizziamo i dati
-ggplot(dati, aes(x = X, y = Y, color = dipartimento)) +
-  geom_point() +
+#| label: corr-nonlinear-plot
+#| fig-cap: "Esempio di relazione non lineare. La correlazione lineare puo essere vicina a zero anche quando esiste un pattern chiaro."
+ggplot(nonlinear, aes(x = attivazione, y = prestazione)) +
+  geom_point(alpha = 0.7) +
+  geom_smooth(se = FALSE) +
+  labs(
+    x = "Attivazione",
+    y = "Prestazione",
+    title = "Una relazione non lineare"
+  )
+```
+
+In questo esempio, il coefficiente lineare non riassume bene la struttura del grafico. Lo scatterplot rivela un modello che il numero da solo non riesce a mostrare.
+
+### Valori estremi
+
+Un singolo valore estremo può cambiare molto una correlazione, soprattutto in campioni piccoli. Per questo motivo, quando calcoliamo una correlazione, dobbiamo sempre osservare il grafico e chiederci se alcuni punti abbiano un'influenza sproporzionata.
+
+```{r}
+#| label: corr-outlier-data
+set.seed(321)
+con_outlier <- tibble::tibble(
+  x = rnorm(30),
+  y = rnorm(30)
+) |>
+  bind_rows(tibble::tibble(x = 5, y = 5))
+
+cor(con_outlier$x, con_outlier$y)
+```
+
+```{r}
+#| label: corr-outlier-plot
+#| fig-cap: "Un valore estremo puo produrre o rafforzare una correlazione apparente."
+ggplot(con_outlier, aes(x = x, y = y)) +
+  geom_point(alpha = 0.8) +
   geom_smooth(method = "lm", se = FALSE) +
   labs(
-    x = "Voto di laurea", 
-    y = "Performance\nnella specializzazione",
-    color = "Dipartimento"
+    x = "Variabile X",
+    y = "Variabile Y",
+    title = "Effetto di un valore estremo"
   )
 ```
 
-#### Interpretazione dei risultati
+Un valore estremo non va eliminato automaticamente. Potrebbe trattarsi di un errore, ma potrebbe anche rappresentare un caso reale e significativo. La decisione deve essere documentata, come discusso nel capitolo sugli outlier.
 
-* **All’interno del Dipartimento A**, la correlazione tra il voto di laurea ($X$) e la performance ($Y$) è positiva: a voti più alti corrispondono, in media, performance migliori.
-* **All’interno del Dipartimento B**, la relazione è anch’essa positiva, indicando lo stesso andamento.
-* **Considerando i due dipartimenti insieme**, la correlazione complessiva diventa negativa: ignorando l’appartenenza al dipartimento, sembra che voti di laurea più alti siano associati a performance peggiori.
+### Gruppi nascosti e paradosso di Simpson
 
-Questa inversione apparente non riflette un cambiamento reale nel comportamento individuale, ma emerge perché il **dipartimento di appartenenza** agisce come variabile confondente, influenzando sia $X$ che $Y$.
-
-#### Significato metodologico
-
-Il paradosso di Simpson mostra in modo particolarmente chiaro che:
-
-* le relazioni statistiche **non sono proprietà intrinseche dei dati**, ma dipendono dal livello di analisi;
-* l’aggregazione indiscriminata può produrre conclusioni profondamente fuorvianti;
-* è essenziale considerare la **struttura dei dati**, i **fattori di raggruppamento** e le **variabili confondenti** prima di trarre inferenze causali o interpretative.
-
-In psicologia questo paradosso rappresenta un monito fondamentale: **analizzare senza stratificare equivale spesso a perdere l’informazione più rilevante**.
-
-### Paradosso di Berkson
-
-Il paradosso di Berkson è un fenomeno statistico che mostra come la selezione non casuale di un campione possa alterare l'associazione osservata tra due variabili, invertendone la direzione o generandone una spuria. Si verifica quando il dataset analizzato non è rappresentativo della popolazione generale, perché è sottoposto a un processo di selezione che dipende da entrambe le variabili in esame.
-
-Un esempio classico è il seguente: analizzando solo ciclisti professionisti, potremmo non osservare alcuna relazione tra la capacità aerobica (VO2 max) e la probabilità di vincere una gara. Ciò accade perché tutti i ciclisti a quel livello hanno già superato una soglia elevatissima di VO2 max, rendendo irrilevante tale variabile all'interno del gruppo selezionato. Se invece considerassimo la popolazione generale, emergerebbe chiaramente una forte relazione positiva tra i due fattori.
-
-Questo paradosso può essere generalizzato anche a situazioni psicologiche. Ad esempio, studiando l'associazione tra depressione e ansia esclusivamente in un campione di pazienti ricoverati in una struttura psichiatrica, si potrebbe osservare una correlazione nulla o negativa, poiché entrambe le condizioni sono già ampiamente rappresentate e il campione è preselezionato in base alla gravità del disagio. Nella popolazione generale, invece, le due condizioni mostrerebbero una chiara associazione positiva.
-
-Il paradosso di Berkson evidenzia quindi l'importanza critica di interrogarsi sul processo di selezione dei dati e sull'adeguatezza del campione rispetto alla domanda di ricerca. Ignorare questo aspetto può condurre a conclusioni fuorvianti.
-
-### Limiti delle statistiche riassuntive semplici
-
-Un esempio famoso che dimostra i limiti delle semplici statistiche descrittive,  come la media, la deviazione standard e la correlazione, è il quartetto di Anscombe. Questo insieme di quattro piccoli dataset ha medie, varianze e correlazioni tra variabili identiche, ma rappresenta relazioni estremamente diverse tra $X$ e $Y$ [@anscombe1973graphs].
-
-Importiamo il dataset `anscombe` disponibile nel pacchetto `datasets` di R:
+Un'associazione osservata nell'intero campione può cambiare quando si distinguono i gruppi. Questo fenomeno è noto come **paradosso di Simpson**.
 
 ```{r}
-data("anscombe")
+#| label: corr-simpson-data
+set.seed(11)
 
-anscombe |> 
-  head()
+gruppo_a <- tibble::tibble(
+  gruppo = "A",
+  x = rnorm(60, mean = 3, sd = 0.7),
+  y = 7 + 0.6 * x + rnorm(60, sd = 0.6)
+)
+
+gruppo_b <- tibble::tibble(
+  gruppo = "B",
+  x = rnorm(60, mean = 7, sd = 0.7),
+  y = 2 + 0.6 * x + rnorm(60, sd = 0.6)
+)
+
+simpson <- bind_rows(gruppo_a, gruppo_b)
+
+cor(simpson$x, simpson$y)
 ```
-
-Il dataset `anscombe` contiene quattro serie di dati (x1, y1), (x2, y2), (x3, y3) e (x4, y4), ognuna costituita da 11 coppie di valori (x, y). Per comprenderne meglio le loro caratteristiche, iniziamo calcolando alcune statistiche descrittive. La funzione `apply()` consente di applicare una funzione (ad esempio, `mean`) a tutte le colonne di un data frame. Utilizzandola sulle colonne di `anscombe`, otteniamo le medie di ciascuna delle otto variabili (le quattro x e le quattro y):
 
 ```{r}
-apply(anscombe, MARGIN = 2, mean)
+#| label: corr-simpson-bygroup
+simpson |>
+  group_by(gruppo) |>
+  summarise(r = cor(x, y), .groups = "drop")
 ```
-
-Osserviamo che le medie delle quattro variabili x sono identiche fino a sei cifre decimali, e le medie delle quattro variabili y differiscono solo in modo trascurabile (circa lo 0.01%). Analogamente, se calcoliamo le deviazioni standard per ciascuna variabile, notiamo una notevole somiglianza:
 
 ```{r}
-apply(anscombe, MARGIN = 2, sd)
-```
-
-Anche in questo caso, le deviazioni standard per le x coincidono fino alla sesta cifra decimale, mentre quelle delle y differiscono di meno dello 0.06%. Inoltre, se calcoliamo i coefficienti di correlazione tra x e y in ognuno dei quattro dataset, scopriamo che sono quasi identici:
-
-```{r}
-# Calcoliamo la correlazione per ciascuna coppia (x1,y1), (x2,y2), (x3,y3), (x4,y4)
-for (i in 1:4) {
-  x_var <- anscombe[[paste0("x", i)]]
-  y_var <- anscombe[[paste0("y", i)]]
-  
-  corr_value <- cor(x_var, y_var)
-  cat("Correlazione tra x", i, "e y", i, ":", corr_value, "\n")
-}
-```
-
-Se ci limitassimo a osservare queste statistiche (media, deviazione standard, correlazione), potremmo facilmente concludere che i quattro dataset sono sostanzialmente indistinguibili tra loro. Tuttavia, la realtà è ben diversa. Le statistiche descrittive, prese da sole, non offrono una visione completa e possono nascondere importanti differenze nella struttura dei dati.
-
-Questa differenza diventa evidente non appena si decide di visualizzare i dati. La rappresentazione grafica fornisce informazioni che non emergono dalle sole statistiche riassuntive:
-
-```{r fig.asp=1}
-anscombe_m <- tibble()
-
-for (i in 1:4) {
-  anscombe_m <- rbind(
-    anscombe_m, tibble(set = i, x = anscombe[, i], y = anscombe[, i + 4])
+#| label: corr-simpson-plot
+#| fig-cap: "Associazioni nei gruppi e associazione complessiva possono raccontare storie diverse."
+ggplot(simpson, aes(x = x, y = y, shape = gruppo)) +
+  geom_point(alpha = 0.7) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(
+    x = "X",
+    y = "Y",
+    shape = "Gruppo",
+    title = "Gruppi nascosti e associazione complessiva"
   )
-}
-
-ggplot(anscombe_m, aes(x, y)) +
-  geom_point(size = 3, shape = 21, fill="orange") +
-  geom_smooth(method = "lm", fill = NA, fullrange = TRUE) +
-  facet_wrap(~set, ncol = 2)
 ```
 
-Osservando i grafici, notiamo subito che i quattro dataset sono molto diversi tra loro. 
+Questo esempio mostra perché l'EDA deve considerare il disegno dello studio e le variabili di gruppo. Una correlazione complessiva può essere diversa dalle correlazioni osservate nei sottogruppi.
 
-- *Dataset 1:* qui la relazione tra x e y è approssimativamente lineare, e la correlazione riflette in modo appropriato il legame tra le due variabili.
-- *Dataset 2:* sebbene la correlazione sia simile a quella del Dataset 1, ma i dati mostrano una relazione curvilinea e non lineare. La semplice correlazione lineare non riesce a coglierne la forma.
-- *Dataset 3:* la presenza di un singolo outlier distorce la percezione della relazione lineare tra le variabili. La correlazione elevata è influenzata in modo sproporzionato da questo punto anomalo.
-- *Dataset 4:* in questo caso, i dati non mostrano alcuna relazione lineare. La correlazione elevata è il risultato di un pattern fortemente atipico (per esempio, una sola coppia di punti allineati).
+## Una procedura pratica per l'EDA bivariata
 
-Il quartetto di Anscombe mette in luce un principio fondamentale: le statistiche descrittive, come la media, la deviazione standard e la correlazione, non sono sempre sufficienti per comprendere la natura dei dati. La visualizzazione grafica è essenziale per cogliere relazioni, pattern non lineari, outlier e altre caratteristiche che le statistiche descrittive non riescono a rivelare. In definitiva, questo esempio dimostra che l'analisi dei dati basata esclusivamente su poche statistiche di sintesi può condurre a conclusioni fuorvianti, mentre l'integrazione con la rappresentazione grafica offre una visione più completa e accurata.
+1. Controllare il significato delle variabili: che cosa misurano? Si tratta di punteggi, tempi, frequenze o categorie ordinate?
+2. Controllare i dati mancanti: la correlazione viene calcolata sugli stessi casi per entrambe le variabili?
+3. Disegnare uno scatterplot: la relazione sembra lineare, monotona, curva o assente?
+4. Cercare i valori estremi: pochi punti dominano la relazione?
+5. Considerare i gruppi: la relazione è simile in tutti i sottogruppi rilevanti?
+6. Calcolare un coefficiente:
+  - Pearson se la relazione è approssimativamente lineare;
+  - Spearman se la relazione è monotona o le variabili sono ordinali.
+7. Interpretare con cautela: l'associazione non implica la causalità.
 
-## Riflessioni conclusive {.unnumbered .unlisted}
+## Usare l'AI con criterio
 
-La covarianza e la correlazione sono strumenti fondamentali per descrivere la direzione e l’intensità di una relazione lineare tra due variabili. Tuttavia, la loro apparente semplicità non deve essere confusa con una completezza informativa. Una correlazione pari a zero non indica l’assenza di relazione in senso assoluto, ma segnala soltanto l’assenza di un legame **lineare**.
+L'AI può essere molto utile per generare codice R, proporre grafici o spiegare gli errori. Per esempio, si può chiedere:
 
-Inoltre, fenomeni come il **paradosso di Simpson** e il **paradosso di Berkson** mostrano chiaramente come le correlazioni possano risultare fuorvianti quando si ignorano la **struttura dei dati** o il **processo di selezione del campione**. In questi casi, la relazione osservata riflette più il modo in cui i dati sono stati raccolti o aggregati che il legame reale tra le variabili.
+> Scrivi del codice R con `ggplot2` per visualizzare la relazione tra lo stress accademico e le ore di sonno e per calcolare la correlazione di Pearson e Spearman.
 
-Esempi classici come il **quartetto di Anscombe** rafforzano ulteriormente questo punto, evidenziando l’importanza di affiancare alle statistiche riassuntive un’attenta **analisi grafica**. Solo così è possibile individuare pattern non lineari, valori anomali e peculiarità del dataset che le misure sintetiche da sole non riescono a catturare.
+Tuttavia, lo studente deve controllare alcuni punti.
 
-Nel prossimo capitolo, introdurremo approcci che permettono di andare oltre la semplice descrizione dell’associazione, avvicinandoci a una comprensione più profonda dei meccanismi sottostanti e ponendo le basi per un’analisi di tipo causale dei fenomeni psicologici.
+::: {.callout-warning title="Cosa devi controllare tu"}
+- Le variabili indicate dall'AI sono presenti davvero nel dataset?
+- I casi con valori mancanti sono stati esclusi? Quanti sono?
+- Il grafico prodotto e adatto al tipo di variabili?
+- La relazione sembra lineare o solo monotona?
+- La correlazione e calcolata sull'intero campione o per gruppi?
+- L'AI sta interpretando una correlazione come se fosse una causa?
+:::
+
+Un buon esercizio non consiste solo nell'ottenere il codice, ma anche nel saperlo spiegare. Dopo aver usato l'AI, proviamo sempre a rispondere:
+
+> Quale domanda risponde questo codice? Quali casi utilizza? Quale relazione mostra? Quale conclusione non posso trarre?
+
+## Dal coefficiente al modello
+
+La correlazione è uno strumento descrittivo. Ci aiuta a capire se due variabili cambiano insieme, ma non ci dice quale processo abbia generato tale associazione. Per passare dalla descrizione alla spiegazione sono necessari una teoria, un disegno di ricerca, il controllo dei confondenti e modelli statistici più espliciti.
+
+Questa distinzione prepara il terreno per il capitolo successivo: l'EDA può suggerire ipotesi causali, ma non può fondarle da sola.
+
+## Riepilogo {.unnumbered .unlisted}
+
+- Lo scatterplot precede il coefficiente.
+- La correlazione di Pearson descrive la forza e la direzione di una relazione lineare.
+- La correlazione di Spearman descrive relazioni monotone usando i ranghi.
+- Una correlazione vicina a zero non esclude relazioni non lineari.
+- I valori estremi e i gruppi nascosti possono modificare fortemente il coefficiente.
+- La correlazione è un risultato descrittivo, non una prova causale.
 
 ## Esercizi {.unnumbered .unlisted}
 
-::: {.callout-tip title="Esercizio" collapse="true"}
-**Esercizi Teorici**  
+::: {.callout-tip collapse="true" title="Esercizio 1: leggere uno scatterplot"}
+Usa il dataset `eda_stress`. Crea uno scatterplot tra `supporto` e `stress`.
 
-1. **Definizioni fondamentali**  
-
-   - Qual è la differenza tra **associazione, correlazione e dipendenza**?  
-   - Perché la **correlazione non implica causalità**? Fai un esempio.  
-   - In quali situazioni la correlazione di **Spearman** è preferibile rispetto alla correlazione di **Pearson**?  
-
-2. **Interpretazione della correlazione**  
-
-   - Qual è il range dei valori che può assumere la correlazione di Pearson?  
-   - Se il coefficiente di correlazione tra due variabili è **0.85**, come interpreteresti la loro relazione?  
-   - Se il coefficiente di correlazione è **-0.60**, che tipo di relazione esiste tra le due variabili?  
-   - Quali fattori potrebbero influenzare il valore della correlazione?  
-
-3. **Covarianza vs Correlazione**  
-
-   - Qual è la differenza tra **covarianza** e **correlazione**?  
-   - Perché la covarianza non è sempre interpretabile come misura della forza della relazione tra due variabili?  
-   - Quali sono i vantaggi di usare la correlazione al posto della covarianza?  
-
-4. **Grafico a dispersione e correlazione**  
-
-   - Osservando un **grafico a dispersione**, quali caratteristiche ti permettono di identificare una relazione lineare positiva o negativa?  
-   - Disegna (o descrivi verbalmente) un esempio di un dataset con una correlazione di **circa 0**, ma con una chiara relazione non lineare tra le variabili.  
-
-**Esercizi Pratici in R**  
-
-📌 **Obiettivo**: Analizzare le relazioni tra **Satisfaction With Life Scale (SWLS)** e **Scala della Rete Sociale di Lubben (LSNS-6)**, calcolare covarianza e correlazione, e visualizzare i dati per individuare pattern.  
-
-**Dati disponibili**:  
-
-Usa i dati raccolti per le variabili SWLS e LSNS, oltre al genere dei partecipanti.  
-
-**1. Esplorazione e Visualizzazione della Relazione tra SWLS e LSNS**  
-
-1. **Carica i dati raccolti dagli studenti** e verifica la struttura del dataset.  
-2. **Calcola le statistiche descrittive**: media, deviazione standard, minimo, massimo e quartili delle variabili SWLS e LSNS.  
-3. **Crea un grafico a dispersione** tra SWLS e LSNS:  
-   - Colora i punti in base al **genere** del partecipante.  
-   - Aggiungi una **linea di regressione** per evidenziare il trend della relazione.  
-
-**2. Calcolo della Covarianza e della Correlazione tra SWLS e LSNS**  
-
-1. **Calcola la covarianza tra SWLS e LSNS** usando la formula matematica della covarianza e confrontala con il valore ottenuto con `cov()`.  
-2. **Calcola la correlazione di Pearson** e commenta il risultato:  
-   - La relazione è forte o debole?  
-   - Ha segno positivo o negativo?  
-   - È coerente con quanto osservato nel grafico a dispersione?  
-3. **Calcola la correlazione di Spearman** e confrontala con quella di Pearson. Quale delle due è più appropriata per questi dati?  
-
-**3. Analisi delle Associazioni per Gruppi**  
-
-1. **Calcola la correlazione separatamente per i partecipanti di genere maschile e femminile.**  
-2. **Confronta i risultati**: la relazione tra SWLS e LSNS è simile nei due gruppi o ci sono differenze?  
-3. **Visualizza i dati con due grafici a dispersione distinti** per maschi e femmine.  
-
-**4. Correlazione Nulla e Pattern Non Lineari**  
-
-1. **Simula un dataset** in cui la correlazione di Pearson è **vicina a 0**, ma esiste una chiara relazione **non lineare** tra le variabili.  
-2. **Costruisci un grafico a dispersione** per osservare il pattern nei dati.  
-3. **Calcola la correlazione di Spearman** e confrontala con quella di Pearson. Quale delle due cattura meglio la relazione nei dati?  
-
-Consegna il file `.qmd` compilato in PDF contenente il codice, le visualizzazioni e le interpretazioni.
+1. La relazione sembra positiva o negativa?
+2. Sembra lineare?
+3. Ci sono punti anomali?
+4. Quale interpretazione psicologica prudente puoi proporre?
 :::
 
-::: {.callout-tip title="Soluzione" collapse="true"}
+::: {.callout-tip collapse="true" title="Esercizio 2: Pearson e Spearman"}
+Calcola la correlazione di Pearson e quella di Spearman tra `supporto` e `stress`.
 
-**1. Definizioni fondamentali**
-
-1.1 Differenza tra **associazione, correlazione e dipendenza**:
-
-- **Associazione**: Indica una relazione generica tra due variabili, senza specificare la natura o la direzione della relazione.
-- **Correlazione**: Misura la forza e la direzione di una relazione **lineare** tra due variabili. Può essere positiva (variabili aumentano insieme) o negativa (una variabile aumenta mentre l'altra diminuisce).
-- **Dipendenza**: Indica che una variabile è influenzata da un'altra, ma non implica necessariamente una relazione lineare. La dipendenza può essere causale o statistica.
-
-1.2 Perché la **correlazione non implica causalità**:
-
-La correlazione misura solo la relazione lineare tra due variabili, ma non indica se una variabile causa l'altra. Un esempio classico è la correlazione tra il consumo di gelati e il numero di annegamenti: entrambi aumentano in estate, ma non c'è un nesso causale diretto. Un terzo fattore (il caldo) influenza entrambe le variabili.
-
-1.3 Quando preferire la correlazione di **Spearman** rispetto a quella di **Pearson**:
-
-- Quando i dati non sono distribuiti normalmente.
-- Quando ci sono outlier che potrebbero distorcere la correlazione di Pearson.
-- Quando la relazione tra le variabili è **monotona** (sempre crescente o decrescente) ma non lineare.
-
-**2. Interpretazione della correlazione**
-
-2.1 Range dei valori della correlazione di Pearson:
-
-La correlazione di Pearson assume valori compresi tra **-1** e **1**:
-- **1**: Correlazione lineare positiva perfetta.
-- **-1**: Correlazione lineare negativa perfetta.
-- **0**: Nessuna correlazione lineare.
-
-2.2 Interpretazione di un coefficiente di **0.85**:
-
-Un coefficiente di 0.85 indica una **forte relazione lineare positiva** tra le due variabili. All'aumentare di una variabile, l'altra tende ad aumentare in modo consistente.
-
-2.3 Interpretazione di un coefficiente di **-0.60**:
-
-Un coefficiente di -0.60 indica una **relazione lineare negativa moderata**. All'aumentare di una variabile, l'altra tende a diminuire.
-
-2.4 Fattori che influenzano la correlazione:
-
-- **Outlier**: Possono distorcere il valore della correlazione.
-- **Distribuzione non lineare**: La correlazione di Pearson non cattura relazioni non lineari.
-- **Range ristretto delle variabili**: Se i dati coprono solo una piccola parte del range possibile, la correlazione potrebbe essere sottostimata.
-
-**3. Covarianza vs Correlazione**
-
-3.1 Differenza tra **covarianza** e **correlazione**:
-
-- **Covarianza**: Misura la direzione della relazione tra due variabili, ma il suo valore dipende dalle unità di misura delle variabili.
-- **Correlazione**: Standardizza la covarianza, rendendola adimensionale e consentendo confronti tra diverse coppie di variabili.
-
-3.2 Perché la covarianza non è sempre interpretabile:
-
-La covarianza non è standardizzata, quindi il suo valore non fornisce informazioni sulla forza della relazione. Ad esempio, una covarianza di 1000 potrebbe indicare una relazione forte o debole, a seconda delle unità di misura.
-
-3.3 Vantaggi della correlazione rispetto alla covarianza:
-
-- È adimensionale, quindi può essere confrontata tra diverse coppie di variabili.
-- Assume valori compresi tra -1 e 1, facilitando l'interpretazione della forza e della direzione della relazione.
-
-**4. Grafico a dispersione e correlazione**
-
-4.1 Caratteristiche di un grafico a dispersione per identificare relazioni lineari:
-
-- **Relazione lineare positiva**: I punti si dispongono lungo una linea retta con pendenza positiva.
-- **Relazione lineare negativa**: I punti si dispongono lungo una linea retta con pendenza negativa.
-- **Nessuna relazione lineare**: I punti sono sparsi senza un pattern evidente.
-
-4.2 Esempio di dataset con correlazione circa 0 ma relazione non lineare:
-
-Immagina un dataset in cui una variabile $x$ assume valori simmetrici intorno a 0 (ad esempio, da -5 a 5), e la variabile $y$ è uguale a $x^2$. In questo caso:
-
-- La correlazione di Pearson sarà **circa 0**, perché non c'è una relazione lineare.
-- Tuttavia, esiste una chiara relazione **non lineare** (quadratica) tra $x$ e $y$.
-
-**Descrizione verbale**:
-
-I punti formano una parabola, con $y$ che aumenta sia quando $x$ è positivo che negativo. La correlazione di Pearson non cattura questa relazione, mentre la correlazione di Spearman potrebbe farlo.
-
-**1. Esplorazione e Visualizzazione della Relazione tra SWLS e LSNS**
-
-1.1 Carica i dati raccolti dagli studenti e verifica la struttura del dataset
-Simuliamo un dataset con 100 partecipanti, includendo le variabili **SWLS** (Soddisfazione di Vita), **LSNS** (Rete Sociale), e **Genere**.
-
-```r
-# Simulazione dei dati
-set.seed(123)
-n <- 100
-genere <- sample(c("Maschio", "Femmina"), n, replace = TRUE)
-swls <- round(rnorm(n, mean = 20, sd = 5), 1)  # SWLS: Scala 5-35
-lsns <- round(rnorm(n, mean = 12, sd = 4), 1)   # LSNS: Scala 0-30
-
-# Creazione del dataset
-dati <- data.frame(Genere = genere, SWLS = swls, LSNS = lsns)
-
-# Verifica della struttura
-str(dati)
-head(dati)
-```
-
-1.2 Calcola le statistiche descrittive
-
-```r
-# Statistiche descrittive per SWLS e LSNS
-summary(dati$SWLS)
-summary(dati$LSNS)
-
-# Media e deviazione standard
-mean(dati$SWLS)
-sd(dati$SWLS)
-mean(dati$LSNS)
-sd(dati$LSNS)
-```
-
-1.3 Crea un grafico a dispersione
-
-```r
-library(ggplot2)
-
-ggplot(dati, aes(x = SWLS, y = LSNS, color = Genere)) +
-  geom_point(size = 3) +
-  geom_smooth(method = "lm", se = FALSE, color = "black") +
-  labs(
-       x = "Soddisfazione di Vita (SWLS)",
-       y = "Rete Sociale (LSNS)") +
-  theme_minimal()
-```
-
-**2. Calcolo della Covarianza e della Correlazione tra SWLS e LSNS**
-
-2.1 Calcola la covarianza
-
-```r
-# Covarianza manuale
-cov_manual <- sum((dati$SWLS - mean(dati$SWLS)) * (dati$LSNS - mean(dati$LSNS))) / (n - 1)
-cov_manual
-
-# Covarianza con funzione R
-cov(dati$SWLS, dati$LSNS)
-```
-
-2.2 Calcola la correlazione di Pearson
-
-```r
-cor_pearson <- cor(dati$SWLS, dati$LSNS, method = "pearson")
-cor_pearson
-```
-- **Commento**: La correlazione è [valore], indicando una relazione [forte/debole] e [positiva/negativa]. Questo è coerente con il grafico a dispersione.
-
-2.3 Calcola la correlazione di Spearman
-
-```r
-cor_spearman <- cor(dati$SWLS, dati$LSNS, method = "spearman")
-cor_spearman
-```
-- **Confronto**: La correlazione di Spearman è più appropriata se i dati non sono distribuiti normalmente o presentano outlier.
-
-**3. Analisi delle Associazioni per Gruppi**
-
-3.1 Calcola la correlazione separatamente per genere
-
-```r
-# Maschi
-cor_maschi <- cor(dati$SWLS[dati$Genere == "Maschio"], dati$LSNS[dati$Genere == "Maschio"], method = "pearson")
-
-# Femmine
-cor_femmine <- cor(dati$SWLS[dati$Genere == "Femmina"], dati$LSNS[dati$Genere == "Femmina"], method = "pearson")
-
-cor_maschi
-cor_femmine
-```
-
-3.2 Confronta i risultati
-
-- **Commento**: La correlazione è [simile/diversa] tra maschi e femmine, suggerendo [presenza/assenza] di differenze di genere.
-
-3.3 Visualizza i dati con grafici distinti
-
-```r
-ggplot(dati, aes(x = SWLS, y = LSNS, color = Genere)) +
-  geom_point(size = 3) +
-  geom_smooth(method = "lm", se = FALSE) +
-  facet_wrap(~ Genere) +
-  labs(
-       x = "Soddisfazione di Vita (SWLS)",
-       y = "Rete Sociale (LSNS)") +
-  theme_minimal()
-```
-
-**4. Correlazione Nulla e Pattern Non Lineari**
-
-4.1 Simula un dataset con correlazione nulla ma relazione non lineare
-
-```r
-set.seed(123)
-x <- rnorm(100, mean = 0, sd = 1)
-y <- x^2 + rnorm(100, mean = 0, sd = 0.5)  # Relazione quadratica
-dati_non_lineari <- data.frame(x = x, y = y)
-
-# Correlazione di Pearson
-cor_pearson_non_lineare <- cor(dati_non_lineari$x, dati_non_lineari$y, method = "pearson")
-cor_pearson_non_lineare  # Dovrebbe essere vicina a 0
-```
-
-4.2 Costruisci un grafico a dispersione
-
-```r
-ggplot(dati_non_lineari, aes(x = x, y = y)) +
-  geom_point(size = 3) +
-  labs(
-       x = "Variabile X",
-       y = "Variabile Y") 
-```
-
-4.3 Calcola la correlazione di Spearman
-
-```r
-cor_spearman_non_lineare <- cor(dati_non_lineari$x, dati_non_lineari$y, method = "spearman")
-cor_spearman_non_lineare  # Dovrebbe catturare la relazione non lineare
-```
-- **Confronto**: La correlazione di Spearman è più adatta per catturare relazioni non lineari.
-:::
-
-
-::: {.callout-note collapse=true title="Informazioni sull'ambiente di sviluppo"}
 ```{r}
-sessionInfo()
+#| label: corr-exercise-spearman
+cor(eda_stress$supporto, eda_stress$stress)
+cor(eda_stress$supporto, eda_stress$stress, method = "spearman")
 ```
+
+I due valori sono simili? Che cosa suggerisce questa somiglianza o differenza?
 :::
 
-## Bibliografia {.unnumbered .unlisted}
+::: {.callout-tip collapse="true" title="Esercizio 3: controllare il codice prodotto dall'AI"}
+Supponi che l'AI produca questo codice:
+
+```{r}
+#| label: corr-exercise-ai-code
+eda_stress |>
+  summarise(r = cor(stress, sonno, use = "complete.obs"))
+```
+
+Rispondi:
+
+1. Che cosa fa `use = "complete.obs"`?
+2. Quanti casi sono usati nel calcolo?
+3. Il codice basta per interpretare la relazione?
+4. Quale grafico aggiungeresti prima di commentare il risultato?
+:::
+
+::: {.callout-tip collapse="true" title="Esercizio 4: correlazione e causalita"}
+Scrivi tre possibili spiegazioni alternative dell'associazione negativa tra stress e sonno:
+
+1. stress causa minore sonno;
+2. minore sonno aumenta lo stress;
+3. una terza variabile influenza entrambe.
+
+Per ciascuna spiegazione, indica quale informazione aggiuntiva servirebbe per valutarla.
+:::

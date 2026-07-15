@@ -1,954 +1,543 @@
-# Visualizzazione dei dati con ggplot2 {#sec-r-ggplot2}
+# Visualizzare i dati con `ggplot2` {#sec-r-ggplot2}
 
-## Introduzione {.unnumbered}
+## Perché questo capitolo {.unnumbered .unlisted}
 
-La visualizzazione è il cuore dell'analisi esplorativa dei dati. Prima di costruire modelli statistici complessi, è essenziale *osservare* i dati per scoprire pattern, identificare anomalie e formulare ipotesi. In questo capitolo imparerai a creare grafici efficaci utilizzando `ggplot2`, il sistema di visualizzazione più potente e flessibile di R.
+L'analisi esplorativa dei dati inizia quasi sempre con la creazione di un grafico. Prima di calcolare un modello, stimare un parametro o discutere un effetto, dobbiamo chiederci cosa mostrano i dati osservati.
 
-::: {.callout-note}
-## Perché ggplot2?
+Un grafico non serve solo a rendere un risultato più gradevole. Permette di osservare la forma delle distribuzioni, confrontare i gruppi, individuare valori anomali, riconoscere le relazioni tra le variabili e verificare che il codice abbia prodotto i risultati attesi.
 
-- **Grammatica coerente**: ogni grafico si costruisce con gli stessi principi.
-- **Personalizzabile**: controllo completo su ogni elemento visuale.
-- **Pubblicabile**: qualità da rivista scientifica.
-- **Estensibile**: centinaia di pacchetti aggiuntivi.
+In questo capitolo useremo `ggplot2` in modo essenziale. Non impareremo tutte le opzioni disponibili. L'obiettivo è più semplice: imparare a leggere, modificare e controllare i grafici più comuni nell'analisi esplorativa dei dati (EDA).
 
-ggplot2 è lo standard de facto per la visualizzazione in psicologia e scienze sociali.
+Al termine del capitolo dovresti essere in grado di:
+
+- riconoscere la struttura di base di un grafico `ggplot2`;
+- scegliere il grafico più adatto in base al tipo di variabili e alla domanda esplorativa;
+- leggere un codice `ggplot2` riga per riga;
+- verificare che un grafico rappresenti correttamente i dati;
+- usare l'AI per generare il codice grafico senza delegare la scelta e l'interpretazione del grafico.
+- salvare un grafico in modo riproducibile.
+
+::: {.callout-important title="Idea chiave"}
+L'AI può scrivere il. codice `ggplot2`, ma non può decidere al posto nostro se il
+grafico è adatto alla domanda, se le variabili sono rappresentate correttamente
+e se l'interpretazione rispetta i limiti dei dati.
 :::
 
-## La filosofia: *Grammar of Graphics*
+## I dati di esempio
 
-`ggplot2` si fonda sul concetto di **grammatica dei grafici** (Wilkinson, 2005): un grafico è costruito come una composizione di strati (*layers*) che mappano i dati su attributi visivi.
-
-### Componenti essenziali
-
-Ogni grafico realizzato con `ggplot2` comprende tre componenti fondamentali:
-
-1. **Dati** (`data`): il dataset da rappresentare.
-2. **Estetiche** (`aes`): la mappatura delle variabili sulle proprietà visive (posizione, colore, forma, ecc.).
-3. **Geometrie** (`geom_*`): il tipo di elemento grafico utilizzato (punti, linee, barre, …).
-
-**Anatomia di un grafico**:
-
-```r
-ggplot(data = <DATI>) +
-  aes(x = <VARIABILE_X>, y = <VARIABILE_Y>) +
-  geom_<TIPO>()
-```
-
-::: {.callout-tip}
-
-## Il simbolo `+` in `ggplot2`
-
-In `ggplot2` il simbolo `+` serve ad **aggiungere strati** al grafico; non si utilizza la pipe (`|>`).
-Si tratta di uno dei pochi contesti del *tidyverse* in cui la pipe non è applicabile.
-
-```r
-# Corretto
-ggplot(dati) + geom_point()
-
-# Errato
-ggplot(dati) |> geom_point()  # NON funziona
-```
-
-:::
-
-## Setup e dati di esempio
+Useremo un piccolo dataset simulato su stress accademico e sonno. L'esempio è
+lo stesso filo conduttore già usato nei capitoli precedenti: vogliamo capire se,
+nel nostro campione, livelli più alti di stress sono associati a una peggiore
+qualità del sonno.
 
 ```{r}
-#| label: setup
+#| label: setup-ggplot2
 #| message: false
+#| warning: false
 
-library(tidyverse)  # Include ggplot2
-library(scales)     # Per formattare assi e legende
-```
+library(tidyverse)
 
-Per gli esempi seguenti, useremo dataset psicologici realistici:
-
-```{r}
-#| label: dati-esempio
-
-# Dataset 1: Studio sulla depressione
-set.seed(123)
-depression <- tibble(
-  id = 1:100,
-  gruppo = sample(c("Controllo", "Trattamento"), 100, replace = TRUE),
-  pre_bdi = rnorm(100, mean = 20, sd = 8),
-  post_bdi = pre_bdi - rnorm(100, mean = 5, sd = 4),
-  eta = sample(18:65, 100, replace = TRUE),
-  genere = sample(c("F", "M"), 100, replace = TRUE)
+studenti <- tibble(
+  id = 1:80,
+  genere = sample(c("F", "M"), size = 80, replace = TRUE),
+  anno = sample(c("primo", "secondo", "terzo"), size = 80, replace = TRUE),
+  stress = round(rnorm(80, mean = 24, sd = 6)),
+  sonno_ore = round(rnorm(80, mean = 6.5, sd = 1.1), 1),
+  qualita_sonno = round(9 - 0.12 * stress + rnorm(80, mean = 0, sd = 1.1), 1)
 ) |>
   mutate(
-    post_bdi = pmax(0, post_bdi),  # BDI non può essere negativo
-    cambiamento = pre_bdi - post_bdi
+    stress = pmin(pmax(stress, 8), 40),
+    sonno_ore = pmin(pmax(sonno_ore, 3.5), 9.5),
+    qualita_sonno = pmin(pmax(qualita_sonno, 1), 10),
+    gruppo_stress = if_else(stress >= 25, "stress alto", "stress basso")
   )
 
-# Dataset 2: Tempi di reazione in compito Stroop
-stroop <- tibble(
-  partecipante = rep(1:30, each = 40),
-  trial = rep(1:40, times = 30),
-  condizione = rep(c("Congruente", "Incongruente"), each = 20, times = 30),
-  rt = ifelse(condizione == "Congruente",
-              rnorm(1200, mean = 650, sd = 100),
-              rnorm(1200, mean = 750, sd = 120))
-) |>
-  mutate(rt = pmax(300, rt))  # RT minimo realistico
-
-head(depression)
-head(stroop)
+studenti
 ```
 
-## Grafici univariati
+Le variabili principali sono:
 
-### Istogrammi: distribuzioni di variabili continue
+- `stress`: punteggio numerico di stress accademico;
+- `sonno_ore`: ore di sonno per notte;
+- `qualita_sonno`: valutazione soggettiva della qualità del sonno da 1 a 10;
+- `genere`, `anno`, `gruppo_stress`: variabili categoriali.
 
-L'istogramma è il primo grafico da creare per esplorare una variabile quantitativa.
+Prima di costruire grafici, controlliamo sempre la struttura dei dati:
 
 ```{r}
-#| label: fig-histogram-base
-#| fig-cap: "Distribuzione dei punteggi BDI pre-trattamento"
-
-ggplot(depression) +
-  aes(x = pre_bdi) +
-  geom_histogram()
+glimpse(studenti)
 ```
 
-::: {.callout-warning}
+## La grammatica minima di `ggplot2`
 
-## Messaggio “`bins = 30`”
+Un grafico `ggplot2` combina tre elementi:
 
-Per impostazione predefinita, `ggplot2` utilizza 30 *bin* (intervalli) per gli istogrammi. Questa scelta automatica è raramente ottimale.
-È buona pratica specificare esplicitamente il numero di *bin* (`bins`) oppure la loro ampiezza (`binwidth`):
+1. una tabella di dati;
+2. una mappatura tra variabili e aspetti visivi del grafico;
+3. una geometria, cioè il tipo di elemento grafico da disegnare.
+
+La struttura minima è:
 
 ```r
-geom_histogram(bins = 20)      # Numero di bin
-geom_histogram(binwidth = 2)   # Ampiezza di ciascun bin
+ggplot(dati, aes(x = variabile_x, y = variabile_y)) +
+  geom_qualcosa()
 ```
 
+Per esempio:
+
+```{r}
+ggplot(studenti, aes(x = stress, y = qualita_sonno)) +
+  geom_point()
+```
+
+Questa istruzione si legge così:
+
+1. usa la tabella `studenti`;
+2. metti `stress` sull'asse x;
+3. metti `qualita_sonno` sull'asse y;
+4. rappresenta ogni osservazione con un punto.
+
+::: {.callout-note title="Il simbolo +"}
+In `ggplot2` il simbolo `+` aggiunge strati al grafico. Non è la pipe `|>`.
+Una regola pratica: se stai trasformando una tabella, probabilmente userai `|>`;
+se stai costruendo un grafico, userai `+`.
 :::
 
-**Istogramma migliorato**:
+## Scegliere il grafico in base alla domanda
+
+La scelta del grafico non dovrebbe partire da quello che l'AI propone, ma dalla
+domanda esplorativa.
+
+| Domanda | Variabili coinvolte | Grafico utile |
+|---|---|---|
+| Com'è distribuita una variabile numerica? | una numerica | istogramma |
+| Ci sono valori estremi? | una numerica, eventualmente per gruppi | boxplot |
+| I gruppi differiscono nella distribuzione? | una numerica + una categoriale | boxplot o punti per gruppo |
+| Due variabili numeriche sono associate? | due numeriche | scatterplot |
+| Quanti casi ci sono in ogni categoria? | una categoriale | grafico a barre |
+| Il pattern cambia per sottogruppi? | variabili + gruppo | faceting |
+
+::: {.callout-tip title="Prima domanda"}
+Prima di scrivere codice, formula la domanda in parole. Per esempio: "Voglio vedere se gli studenti con un livello di stress più alto tendono a riportare una qualità del sonno più bassa". Solo dopo scegli il grafico.
+:::
+
+## Una variabile numerica: istogramma
+
+Quando vogliamo osservare la distribuzione di una variabile numerica, un primo
+grafico utile è l'istogramma.
 
 ```{r}
-#| label: fig-histogram-migliorato
-#| fig-cap: "Distribuzione BDI pre-trattamento con personalizzazione"
+#| fig-cap: "Distribuzione dei punteggi di stress nel campione."
 
-ggplot(depression) +
-  aes(x = pre_bdi) +
-  geom_histogram(binwidth = 3, fill = "steelblue", color = "white") +
+ggplot(studenti, aes(x = stress)) +
+  geom_histogram(binwidth = 3) +
   labs(
-    title = "Distribuzione dei punteggi BDI",
-    x = "Punteggio BDI (pre-trattamento)",
-    y = "Frequenza"
-  ) +
-  theme_minimal()
+    x = "Stress accademico",
+    y = "Frequenza",
+    title = "Distribuzione dello stress accademico"
+  )
 ```
 
-**Elementi aggiunti**:
+Questo grafico aiuta a porsi le seguenti domande:
 
-- `binwidth = 3`: bin da 3 unità BDI.
-- `fill` e `color`: colore riempimento e bordo.
-- `labs()`: titoli degli assi.
-- `theme_minimal()`: tema pulito.
+- i valori sono concentrati in una zona oppure molto dispersi?
+- la distribuzione è simmetrica o asimmetrica?
+- ci sono valori inattesi?
+- il range dei valori è plausibile rispetto allo strumento di misura?
 
-### Grafici di densità: un’alternativa agli istogrammi
+::: {.callout-warning title="Controllo"}
+L'ampiezza degli intervalli (`binwidth`) modifica l'aspetto dell'istogramma. Se l'AI propone un istogramma, è sempre necessario controllare che la scelta dei bin non nasconda la forma dei dati.
+:::
 
-I grafici di densità forniscono una **stima lisciata** della distribuzione di una variabile continua e sono particolarmente utili per il confronto visivo tra gruppi.
+## Una variabile numerica per gruppi: boxplot
 
-```{r}
-ggplot(depression) +
-  aes(x = pre_bdi, fill = gruppo) +
-  geom_density(alpha = 0.5) +
-  labs(
-    title = "Confronto delle distribuzioni BDI tra gruppi",
-    x = "Punteggio BDI",
-    y = "Densità",
-    fill = "Gruppo"
-  ) +
-  theme_minimal()
-```
-
-**Nota**: l’argomento `alpha = 0.5` introduce trasparenza, facilitando l’osservazione delle sovrapposizioni tra distribuzioni.
-
-### Boxplot: sintesi dei cinque numeri
-
-I boxplot offrono una rappresentazione compatta di posizione, dispersione e valori estremi.
+Se vogliamo confrontare una variabile numerica tra gruppi, il boxplot offre una
+sintesi compatta.
 
 ```{r}
-ggplot(depression) +
-  aes(x = gruppo, y = cambiamento, fill = gruppo) +
+#| fig-cap: "Ore di sonno per gruppo di stress."
+
+ggplot(studenti, aes(x = gruppo_stress, y = sonno_ore)) +
   geom_boxplot() +
   labs(
-    title = "Cambiamento nei punteggi BDI",
-    x = "Gruppo",
-    y = "Riduzione BDI (punti)",
-    fill = "Gruppo"
-  ) +
-  theme_minimal()
-```
-
-**Interpretazione**:
-
-* **box**: intervallo interquartile (IQR, 50% centrale dei dati);
-* **linea nel box**: mediana;
-* **baffi**: estensione fino a 1.5 × IQR;
-* **punti isolati**: potenziali outlier.
-
-### Violin plot: boxplot + densità
-
-I *violin plot* combinano la sintesi del boxplot con la forma completa della distribuzione.
-
-```{r}
-ggplot(depression) +
-  aes(x = gruppo, y = cambiamento, fill = gruppo) +
-  geom_violin(alpha = 0.5) +
-  geom_boxplot(width = 0.2, alpha = 0.7) +
-  labs(
-    title = "Distribuzione completa dei cambiamenti",
-    x = "Gruppo",
-    y = "Riduzione BDI"
-  ) +
-  theme_minimal()
-```
-
-::: {.callout-tip}
-
-## Quando usare quale grafico?
-
-* **Istogramma**: variabile singola, interesse per la forma dettagliata.
-* **Densità**: confronto di distribuzioni tra gruppi.
-* **Boxplot**: sintesi rapida, molti gruppi.
-* **Violin plot**: informazione completa sulla distribuzione per gruppo.
-:::
-
-## Grafici bivariati
-
-### Scatterplot: relazioni tra variabili continue
-
-```{r}
-ggplot(depression) +
-  aes(x = pre_bdi, y = post_bdi) +
-  geom_point() +
-  labs(
-    title = "BDI: pre vs post trattamento",
-    x = "Punteggio pre-trattamento",
-    y = "Punteggio post-trattamento"
-  ) 
-```
-
-#### Aggiungere una linea di tendenza
-
-```{r}
-ggplot(depression) +
-  aes(x = pre_bdi, y = post_bdi) +
-  geom_point(alpha = 0.5) +
-  geom_smooth(method = "lm", se = TRUE, color = "red") +
-  labs(
-    title = "Relazione BDI pre–post",
-    x = "Pre-trattamento",
-    y = "Post-trattamento"
-  ) 
-```
-
-**Elementi chiave**:
-
-* `geom_smooth()`: aggiunge una linea di tendenza
-* `method = "lm"`: regressione lineare
-* `se = TRUE`: banda di confidenza
-
-### Colorare per gruppo
-
-```{r}
-ggplot(depression) +
-  aes(x = pre_bdi, y = post_bdi, color = gruppo) +
-  geom_point(size = 2, alpha = 0.6) +
-  geom_smooth(method = "lm", se = FALSE) +
-  labs(
-    title = "Relazione BDI per gruppo",
-    x = "Pre-trattamento",
-    y = "Post-trattamento",
-    color = "Gruppo"
-  ) 
-```
-
-**Nota**: mappando `color = gruppo` all’interno di `aes()`, `ggplot2` genera automaticamente colori distinti, legenda e linee di tendenza separate.
-
-### Grafici a barre: medie per gruppo
-
-I grafici a barre sono appropriati **solo** per statistiche riassuntive già calcolate.
-
-```{r}
-depression_summary <- depression |>
-  group_by(gruppo) |>
-  summarise(
-    media = mean(cambiamento),
-    se = sd(cambiamento) / sqrt(n())
+    x = "Gruppo di stress",
+    y = "Ore di sonno",
+    title = "Ore di sonno nei gruppi di stress"
   )
 ```
 
+Il boxplot mostra:
+
+- la mediana;
+- la variabilità centrale dei dati;
+- eventuali valori lontani dal resto della distribuzione.
+
+Tuttavia, il boxplot può nascondere il numero effettivo di casi in ogni gruppo.
+Per i campioni piccoli, può essere utile mostrare anche i punti osservati.
+
 ```{r}
-ggplot(depression_summary) +
-  aes(x = gruppo, y = media, fill = gruppo) +
-  geom_col() +
-  geom_errorbar(
-    aes(ymin = media - se, ymax = media + se),
-    width = 0.2
-  ) +
+#| fig-cap: "Ore di sonno per gruppo di stress, con osservazioni individuali."
+
+ggplot(studenti, aes(x = gruppo_stress, y = sonno_ore)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(width = 0.15, alpha = 0.6) +
   labs(
-    title = "Cambiamento medio per gruppo",
-    x = "Gruppo",
-    y = "Riduzione media BDI",
-    fill = "Gruppo"
-  ) 
+    x = "Gruppo di stress",
+    y = "Ore di sonno",
+    title = "Distribuzione delle ore di sonno nei gruppi"
+  )
 ```
 
-::: {.callout-important}
-
-## `geom_bar()` vs `geom_col()`
-
-* **`geom_bar()`**: calcola automaticamente le frequenze
-* **`geom_col()`**: utilizza valori y forniti esplicitamente
-
-Per medie o somme già calcolate, usa sempre `geom_col()`.
+::: {.callout-important title="Non trasformare il grafico in una conclusione"}
+Un boxplot può suggerire una differenza tra gruppi, ma non dimostra da solo un
+effetto causale. In questa fase stiamo esplorando i dati, non concludendo che lo
+stress causa meno sonno.
 :::
 
-## Estetiche (*aesthetics*)
+## Due variabili numeriche: scatterplot
 
-Le estetiche mappano le variabili del dataset su proprietà visive del grafico.
-
-### Estetiche principali
-
-| Estetica   | Tipo variabile      | Funzione              |
-| ---------- | ------------------- | --------------------- |
-| `x`, `y`   | Continua / discreta | Posizione             |
-| `color`    | Qualsiasi           | Colore del bordo      |
-| `fill`     | Qualsiasi           | Colore di riempimento |
-| `size`     | Continua            | Dimensione            |
-| `alpha`    | Continua            | Trasparenza           |
-| `shape`    | Discreta            | Forma                 |
-| `linetype` | Discreta            | Tipo di linea         |
-
-### Mappare vs. impostare
-
-**Distinzione fondamentale**:
+Per studiare la relazione tra due variabili numeriche, il grafico più diretto è
+lo scatterplot.
 
 ```{r}
-# Mappare: la proprietà varia con i dati
-ggplot(depression) +
-  aes(x = pre_bdi, y = post_bdi, color = gruppo) +
-  geom_point()
+#| fig-cap: "Relazione tra stress accademico e qualità del sonno."
 
-# Impostare: valore fisso
-ggplot(depression) +
-  aes(x = pre_bdi, y = post_bdi) +
-  geom_point(color = "red")
-```
-
-**Regola d’oro**:
-
-* **Dentro `aes()`** → la proprietà dipende dai dati
-* **Fuori `aes()`** → la proprietà è costante
-
-### Esempio con più estetiche
-
-```{r}
-ggplot(depression) +
-  aes(
-    x = pre_bdi,
-    y = post_bdi,
-    color = gruppo,
-    size = eta,
-    shape = genere
-  ) +
-  geom_point(alpha = 0.6) +
+ggplot(studenti, aes(x = stress, y = qualita_sonno)) +
+  geom_point() +
   labs(
-    title = "Analisi multivariata dei punteggi BDI",
-    x = "Pre-trattamento",
-    y = "Post-trattamento",
-    color = "Gruppo",
-    size = "Età",
-    shape = "Genere"
-  ) 
+    x = "Stress accademico",
+    y = "Qualita' del sonno",
+    title = "Stress e qualità del sonno"
+  )
 ```
 
-::: {.callout-warning}
+Questo grafico permette di osservare:
 
-## Non esagerare
+- la direzione della relazione;
+- la forza approssimativa dell'associazione;
+- la presenza di casi insoliti;
+- eventuali pattern non lineari.
 
-L’uso eccessivo di estetiche compromette la leggibilità.
-**Limite pratico**: 2–3 estetiche mappate simultaneamente.
+Possiamo aggiungere una linea di tendenza, ma dobbiamo interpretarla con cautela.
+
+```{r}
+#| fig-cap: "Relazione tra stress e qualità del sonno con linea di tendenza."
+
+ggplot(studenti, aes(x = stress, y = qualita_sonno)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = TRUE) +
+  labs(
+    x = "Stress accademico",
+    y = "Qualita' del sonno",
+    title = "Associazione tra stress e qualità del sonno"
+  )
+```
+
+::: {.callout-warning title="Errore comune"}
+Una linea di tendenza non trasforma un'associazione in una spiegazione causale.
+Se i dati sono di tipo osservazionale, il grafico può suggerire una relazione tra le variabili, ma non stabilisce da solo che una variabile produca l'altra.
 :::
 
-## Faceting: grafici multipli
+## Una variabile categoriale: grafico a barre
 
-Il **faceting** suddivide i dati in sottoinsiemi e genera un pannello grafico per ciascuno. È particolarmente utile per confronti sistematici tra gruppi.
-
-### `facet_wrap()`: griglia flessibile
-
-```{r}
-#| label: fig-facet-wrap
-#| fig-cap: "Istogrammi BDI per gruppo e genere"
-
-ggplot(depression) +
-aes(x = pre_bdi) +
-geom_histogram(binwidth = 3, fill = "steelblue", color = "white") +
-facet_wrap(~ gruppo + genere, ncol = 2) +
-labs(
-title = "Distribuzione BDI stratificata",
-x = "Punteggio BDI",
-y = "Frequenza"
-) 
-```
-
-**Sintassi**: `facet_wrap(~ variabile)` oppure `facet_wrap(~ var1 + var2)`
-
-### `facet_grid()`: griglia strutturata
+Quando la variabile è categoriale, il grafico a barre può mostrare quanti casi
+appartengono a ciascuna categoria.
 
 ```{r}
-#| label: fig-facet-grid
-#| fig-cap: "Confronto sistematico con facet_grid"
+#| fig-cap: "Numero di studenti per anno di corso."
 
-ggplot(depression) +
-aes(x = pre_bdi, y = post_bdi) +
-geom_point(alpha = 0.5) +
-geom_smooth(method = "lm", se = FALSE) +
-facet_grid(genere ~ gruppo) +
-labs(
-title = "Relazione pre-post per genere e gruppo",
-x = "Pre-trattamento",
-y = "Post-trattamento"
-) 
-```
-
-**Sintassi**: `facet_grid(righe ~ colonne)`
-
-::: {.callout-tip}
-
-## Quando usare quale funzione?
-
-* **`facet_wrap()`**: una variabile (o più variabili con impaginazione flessibile)
-* **`facet_grid()`**: due variabili, con griglia esplicita righe × colonne
-:::
-
-## Temi e personalizzazione
-
-I **temi** controllano gli elementi non legati ai dati (sfondo, griglie, caratteri, spaziature).
-
-### Temi predefiniti
-
-```{r}
-#| label: fig-themes
-#| fig-cap: "Confronto temi predefiniti"
-#| fig-subcap:
-#|   - "theme_gray (default)"
-#|   - "theme_minimal"
-#|   - "theme_classic"
-#|   - "theme_bw"
-#| layout-ncol: 2
-
-base_plot <- ggplot(depression) +
-aes(x = pre_bdi, y = post_bdi, color = gruppo) +
-geom_point()
-
-base_plot + theme_gray() + ggtitle("theme_gray")
-base_plot + theme_minimal() + ggtitle("theme_minimal")
-base_plot + theme_classic() + ggtitle("theme_classic")
-base_plot + theme_bw() + ggtitle("theme_bw")
-```
-
-**Temi comuni**:
-
-* `theme_gray()`: predefinito (sfondo grigio)
-* `theme_minimal()`: essenziale e moderno
-* `theme_classic()`: stile “da pubblicazione” (senza griglia)
-* `theme_bw()`: bianco e nero
-
-### Personalizzazione fine con `theme()`
-
-```{r}
-#| label: fig-custom-theme
-#| fig-cap: "Grafico con personalizzazione completa"
-
-ggplot(depression) +
-aes(x = gruppo, y = cambiamento, fill = gruppo) +
-geom_violin(alpha = 0.5) +
-geom_boxplot(width = 0.2, alpha = 0.7) +  # Boxplot sovrapposto
-labs(
-title = "Cambiamento BDI per gruppo",
-subtitle = "Studio randomizzato controllato (N=100)",
-x = "Gruppo di intervento",
-y = "Riduzione punteggio BDI",
-caption = "Fonte: Dataset simulato"
-) +
-theme_minimal() +
-theme(
-plot.title = element_text(size = 16, face = "bold"),
-plot.subtitle = element_text(size = 12, color = "gray40"),
-axis.title = element_text(size = 12, face = "bold"),
-legend.position = "none",  # Nasconde legenda (ridondante)
-panel.grid.major.x = element_blank()  # Rimuove griglia verticale
-)
-```
-
-**Elementi spesso personalizzati** (esempi):
-
-* `plot.title`: titolo
-* `axis.text`: etichette sugli assi
-* `legend.position`: posizione della legenda (`"none"`, `"bottom"`, `"right"`, …)
-* `panel.grid`: griglia di sfondo
-
-## Salvare i grafici
-
-### Con `ggsave()`
-
-```r
-#| label: save-plot
-#| eval: false
-
-# Salva l’ultimo grafico creato
-
-ggsave("grafico.png", width = 8, height = 6, dpi = 300)
-
-# Salva un grafico specifico
-
-mio_plot <- ggplot(depression) + aes(x = pre_bdi) + geom_histogram()
-ggsave("istogramma_bdi.pdf", plot = mio_plot, width = 10, height = 6)
-```
-
-**Parametri principali**:
-
-* `filename`: nome del file (l’estensione determina il formato: `.png`, `.pdf`, `.svg`)
-* `width`, `height`: dimensioni (in pollici)
-* `dpi`: risoluzione (300 per stampa/pubblicazione, 150 per presentazioni)
-* `plot`: oggetto `ggplot` da salvare (default: l’ultimo creato)
-
-::: {.callout-tip}
-
-## Formati consigliati
-
-* **PNG**: presentazioni e web (raster)
-* **PDF**: articoli e stampa (vettoriale, scalabile)
-* **SVG**: web ed editing successivo (Inkscape/Illustrator)
-:::
-
-## Scale: controllo di assi e legende
-
-Le **scale** determinano come i valori dei dati vengono mappati sulle estetiche del grafico e come tale mappatura viene rappresentata tramite assi e legende.
-
-### Scale continue
-
-```{r}
-#| label: fig-scale-continuous
-#| fig-cap: "Personalizzazione di assi continui"
-
-ggplot(depression) +
-  aes(x = pre_bdi, y = post_bdi, color = cambiamento) +
-  geom_point(size = 3) +
-  scale_x_continuous(
-    breaks = seq(0, 40, by = 10),
-    limits = c(0, 40)
-  ) +
-  scale_y_continuous(
-    breaks = seq(0, 40, by = 10),
-    limits = c(0, 40)
-  ) +
-  scale_color_gradient(
-    low = "blue", 
-    high = "red",
-    name = "Miglioramento\n(punti)"
-  ) +
+ggplot(studenti, aes(x = anno)) +
+  geom_bar() +
   labs(
-    title = "Punteggi BDI pre-post con miglioramento",
-    x = "Pre-trattamento",
-    y = "Post-trattamento"
-  ) +
-  theme_minimal()
+    x = "Anno di corso",
+    y = "Numero di studenti",
+    title = "Composizione del campione per anno"
+  )
 ```
 
-### Scale discrete
+Qui `geom_bar()` conta automaticamente quante righe appartengono a ogni categoria.
+
+Se invece abbiamo già calcolato una sintesi, per esempio una media per gruppo,
+allora useremo `geom_col()`.
 
 ```{r}
-#| label: fig-scale-discrete
-#| fig-cap: "Personalizzazione colori per variabili discrete"
-
-ggplot(depression) +
-  aes(x = gruppo, y = cambiamento, fill = gruppo) +
-  geom_violin(alpha = 0.5) +
-  scale_fill_manual(
-    values = c("Controllo" = "gray70", "Trattamento" = "steelblue"),
-    name = "Condizione"
-  ) +
-  labs(
-    title = "Effetto del trattamento",
-    x = NULL,  # Rimuove etichetta asse x (ridondante con legenda)
-    y = "Riduzione BDI"
-  ) 
-```
-
-**Funzioni scale comuni**:
-
-- `scale_x_continuous()`, `scale_y_continuous()`: assi numerici.
-- `scale_color_manual()`, `scale_fill_manual()`: colori personalizzati.
-- `scale_color_brewer()`: palette `ColorBrewer` (ottime per daltonici).
-- `scale_x_log10()`: scala logaritmica.
-
-## Grafici complessi: esempio Stroop
-
-Mettiamo insieme i diversi elementi visti finora applicandoli al dataset Stroop.
-
-```{r}
-#| label: fig-stroop-complex
-#| fig-cap: "Analisi completa effetto Stroop"
-#| fig-width: 10
-#| fig-height: 6
-
-# Calcola statistiche per partecipante
-stroop_summary <- stroop |>
-  group_by(partecipante, condizione) |>
+medie_sonno <- studenti |>
+  group_by(anno) |>
   summarise(
-    rt_media = mean(rt),
-    rt_se = sd(rt) / sqrt(n()),
+    media_sonno = mean(sonno_ore, na.rm = TRUE),
     .groups = "drop"
   )
 
-ggplot(stroop_summary) +
-  aes(x = condizione, y = rt_media, group = partecipante) +
-  
-  # Linee che collegano le misure ripetute
-  geom_line(alpha = 0.3, color = "gray50") +
-  
-  # Punti per ogni partecipante
-  geom_point(aes(color = condizione), size = 2, alpha = 0.6) +
-  
-  # Statistiche aggregate sovrapposte
-  stat_summary(
-    fun = mean, 
-    geom = "point", 
-    size = 4, 
-    color = "black",
-    shape = 18  # Diamante
-  ) +
-  stat_summary(
-    fun.data = mean_se, 
-    geom = "errorbar", 
-    width = 0.2,
-    linewidth = 1,
-    color = "black"
-  ) +
-  
-  scale_color_manual(
-    values = c("Congruente" = "#2E7D32", "Incongruente" = "#C62828")
-  ) +
-  
+medie_sonno
+```
+
+```{r}
+#| fig-cap: "Media delle ore di sonno per anno di corso."
+
+ggplot(medie_sonno, aes(x = anno, y = media_sonno)) +
+  geom_col() +
   labs(
-    title = "Effetto Stroop: Tempi di reazione per condizione",
-    subtitle = "Linee grigie = singoli partecipanti; diamanti neri = medie aggregate",
-    x = "Condizione",
-    y = "Tempo di reazione (ms)",
-    color = "Condizione"
-  ) +
-  theme(
-    plot.title = element_text(size = 14, face = "bold"),
-    plot.subtitle = element_text(size = 10, color = "gray40"),
-    legend.position = "none"  # Ridondante con asse x
+    x = "Anno di corso",
+    y = "Ore di sonno medie",
+    title = "Sonno medio per anno di corso"
   )
 ```
 
-**Elementi chiave**:
+::: {.callout-note title="`geom_bar()` o `geom_col()`?"}
+Usa `geom_bar()` quando vuoi contare le osservazioni presenti nei dati. Usa
+`geom_col()` quando la tabella contiene già i valori da rappresentare.
+:::
 
-1. `geom_line()`: connette misure ripetute dello stesso partecipante.
-2. `stat_summary()`: calcola e sovrappone statistiche aggregate.
-3. `scale_color_manual()`: colori semantici (verde = veloce, rosso = lento).
-4. trasparenza (`alpha`) per distinguere livelli individuali vs. aggregati.
+## Mappare o impostare un'estetica
 
-## Best practices per grafici scientifici
-
-### 1. Chiarezza prima di tutto
-
-✅ **Buone pratiche**:
-
-* Titoli informativi e descrittivi.
-* Assi chiaramente etichettati, con unità di misura.
-* Legende esplicative.
-* Caratteri leggibili (≥ 10 pt).
-
-❌ **Da evitare**:
-
-* Grafici sovraffollati.
-* Colori difficili da distinguere.
-* Eccesso di informazioni in un singolo grafico.
-* Effetti tridimensionali non informativi.
-
-### 2. Colori accessibili
-
-Utilizza palette adatte anche a persone con deficit di visione dei colori:
+Una delle confusioni più comuni in `ggplot2` riguarda la differenza tra mappare una variabile e impostare una proprietà fissa.
 
 ```{r}
-library(viridis)
-
-ggplot(depression) +
-  aes(x = pre_bdi, y = post_bdi, color = eta) +
-  geom_point(size = 3) +
-  scale_color_viridis_c(option = "plasma") +
-  labs(
-    title = "Palette Viridis (colorblind-safe)",
-    color = "Età"
-  ) 
+# Il colore dipende dai dati: ogni gruppo può avere un colore diverso
+ggplot(studenti, aes(x = stress, y = qualita_sonno, color = genere)) +
+  geom_point()
 ```
 
-**Palette consigliate**:
+Qui `color = genere` è dentro `aes()`: il colore è collegato a una variabile.
 
-* `viridis`, `magma`, `plasma`, `inferno` (pacchetto `viridis`)
-* Palette `ColorBrewer` (es. `scale_color_brewer(palette = "Set2")`)
+```{r}
+# Il colore è fisso: tutti i punti hanno la stessa proprieta'
+ggplot(studenti, aes(x = stress, y = qualita_sonno)) +
+  geom_point(color = "gray40")
+```
 
-### 3. Rapporto larghezza/altezza
+Qui `color = "gray40"` è fuori da `aes()`: il colore non rappresenta una
+variabile.
 
-Dimensioni comunemente adottate nelle pubblicazioni APA:
+::: {.callout-tip title="Controllo"}
+Se l'AI produce un grafico con colori, forme o dimensioni diverse, chiediti se quella differenza visiva rappresenta davvero una variabile. Oppure è solo una scelta decorativa?
+:::
 
-* **Colonna singola**: 3.5 × 3.5 pollici.
-* **Due colonne**: 7 × 5 pollici.
-* **Slide**: 10 × 6 pollici (16:9) oppure 10 × 7.5 pollici (4:3).
+## Faceting: lo stesso grafico per sottogruppi
 
-### 4. Esportazione in formati vettoriali
+Il faceting consente di ripetere lo stesso grafico per livelli diversi di una variabile categoriale. È utile quando si desidera verificare se un determinato modello cambia tra i sottogruppi.
 
-Per garantire la massima qualità grafica:
+```{r}
+#| fig-cap: "Relazione tra stress e qualità del sonno, separata per anno."
+
+ggplot(studenti, aes(x = stress, y = qualita_sonno)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  facet_wrap(~ anno) +
+  labs(
+    x = "Stress accademico",
+    y = "Qualita' del sonno",
+    title = "Stress e sonno nei diversi anni di corso"
+  )
+```
+
+Il faceting è utile, ma può anche frammentare troppo i dati. Se ogni pannello
+contiene pochi casi, il grafico può suggerire pattern instabili.
+
+## Titoli, assi e legenda
+
+Un grafico deve poter essere letto da una persona che non ha seguito tutti i passaggi della nostra analisi. Per questo motivo, titoli, assi e legenda fanno parte dell'analisi e non sono semplici elementi decorativi.
+
+```{r}
+#| fig-cap: "Grafico con etichette esplicite."
+
+ggplot(studenti, aes(x = stress, y = qualita_sonno, color = genere)) +
+  geom_point() +
+  labs(
+    title = "Stress accademico e qualità del sonno",
+    subtitle = "Ogni punto rappresenta uno studente",
+    x = "Punteggio di stress accademico",
+    y = "Qualita' del sonno percepita (1-10)",
+    color = "Genere"
+  )
+```
+
+Una buona etichetta chiarisce:
+
+- cosa rappresentano gli assi;
+- quale unità di misura o scala viene utilizzata;
+- cosa rappresentano i colori, le forme o i pannelli;
+- quale campione o sottogruppo viene visualizzato.
+
+## Personalizzazione minima
+
+`ggplot2` offre molte possibilità di personalizzazione. In questo modulo ne useremo poche. La priorità è la chiarezza, non l'estetica fine a sé stessa.
+
+```{r}
+ggplot(studenti, aes(x = stress, y = qualita_sonno)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = TRUE) +
+  labs(
+    x = "Stress accademico",
+    y = "Qualita' del sonno",
+    title = "Associazione tra stress e qualità del sonno"
+  ) +
+  theme_minimal()
+```
+
+`theme_minimal()` rimuove alcuni elementi visivi non necessari. Va bene usarlo,
+ma non risolve problemi sostanziali: un grafico concettualmente sbagliato resta
+sbagliato anche se è esteticamente pulito.
+
+## Salvare un grafico
+
+Per salvare un grafico in modo riproducibile è utile assegnarlo a un oggetto e
+poi usare la funzione `ggsave()`.
+
+```{r}
+grafico_stress_sonno <- ggplot(studenti, aes(x = stress, y = qualita_sonno)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = TRUE) +
+  labs(
+    x = "Stress accademico",
+    y = "Qualita' del sonno",
+    title = "Stress e qualità del sonno"
+  )
+
+grafico_stress_sonno
+```
 
 ```r
-ggsave("figura1.pdf", width = 7, height = 5)
-ggsave("figura1.svg", width = 7, height = 5)
+ggsave(
+  filename = "output/grafico_stress_sonno.png",
+  plot = grafico_stress_sonno,
+  width = 7,
+  height = 5,
+  dpi = 300
+)
 ```
 
-## Risorse aggiuntive
+Nel codice sopra assumiamo che esista una cartella `output/` nel progetto. Se la cartella non esiste, R restituirà un errore.
 
-### Geometrie non trattate qui
+::: {.callout-warning title="Controllo"}
+Non salvare i grafici manualmente con gli screenshot. Usa un codice riproducibile, così il grafico può essere ricreato se i dati o il codice dovessero cambiare.
+:::
 
-`ggplot2` include numerose geometrie; alcune particolarmente utili in ambito psicologico:
+## Usare l'AI con criterio
 
-* `geom_jitter()`: scatterplot con *jitter* per ridurre la sovrapposizione.
-* `geom_pointrange()`: punti con intervalli (effect size, CI).
-* `geom_tile()`: heatmap.
-* `geom_ribbon()`: bande di confidenza.
-* `geom_qq()`: QQ-plot per la verifica della normalità.
+L'AI può essere molto utile con `ggplot2`. Per esempio, si può chiedere:
 
-### Estensioni di `ggplot2`
+> Scrivi codice R con `ggplot2` per visualizzare la relazione tra stress
+> accademico e qualità del sonno, distinguendo gli studenti per anno di corso.
 
-Pacchetti che ampliano le funzionalità di `ggplot2`:
+Tuttavia, dopo aver ricevuto il codice, è necessario controllare almeno cinque cose:
 
-* **`patchwork`**: composizione di grafici multipli.
-* **`ggridges`**: *ridge plots* per distribuzioni.
-* **`ggdist`**: visualizzazioni di distribuzioni bayesiane.
-* **`gganimate`**: animazioni.
-* **`plotly`**: grafici interattivi.
+1. il dataset usato è quello corretto?
+2. le variabili esistono davvero e hanno il tipo corretto?
+3. il grafico scelto è coerente con la domanda?
+4. il codice elimina o aggrega casi senza dirlo chiaramente?
+5. l'interpretazione suggerita dall'AI va oltre ciò che il grafico mostra?
 
-### Libri e tutorial
 
-- [ggplot2 book](https://ggplot2-book.org/) di Hadley Wickham.
-- [R Graphics Cookbook](https://r-graphics.org/) di Winston Chang.
-- [Data Visualization with R](https://rkabacoff.github.io/datavis/) di Rob Kabacoff.
+::: {.callout-important title="Mini-verifica"}
+Quando si utilizza un codice grafico prodotto dall'AI, è necessario essere in grado di spiegare in parole semplici ogni riga: quali tabelle vengono utilizzate, quali variabili vengono messe sugli assi, quale geometria viene disegnata e cosa rappresentano eventuali colori o pannelli.
+:::
+
+## Errori frequenti
+
+### Scambiare una media per una distribuzione
+
+Un grafico a barre delle medie può nascondere la variabilità dei dati. Quando
+possibile, osserva anche la distribuzione o i punti individuali.
+
+### Usare il grafico sbagliato per il tipo di variabile
+
+Uno scatterplot richiede due variabili numeriche. Se una variabile è categoriale, un boxplot o un grafico a barre potrebbe essere più adatto.
+
+### Dimenticare i valori mancanti
+
+Se alcune osservazioni mancano, `ggplot2` può escluderle dal grafico. Leggi i
+messaggi di avviso e controlla quanti casi sono stati rappresentati.
+
+### Interpretare graficamente la causalità
+
+Un grafico può mostrare un'associazione. La causalità richiede un disegno di
+ricerca adeguato e assunzioni esplicite.
+
+## Cosa portare ai capitoli EDA
+
+Dopo questo capitolo, non devi conoscere tutte le funzioni di `ggplot2`. Devi però aver acquisito alcune abitudini:
+
+- scegliere il grafico in base alla domanda e al tipo di variabili;
+- leggere il codice grafico come una sequenza di decisioni;
+- controllare che ogni elemento visivo rappresenti qualcosa di chiaro;
+- distinguere i pattern esplorativi dalle conclusioni inferenziali.
+- documentare i grafici in un file Quarto.
+
+Queste abitudini verranno utilizzate nei capitoli successivi per esplorare distribuzioni, posizione, dispersione, correlazioni, relazioni causali e valori anomali.
 
 ## Esercizi
 
-### 🟢 Esercizio 1: Istogramma base
+### Esercizio 1: leggere un grafico
 
-Crea un istogramma dei tempi di reazione nel dataset `stroop`. Usa `binwidth = 50` e aggiungi titoli appropriati.
+Considera questo codice:
 
-::: {.callout-note collapse="true"}
-## Soluzione
-
-```{r}
-#| label: ex1-solution
-
-ggplot(stroop) +
-  aes(x = rt) +
-  geom_histogram(binwidth = 50, fill = "coral", color = "white") +
-  labs(
-    title = "Distribuzione dei tempi di reazione",
-    x = "Tempo di reazione (ms)",
-    y = "Frequenza"
-  ) +
-  theme_minimal()
+```r
+ggplot(studenti, aes(x = stress, y = sonno_ore)) +
+  geom_point() +
+  geom_smooth(method = "lm")
 ```
-:::
 
-### 🟢 Esercizio 2: Boxplot per gruppo
+Rispondi:
 
-Crea un boxplot che confronti i tempi di reazione tra condizioni congruenti e incongruenti.
+1. quale variabile è sull'asse x?
+2. quale variabile è sull'asse y?
+3. che cosa rappresenta ogni punto?
+4. che cosa aggiunge `geom_smooth()`?
+5. quale conclusione causale non puoi trarre da questo grafico?
 
-::: {.callout-note collapse="true"}
-## Soluzione
+### Esercizio 2: scegliere il grafico
 
-```{r}
-#| label: ex2-solution
+Per ciascuna domanda, indica un grafico appropriato:
 
-ggplot(stroop) +
-  aes(x = condizione, y = rt, fill = condizione) +
-  geom_boxplot() +
-  labs(
-    title = "Confronto RT: Stroop congruente vs. incongruente",
-    x = "Condizione",
-    y = "Tempo di reazione (ms)",
-    fill = "Condizione"
-  ) +
-  theme_minimal()
+1. Come sono distribuiti i punteggi di stress?
+2. Gli studenti del primo, secondo e terzo anno dormono un numero diverso di ore?
+3. La qualità del sonno tende a diminuire quando lo stress aumenta?
+4. Quanti studenti appartengono ai diversi anni di corso?
+
+### Esercizio 3: diagnosticare un errore
+
+L'AI ha prodotto questo codice:
+
+```r
+ggplot(studenti, aes(x = genere, y = anno)) +
+  geom_point()
 ```
-:::
 
-### 🟡 Esercizio 3: Scatterplot con faceting
+Spiega perché questo grafico probabilmente non è molto informativo. Proponi un
+grafico migliore se la domanda è: "quanti studenti ci sono per genere e anno?".
 
-Crea uno scatterplot della relazione tra età e cambiamento BDI (dataset `depression`), con faceting per gruppo e colore per genere.
+### Esercizio 4: modificare codice
 
-::: {.callout-note collapse="true"}
-## Soluzione
+Parti da questo grafico:
 
-```{r}
-#| label: ex3-solution
-
-ggplot(depression) +
-  aes(x = eta, y = cambiamento, color = genere) +
-  geom_point(alpha = 0.6) +
-  geom_smooth(method = "lm", se = FALSE) +
-  facet_wrap(~ gruppo) +
-  labs(
-    title = "Età e risposta al trattamento",
-    x = "Età (anni)",
-    y = "Riduzione BDI",
-    color = "Genere"
-  ) +
-  theme_minimal()
+```r
+ggplot(studenti, aes(x = stress, y = qualita_sonno)) +
+  geom_point()
 ```
-:::
 
-### 🟡 Esercizio 4: Personalizzazione completa
+Modificalo in modo da:
 
-Ricrea il grafico dell'Esercizio 2 (boxplot RT) ma:
+1. distinguere i punti per `genere`;
+2. aggiungere una linea di tendenza;
+3. aggiungere etichette chiare agli assi.
 
-1. Usa `theme_classic()`.
-2. Cambia colori in rosso (#C62828) e verde (#2E7D32).
-3. Aggiungi sottotitolo "N = 1200 trial".
-4. Rimuovi la legenda (ridondante).
-5. Aumenta la dimensione del titolo a 14pt.
+### Esercizio 5: controllo AI
 
-::: {.callout-note collapse="true"}
-## Soluzione
+Chiedi a uno strumento di AI di generare un grafico `ggplot2` per esplorare la
+relazione tra stress accademico e sonno. Poi valuta il codice ottenuto usando
+questa lista:
 
-```{r}
-#| label: ex4-solution
-
-ggplot(stroop) +
-  aes(x = condizione, y = rt, fill = condizione) +
-  geom_boxplot() +
-  scale_fill_manual(
-    values = c("Congruente" = "#2E7D32", "Incongruente" = "#C62828")
-  ) +
-  labs(
-    title = "Confronto RT: Stroop congruente vs. incongruente",
-    subtitle = "N = 1200 trial",
-    x = "Condizione",
-    y = "Tempo di reazione (ms)"
-  ) +
-  theme_classic() +
-  theme(
-    plot.title = element_text(size = 14, face = "bold"),
-    legend.position = "none"
-  )
-```
-:::
-
-### 🔴 Esercizio 5: Grafico avanzato
-
-Crea un grafico che mostri:
-
-1. Distribuzioni RT (densità) per condizione Stroop.
-2. Sovrapponi i primi 5 partecipanti come linee individuali semi-trasparenti.
-3. Evidenzia le medie aggregate con linee verticali tratteggiate.
-4. Usa faceting per separare le condizioni.
-5. Personalizza completamente il tema.
-
-::: {.callout-note collapse="true"}
-## Soluzione
-
-```{r}
-#| label: ex5-solution
-#| fig-width: 10
-
-# Dati per linee individuali (primi 5 partecipanti)
-stroop_ind <- stroop |>
-  filter(partecipante <= 5)
-
-# Medie per linee aggregate
-stroop_medie <- stroop |>
-  group_by(condizione) |>
-  summarise(rt_mean = mean(rt))
-
-ggplot() +
-  # Densità completa
-  geom_density(
-    data = stroop,
-    aes(x = rt, fill = condizione),
-    alpha = 0.3
-  ) +
-  
-  # Densità individuale partecipanti
-  geom_density(
-    data = stroop_ind,
-    aes(x = rt, group = partecipante),
-    alpha = 0.2,
-    color = "gray40"
-  ) +
-  
-  # Linee verticali per medie
-  geom_vline(
-    data = stroop_medie,
-    aes(xintercept = rt_mean, color = condizione),
-    linetype = "dashed",
-    linewidth = 1
-  ) +
-  
-  facet_wrap(~ condizione, scales = "free_y") +
-  
-  scale_fill_manual(
-    values = c("Congruente" = "#2E7D32", "Incongruente" = "#C62828")
-  ) +
-  scale_color_manual(
-    values = c("Congruente" = "#2E7D32", "Incongruente" = "#C62828")
-  ) +
-  
-  labs(
-    title = "Variabilità individuale nell'effetto Stroop",
-    subtitle = "Linee grigie = primi 5 partecipanti; linee tratteggiate = medie",
-    x = "Tempo di reazione (ms)",
-    y = "Densità"
-  ) +
-  
-  theme_minimal() +
-  theme(
-    plot.title = element_text(size = 14, face = "bold"),
-    plot.subtitle = element_text(size = 10, color = "gray40"),
-    legend.position = "none",
-    strip.text = element_text(size = 12, face = "bold")
-  )
-```
-:::
+- usa il dataset corretto?
+- usa variabili esistenti?
+- il grafico è adatto alla domanda?
+- l'interpretazione resta descrittiva?
+- il codice può essere inserito in un documento Quarto?
 
 ## Punti chiave
 
-::: {.callout-tip icon=false}
-## 📌 Da ricordare
-
-✅ **Grammatica dei grafici**: `data + aes + geom`.
-
-✅ **Estetiche mappate** (dentro `aes()`) vs. **fisse** (fuori `aes()`).
-
-✅ **Faceting** per confronti sistematici: `facet_wrap()` o `facet_grid()`.
-
-✅ **Temi** controllano l'aspetto non-dati: `theme_minimal()`, `theme_classic()`...
-
-✅ **Scale** personalizzano assi e legende: `scale_*_manual()`, `scale_*_continuous()`.
-
-✅ **Salva** con `ggsave()` in formati vettoriali (PDF, SVG) per qualità da pubblicazione.
-
-✅ **Colori accessibili**: Usa palette `viridis` o `ColorBrewer`.
-
-✅ **Semplicità**: Un grafico chiaro vale più di uno complesso.
-:::
-
-
+- `ggplot2` costruisce grafici combinando dati, estetiche e geometrie.
+- La scelta del grafico dipende dalla domanda e dal tipo di variabili.
+- I grafici servono a esplorare, controllare e comunicare i dati.
+- Un grafico non giustifica da solo conclusioni causali o inferenziali forti.
+- L'AI può produrre codice, ma lo studente deve saperlo leggere e verificare.

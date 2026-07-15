@@ -1,31 +1,169 @@
 # R {.unnumbered}
 
-*Gli strumenti per tradurre le domande in analisi.*
+*Capire, controllare e documentare analisi nell'epoca dell'AI.*
 
-In questa sezione viene presentato R, il linguaggio di programmazione che useremo per tutto il percorso. R non è l'unica opzione disponibile, anche Python è molto diffuso, ma è stato sviluppato specificamente per l'analisi statistica e offre un ecosistema particolarmente ricco per la psicometria e la modellazione bayesiana.
+Questa sezione introduce R come strumento per lavorare con i dati in modo trasparente e riproducibile. Non ha l'obiettivo di trasformare gli studenti in programmatori. Il suo obiettivo è più limitato, ma molto importante: fornire le competenze minime necessarie per leggere, eseguire, modificare, controllare e documentare l'analisi dei dati psicologici.
 
-## Due livelli di competenza
+Oggi, questo obiettivo va formulato in modo diverso rispetto al passato. Gli strumenti di intelligenza artificiale possono generare codice, correggere errori, suggerire grafici, spiegare funzioni e proporre soluzioni alternative. Questo è utile e in questo manuale non viene trattato come qualcosa da evitare. Nella ricerca contemporanea, l'uso di strumenti di supporto alla scrittura del codice è ormai una pratica comune.
 
-Programmare richiede due tipi di abilità distinte.
+Tuttavia, l'uso dell'AI non esime dalla responsabilità dell'analisi. Chi presenta un risultato deve essere in grado di spiegare cosa fa il codice, perché è stato usato, quali dati ha trasformato, quali osservazioni ha incluso o escluso, quali assunzioni incorpora e quali limiti ci sono nell'interpretazione.
 
-Il **pensiero algoritmico** è la capacità di scomporre un problema in passaggi logici: quali sono gli input? Qual è l'output desiderato? Quali operazioni permettono di passare dall'uno all'altro? Questa competenza è trasferibile a qualsiasi linguaggio e, in un'epoca in cui gli assistenti AI sono in grado di generare codice, diventa ancora più importante: per poter valutare se una soluzione proposta è corretta, è necessario prima comprendere il problema.
+::: {.callout-note appearance="minimal"}
+L'obiettivo non è imparare R per scrivere ogni comando a mano. L'obiettivo è imparare a sufficienza R per capire, controllare e modificare il codice che si utilizza, anche quando è stato prodotto con l'aiuto dell'intelligenza artificiale.
+:::
 
-La **sintassi** è l'insieme di regole specifiche di un linguaggio. È importante, ma oggi meno critica rispetto al passato: gli errori sintattici sono facilmente correggibili con l'esperienza o con l'aiuto di strumenti automatici. L'obiettivo non è memorizzare comandi, ma sviluppare una familiarità sufficiente a leggere, modificare e risolvere gli errori nel codice.
+## Perché usare ancora R
 
-## Cosa troverai
+R è un linguaggio nato per l'analisi statistica. In psicologia e nelle scienze sociali è molto utilizzato perché consente di organizzare, trasformare, visualizzare i dati, stimare i modelli, produrre report riproducibili e condividere in modo esplicito le procedure di analisi.
 
-I capitoli di questa sezione coprono:
+Per il percorso di questo Companion, R serve soprattutto a tre scopi.
 
-- **sintassi di base**: oggetti, funzioni, strutture dati;
-- **funzioni utili**: operazioni comuni per la manipolazione dei dati;
-- **programmazione**: controllo di flusso, funzioni personalizzate;
-- **pacchetti**: estensione di R con librerie specializzate;
-- **dplyr**: il toolkit moderno per la trasformazione dei dati;
-- **Quarto**: creare documenti riproducibili che integrano testo e codice;
-- **ambiente di lavoro**: organizzazione dei progetti e buone pratiche.
+In primo luogo, rende visibili le operazioni eseguite sui dati. Se calcoliamo una media, filtriamo alcune osservazioni, ricodifichiamo una variabile o produciamo un grafico, il codice lascia una traccia controllabile di tutte le operazioni eseguite. Questo è essenziale per evitare che l'analisi diventi una sequenza di passaggi impliciti e difficili da verificare.
 
-## Collegamenti
+In secondo luogo, permette di riprodurre i risultati. Un'analisi non dovrebbe dipendere dalla memoria di chi l'ha eseguita o da passaggi manuali difficili da ricostruire. Se i dati, il codice e il testo sono organizzati correttamente, un'altra persona può comprendere il percorso seguito e, almeno in linea di principio, riprodurlo.
 
-R è lo strumento che rende operative le idee. I concetti discussi nella sezione "*Fondamenti*" — variabili, scale di misura, disegni sperimentali — diventano qui colonne di un data frame, tipi di dati, strutture di analisi. Le tecniche di esplorazione presentate nella sezione *EDA* richiedono del codice per essere implementate: istogrammi, grafici a dispersione e statistiche descrittive sono tutti il risultato di funzioni R.
+In terzo luogo, R collega l'analisi operativa alle domande metodologiche discusse nella prima parte del manuale. Le variabili, i campioni, le scale di misura, i valori mancanti, i disegni di ricerca e i limiti dell'inferenza non sono concetti astratti, ma diventano colonne di una tabella, righe di un dataset, condizioni di filtro, grafici, statistiche descrittive e modelli.
 
-Senza strumenti metodologici adeguati, anche le domande di ricerca più interessanti rimangono senza risposta.
+## Che cosa significa imparare R oggi
+
+Imparare R non significa memorizzare molte funzioni. Significa riconoscere alcuni schemi ricorrenti. La maggior parte del codice che useremo nel companion può essere compresa se si conoscono pochi elementi fondamentali:
+
+| Elemento | Perché serve |
+|---|---|
+| `oggetto <- valore` | Capire che un risultato viene salvato con un nome. |
+| `funzione(argomento = valore)` | Leggere la struttura di quasi tutti i comandi R. |
+| `dati |> funzione()` | Capire una sequenza di operazioni applicate a una tabella. |
+| `select()`, `filter()`, `mutate()` | Capire come si scelgono, filtrano e trasformano variabili e osservazioni. |
+| `group_by()` e `summarise()` | Capire come si calcolano statistiche per gruppi. |
+| `NA`, `is.na()`, `na.rm = TRUE` | Riconoscere e gestire i dati mancanti. |
+| `ggplot(..., aes(...)) + geom_*()` | Leggere la grammatica di base dei grafici. |
+| blocchi di codice R in Quarto | Capire dove il codice viene eseguito in un documento Quarto. |
+| `pacchetto::funzione()` | Sapere da quale pacchetto proviene una funzione. |
+
+Questa è la grammatica minima. Non permette di fare tutto, ma di certo non si è più ciechi davanti al codice. Consente di chiedere aiuto in modo più preciso, di riconoscere gli errori più comuni, di modificare gli esempi esistenti e di verificare se una soluzione proposta dall'AI è plausibile.
+
+## Quattro competenze da sviluppare
+
+In questa sezione lavoreremo soprattutto su quattro competenze.
+
+### Leggere il codice
+
+Leggere il codice significa saper spiegare, in linguaggio comune, cosa fa una sequenza di comandi. Per esempio: "questo codice prende il dataset, seleziona alcune variabili, elimina i casi con valori mancanti, calcola una media per gruppo e produce un grafico".
+
+Questa competenza è più importante della semplice memorizzazione. Anche se un comando è stato scritto dall'AI, lo studente deve essere in grado di spiegare l'operazione eseguita.
+
+### Eseguire il codice
+
+Eseguire il codice significa saper aprire un progetto, caricare i pacchetti necessari, importare i dati, lanciare i comandi e osservare l'output. Si tratta di una competenza pratica, ma non banale: molti errori derivano da file posizionati in modo errato, pacchetti non caricati, nomi di variabili scritti in modo diverso o dati letti con un formato inaspettato.
+
+### Modificare il codice
+
+Modificare il codice significa prendere un esempio funzionante e adattarlo a un nuovo problema. Questa è una competenza fondamentale per chi muove i primi passi nel settore. Spesso non partiremo da una pagina vuota, ma da un esempio, da una soluzione generata dall'AI o da un frammento di codice già presente nel Companion. Il compito sarà capire quali parti cambiare e quali lasciare invariate.
+
+### Verificare il codice
+
+Verificare il codice significa controllare che l'analisi faccia davvero ciò che pensiamo. Per esempio, dopo un filtro, dobbiamo chiederci quante osservazioni sono rimaste; dopo una ricodifica, dobbiamo controllare i valori della nuova variabile e, dopo un grafico, dobbiamo chiederci se il tipo di visualizzazione è coerente con il tipo di dati.
+
+Questa è la competenza più importante nell'epoca dell'intelligenza artificiale. L'AI può generare codice formalmente corretto, ma che potrebbe non essere adatto alla domanda, al dataset o al disegno della ricerca. Il controllo resta comunque responsabilità di chi conduce l'analisi.
+
+## Usare l'AI con criterio
+
+L'AI può essere un buon assistente per lavorare con R. Può aiutare a:
+
+- scrivere una prima versione del codice;
+- spiegare un messaggio di errore;
+- proporre una pipeline `dplyr`;
+- suggerire un grafico con `ggplot2`;
+- trasformare un codice disordinato in un codice più leggibile;
+- commentare un blocco di codice;
+- proporre controlli diagnostici.
+
+Tuttavia, l'AI non conosce automaticamente il contesto della ricerca. Non conosce la domanda teorica originaria, né come è stato costruito il campione, né cosa rappresentano le variabili, quali sono le codifiche speciali, quali osservazioni devono essere escluse o quale interpretazione è giustificata dal disegno.
+
+Per questo motivo, ogni utilizzo dell'AI dovrebbe essere accompagnato da alcune domande di controllo:
+
+1. Il codice usa il dataset corretto?
+2. I nomi delle variabili corrispondono a quelli reali?
+3. Le variabili sono trattate nel modo giusto, per esempio come variabili numeriche, categoriali o ordinali?
+4. I valori mancanti sono gestiti in modo esplicito?
+5. La pipeline elimina alcune osservazioni? Se sì, quante e perché?
+6. Il grafico o la statistica sono coerenti con la domanda?
+7. Il risultato viene interpretato come descrizione, associazione, previsione o causalità?
+8. Il codice è inserito in un documento riproducibile?
+
+::: {.callout-warning appearance="minimal"}
+Una regola pratica: non usare mai del codice che non sapresti spiegare almeno a grandi linee. Non è necessario ricordare ogni dettaglio sintattico, ma è importante sapere quali sono gli input, gli output e le trasformazioni che avvengono nel mezzo.
+:::
+
+## Che cosa non faremo
+
+Questa sezione non è un manuale completo di R. In rete si trovano molte risorse, spesso eccellenti, che spiegano in dettaglio la sintassi del linguaggio, la programmazione avanzata, la costruzione di pacchetti, le tecniche di ottimizzazione e molti altri aspetti.
+
+Qui faremo una scelta diversa. Tratteremo solo gli argomenti necessari per iniziare a lavorare con i dati psicologici nel contesto di questo progetto. Alcuni dettagli verranno semplificati. Alcuni argomenti verranno solo menzionati. Altri saranno rimandati a materiali esterni o a approfondimenti facoltativi.
+
+Questa scelta non impoverisce il percorso. Al contrario, lo rende più adatto allo scopo. Per gli studenti che si avvicinano per la prima volta alla statistica, il problema principale non è conoscere tutte le possibilità offerte da R, ma costruire un rapporto non intimidatorio e responsabile con il codice.
+
+## Mappa della sezione
+
+I capitoli successivi sono organizzati per accompagnare gradualmente il passaggio dalla comprensione del codice all'analisi riproducibile.
+
+| Capitolo | Funzione principale | Domanda guida |
+|---|---|---|
+| **Sintassi di base** | Introdurre la grammatica minima per leggere codice R. | Che cosa sta facendo questo comando? |
+| **Ambiente di lavoro** | Organizzare file, progetti e percorsi. | Dove sono i dati e come rendo l'analisi riproducibile? |
+| **Funzioni utili** | Importare dati, controllare tabelle e svolgere operazioni comuni. | Il dataset è stato letto e controllato correttamente? |
+| **Programmazione** | Presentare alcuni strumenti per capire codice più articolato. | Quando serve automatizzare o generalizzare un'operazione? |
+| **dplyr** | Trasformare dati in modo leggibile. | Quali righe e colonne sto usando, creando o modificando? |
+| **ggplot2** | Visualizzare distribuzioni, confronti e relazioni. | Quale grafico rende visibile il pattern rilevante? |
+| **Quarto** | Integrare testo, codice e output in un documento riproducibile. | Come comunico un'analisi in modo trasparente? |
+| **Pacchetti** | Capire come R viene esteso da librerie specializzate. | Da dove vengono le funzioni che sto usando? |
+
+Questa mappa non va letta come un programma di programmazione generale. Ogni capitolo è concepito per preparare il lavoro successivo nella sezione EDA, in cui useremo R per esplorare dati reali o simulati, costruire grafici, calcolare statistiche descrittive e analizzare modelli, anomalie e relazioni tra variabili.
+
+## Collegamento con il resto del progetto
+
+La prima parte del modulo ha trattato il tema della genesi dei dati: domande di ricerca, campioni, disegni, misure, costrutti e modelli. La sezione dedicata a R mostra come rendere operative queste idee.
+
+Per esempio, se vogliamo studiare la relazione tra lo stress accademico e la qualità del sonno, R ci permette di:
+
+- importare il file con le risposte degli studenti;
+- verificare quante osservazioni e variabili contiene;
+- verificare la presenza di dati mancanti;
+- distinguere le variabili numeriche, ordinali e categoriali;
+- calcolare le statistiche descrittive;
+- produrre grafici;
+- documentare ogni passaggio in un report.
+
+La sezione EDA utilizzerà questi strumenti per esplorare i dati prima di passare a modelli più formali. Il manuale principale sull'inferenza bayesiana riprenderà poi i temi dell'incertezza, della stima e del confronto tra modelli. In questo percorso, R non è il fine, ma il mezzo che rende possibile il passaggio controllato dalla domanda ai dati, dai dati all'analisi e dall'analisi all'interpretazione.
+
+## Come studiare questa sezione
+
+Per trarre beneficio da questa parte, non è necessario memorizzare tutto. È più utile adottare alcune abitudini.
+
+In primo luogo, esegui il codice e osserva l'output. Chiediti sempre che cosa è cambiato dopo ogni comando.
+
+In secondo luogo, modifica piccoli dettagli. Cambia una variabile, un filtro, il titolo di un grafico o un'opzione della funzione. Spesso, vedere che cosa succede è il modo più efficace per capire.
+
+In terzo luogo, considera l'AI come un interlocutore, non come un sostituto. Puoi chiedere spiegazioni, alternative e correzioni, ma ricorda sempre di verificare il risultato sul dataset reale.
+
+In quarto luogo, scrivi brevi commenti. Anche una frase semplice può chiarire il rapporto tra il codice e la domanda di ricerca.
+
+Infine, conserva il codice in un progetto ben organizzato e, quando possibile, in un documento Quarto. L'analisi diventa più solida dal punto di vista scientifico quando può essere ricostruita.
+
+## Cosa portare con sé
+
+Al termine di questa sezione, non sarà necessario conoscere ogni aspetto di R, ma sarà importante saper fare alcune cose essenziali:
+
+1. aprire un progetto e orientarsi tra file, dati e script;
+2. leggere un blocco di codice R e spiegarne il senso generale;
+3. eseguire il codice e riconoscere gli output principali;
+4. importare un dataset e controllarne la struttura;
+5. gestire in modo consapevole valori mancanti e tipi di variabili;
+6. usare o modificare semplici pipeline `dplyr`;
+7. leggere e adattare grafici `ggplot2`;
+8. integrare testo, codice e risultati in Quarto;
+9. usare l'AI per ottenere supporto senza perdere controllo sull'analisi;
+10. distinguere un errore di sintassi da un errore concettuale.
+
+Queste competenze sono sufficienti per iniziare la parte di analisi esplorativa dei dati (EDA). In particolare, sono sufficienti per adottare un approccio attivo nei confronti del codice: non subirlo passivamente o copiarlo meccanicamente, ma utilizzarlo come strumento per rendere il ragionamento sui dati più chiaro, controllabile e comunicabile.
+

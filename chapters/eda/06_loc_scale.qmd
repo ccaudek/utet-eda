@@ -1,1361 +1,485 @@
 # Indicatori di tendenza centrale e variabilità {#sec-central-tendency-variability}
 
 ::: {.callout-note appearance="minimal"}
-La visualizzazione grafica dei dati rappresenta il punto di partenza di ogni analisi quantitativa. Grazie a rappresentazioni grafiche adeguate, è possibile individuare importanti caratteristiche di una distribuzione, come la simmetria o l'asimmetria, nonché la presenza di una o più modalità. In seguito, per descrivere sinteticamente le principali caratteristiche dei dati, è possibile utilizzare specifici indici numerici. In questo capitolo verranno presentati i principali indicatori della statistica descrittiva.
+Nel capitolo precedente abbiamo visto come scegliere e leggere un grafico. In questo capitolo faremo un passo avanti: impareremo a sintetizzare una distribuzione con pochi numeri, senza perdere di vista la sua forma.
+
+Le statistiche descrittive non sostituiscono i grafici. Sono utili per riassumere ciò che abbiamo osservato nei dati quando il riassunto è appropriato.
 :::
 
-## Panoramica del capitolo {.unnumbered .unlisted}
+## Perché questo capitolo è centrale {.unnumbered .unlisted}
 
-- *Tendenza centrale:* scelta della misura (media, mediana, moda) in base al tipo di dati e alla presenza di valori anomali.
-- *Robustezza:* confronto tra misure sensibili (media, deviazione standard) e misure robuste (mediana, trimmed mean, MAD).
-- *Simulazioni:* dimostrazione empirica dell'effetto degli outlier attraverso esempi pratici.
-- *Variabilità:* interpretazione di range, varianza, deviazione standard e IQR per quantificare la dispersione dei dati attorno al valore centrale.
+Quando descriviamo una variabile psicologica, spesso vogliamo rispondere a due domande:
 
-::: {.callout-tip collapse=true}
-## Prerequisiti
+1. **Dove si concentrano i valori?**  
+   Questa è la domanda sulla *tendenza centrale*.
 
-- Leggere "Most Psychological Researchers Assume Their Samples Are Ergodic: Evidence From a Year of Articles in Three Major Journals" [@speelman2024most].
-- Studiare l'@sec-apx-sums.
+2. **Quanto sono diversi tra loro i valori?**  
+   Questa è la domanda sulla *variabilità*.
+
+Per esempio, se misuriamo la qualità del sonno in un gruppo di studenti, non basta dire che il punteggio medio è 6.8. Dobbiamo anche chiederci:
+
+- tutti gli studenti dormono più o meno allo stesso modo, oppure ci sono grandi differenze?
+- la distribuzione è simmetrica o asimmetrica?
+- ci sono valori estremi?
+- la media rappresenta bene i dati, oppure sarebbe più prudente usare la mediana?
+- la deviazione standard descrive bene la variabilità, oppure è meglio usare l'intervallo interquartile o il MAD?
+
+Questo capitolo segue quindi l'esplorazione univariata e precede la distribuzione normale. Prima analizziamo i dati, poi scegliamo un riassunto e solo dopo possiamo chiederci se un modello, come la distribuzione normale, sia una rappresentazione utile.
+
+## Obiettivi del capitolo {.unnumbered .unlisted}
+
+Al termine del capitolo dovresti essere in grado di:
+
+- distinguere moda, mediana e media;
+- capire quando la media è informativa e quando può essere fuorviante;
+- distinguere range, IQR, deviazione standard e MAD;
+- scegliere riassunti coerenti con la forma della distribuzione;
+- leggere e controllare il codice R usato per calcolare le statistiche descrittive;
+- evitare interpretazioni automatiche prodotte da AI senza prima controllare i dati.
+
+::: {.callout-tip title="Idea guida"}
+Non esiste una statistica descrittiva sempre migliore delle altre. Esiste una statistica più o meno adatta alla domanda, al tipo di variabile e alla forma della distribuzione.
 :::
 
-::: {.callout-caution collapse=true title="Preparazione del Notebook"}
+## Preparazione
+
+Useremo un piccolo dataset didattico. I dati sono simulati, ma rappresentano un caso realistico: studenti universitari, stress accademico, qualità del sonno e ore di sonno.
 
 ```{r}
-here::here("code", "_common.R") |> 
-  source()
+#| label: loc-scale-setup
+#| include: false
+library(dplyr)
+library(ggplot2)
 
-# Load packages
-if (!requireNamespace("pacman")) install.packages("pacman")
-pacman::p_load(tidyr, viridis, vcd)
+set.seed(1234)
 ```
+
+```{r}
+#| label: loc-scale-data
+studenti <- data.frame(
+  id = 1:60,
+  stress = round(pmin(pmax(rnorm(60, mean = 6.2, sd = 1.5), 1), 10), 1),
+  sonno_qualita = round(pmin(pmax(rnorm(60, mean = 6.5, sd = 1.3), 1), 10), 1),
+  ore_sonno = round(pmin(pmax(rnorm(60, mean = 7.1, sd = 0.9), 4), 10), 1)
+)
+
+# Aggiungiamo alcuni valori plausibili ma estremi.
+studenti$ore_sonno[c(4, 17)] <- c(4.1, 9.8)
+studenti$stress[c(22, 49)] <- c(9.7, 9.9)
+
+head(studenti)
+```
+
+## Prima regola: guardare prima di riassumere
+
+Prima di calcolare media, mediana o deviazione standard, guardiamo la distribuzione.
+
+```{r}
+#| label: loc-scale-hist-sleep
+#| fig-cap: "Distribuzione delle ore di sonno nel campione didattico."
+ggplot(studenti, aes(x = ore_sonno)) +
+  geom_histogram(bins = 12, boundary = 0) +
+  labs(
+    x = "Ore di sonno",
+    y = "Frequenza"
+  )
+```
+
+Il grafico ci aiuta a capire se i dati sono concentrati, dispersi, simmetrici, asimmetrici o se presentano valori insoliti. Senza questa informazione, una statistica descrittiva rischia di diventare un numero isolato.
+
+::: {.callout-caution title="Errore comune"}
+Un errore frequente è calcolare automaticamente `mean()` e `sd()` per ogni variabile numerica. Questo può essere utile per una prima esplorazione, ma non basta: è sempre necessario verificare che la distribuzione giustifichi quel tipo di riassunto.
 :::
 
-## Indici di tendenza centrale
+## Tendenza centrale: qual è il valore tipico?
 
-Gli indici di tendenza centrale sono valori sintetici che hanno lo scopo di sintetizzare un insieme di dati individuando un valore rappresentativo, tipico o centrale attorno al quale i dati tendono a distribuirsi. Consentono di cogliere in modo immediato le caratteristiche fondamentali di una distribuzione, offrendo una descrizione sintetica ed efficace senza dover esaminare ogni singolo dato. Grazie alla loro capacità di riassumere informazioni complesse in un unico valore, gli indici di tendenza centrale costituiscono uno strumento essenziale nell'analisi statistica, sia descrittiva che inferenziale. I principali indici sono:
+Gli indicatori di tendenza centrale cercano di individuare un valore rappresentativo della distribuzione.
 
-1. *Media*: la media è la somma di tutti i valori divisa per il numero totale di valori. È spesso utilizzata come misura generale di tendenza centrale, ma è sensibile agli estremi (valori molto alti o molto bassi).
-2. *Mediana*: la mediana è il valore che divide l'insieme di dati in due parti uguali. A differenza della media, non è influenzata da valori estremi ed è quindi più robusta in presenza di outlier.
-3. *Moda*: la moda è il valore che appare più frequentemente in un insieme di dati. In alcuni casi, può non essere presente o esserci più di una moda.
+I tre indicatori principali sono:
 
-La scelta dell'indice più appropriato non è mai neutra, ma dipende dalla natura dei dati e dalla domanda a cui si vuole rispondere. In presenza di valori anomali, ad esempio, la mediana fornisce una rappresentazione più fedele rispetto alla media, che risulterebbe invece distorta. Padroneggiare questi strumenti significa, quindi, non solo essere in grado di calcolare un numero, ma anche di interpretare correttamente la struttura sottostante ai dati.
+- **moda**: il valore più frequente;
+- **mediana**: il valore che divide i dati ordinati in due metà;
+- **media**: la somma dei valori divisa per il numero di osservazioni.
 
 ### Moda
 
-La *moda* ($\text{Mo}$) rappresenta il valore della variabile che *compare con maggiore frequenza* in una distribuzione. In altre parole, è il valore più *ricorrente* nei dati.  
+La **moda** è il valore che compare più spesso. È particolarmente utile per le variabili categoriali.
 
-- Nelle *distribuzioni unimodali*, esiste una sola moda, che coincide con il valore centrale della distribuzione più frequente.  
-- Tuttavia, in alcune distribuzioni, possono emergere *più di una moda*, rendendole *multimodali*. In questi casi, la moda perde il suo significato di indicatore unico di tendenza centrale, poiché la presenza di più valori con frequenze elevate rende difficile individuare un singolo punto di riferimento.  
+Per esempio, se si chiede agli studenti quale strategia usano più spesso per gestire lo stress, la moda indica la risposta più frequente.
+
+```{r}
+#| label: loc-scale-mode-example
+strategie <- c(
+  "studio", "sonno", "sport", "studio", "amici", "studio",
+  "sport", "sonno", "studio", "amici", "studio"
+)
+
+table(strategie)
+```
+
+In questo caso la moda è la categoria con frequenza più alta.
+
+::: {.callout-note title="Quando usare la moda"}
+La moda è utile quando si vuole descrivere la categoria più comune. È meno utile quando i valori sono molti e ciascuno compare poche volte, come spesso accade con le variabili continue.
+:::
 
 ### Mediana
 
-La *mediana* ($\tilde{x}$) corrisponde al valore che divide il campione in due metà: il 50% dei dati è inferiore o uguale alla mediana e il restante 50% è superiore o uguale. A differenza della media, la mediana è meno influenzata dai valori estremi, rendendola una misura particolarmente robusta in presenza di dati asimmetrici o outlier.
+La **mediana** è il valore centrale dei dati ordinati. Il 50% delle osservazioni è minore o uguale alla mediana e il restante 50% è maggiore o uguale.
+
+```{r}
+#| label: loc-scale-median-example
+median(studenti$ore_sonno)
+```
+
+La mediana è robusta, ovvero non cambia molto se sono presenti pochi valori estremi. Per questo motivo, è spesso adatta a distribuzioni asimmetriche o con outlier.
 
 ### Media
 
-La media aritmetica di un insieme di valori rappresenta il punto centrale o il baricentro della distribuzione dei dati. È calcolata come la somma di tutti i valori divisa per il numero totale di valori, ed è espressa dalla formula:
+La **media aritmetica** si  calcola sommando tutti i valori e dividendo il risultato per il numero di osservazioni.
 
 $$
-\bar{x}=\frac{1}{n}\sum_{i=1}^n x_i,
-$$ {#eq-mean}
-dove $x_i$ rappresenta i valori nell'insieme, $n$ è il numero totale di valori, e $\sum$ indica la sommatoria.
+\bar{x} = \frac{1}{n}\sum_{i=1}^{n} x_i.
+$$
 
-### Calcolo della media con `R`
-
-Per calcolare la media di un piccolo numero di valori in R, possiamo utilizzare la somma di questi valori e dividerla per il numero totale di elementi. Consideriamo ad esempio i valori 12, 44, 21, 62, 24:
+In R:
 
 ```{r}
-(12 + 44 + 21 + 62 + 24) / 5
+#| label: loc-scale-mean-example
+mean(studenti$ore_sonno)
 ```
 
-ovvero
+La media utilizza tutti i valori, pertanto è molto informativa quando la distribuzione è abbastanza simmetrica e priva di valori estremi. Proprio perché utilizza tutti i valori, però, è sensibile agli outlier.
+
+## Media e mediana a confronto
+
+Confrontiamo la media e la mediana di alcune variabili del dataset.
 
 ```{r}
-x <- c(12, 44, 21, 62, 24)
-mean(x)
-```
-
-### Media vs mediana: robustezza e scelta della misura {#sec-mean-vs-median}
-
-La scelta tra media e mediana come misura di tendenza centrale dipende dalle caratteristiche della distribuzione dei dati e dall'obiettivo dell'analisi. Comprendere quando utilizzare l'una o l'altra è fondamentale per una corretta interpretazione statistica.
-
-### Differenze concettuali
-
-La **media aritmetica** tiene conto di tutti i valori nella distribuzione, assegnando uguale peso a ciascuna osservazione. Questa caratteristica la rende matematicamente conveniente (ad esempio, è coinvolta nel calcolo della varianza) ma anche sensibile ai valori estremi.
-
-La **mediana**, invece, rappresenta il valore centrale della distribuzione ordinata e non è influenzata dall'entità dei valori estremi, ma solo dalla loro posizione. Questa proprietà la rende una misura *robusta*, particolarmente utile quando la distribuzione è asimmetrica o contiene outlier.
-
-### L'effetto degli outlier: una simulazione
-
-Per comprendere concretamente l'impatto dei valori estremi, consideriamo una simulazione. Generiamo un campione di 100 osservazioni da una distribuzione normale e osserviamo cosa accade quando introduciamo progressivamente valori anomali.
-
-```{r}
-set.seed(123)
-
-# Campione base da distribuzione normale
-dati_base <- rnorm(100, mean = 50, sd = 10)
-
-# Creiamo versioni con numero crescente di outlier
-dati_1_outlier <- c(dati_base[1:99], 150)  # 1 outlier estremo
-dati_5_outlier <- c(dati_base[1:95], rep(150, 5))  # 5 outlier
-dati_10_outlier <- c(dati_base[1:90], rep(150, 10))  # 10 outlier
-
-# Confronto delle misure
-risultati <- data.frame(
-  Scenario = c("Nessun outlier", "1 outlier (1%)", "5 outlier (5%)", "10 outlier (10%)"),
-  Media = c(mean(dati_base), mean(dati_1_outlier), 
-            mean(dati_5_outlier), mean(dati_10_outlier)),
-  Mediana = c(median(dati_base), median(dati_1_outlier), 
-              median(dati_5_outlier), median(dati_10_outlier)),
-  Differenza = NA
-)
-
-risultati$Differenza <- risultati$Media - risultati$Mediana
-
-knitr::kable(risultati, digits = 2, 
-             caption = "Confronto tra media e mediana al variare della presenza di outlier")
-```
-
-Come si può osservare, mentre la mediana rimane sostanzialmente stabile, la media aumenta progressivamente con l'aggiunta di valori estremi. Anche un singolo outlier (solo l'1% del campione) è sufficiente per alterare notevolmente la media.
-
-Visualizziamo graficamente questo fenomeno:
-
-```{r}
-#| label: fig-outlier-effect
-#| fig-cap: "Effetto degli outlier su media e mediana"
-
-plot_data <- data.frame(
-  valore = c(dati_base, dati_1_outlier, dati_5_outlier, dati_10_outlier),
-  scenario = rep(c("Nessun outlier", "1 outlier (1%)", 
-                   "5 outlier (5%)", "10 outlier (10%)"), 
-                 each = 100)
-)
-
-# Calcolo statistiche per ogni scenario
-stats <- plot_data |>
-  group_by(scenario) |>
+#| label: loc-scale-center-table
+studenti |>
   summarise(
-    media = mean(valore),
-    mediana = median(valore)
+    media_stress = mean(stress),
+    mediana_stress = median(stress),
+    media_sonno = mean(ore_sonno),
+    mediana_sonno = median(ore_sonno)
   )
-
-ggplot(plot_data, aes(x = valore)) +
-  geom_histogram(bins = 30, fill = "lightblue", color = "black", alpha = 0.7) +
-  geom_vline(data = stats, aes(xintercept = media), 
-             color = "red", linetype = "dashed", linewidth = 1) +
-  geom_vline(data = stats, aes(xintercept = mediana), 
-             color = "blue", linetype = "solid", linewidth = 1) +
-  facet_wrap(~scenario, ncol = 2, scales = "free") +
-  labs(title = "Confronto tra media (rosso) e mediana (blu)\nin presenza di outlier",
-       x = "Valore", y = "Frequenza") 
 ```
 
-La visualizzazione mostra chiaramente come la media (linea rossa tratteggiata) si sposti verso destra in presenza di outlier, mentre la mediana (linea blu continua) rimane ancorata al centro della massa principale dei dati.
+Quando la media e la mediana sono simili, la distribuzione è spesso abbastanza bilanciata. Quando sono molto diverse, è meglio tornare al grafico e chiedersi il perché.
 
-### Misure robuste: media spuntata e MAD
+### L'effetto dei valori estremi
 
-Per mitigare la sensibilità della media aritmetica agli outlier, la statistica offre misure alternative più robuste.
-
-### Media spuntata (*trimmed mean*)
-
-La media spuntata calcola la media escludendo una percentuale simmetrica di valori estremi. Ad esempio, con un trim del 10%, vengono rimossi il 5% dei valori più bassi e il 5% dei valori più alti prima del calcolo:
+Consideriamo due piccoli insiemi di dati. Il secondo contiene un valore molto alto.
 
 ```{r}
-# Confronto tra media standard e trimmed mean
+#| label: loc-scale-outlier-center
+sonno_a <- c(6.2, 6.5, 6.8, 7.0, 7.1, 7.3, 7.5)
+sonno_b <- c(6.2, 6.5, 6.8, 7.0, 7.1, 7.3, 12.0)
+
 data.frame(
-  Scenario = c("Nessun outlier", "1 outlier (1%)", "5 outlier (5%)", "10 outlier (10%)"),
-  Media = c(mean(dati_base), mean(dati_1_outlier), 
-            mean(dati_5_outlier), mean(dati_10_outlier)),
-  `Trimmed Mean (10%)` = c(
-    mean(dati_base, trim = 0.10),
-    mean(dati_1_outlier, trim = 0.10),
-    mean(dati_5_outlier, trim = 0.10),
-    mean(dati_10_outlier, trim = 0.10)
-  )
-) |>
-  knitr::kable(digits = 2, 
-               caption = "Confronto tra media standard e trimmed mean")
+  scenario = c("senza valore estremo", "con valore estremo"),
+  media = c(mean(sonno_a), mean(sonno_b)),
+  mediana = c(median(sonno_a), median(sonno_b))
+)
 ```
 
-La media spuntata rappresenta un compromesso efficace tra la sensibilità della media aritmetica e la robustezza della mediana.
+La media cambia più della mediana. Ciò non significa che la media sia sbagliata. Significa che la media risponde a una domanda diversa: tiene conto anche dell'intensità del valore estremo.
 
-### Deviazione Mediana Assoluta
-
-Per misurare la variabilità in modo robusto, possiamo utilizzare la *deviazione mediana assoluta* (MAD), definita come:
-
-$$
-\text{MAD} = \text{mediana}(|X_i - \text{mediana}(X)|)
-$$
-
-Il MAD misura la distanza tipica dei valori dalla mediana, offrendo una misura di variabilità resistente agli outlier:
-
-```{r}
-# Confronto tra deviazione standard e MAD
-data.frame(
-  Scenario = c("Nessun outlier", "1 outlier (1%)", "5 outlier (5%)", "10 outlier (10%)"),
-  `Dev. Standard` = c(sd(dati_base), sd(dati_1_outlier), 
-                       sd(dati_5_outlier), sd(dati_10_outlier)),
-  MAD = c(mad(dati_base), mad(dati_1_outlier), 
-          mad(dati_5_outlier), mad(dati_10_outlier))
-) |>
-  knitr::kable(digits = 2, 
-               caption = "Confronto tra deviazione standard e MAD")
-```
-
-Come si evince dalla tabella, mentre la deviazione standard cresce sensibilmente in presenza di outlier, il MAD rimane sostanzialmente stabile, fornendo una misura più affidabile della variabilità "tipica" della distribuzione.
-
-### Linee guida per la scelta
-
-La scelta della misura appropriata dipende dal contesto analitico e dagli obiettivi della ricerca:
-
-**Utilizzare la media quando:**
-
-- la distribuzione è approssimativamente simmetrica e priva di outlier;
-- è importante che ogni osservazione contribuisca alla misura finale;
-- si intendono sfruttare proprietà matematiche specifiche (es. minimizzazione degli scarti quadratici);
-- si procederà con analisi parametriche che assumono normalità.
-
-**Utilizzare la mediana quando:**
-
-- la distribuzione è marcatamente asimmetrica;
-- sono presenti outlier che non si possono rimuovere;
-- si lavora con variabili ordinali;
-- è importante una misura resistente a valori estremi;
-- si desidera un "valore tipico" che rappresenti il centro effettivo della distribuzione.
-
-**Utilizzare la trimmed mean quando:**
-
-- si desidera un compromesso tra sensibilità e robustezza;
-- si sospetta la presenza di alcuni outlier ma si vuole mantenere l'influenza della maggior parte dei dati.
-
-**Utilizzare MAD quando:**
-
-- si necessita di una misura di variabilità robusta;
-- la distribuzione contiene outlier;
-- si sta utilizzando la mediana come misura di tendenza centrale.
-
-::: {.callout-important title="Attenzione alla coerenza"}
-
-È fondamentale mantenere coerenza metodologica tra le misure di tendenza centrale e di variabilità utilizzate. Se si sceglie la mediana per la sua robustezza, è coerente utilizzare MAD come misura di variabilità, anziché la deviazione standard.
+::: {.callout-tip title="Regola pratica"}
+Se la distribuzione è simmetrica e non presenta valori estremi, la media e la deviazione standard possono essere un buon riassunto. Se la distribuzione è asimmetrica o presenta valori estremi, la mediana e l'intervallo interquartile (IQR) sono spesso più affidabili.
 :::
 
-### Un caso pratico: distribuzione dei redditi
+## Variabilità: quanto differiscono i valori?
 
-Un esempio emblematico dell'utilità di mediana e MAD riguarda l'analisi dei redditi. Consideriamo un campione simulato di redditi familiari:
+Un valore centrale non basta. Due distribuzioni possono avere la stessa media, ma una variabilità molto diversa.
 
-```{r}
-set.seed(456)
+Immaginiamo due gruppi di studenti con una media simile di ore di sonno. Nel primo gruppo tutti dormono circa sette ore, mentre nel secondo alcuni dormono pochissimo e altri molto. La media può essere la stessa, ma il significato psicologico è diverso.
 
-# Simuliamo redditi con distribuzione log-normale (tipica dei redditi reali)
-# La maggior parte delle famiglie ha redditi moderati, poche hanno redditi molto alti
-redditi <- rlnorm(1000, meanlog = 10.5, sdlog = 0.6)
+### Range
 
-# Aggiungiamo alcuni redditi molto elevati (top 1%)
-redditi_completi <- c(redditi[1:990], rlnorm(10, meanlog = 12.5, sdlog = 0.3))
-
-# Confronto misure
-cat("Media dei redditi:", round(mean(redditi_completi), 0), "€\n")
-cat("Mediana dei redditi:", round(median(redditi_completi), 0), "€\n")
-cat("Trimmed mean (10%):", round(mean(redditi_completi, trim = 0.10), 0), "€\n\n")
-
-cat("Deviazione standard:", round(sd(redditi_completi), 0), "€\n")
-cat("MAD:", round(mad(redditi_completi), 0), "€\n")
-```
-
-In questo scenario, la mediana fornisce una rappresentazione più accurata del "reddito tipico", poiché non è influenzata dai redditi estremamente elevati dell'1% più ricco. La media, al contrario, sovrastima sensibilmente il reddito della maggioranza della popolazione.
-
-```{r}
-#| label: fig-redditi
-#| fig-cap: "Distribuzione dei redditi: confronto tra media e mediana"
-
-data.frame(reddito = redditi_completi) |>
-  ggplot(aes(x = reddito)) +
-  geom_histogram(bins = 50, fill = "lightgreen", color = "black", alpha = 0.7) +
-  geom_vline(xintercept = mean(redditi_completi), 
-             color = "red", linetype = "dashed", linewidth = 1) +
-  geom_vline(xintercept = median(redditi_completi), 
-             color = "blue", linetype = "solid", linewidth = 1) +
-  annotate("text", x = mean(redditi_completi) + 10000, y = 150, 
-           label = "Media", color = "red", angle = 90) +
-  annotate("text", x = median(redditi_completi) - 5000, y = 150, 
-           label = "Mediana", color = "blue", angle = 90) +
-  labs(title = "Distribuzione asimmetrica dei redditi",
-       subtitle = "La mediana rappresenta meglio il reddito 'tipico'",
-       x = "Reddito (€)", y = "Frequenza") +
-  scale_x_continuous(labels = scales::comma)
-```
-
-### Un'applicazione concreta: il caso Natsal
-
-Come illustrato nella @sec-mean-vs-median, la *media spuntata* rappresenta un compromesso efficace tra sensibilità e robustezza. Eliminando una percentuale simmetrica di dati estremi, offre una misura più stabile della tendenza centrale.
-
-::: {.callout-note collapse="true" title="Esempio applicato: Natsal"}
-
-Per dimostrare l'applicazione pratica della media spuntata, analizziamo i dati del Progetto Natsal, contenuti nel file `sexual-partners.csv`.
-
-Negli anni '80, con l'emergere dell'AIDS, le autorità sanitarie britanniche si resero conto della mancanza di dati affidabili sui comportamenti sessuali della popolazione. In particolare, era cruciale comprendere la frequenza di cambio partner, il numero di partner simultanei e le pratiche sessuali adottate. Queste informazioni erano essenziali per prevedere la diffusione delle malattie sessualmente trasmissibili e pianificare i servizi sanitari, ma si faceva ancora riferimento ai dati di Alfred Kinsey raccolti negli Stati Uniti negli anni '40, privi di rappresentatività campionaria.
-
-A partire dalla fine degli anni '80, furono quindi avviati nel Regno Unito e negli Stati Uniti studi rigorosi sui comportamenti sessuali, nonostante forti opposizioni. In particolare, il governo di Margaret Thatcher ritirò all'ultimo momento il sostegno a un'importante indagine. I ricercatori riuscirono comunque a ottenere finanziamenti da enti benefici, dando vita al *National Sexual Attitudes and Lifestyles Survey* (Natsal). Da allora, questa indagine viene condotta ogni dieci anni, a partire dal 1990. La terza rilevazione, Natsal-3, è stata effettuata intorno al 2010.
-
-Analizziamo i dati relativi al *numero totale dichiarato di partner sessuali di sesso opposto* nella vita per uomini e donne di età compresa tra 35 e 44 anni. I dati provengono da Natsal-3 e includono 796 uomini e 1193 donne.
-
-Procediamo all'importazione dei dati:
-
-```{r}
-sexual_partners <- rio::import(here::here("data", "sexual-partners.csv"))
-```
-
-Esaminiamo un campione casuale del dataset:
-
-```{r}
-sexual_partners[sample(1:nrow(sexual_partners), size = 10, replace = FALSE), ]
-```
-
-La colonna `Gender` indica il genere del rispondente, mentre `NumPartners` riporta il numero di partner sessuali di sesso opposto dichiarati.
-
-Calcoliamo la media spuntata per gli uomini:
-
-```{r}
-sex_partners_men <- sexual_partners[sexual_partners$Gender == "Man", "NumPartners"]
-mean(sex_partners_men, trim = 0.10, na.rm = TRUE)
-```
-
-Calcoliamo la media spuntata per le donne:
-
-```{r}
-sex_partners_women <- sexual_partners[sexual_partners$Gender == "Woman", "NumPartners"]
-mean(sex_partners_women, trim = 0.10, na.rm = TRUE)
-```
-:::
-
-### Proprietà della media
-
-Una proprietà fondamentale della media è che la somma degli scarti di ciascun valore dalla media è zero:
+Il **range** è la differenza tra valore massimo e valore minimo:
 
 $$
-\sum_{i=1}^n (x_i - \bar{x}) = 0.\notag
-$$ {#eq-diffmeansumzero}
-
-Infatti,
-
-$$
-\begin{aligned}
-\sum_{i=1}^n (x_i - \bar{x}) &= \sum_i x_i - \sum_i \bar{x}\notag\\
-&= \sum_i x_i - n \bar{x}\notag\\
-&= \sum_i x_i - \sum_i x_i = 0.\notag
-\end{aligned}
-$$
-Questa proprietà implica che i dati sono equamente distribuiti intorno alla media.
-
-In R abbiamo:
-
-```{r}
-sum(x - mean(x))
-```
-
-::: {.callout-tip title="Nota sulla notazione scientifica" collapse="true"}
-Quando in un terminale viene visualizzato un numero come `-7.105e-15` in notazione scientifica, esso corrisponde a $-7.105 \cdot 10^{-15}$, che è effettivamente zero nel contesto dei calcoli numerici.  
-
-Questa approssimazione è una conseguenza diretta della *precisione finita* dei calcolatori. I sistemi digitali, infatti, rappresentano i numeri reali attraverso una codifica in *virgola mobile* (*floating point*), che comporta inevitabili errori di arrotondamento. La ragione risiede nell'impossibilità di memorizzare numeri reali con precisione assoluta.  
-
-Lo standard *IEEE 754 a doppia precisione* (64 bit), ampiamente utilizzato, suddivide la memoria in tre componenti:  
-
-- 1 bit per il segno (positivo/negativo),  
-- 11 bit per l'esponente (intervallo di scala),  
-- 52 bit per la mantissa (o significando), che definisce le cifre significative.
-
-Grazie a questa struttura, è possibile rappresentare numeri con una precisione di circa *15-17 cifre decimali*. Tuttavia, qualsiasi valore non esprimibile in formato binario entro questi limiti subisce un troncamento o un arrotondamento, generando piccole discrepanze rispetto al risultato teorico.
-:::
-
-### La media come centro di gravità dell'istogramma
-
-La media aritmetica può essere interpretata come il centro di gravità o il punto di equilibrio della distribuzione dei dati. In termini fisici, il centro di gravità è il punto in cui la massa di un sistema è equilibrata o concentrata.
-
-In termini statistici, possiamo considerare la media come il punto in cui la distribuzione dei dati è in equilibrio. Ogni valore dell'insieme di dati può essere visto come un punto materiale con una massa proporzionale al suo valore. Se immaginiamo questi punti disposti su una linea, con valori più grandi a destra e più piccoli a sinistra, la media corrisponderà esattamente al punto in cui la distribuzione sarebbe in equilibrio.
-
-::: {.callout-note collapse="true" title="Principio dei minimi quadrati"}
-
-Il *metodo dei minimi quadrati* afferma che la posizione della media minimizza la somma dei quadrati delle distanze dai dati. Matematicamente, ciò significa che la somma dei quadrati degli scarti tra ciascun valore osservato e la media è minima. Questo principio è alla base dell'analisi statistica della regressione e conferma il ruolo della media come *centro di gravità* della distribuzione dei dati.
-
-**Simulazione.** Utilizziamo una simulazione per verificare questo principio, calcolando la somma dei quadrati degli scarti per diversi valori e visualizzando il risultato con *ggplot2*.
-
-```{r}
-# Definizione dell'intervallo di valori da testare
-nrep <- 10000
-M <- seq(20, 40, length.out = nrep)
-res <- rep(NA, nrep)
-
-# Calcolo della somma dei quadrati degli scarti per ciascun valore di M
-for (i in 1:nrep) {
-  res[i] = sum((x - M[i])^2)
-}
-
-# Identificazione del valore minimo
-min_index <- which.min(res)
-min_M <- M[min_index]
-
-# Creazione del dataframe per ggplot
-df <- data.frame(M, res)
-
-df |> 
-  ggplot(aes(x = M, y = res)) +
-  geom_line(color = "blue") +
-  geom_vline(xintercept = min_M, linetype = "dashed", color = "red") +
-  labs(
-    x = "Valore di M",
-    y = "Somma dei quadrati degli scarti"
-  ) 
-```
-
-Stampiamo il minimo:
-
-```{r}
-min_M
-```
-
-Confronto con la media:
-
-```{r}
-mean(x)
-```
-Osserviamo che il valore di `M` che minimizza la somma dei quadrati degli scarti coincide con la media dei dati, confermando il principio dei minimi quadrati.
-:::
-
-### Le proporzioni sono medie
-
-Se un insieme di dati è composto esclusivamente da valori binari (0 o 1), allora la somma corrisponde al numero totale di unità presenti, mentre la media rappresenta la proporzione di unità sul totale.
-
-```{r}
-zero_one <- c(1, 1, 1, 0)
-result <- mean(zero_one)
-result
-```
-È possibile sostituire 1 con il valore booleano True e 0 con False:
-
-```{r}
-mean(c(TRUE, TRUE, TRUE, FALSE))
-```
-
-### Limiti della media aritmetica
-
-La media aritmetica, tuttavia, ha alcune limitazioni: non sempre è l'indice più adeguato per descrivere accuratamente la tendenza centrale della distribuzione, specialmente quando si verificano asimmetrie o valori anomali (outlier). In queste situazioni, è più indicato utilizzare la mediana o la media spuntata (come spiegheremo successivamente).
-
-::: {.callout-note collapse="true" title="Come descrivere la tendenza centrale in distribuzioni asimmetriche"}
-
-Quando una distribuzione è *asimmetrica*, gli indici di tendenza centrale – moda, mediana e media – assumono valori diversi e trasmettono informazioni complementari. Per illustrare questo concetto, analizziamo i dati del Progetto Natsal (`sexual-partners.csv`), che riportano il numero di partner sessuali di sesso opposto dichiarati da uomini e donne di età compresa tra 35 e 44 anni.
-
-1. **Esplorazione iniziale dei dati**
-
-Estratto casuale di dieci righe dal dataset:
-
-```{r}
-sexual_partners[sample(1:nrow(sexual_partners), 10), ]
-```
-
-Il dataset contiene due variabili principali:
-* `Gender`: genere del rispondente
-* `NumPartners`: numero di partner sessuali dichiarati
-
-Verifichiamo la numerosità campionaria per gruppo:
-
-```{r}
-sexual_partners |> 
-  group_by(Gender) |> 
-  summarise(count = n())
-```
-
-Il numero massimo riportato è molto elevato (oltre 500), ma per una visualizzazione più chiara limiteremo l'analisi a **valori ≤ 50**:
-
-```{r}
-sexual_partners |> 
-  group_by(Gender) |> 
-  summarise(maximum = max(NumPartners))
-```
-
-2. **Visualizzazione delle distribuzioni**
-
-Calcoliamo e rappresentiamo la distribuzione dei partner (con valori limitati a ≤50) separatamente per genere:
-
-```{r}
-sexual_partners_truncated <- sexual_partners |> 
-  filter(NumPartners <= 50)
-
-percentage_data <- sexual_partners_truncated %>%
-  group_by(Gender, NumPartners) %>%
-  summarise(Count = n(), .groups = "drop") %>%
-  group_by(Gender) %>%
-  mutate(Percentage = Count / sum(Count) * 100)
-
-y_max <- max(percentage_data$Percentage)
-
-gender_labels <- c("Man" = "Uomini 35–44", "Woman" = "Donne 35–44")
-
-percentage_data |>
-  ggplot(aes(NumPartners, Percentage, fill = Gender)) +
-  geom_col(position = "dodge", color = "black") +
-  facet_wrap(~Gender, labeller = labeller(Gender = gender_labels)) +
-  scale_y_continuous(limits = c(0, y_max)) +
-  labs(x = "Numero di partner sessuali dichiarati", y = "Percentuale") +
-  theme(legend.position = "none")
-```
-
-La distribuzione risulta **fortemente asimmetrica positiva**: la maggior parte dei soggetti dichiara un numero basso di partner, mentre una coda lunga a destra rappresenta pochi individui con valori molto elevati.
-
-3. **Calcolo degli indici di tendenza centrale**
-
-Calcoliamo media, mediana e moda per ciascun genere:
-
-```{r}
-get_mode <- function(x) {
-  tbl <- table(x)
-  as.numeric(names(tbl)[which.max(tbl)])
-}
-
-sexual_partners_truncated |> 
-  group_by(Gender) |> 
-  summarise(
-    media   = mean(NumPartners, na.rm = TRUE),
-    mediana = median(NumPartners, na.rm = TRUE),
-    moda    = get_mode(NumPartners)
-  )
-```
-
-4. **Interpretazione dei risultati**
-
-* **Media**: notevolmente più alta della mediana e della moda, poiché fortemente influenzata dalla coda destra della distribuzione.
-* **Mediana**: valore centrale della distribuzione, molto meno sensibile ai valori estremi. Rappresenta una misura più robusta della tendenza centrale.
-* **Moda**: corrisponde al valore più frequente (1 partner), ma in distribuzioni così sparse fornisce un'informazione limitata.
-
-5. **Conclusioni pratiche per l'analisi**
-
-* In presenza di distribuzioni **asimmetriche**, la **mediana** è generalmente l'indice di tendenza centrale più affidabile e informativo.
-* È comunque utile riportare sia la **media** che la **moda** per documentare l'entità dell'asimmetria e le caratteristiche della distribuzione.
-* La descrizione numerica deve essere sempre accompagnata da una **visualizzazione grafica** (istogrammi, boxplot) che permetta di apprezzare visivamente la forma della distribuzione e la presenza di valori estremi.
-* Una descrizione completa richiede anche l'utilizzo di **misure di dispersione**, che esploreremo nella sezione successiva.
-
-:::
-
-### La media come rappresentazione della psicologia umana: un'arma a doppio taglio?
-
-La media è uno degli strumenti statistici più semplici e intuitivi che i ricercatori utilizzano per sintetizzare i dati. È un indice di tendenza centrale familiare e intuitivo: se chiediamo a un gruppo di persone la loro età e calcoliamo la media, otteniamo un valore che sintetizza in un'unica cifra l'informazione disponibile. Ma cosa significa, in realtà, "riassumere" i dati con la media? E soprattutto, questa operazione ha senso quando si studiano i processi psicologici e il comportamento umano?
-
-In molte discipline scientifiche, il concetto di media è utile perché descrive fenomeni che tendono a essere stabili e uniformi. Per esempio, se misuriamo l’altezza di un gruppo di persone, possiamo aspettarci che la distribuzione sia approssimativamente normale e che la media offra una stima ragionevole di un valore tipico. Tuttavia, la mente umana e i processi psicologici non funzionano come il sistema cardiovascolare o i muscoli. Ogni persona ha esperienze uniche che plasmano le sue risposte, i suoi pensieri e le sue emozioni. 
-
-Un problema centrale, sollevato da @speelman2013mean, riguarda l'implicita assunzione che ci sia un *vero valore* sottostante ai processi psicologici che possiamo stimare attraverso la media, come se il comportamento umano fosse determinato da meccanismi identici in ogni individuo, con le differenze attribuibili solo a "rumore" sperimentale. Questo approccio, tipico della psicologia sperimentale tradizionale, assume che testare un gruppo di persone e mediare i loro risultati ci permetta di rivelare la struttura comune della mente umana. Ma questa assunzione è davvero giustificata?
-
-### La fallacia ergodica e l’illusione dell’universalità {#sec-eda-ergodic-fallacy}
-
-Un errore metodologico frequente nella psicologia è la cosiddetta *fallacia ergodica*, ovvero l’errata convinzione che le caratteristiche medie di un gruppo possano essere automaticamente applicate ai singoli individui che lo compongono [@speelman2024most]. Questo equivoco nasce dall’idea che la media descriva un valore "tipico" valido per tutti, senza considerare le differenze individuali o le variazioni nel tempo.
-
-Immaginiamo di studiare la felicità di un gruppo di persone nel corso di una settimana e di calcolare la media dei loro punteggi di benessere giornalieri. Se lunedì una persona ha un punteggio di 2 (molto infelice), mercoledì 5 (moderatamente felice) e sabato 8 (molto felice), il suo punteggio medio sarà 5. Tuttavia, questo valore intermedio non rappresenta in alcun modo la realtà soggettiva vissuta da quella persona nei singoli giorni. Lo stesso problema si pone quando si usano le medie per descrivere abilità cognitive, tratti di personalità o stati emotivi: la media può nascondere fluttuazioni e differenze individuali fondamentali per comprendere la psicologia umana.
-
-Il rischio, come sottolineato da @molden2006finding, è che il nostro desiderio di trovare *universalità* nei processi cognitivi ci porti a enfatizzare somiglianze tra le persone, ignorando le variazioni individuali che possono essere altrettanto, se non più, informative. Per esempio, due studenti con lo stesso punteggio medio in un test di memoria potrebbero aver ottenuto quel risultato in modi completamente diversi: uno potrebbe aver avuto prestazioni costantemente nella media, mentre l’altro potrebbe aver avuto picchi di eccellenza alternati a difficoltà estreme.
-
-### La media: uno strumento da usare con cautela
-
-Questi problemi non significano che la media sia inutile in psicologia. È un indicatore potente e spesso informativo, ma deve essere interpretato con cautela. In particolare, non può essere usata per fare inferenze sui singoli individui senza considerare altre misure, come la *varianza* e la *deviazione standard*, che ci dicono quanto i dati siano dispersi intorno alla media.
-
-In psicologia, comprendere la variabilità è tanto importante quanto individuare una tendenza centrale. Se vogliamo davvero capire il comportamento umano, dobbiamo chiederci non solo *qual è il valore medio?* ma anche *quanto variano i dati?* e *cosa ci dice questa variabilità sulle differenze individuali?* Nella prossima sezione, esamineremo questi concetti e vedremo come la varianza e la deviazione standard ci aiutano a catturare le differenze che la media, da sola, non può rivelare.
-
-::: {.callout-note collapse="true" title="La scelta della misura di tendenza centrale"}
-
-La selezione della misura di tendenza centrale più adeguata è un aspetto fondamentale dell'analisi statistica. Tale scelta deve basarsi sulla natura dei dati a disposizione, sulla loro distribuzione e sulla potenziale presenza di valori anomali o asimmetrie. Comprendere le caratteristiche distintive di ciascun indicatore è cruciale per una rappresentazione corretta e significativa dell’informazione.
-
-**La moda** trova la sua principale applicazione nei dati di tipo categoriale o nominale, dove rappresenta l'unica misura di tendenza centrale calcolabile. La sua utilità è massima nelle distribuzioni unimodali, ovvero quelle in cui un unico valore emerge con frequenza predominante. Al contrario, in presenza di distribuzioni multimodali, caratterizzate da più picchi di frequenza, la moda perde di significatività, poiché l’identificazione di un singolo valore rappresentativo diventa impossibile. Nei dati continui, infine, la moda può spesso non essere definita o risultare poco informativa.
-
-**La media aritmetica** è l’indicatore più comune e fornisce una stima eccellente della tendenza centrale per distribuzioni simmetriche e prive di valori anomali. Tuttavia, la media presenta una critica debolezza: la sua estrema sensibilità ai valori estremi. In distribuzioni asimmetriche o contaminata da outlier, la media subisce uno spostamento marcato verso la coda della distribuzione, finendo per non rappresentare più fedelmente la maggior parte dei dati.
-
-**La Media Spuntata** si propone come una valida alternativa alla media tradizionale quando si sospetta la presenza di valori anomali. Questo indicatore, calcolato escludendo una certa percentuale dei valori più estremi (ad esempio, il 5% per ogni coda), offre un compromesso vantaggioso. Rispetto alla media, è molto più robusta agli outlier; rispetto alla mediana, tiene conto di un maggior numero di osservazioni, preservando parte dell'informazione contenuta nei dati.
-
-**La mediana**, essendo definita come il valore centrale di una distribuzione ordinata, possiede una robustezza intrinseca ai valori anomali. La sua natura posizionale fa sì che essa non venga influenzata dall’entità numerica dei dati, ma solo dal loro rango. Questo la rende la misura d’elezione per distribuzioni fortemente asimmetriche o con outlier. Inoltre, è l’indicatore preferibile per i dati ordinali, dove le distanze tra le categorie non sono definite numericamente.
-
-**Linee guida per una scelta consapevole.**
-
-Per distribuzioni simmetriche e unimodali, la media aritmetica costituisce generalmente la scelta ottimale, in quanto ne coglie appieno il centro. Quando si affrontano distribuzioni asimmetriche o dataset contenenti valori anomali, la mediana è da preferire per la sua innata resistenza a tali distorsioni. La media spuntata rappresenta un'ottima opzione quando si desidera attenuare l’impatto di pochi outlier senza rinunciare completamente all’informazione che forniscono.
-Per i dati categoriali (nominali), la moda è l’unica misura applicabile, a patto che la distribuzione sia unimodale. In scenari complessi come le distribuzioni multimodali, nessuna singola misura è sufficiente a descrivere la tendenza centrale. In questi casi, è indispensabile affiancare agli indicatori statistici una visualizzazione grafica (ad esempio un istogramma) e una descrizione analitica dei diversi picchi presenti.
-
-In sintesi, non esiste una misura migliore in assoluto. La media è potente per dati simmetrici, la mediana è lo strumento robusto per proteggersi dalle distorsioni, la media spuntata è un utile compromesso e la moda è essenziale per i dati categoriali. La scelta deve sempre essere guidata da una attenta valutazione preliminare della distribuzione dei dati.
-:::
-
-## La variabilità nei dati psicologici  
-
-Nei fenomeni psicologici e comportamentali, *la variabilità è una caratteristica intrinseca*. Ad esempio, se misuriamo il livello di stress percepito da una persona più volte nella stessa giornata, è raro osservare lo stesso valore anche utilizzando strumenti identici. Allo stesso modo, un questionario standardizzato sull’autostima somministrato a un gruppo di studenti universitari restituirà punteggi differenti per ciascun partecipante. Anche registrando i tempi di reazione in un compito cognitivo, noteremo fluttuazioni sia tra individui diversi sia nelle prestazioni dello stesso individuo in prove ripetute.  
-
-Questa *dispersione sistematica* non è un “rumore” da ignorare, ma un elemento informativo cruciale. L’analisi statistica in psicologia ha infatti uno scopo duplice: da un lato, quantificare la variabilità; dall’altro, identificarne le origini. Differenze individuali, contesto ambientale, errori di misurazione o interazioni tra fattori sono solo alcune delle possibili fonti che contribuiscono alla variazione osservata.  
-
-In questa sezione esploreremo:  
-
-1. *la scomposizione della variabilità* in componenti spiegate (attribuibili a fattori noti, come un intervento sperimentale) e non spiegate (legate a elementi casuali o non controllati).  
-2. *strumenti per descriverla*, sia attraverso rappresentazioni grafiche (boxplot, istogrammi) sia mediante indici numerici (differenza interquartile, varianza, deviazione standard).  
-
-Comprendere la variabilità non è un esercizio tecnico, ma un passo fondamentale per interpretare fenomeni complessi come le differenze di personalità, le oscillazioni emotive o l’efficacia di una terapia. Ogni modello psicologico, infatti, deve fare i conti con questa dimensione dinamica e multideterminata dei dati.  
-
-### Quantili
-
-Accanto alle misure di tendenza centrale, i *quantili* descrivono la posizione relativa di un'osservazione all'interno di una distribuzione. Mentre media, mediana e moda individuano un valore "tipico", i quantili rispondono a una domanda complementare: qual è il valore al di sotto del quale ricade una determinata proporzione dei dati?
-
-### Definizione formale
-
-Il quantile di ordine $p$ (con $0 < p < 1$) è il valore $q_p$ tale che una proporzione $p$ delle osservazioni è minore o uguale a $q_p$. Formalmente, dati $n$ valori ordinati $x_{(1)} \leq x_{(2)} \leq ... \leq x_{(n)}$, il quantile di ordine $p$ si ottiene calcolando $k = \lceil p \cdot n \rceil$, dove $\lceil \cdot \rceil$ rappresenta la funzione di arrotondamento per eccesso. Il quantile corrisponde allora a $q_p = x_{(k)}$.
-
-Quando $p \cdot n$ non è un intero, si ricorre in genere all'interpolazione lineare tra le due osservazioni più vicine, metodo implementato nella maggior parte dei software statistici.
-
-Per chiarire il calcolo, consideriamo un esempio semplice: dati ordinati {15, 20, 23, 25, 28, 30, 35, 40, 45, 50}. Il 30° percentile ($p=0.3$) si determina come $k = \lceil 0.3 \cdot 10 \rceil = 3$, dunque $q_{0.3} = 23$.
-
-### Percentili e quartili: casi particolari
-
-Un caso speciale di quantili sono i *percentili*, che suddividono la distribuzione in cento parti uguali. Tra questi, assumono particolare rilievo i *quartili*:
-
-- **primo quartile (Q₁)**: 25° percentile;
-- **secondo quartile (Q₂)**: 50° percentile (corrisponde alla mediana);
-- **terzo quartile (Q₃)**: 75° percentile.
-
-I quartili delimitano la distribuzione in quattro segmenti di uguale numerosità, fornendo una sintesi robusta della sua posizione e dispersione.
-
-### Esempio applicativo
-
-Per illustrare l'uso pratico dei quantili, consideriamo nuovamente la variabile `NumPartners`, distintamente per genere. Calcoliamo il 10° e il 90° percentile:
-
-```{r}
-# Quantili per gli uomini
-quantile(
-  sexual_partners[sexual_partners$Gender == "Man", "NumPartners"], 
-  probs = c(0.1, 0.9)
-  )
-
-# Quantili per le donne
-quantile(
-  sexual_partners[sexual_partners$Gender == "Woman", "NumPartners"], 
-  probs = c(0.1, 0.9)
-  )
-```
-
-I risultati rivelano che:
-
-- **tra gli uomini**, il 10% dei soggetti ha dichiarato al massimo un partner, mentre il 10% con valori più elevati supera i 34 partner;
-- **tra le donne**, il 10° percentile corrisponde anch'esso a un partner, ma il 90° percentile non supera i 18 partner.
-
-Questa differenza evidenzia come le due distribuzioni condividano una base simile nella parte inferiore (numerosi individui con pochi partner), ma divergano significativamente nella coda superiore: negli uomini, la presenza di alcuni valori estremi allunga la distribuzione verso destra, generando una maggiore asimmetria positiva.
-
-### Misure di dispersione basate sui quantili
-
-I quantili possono essere utilizzati anche per costruire indici di variabilità che non fanno ipotesi sulla forma della distribuzione. La misura più semplice è l’*intervallo di variazione*, pari alla differenza tra valore massimo e minimo. Questo indice è immediato da calcolare, ma dipende esclusivamente dagli estremi e risulta quindi molto sensibile agli outlier.
-
-```{r}
-x <- c(12, 18, 20, 22, 25, 28, 30, 35)
-range(x)
-diff(range(x))
-```
-
-Nell’esempio l’intervallo è 23, valore che descrive l’ampiezza complessiva dei dati ma non la loro distribuzione interna.
-
-Un indicatore più robusto è la *differenza interquartile (IQR)*, che misura la distanza fra il terzo e il primo quartile, racchiudendo così il 50% centrale dei dati.
-
-```{r}
-IQR(x)
-```
-
-Se in un gruppo di studenti i quartili sono $Q_1 = 25$ e $Q_3 = 40$, l’IQR è pari a 15: significa che metà dei punteggi si colloca in un intervallo di 15 unità. Questo indice riduce l’influenza dei valori estremi, anche se non rappresenta l’intera dispersione della distribuzione.
-
-In sintesi, l’intervallo di variazione e l’IQR offrono due prospettive complementari: il primo fornisce un’idea immediata dell’ampiezza totale dei dati, il secondo descrive la variabilità tipica della parte centrale della distribuzione. Entrambi hanno limiti che rendono necessario affiancarli a misure più complete, come la varianza e la deviazione standard, di cui parleremo nella sezione successiva.
-
-### La varianza
-
-La *varianza* è una delle misure di dispersione più utilizzate in statistica perché tiene conto di *tutte* le osservazioni e descrive quanto i valori si discostano dalla loro media. Formalmente, se abbiamo $n$ osservazioni $x_1, x_2, \dots, x_n$ e indichiamo con $\bar{x} = \frac{1}{n} \sum_{i=1}^n x_i$ la loro media, la varianza (in versione *descrittiva*) si calcola così:
-
-$$
-S^2 = \frac{1}{n} \sum_{i=1}^n (x_i - \bar{x})^2.
-$$ {#eq-var-descr}
-
-In altre parole, per trovare la varianza:
-
-1. calcoliamo la media di tutti i valori ($\bar{x}$),
-2. sottraiamo la media a ciascun valore, ottenendo così lo *scarto* $(x_i - \bar{x})$,
-3. eleviamo ogni scarto al quadrato, per rendere positivi i valori ed enfatizzare gli scostamenti più grandi,
-4. infine, facciamo la *media* di questi quadrati.
-
-Maggiore è la varianza, maggiore è la variabilità (o dispersione) dei dati rispetto alla media. Al contrario, una varianza prossima allo zero indica che le osservazioni sono molto vicine tra loro e quasi coincidenti con la media.
-
-> **Nota su popolazione e campione.** Spesso, nell’analisi di dati campionari, la varianza viene calcolata usando $\frac{1}{n-1}$ al denominatore al posto di $\frac{1}{n}$. In questo modo otteniamo una stima corretta (non distorta) della varianza della popolazione. Nel contesto della formula sopra riportata, invece, stiamo calcolando la varianza *descrittiva* (o *popolazione completa*).
-
-::: {.callout-caution collapse="true" title="Esempio"}
-
-Immaginiamo di aver misurato il numero di *ore di studio* giornaliere di un piccolo gruppo di partecipanti a un esperimento di psicologia. I dati raccolti sono:
-
-$$
-x = \{3,\, 1,\, 4,\, 2\}.
+\text{range} = \max(x) - \min(x).
 $$
 
-Passo 1: Calcolo della media
+```{r}
+#| label: loc-scale-range-example
+range(studenti$ore_sonno)
+diff(range(studenti$ore_sonno))
+```
+
+Il range è semplice, ma dipende solo da due valori. Per questo è molto sensibile agli estremi.
+
+### Quartili e intervallo interquartile
+
+I **quartili** dividono la distribuzione in quattro parti. L'intervallo interquartile, o **IQR**, è la differenza tra il terzo quartile e il primo quartile:
 
 $$
-\bar{x} = \frac{3 + 1 + 4 + 2}{4} = \frac{10}{4} = 2.5.
+IQR = Q_3 - Q_1.
 $$
 
-Passo 2: Scarti dalla media
-
-- Per il primo valore ($x_1 = 3$): $3 - 2.5 = 0.5$.
-- Per il secondo valore ($x_2 = 1$): $1 - 2.5 = -1.5$.
-- Per il terzo valore ($x_3 = 4$): $4 - 2.5 = 1.5$.
-- Per il quarto valore ($x_4 = 2$): $2 - 2.5 = -0.5$.
-
-Passo 3: Quadrati degli scarti
-
-- $(0.5)^2 = 0.25$.
-- $(-1.5)^2 = 2.25$.
-- $(1.5)^2 = 2.25$.
-- $(-0.5)^2 = 0.25$.
-
-Passo 4: Calcolo della varianza
-
-Facciamo la media di questi valori:
-
-$$
-S^2 = \frac{0.25 + 2.25 + 2.25 + 0.25}{4} = \frac{5}{4} = 1.25.
-$$
-
-Dunque la varianza è 1.25.
-:::
-
-### Interpretazione
-
-Nel caso dell'esempio precedente relativo alle ore di studio giornaliere, una varianza pari a 1.25 indica che le ore di studio giornaliere si discostano, in media, di 1.25 unità quadrate dalla media di 2.5 ore. Per comprendere meglio l’ordine di grandezza di questa dispersione, solitamente si fa riferimento alla *deviazione standard*, che è la radice quadrata della varianza. In questo caso, $\sqrt{1.25} \approx 1.12$ ore.
-
-- Se la varianza (o la deviazione standard) fosse stata molto più grande, avremmo dedotto che gli studenti del campione presentano abitudini di studio molto diverse.
-- Al contrario, se la varianza fosse prossima a 0, significherebbe che quasi tutti studiano un numero di ore molto simile a 2.5.
-
-### Calcolo in R
-
-Se volessimo effettuare in R i calcoli relativi all'esempio sulle ore di studio, potremmo fare così:
+L'IQR descrive l'ampiezza della metà centrale dei dati.
 
 ```{r}
-# Dati
-x <- c(3, 1, 4, 2)
-
-# Calcolo manuale della media
-media_x <- mean(x)
-
-# Calcolo manuale della varianza secondo la formula descrittiva
-varianza_descr <- mean((x - media_x)^2)
-varianza_descr
-# [1] 1.25
-
-# Calcolo della varianza con la funzione var() di R
-# (Attenzione: per default var() usa n-1 al denominatore)
-varianza_campionaria <- var(x)
-varianza_campionaria
-# [1] 1.666667
-```
-Osserviamo che `var(x)` dà un valore di circa 1.67 perché R, di default, calcola la *varianza campionaria* (con $n-1$ al denominatore). Se vogliamo la *varianza descrittiva* (come nella formula con $n$ al denominatore), usiamo la nostra `varianza_descr`.
-
-In sintesi, la varianza fornisce un modo per quantificare quanto siano diverse tra loro le osservazioni. Nel caso dell’esempio sulle ore di studio, abbiamo visto che i valori, pur non essendo tutti identici, non mostrano una dispersione eccessiva (la varianza è 1.25). Se i comportamenti di studio fossero estremamente diversificati (per esempio, se qualcuno studiasse 0 ore al giorno e qualcun altro 10), la varianza sarebbe molto più elevata, indicando una marcata eterogeneità nel campione.
-
-### Stima della varianza della popolazione
-
-Si noti il denominatore della formula della varianza. Nell'@eq-var-descr, ho utilizzato $n$ come denominatore (l'ampiezza campionaria, ovvero il numero di osservazioni nel campione). In questo modo, otteniamo la varianza come *statistica descrittiva* del campione. Tuttavia, è possibile utilizzare $n-1$ come denominatore alternativo:
-
-$$
-s^2 = \frac{1}{n-1} \sum_{i=1}^n (x_i - \bar{x})^2 .
-$$ {#eq-var-stimatore}
-
-In questo secondo caso, otteniamo la varianza come *stimatore* della varianza della popolazione. Si può dimostrare che l'@eq-var-stimatore fornisce una stima corretta (ovvero, non distorta) della varianza della popolazione da cui abbiamo ottenuto il campione, mentre l'@eq-var-descr fornisce (in media) una stima troppo piccola della varianza della popolazione. Si presti attenzione alla notazione: $S^2$ rappresenta la varianza come statistica descrittiva, mentre $s^2$ rappresenta la varianza come stimatore.
-
-::: {.callout-note collapse="true" title="Simulazione"}
-
-Per illustrare questo punto, svolgiamo una simulazione. Consideriamo la distribuzione dei punteggi del quoziente di intelligenza (QI). I valori del QI seguono una particolare distribuzione chiamata *distribuzione normale* (v. @sec-eda-intro-gauss), con media 100 e deviazione standard 15. La forma di questa distribuzione è illustrata nella figura seguente.
-
-```{r}
-# Define parameters
-x <- seq(100 - 4 * 15, 100 + 4 * 15, by = 0.001)
-mu <- 100
-sigma <- 15
-
-# Compute the PDF
-pdf <- dnorm(x, mean = mu, sd = sigma)
-
-# Plot using ggplot2
-data <- tibble(x = x, pdf = pdf)
-ggplot(data, aes(x = x, y = pdf)) +
-  geom_line() +
-  labs(
-    x = "QI", 
-    y = "Densità"
-  ) 
+#| label: loc-scale-iqr-example
+quantile(studenti$ore_sonno, probs = c(.25, .50, .75))
+IQR(studenti$ore_sonno)
 ```
 
-Supponiamo di estrarre un campione casuale di 4 osservazioni dalla popolazione del quoziente di intelligenza -- in altre parole, supponiamo di misurare il quoziente di intelligenza di 4 persone prese a caso dalla popolazione.
-
-```{r}
-set.seed(123) 
-x <- rnorm(4, mean = 100, sd = 15)
-print(x)
-```
-
-Calcoliamo la varianza usando $n$ al denominatore. Si noti che la vera varianza del quoziente di intelligenza è $15^2$ = 225.
-
-```{r}
-var(x)
-```
-
-Consideriamo ora 10 campioni casuali del QI, ciascuno di ampiezza 4.
-
-```{r}
-mu <- 100
-sigma <- 15
-size <- 4
-niter <- 10
-random_samples <- list()
-
-set.seed(123) 
-
-for (i in 1:niter) {
-  one_sample <- rnorm(size, mean = mu, sd = sigma)
-  random_samples[[i]] <- one_sample
-}
-```
-
-Il primo campione è
-
-```{r}
-random_samples[1]
-```
-
-Il decimo campione è
-
-```{r}
-random_samples[10]
-```
-
-Stampiamo i valori di tutti i 10 campioni.
-
-```{r}
-rs <- do.call(rbind, random_samples)
-rs
-```
-
-Per ciascun campione (ovvero, per ciascuna riga della matrice
-precedente), calcoliamo la varianza usando la formula con $n$ al denominatore.
-Otteniamo così 10 stime della varianza della popolazione del QI.
-
-```{r}
-x_var <- apply(rs, 1, var)  # Applica la funzione var su ciascuna riga
-print(x_var)
-```
-
-Notiamo due cose: 
-
-- le stime sono molto diverse tra loro; questo fenomeno è noto con il nome di *variabilità campionaria*;
-- in media le stime sono troppo piccole.
-
-Per aumentare la sicurezza riguardo al secondo punto menzionato in precedenza, ripeteremo la simulazione utilizzando un numero di iterazioni maggiore.
-
-```{r}
-mu <- 100
-sigma <- 15
-size <- 4
-niter <- 10000
-random_samples <- list()
-
-set.seed(123) # Replace 123 with your desired seed for reproducibility
-
-for (i in 1:niter) {
-  one_sample <- rnorm(size, mean = mu, sd = sigma)
-  random_samples[[i]] <- one_sample
-}
-
-rs <- do.call(rbind, random_samples)
-x_var <- apply(rs, 1, var) * (size - 1) / size  # Adjust for population variance (ddof = 0)
-```
-
-Esaminiamo la distribuzione dei valori ottenuti.
-
-```{r}
-# Create a data frame for plotting
-data <- data.frame(x_var = x_var)
-
-# Plot the histogram using ggplot2
-ggplot(data, aes(x = x_var)) +
-  geom_histogram(fill = "lightblue", bins = 30, color = "black") +
-  scale_x_continuous(limits = c(0, 1500)) +
-  scale_y_continuous(limits = c(0, 2250)) +
-  labs(
-    x = "Varianza", 
-    y = "Frequenza"
-  )
-```
-
-La stima più verosimile della varianza del QI è dato dalla media di
-questa distribuzione. 
-
-```{r}
-mean(x_var)
-```
-
-Si noti che il nostro spospetto è stato confermato: il valore medio della stima della varianza ottenuta con l'@eq-var-descr è troppo piccolo rispetto al valore corretto di $15^2 = 225$. 
-
-Ripetiamo ora la simulazione usando la formula della varianza con $n-1$ al denominatore.
-
-```{r}
-set.seed(123) 
-
-mu <- 100
-sigma <- 15
-size <- 4
-niter <- 10000
-random_samples <- list()
-
-for (i in 1:niter) {
-  one_sample <- rnorm(size, mean = mu, sd = sigma)
-  random_samples[[i]] <- one_sample
-}
-
-rs <- do.call(rbind, random_samples)
-x_var <- apply(rs, 1, var)  # ddof = 1 is default for var in R
-```
-
-Esaminiamo la distribuzione dei valori ottenuti.
-
-```{r}
-# Create a data frame for plotting
-data <- data.frame(x_var = x_var)
-
-# Plot the histogram using ggplot2
-ggplot(data, aes(x = x_var)) +
-  geom_histogram(fill = "lightblue", bins = 30, color = "black") +
-  scale_x_continuous(limits = c(0, 1500)) +
-  scale_y_continuous(limits = c(0, 2250)) +
-  labs(
-    x = "Varianza Corretta", 
-    y = "Frequenza"
-  )
-```
-
-Nel secondo caso, se utilizziamo $n-1$ come denominatore per calcolare la stima della varianza, il valore atteso di questa stima è molto vicino al valore corretto di 225. Se il numero di campioni fosse infinito, i due valori sarebbero identici.
-
-```{r}
-mean(x_var)
-```
-
-In conclusione, le due formule della varianza hanno scopi diversi. 
-
-- La formula della varianza con $n$ al denominatore viene utilizzata come statistica descrittiva per descrivere la variabilità di un particolare campione di osservazioni.
-- D'altro canto, la formula della varianza con $n-1$ al denominatore viene utilizzata come stimatore per ottenere la migliore stima della varianza della popolazione da cui quel campione è stato estratto.
-:::
+L'intervallo interquartile (IQR) è utile quando si desidera ottenere una misura robusta della variabilità, meno influenzata dai valori estremi rispetto al range.
 
 ### Deviazione standard
 
-Per interpretare la varianza in modo più intuitivo, si può calcolare la deviazione standard (o scarto quadratico medio o scarto tipo) prendendo la radice quadrata della varianza. La deviazione standard è espressa nell'unità di misura originaria dei dati, a differenza della varianza che è espressa nel quadrato dell'unità di misura dei dati. La deviazione standard fornisce una misura della dispersione dei dati attorno alla media, rendendo più facile la comprensione della variabilità dei dati.
+La **deviazione standard** descrive quanto i valori tendono a distanziarsi dalla media.
 
-La deviazione standard (o scarto quadratico medio, o scarto tipo) è definita come:
+```{r}
+#| label: loc-scale-sd-example
+sd(studenti$ore_sonno)
+```
 
-$$
-s^2 = \sqrt{(n-1)^{-1} \sum_{i=1}^n (x_i - \bar{x})^2}.
-$$ {#eq-sd-stimatore}
+La deviazione standard è espressa nella stessa unità di misura della variabile. Se la variabile è misurata in ore, anche la deviazione standard sarà espressa in ore.
 
-Quando tutte le osservazioni sono uguali, $s = 0$, altrimenti $s > 0$.
+In R, la funzione `sd()` calcola la deviazione standard campionaria, utilizzando al denominatore $n - 1$. Questo è coerente con l'idea che stiamo utilizzando un campione per descrivere una popolazione più ampia.
 
-::: {.callout-note}
-Il termine *standard deviation* è stato introdotto in statistica da Pearson nel 1894 assieme alla lettera greca $\sigma$ che lo rappresenta. Il termine italiano "deviazione standard" ne è la traduzione più utilizzata nel linguaggio comune; il termine dell’[Ente Nazionale Italiano di Unificazione](https://it.wikipedia.org/wiki/Ente_nazionale_italiano_di_unificazione) è tuttavia “scarto tipo”, definito come la radice quadrata positiva della varianza.
+::: {.callout-note title="Interpretazione intuitiva"}
+La deviazione standard può essere interpretata come la distanza tipica dei valori dalla media. Questa lettura è più affidabile quando la distribuzione è abbastanza simmetrica e non presenta valori estremi marcati.
 :::
 
-La deviazione standard $s$ dovrebbe essere utilizzata solo quando la media è una misura appropriata per descrivere il centro della distribuzione, ad esempio nel caso di distribuzioni simmetriche. Tuttavia, è importante tener conto che, come la media $\bar{x}$, anche la deviazione standard è fortemente influenzata dalla presenza di dati anomali, ovvero pochi valori che si discostano notevolmente dalla media rispetto agli altri dati della distribuzione. In presenza di dati anomali, la deviazione standard può risultare ingannevole e non rappresentare accuratamente la variabilità complessiva della distribuzione. Pertanto, è fondamentale considerare attentamente il contesto e le caratteristiche dei dati prima di utilizzare la deviazione standard come misura di dispersione. In alcune situazioni, potrebbe essere più appropriato ricorrere a misure di dispersione robuste o ad altre statistiche descrittive per caratterizzare la variabilità dei dati in modo più accurato e affidabile.
+### Varianza
 
-### Interpretazione
+La **varianza** è il quadrato della deviazione standard:
 
-La deviazione standard misura la dispersione dei dati rispetto alla media aritmetica. In termini semplici, indica quanto, in media, ciascun valore osservato si discosta dalla media del campione. Anche se è simile allo scarto semplice medio campionario (la media dei valori assoluti degli scarti rispetto alla media), la deviazione standard utilizza lo scarto quadratico medio e produce un valore leggermente diverso.
+$$
+s^2 = \frac{1}{n-1}\sum_{i=1}^{n}(x_i - \bar{x})^2.
+$$
 
-::: {#exm-}
-Per verificare l'interpretazione della deviazione standard, utilizziamo i punteggi relativi alle ore di studio di un piccolo numero di studenti.
-
-```{r}
-x <- c(3, 1, 4, 2)
-
-std_x <- sqrt(var(x) * 3 / 4)
-std_x
-```
-
-La deviazione standard calcolata è 1.12. Questo valore ci dice che, in media, ciascun punteggio si discosta di circa 1.12 ore dalla media aritmetica delle ore di studio di questo gruppo di studenti.
-
-- Valore più alto: indica maggiore dispersione dei dati intorno alla media.
-- Valore più basso: i dati sono più concentrati vicino alla media.
-
-Se calcoliamo anche lo scarto semplice medio campionario per confronto, otteniamo:
+In R:
 
 ```{r}
-mean(abs(x - mean(x)))
+#| label: loc-scale-var-example
+var(studenti$ore_sonno)
+sd(studenti$ore_sonno)^2
 ```
 
-I due valori (deviazione standard e scarto semplice medio) sono simili ma non identici, a causa delle diverse definizioni matematiche.
+La varianza è importante in molti modelli statistici, ma è meno intuitiva della deviazione standard, in quanto è espressa in unità al quadrato. Per la descrizione iniziale dei dati, di solito è più interpretabile la deviazione standard.
+
+### MAD: una misura robusta di variabilità
+
+La **deviazione mediana assoluta**, o **MAD**, misura la distanza tipica dei valori dalla mediana:
+
+$$
+MAD = \text{mediana}(|x_i - \text{mediana}(x)|).
+$$
+
+In R:
+
+```{r}
+#| label: loc-scale-mad-example
+mad(studenti$ore_sonno)
+```
+
+Il MAD è robusto rispetto agli outlier. È utile quando la deviazione standard risulterebbe troppo influenzata da pochi valori estremi.
+
+## Un confronto visivo
+
+Mettiamo insieme il grafico e le statistiche descrittive.
+
+```{r}
+#| label: loc-scale-summary-table
+studenti |>
+  summarise(
+    n = n(),
+    media = mean(ore_sonno),
+    mediana = median(ore_sonno),
+    sd = sd(ore_sonno),
+    iqr = IQR(ore_sonno),
+    mad = mad(ore_sonno),
+    minimo = min(ore_sonno),
+    massimo = max(ore_sonno)
+  )
+```
+
+```{r}
+#| label: loc-scale-boxplot-sleep
+#| fig-cap: "Distribuzione delle ore di sonno con boxplot."
+ggplot(studenti, aes(y = ore_sonno)) +
+  geom_boxplot() +
+  labs(
+    x = NULL,
+    y = "Ore di sonno"
+  )
+```
+
+Il boxplot mostra la mediana, i quartili e i possibili valori estremi. Per questo motivo è particolarmente utile quando si vuole mettere in relazione la tendenza centrale e la variabilità.
+
+## Quale riassunto scegliere?
+
+La scelta non dipende solo dalla praticità del calcolo. Dipende dalla variabile, dalla distribuzione e dalla domanda.
+
+| Situazione | Riassunto consigliato | Motivo |
+|---|---|---|
+| Variabile categoriale | Frequenze e moda | La media non ha significato |
+| Distribuzione numerica simmetrica | Media e deviazione standard | Riassumono bene centro e dispersione |
+| Distribuzione asimmetrica | Mediana e IQR | Sono più robusti |
+| Presenza di valori estremi | Mediana, IQR, MAD | Riduce l'influenza degli outlier |
+| Confronto tra gruppi | Centro + variabilità per gruppo | La sola media può nascondere differenze importanti |
+| Scala ordinale breve, come molti item Likert | Frequenze, mediana, IQR | Le distanze tra categorie non sono sempre interpretabili come uguali |
+
+::: {.callout-important title="Non riportare mai solo un numero"}
+Un riassunto numerico dovrebbe essere accompagnato da almeno una descrizione della distribuzione. Dire "la media è 6,8" è molto meno informativo rispetto a "la distribuzione è abbastanza simmetrica, senza outlier evidenti; per questo motivo riportiamo la media e la deviazione standard".
 :::
 
-### Varianza spiegata e non spiegata
+## Descrivere gruppi senza dimenticare gli individui
 
-La varianza, come abbiamo visto, misura quanto i dati si disperdono attorno alla media. Un concetto fondamentale nei *modelli statistici lineari* è la distinzione tra *varianza spiegata* e *varianza non spiegata*, che ci permette di valutare quanto bene un modello teorico riesca a chiarire la variabilità osservata nei dati.
-
-### Decomposizione della varianza
-
-Quando osserviamo un fenomeno (ad esempio i risultati di un test), troviamo inevitabilmente differenze tra individui. Queste differenze possono essere suddivise in due componenti principali:
-
-- *varianza spiegata*: la parte di variabilità che può essere attribuita a fattori identificati e misurabili;
-- *varianza non spiegata*: la parte rimanente di variabilità che non è chiarita dai fattori considerati.
-
-Formalmente, questa decomposizione può essere espressa come:
-
-$$
-\sum_{i=1}^{n}(Y_i - \bar{Y})^2 = \sum_{i=1}^{n}(\hat{Y}_i - \bar{Y})^2 + \sum_{i=1}^{n}(Y_i - \hat{Y}_i)^2 ,
-$$
-dove:
-
-- $Y_i$ sono i dati osservati,
-- $\bar{Y}$ è la media dei dati osservati,
-- $\hat{Y}_i$ sono i valori attesi (previsti) dal modello teorico.
-
-Intuitivamente:
-
-- la *varianza totale* (lato sinistro della formula) rappresenta la dispersione complessiva dei dati attorno alla loro media;
-- la *varianza spiegata* (primo termine a destra) indica quanto bene i valori previsti dal modello descrivono il comportamento dei dati;
-- la *varianza non spiegata* (secondo termine a destra) riflette ciò che il modello non riesce a prevedere.
-
-::: {.callout-note collapse="true" title="Simulazione"}
-
-Supponiamo di analizzare i punteggi di un esame universitario di "Psicometria" ottenuti da 200 studenti. La nostra teoria indica che i punteggi dipendano da:
-
-1. Ore settimanali dedicate allo studio;
-2. Presenza o assenza di "paura della matematica" (*math anxiety*) [@barroso2021meta].
-
-Nello specifico, ipotizziamo:
-
-- una relazione positiva tra ore di studio e punteggio ottenuto;
-- una riduzione del 30% del punteggio per chi presenta paura della matematica rispetto agli altri studenti, a parità di ore di studio.
-
-Ecco la simulazione in R:
+In psicologia, lavoriamo spesso con le medie di gruppo. Questo è utile, ma può diventare fuorviante se dimentichiamo la variabilità individuale.
 
 ```{r}
-set.seed(123)
+#| label: loc-scale-group-data
+studenti <- studenti |>
+  mutate(
+    gruppo_stress = if_else(stress >= median(stress), "stress alto", "stress basso")
+  )
 
-# Simuliamo i dati per 200 studenti
-n <- 200
-ore_studio <- runif(n, min = 2, max = 15) |> round()
-paura_mat <- rbinom(n, 1, prob = 0.3)
-
-k <- 2  # Ogni ora di studio corrisponde a circa 2 punti
-
-# Calcoliamo i punteggi attesi, limitati a 30 punti massimo
-punteggio_atteso <- ore_studio * k * ifelse(paura_mat == 1, 0.7, 1) |> round()
-punteggio_atteso <- ifelse(punteggio_atteso > 30, 30, punteggio_atteso)
-
-# Generiamo punteggi reali aggiungendo casualità (tra 0 e 30 punti)
-punteggio_reale <- (punteggio_atteso + rnorm(n, mean = 0, sd = 3)) |> round()
-punteggio_reale <- pmin(pmax(punteggio_reale, 0), 30)
-
-# Creiamo il dataset finale
-data <- data.frame(ore_studio, paura_mat, punteggio_atteso, punteggio_reale)
-head(data)
+studenti |>
+  group_by(gruppo_stress) |>
+  summarise(
+    n = n(),
+    media_sonno = mean(ore_sonno),
+    mediana_sonno = median(ore_sonno),
+    sd_sonno = sd(ore_sonno),
+    iqr_sonno = IQR(ore_sonno),
+    .groups = "drop"
+  )
 ```
-
-Calcoliamo ora la decomposizione della varianza usando le formule indicate:
 
 ```{r}
-# Media dei punteggi reali
-media_reale <- mean(data$punteggio_reale)
-
-# Calcolo delle componenti della varianza
-varianza_totale <- mean((data$punteggio_reale - media_reale)^2)
-varianza_spiegata <- mean((data$punteggio_atteso - media_reale)^2)
-varianza_non_spiegata <- mean((data$punteggio_reale - data$punteggio_atteso)^2)
-
-# Risultati
-c(varianza_totale, varianza_spiegata, varianza_non_spiegata)
+#| label: loc-scale-group-plot
+#| fig-cap: "Ore di sonno nei gruppi a stress basso e alto."
+ggplot(studenti, aes(x = gruppo_stress, y = ore_sonno)) +
+  geom_boxplot() +
+  geom_jitter(width = 0.12, alpha = 0.6) +
+  labs(
+    x = NULL,
+    y = "Ore di sonno"
+  )
 ```
 
-Interpretazione dei risultati:
+Il confronto tra i gruppi è più informativo quando affianchiamo alla media o alla mediana la dispersione dei valori. Due gruppi possono differire nella media, ma sovrapporsi molto. Oppure possono avere una media simile, ma una variabilità diversa.
 
-- la *varianza totale* indica quanto in generale i punteggi differiscono tra loro,
-- la *varianza spiegata* rappresenta quanto della variabilità totale può essere attribuita ai fattori teorici (ore di studio e paura della matematica),
-- la *varianza non spiegata* evidenzia la variabilità residua che il modello non riesce a cogliere.
-
-La proporzione di varianza spiegata è data dal rapporto:
-
-```{r}
-prop_spiegata <- varianza_spiegata / varianza_totale
-prop_spiegata
-```
-
-Questa proporzione è sempre compresa tra 0 e 1:
-
-- valori vicini a 1 indicano che il modello è efficace nel descrivere i dati;
-- valori vicini a 0 suggeriscono che il modello non cattura adeguatamente la realtà osservata.
-
-Questa decomposizione della varianza è uno strumento cruciale per valutare l'efficacia delle teorie e dei modelli statistici. Approfondiremo ulteriormente questi aspetti nel capitolo dedicato ai *modelli di regressione* (v.  @sec-linear-models-biv-model-frequentist).
+::: {.callout-note title="Nota epistemologica"}
+La media di un gruppo non descrive necessariamente ogni singolo individuo. Questo punto è particolarmente importante in psicologia, dove i processi individuali possono differire notevolmente anche quando la media aggregata sembra chiara.
 :::
 
-### Deviazione mediana assoluta
+## Usare l'AI con criterio
 
-La *deviazione mediana assoluta* (MAD) è una misura robusta di dispersione basata sulla mediana. È definita come la mediana dei valori assoluti delle deviazioni dei dati rispetto alla mediana:
+L'AI può aiutare a scrivere il codice necessario per calcolare le statistiche descrittive. Per esempio, può generare una tabella con la media, la mediana, la deviazione standard e l'intervallo interquartile per più variabili.
 
-$$
-\text{MAD} = \text{median} \left( |X_i - \text{median}(X)| \right) 
-$$ {#eq-mad-def}
+Questo è utile, ma non sufficiente. Lo studente deve controllare che le variabili siano del tipo corretto.
 
-La MAD è particolarmente utile per analizzare dati contenenti outlier o distribuzioni asimmetriche, poiché è meno influenzata dai valori estremi rispetto alla deviazione standard.
+- se le variabili sono del tipo corretto;
+- se i valori mancanti sono gestiti esplicitamente;
+- se la media è appropriata per la distribuzione osservata;
+- se l'AI sta usando la funzione `sd()` senza spiegare che cosa misura;
+- se vengono esclusi i casi con `NA` senza documentarlo;
+- se il riassunto numerico è accompagnato da un grafico.
 
-### Relazione tra MAD e deviazione standard in una distribuzione normale
-
-Quando i dati seguono una distribuzione normale (gaussiana), esiste una relazione approssimativa tra MAD e deviazione standard. La MAD può essere convertita in una stima della deviazione standard moltiplicandola per una costante di 1.4826:
-
-$$ 
-\sigma \approx k \times \text{MAD},
-$$
-dove:
-
-- $\sigma$ è la deviazione standard,
-- MAD è la Mediana della Deviazione Assoluta,
-- $k$ è una costante che, per una distribuzione normale, è tipicamente presa come circa 1.4826.
-
-Questa costante deriva dalla proprietà della distribuzione normale, in cui circa il 50% dei valori si trova entro 0.6745 deviazioni standard dalla media.
-
-La formula completa per convertire la MAD in una stima della deviazione standard in una distribuzione normale è:
-
-$$ 
-\sigma \approx 1.4826 \times \text{MAD} .
-$$
-Questa relazione è utile per stimare la deviazione standard in modo più robusto, specialmente quando si sospetta la presenza di outlier o si ha a che fare con campioni piccoli. Di conseguenza, molti software restituiscono il valore MAD moltiplicato per questa costante per fornire un'indicazione più intuitiva della variabilità dei dati. Tuttavia, è importante notare che questa relazione si mantiene accurata solo per le distribuzioni che sono effettivamente normali. In presenza di distribuzioni fortemente asimmetriche o con elevati outlier, la deviazione standard e la MAD possono fornire indicazioni molto diverse sulla variabilità dei dati.
-
-::: {.callout-note collapse="true" title="Dimostrazione numerica"}
-
-Per verificare questo principio, usiamo un campione di dati simulati dalla distribuzione del QI:
-
-```{r}
-qi <- rnorm(200, 100, 15)
-1.4826 * median(abs(qi - median(qi)), na.rm = TRUE)
-```
-
-Otteniamo un valore che è simile alla deviazione standard calcolata con:
-
-```{r}
-sqrt(
-  var(qi) * (length(qi) - 1) / length(qi)
-)
-```
-
-Ciò conferma la relazione tra MAD e deviazione standard in distribuzioni gaussiane.
-
-Se invece usiamo dei dati non normali, l'approssimazione non è buona:
-
-```{r}
-set.seed(123) 
-y <- rchisq(200, 1)
-1.4826 * median(abs(y - median(y)))
-```
-
-```{r}
-sqrt(
-  var(y) * (length(y) - 1) / length(y)
-)
-```
+::: {.callout-tip title="Prompt utile"}
+Chiedi all'AI: "Scrivi il codice R per calcolare la media, la mediana, la deviazione standard, l'intervallo interquartile e il numero di valori mancanti per queste variabili. Spiegami poi quali controlli devo fare prima di interpretare la media".
 :::
 
-### Quando utilizzare deviazione standard e MAD
+::: {.callout-caution title="Controllo obbligatorio"}
+Non accettare una tabella descrittiva prodotta dall'AI senza prima aver guardato almeno un grafico della distribuzione. L'AI può calcolare numeri corretti, ma suggerire comunque un riassunto poco adatto.
+:::
 
-**Deviazione standard**
-Questa misura è ottimale quando si lavora con dati approssimativamente distribuiti in modo normale e quando si intende descrivere la dispersione dei valori attorno alla loro media aritmetica. La deviazione standard gode di proprietà matematiche utili in molti modelli statistici, ma presenta lo svantaggio di essere sensibile alla presenza di valori anomali.
+## Collegamento con la distribuzione normale
 
-**Deviazione mediana assoluta (MAD)**
-Questa misura risulta particolarmente adatta quando i dati presentano distribuzioni non normali, marcata asimmetria o quando sono presenti outlier. Il MAD è robusto poiché si basa sulla mediana, che è già di per sé una misura resistente ai valori estremi, e non sulla media. È quindi la scelta migliore quando si desidera una stima stabile della variabilità che non sia distorta da osservazioni eccezionali.
+Il capitolo successivo introduce la distribuzione normale. Questo collegamento è naturale, in quanto la distribuzione normale è descritta da due parametri: la media e la deviazione standard.
 
-### Indici di variabilità relativi
+Tuttavia, l'obiettivo non è verificare meccanicamente se i dati sono "normali". L'obiettivo è capire quando la media e la deviazione standard sono un riassunto adeguato e quando, invece, la distribuzione richiede strumenti più robusti o modelli diversi.
 
-A volte può essere necessario confrontare la variabilità di grandezze incommensurabili, ovvero di caratteri misurati con differenti unità di misura. In queste situazioni, le misure di variabilità descritte in precedenza diventano inadeguate poiché dipendono dall'unità di misura utilizzata. Per superare questo problema, si ricorre a specifici numeri adimensionali chiamati *indici relativi di variabilità*.
+La distribuzione normale è un modello utile in molti contesti, ma non è una legge che i dati devono rispettare.
 
-Il più importante di questi indici è il *coefficiente di variazione* ($C_v$), definito come il rapporto tra la deviazione standard ($\sigma$) e la media dei dati ($\bar{x}$):
+## Checklist finale {.unnumbered .unlisted}
 
-$$
-C_v = \frac{\sigma}{\bar{x}}.
-$$ {#eq-cv-def}
+Prima di riportare le statistiche descrittive, chiediti:
 
-Il coefficiente di variazione è un numero puro e permette di confrontare la variabilità di distribuzioni con unità di misura diverse.
-
-Un altro indice relativo di variabilità è la *differenza interquartile rapportata* a uno dei tre quartili (primo quartile, terzo quartile o mediana). Questo indice è definito come:
-
-$$
-\frac{x_{0.75} - x_{0.25}}{x_{0.25}}, \qquad \frac{x_{0.75} - x_{0.25}}{x_{0.75}}, \qquad \frac{x_{0.75} - x_{0.25}}{x_{0.50}}.
-$$
-
-Questi indici relativi di variabilità forniscono una misura adimensionale della dispersione dei dati, rendendo possibile il confronto tra grandezze con diverse unità di misura e facilitando l'analisi delle differenze di variabilità tra i dati.
-
-## Riflessioni conclusive {.unnumbered .unlisted}
-
-Le statistiche descrittive forniscono strumenti essenziali per sintetizzare e interpretare i dati nelle scienze psicologiche e sociali. Gli indici di tendenza centrale (media, mediana e moda) individuano il valore tipico di una distribuzione e forniscono un punto di riferimento essenziale per la sintesi iniziale. Gli indici di dispersione (deviazione standard, varianza e intervallo interquartile) completano questo quadro, quantificando la variabilità dei dati rispetto al valore centrale e rivelando l'eterogeneità spesso presente nel fenomeno oggetto di studio.
-
-Tuttavia, è essenziale considerare con attenzione le implicazioni teoriche e metodologiche associate all’uso di queste misure. Un nodo cruciale è rappresentato dal rischio della **fallacia ergodica**, ossia dall’erronea assunzione che le proprietà osservate a livello di gruppo possano essere trasferite automaticamente al livello del singolo individuo. In psicologia, infatti, i fenomeni di interesse sono caratterizzati da una marcata **variabilità intraindividuale e interindividuale**, che difficilmente può essere catturata in modo adeguato da indicatori puramente aggregati.
-
-Di conseguenza, le statistiche descrittive non dovrebbero essere intese come un punto di arrivo, ma piuttosto come una **fase preliminare dell’analisi**. La loro interpretazione acquista significato solo se integrata con approcci metodologici più sofisticati, quali i **modelli longitudinali** o le **analisi idiografiche**, capaci di rispettare la specificità dei singoli casi. Solo un impiego critico e consapevole di questi strumenti consente di evitare generalizzazioni spurie e di restituire una rappresentazione più accurata e sfumata dei processi psicologici e comportamentali.
+- Ho verificato la distribuzione?
+- La variabile è categoriale, ordinale o numerica?
+- Ci sono valori mancanti?
+- Ci sono valori estremi o inattesi?
+- La media e la mediana sono simili o molto diverse?
+- La deviazione standard è interpretabile per questa distribuzione?
+- Sarebbe meglio riportare la mediana e l'intervallo interquartile?
+- Ho documentato eventuali esclusioni o ricodifiche?
+- Il riassunto risponde davvero alla domanda di ricerca?
 
 ## Esercizi {.unnumbered .unlisted}
 
 ::: {.callout-important title="Problemi" collapse="true"}
 
-*Parte 1: Domande Teoriche*
+1. **Lettura concettuale**  
+   Spiega la differenza tra media e mediana. Perché la mediana è più robusta in presenza di valori estremi?
 
-1. *Definizione e comprensione dei concetti*
+2. **Scelta del riassunto**  
+   Una variabile misura il numero di ore settimanali dedicate allo studio. La distribuzione è molto asimmetrica: molti studenti studiano poche ore, pochi studenti studiano moltissime ore. Quale riassunto useresti? Perché?
 
-   - Spiega la differenza tra media, mediana e moda.
-   - In quali situazioni la mediana fornisce una misura della tendenza centrale migliore rispetto alla media?
-   - Perché la media è sensibile ai valori estremi?
-   - Quali sono i vantaggi della deviazione mediana assoluta (MAD) rispetto alla deviazione standard?
-   
-2. *Interpretazione della variabilità*
+3. **Interpretazione della variabilità**  
+   Due gruppi hanno la stessa media di qualità del sonno, ma il primo ha deviazione standard molto più alta. Come interpreteresti questa differenza?
 
-   - Spiega il concetto di varianza e la sua interpretazione.
-   - Qual è la differenza tra varianza e deviazione standard?
-   - Descrivi in quali casi l'utilizzo del coefficiente di variazione è più appropriato rispetto alla deviazione standard.
-   - Quali sono i limiti della moda come indice di tendenza centrale?
-   
-*Parte 2: Calcoli Manuali*
+4. **Controllo del codice AI**  
+   L'AI propone questo codice:
 
-3. *Calcolo della media, mediana e moda*
-
-   - Considera i seguenti punteggi totali della SWLS che sono stati raccolti in un campione di studenti. Calcola manualmente:
-   
-     - La media
-     - La mediana
-     - La moda
-     - Il range
-
-4. *Calcolo della varianza e della deviazione standard*
-
-   - Usando gli stessi dati dell'esercizio precedente, calcola:
-     - La varianza
-     - La deviazione standard
-     - La deviazione mediana assoluta (MAD)
-   
-*Parte 3: Esercizi con R*
-
-5. *Analisi descrittiva con R*
-
-   - Carica il dataset `swls_scores.csv` contenente i punteggi SWLS degli studenti.
-   - Calcola media, mediana e moda utilizzando R.
-   - Calcola la varianza e la deviazione standard utilizzando le funzioni appropriate in R.
-   
-   *Codice suggerito:*
-   
    ```r
-   library(tidyverse)
-   library(rio)
-   
-   # Caricamento del dataset
-   df <- import("swls_scores.csv")
-   
-   # Calcolo delle statistiche descrittive
-   mean(df$swls_total)
-   median(df$swls_total)
-   
-   # Moda (funzione personalizzata)
-   get_mode <- function(x) {
-     tbl <- table(x)
-     as.numeric(names(tbl)[which.max(tbl)])
-   }
-   get_mode(df$swls_total)
-   
-   # Varianza e deviazione standard
-   var(df$swls_total)
-   sd(df$swls_total)
-   
-   # Deviazione mediana assoluta
-   mad(df$swls_total)
+   studenti |>
+     summarise(across(c(stress, sonno_qualita, ore_sonno),
+                      list(media = mean, sd = sd)))
    ```
-   
-6. *Visualizzazione della distribuzione dei dati*
 
-   - Crea un istogramma dei punteggi totali della SWLS.
-   - Aggiungi una linea verticale che rappresenti la media e una che rappresenti la mediana.
-   
-   *Codice suggerito:*
-   
-   ```r
-   ggplot(df, aes(x = swls_total)) +
-     geom_histogram(binwidth = 2, fill = "blue", alpha = 0.5, color = "black") +
-     geom_vline(aes(xintercept = mean(swls_total)), color = "red", linetype = "dashed", size = 1) +
-     geom_vline(aes(xintercept = median(swls_total)), color = "green", linetype = "dotted", size = 1) +
-     labs(title = "Distribuzione dei punteggi SWLS", x = "Punteggio SWLS", y = "Frequenza")
-   ```
-   
-*Parte 4: Domande di Comprensione*
+   Quali controlli mancano prima di interpretare i risultati?
 
-7. *Analisi concettuale*
+5. **Modifica del codice**  
+   Modifica il codice precedente in modo da includere anche mediana, IQR e numero di valori mancanti.
 
-   - Perché la media aritmetica può essere considerata il "baricentro" della distribuzione dei dati?
-   - Se aggiungiamo un valore estremo al dataset, quale delle misure di tendenza centrale subirà il maggior impatto?
-   - In quali situazioni la varianza campionaria è preferibile rispetto alla varianza della popolazione?
-   - Qual è la relazione tra la deviazione standard e la varianza?
-   - Fornisci un'interpretazione intuitiva della deviazione standard.
-   - Discuti le differenze e le somiglianze tra la deviazione standard e MAD. Usa queste informazioni per ridescrivere in maniera intuitiva il significato di deviazione standard.
+6. **Interpretazione prudente**  
+   In un report leggi: "La media dello stress è 6.2, quindi gli studenti sono moderatamente stressati". Perché questa frase è incompleta?
 :::
 
-::: {.callout-tip title="Soluzioni" collapse="true"}
-Poniamo che i valori SWLS siano [ 18, 22, 26, 19, 24, 30, 26, 22, 18, 28, 21 ].
+::: {.callout-tip title="Soluzioni orientative" collapse="true"}
 
-1. *Media:*
-   $$ \bar{x} = \frac{18 + 22 + 26 + 19 + 24 + 30 + 26 + 22 + 18 + 28 + 21}{11} = 23.36 $$
-   
-2. *Mediana:*
-   Ordinando i dati: [ 18, 18, 19, 21, 22, 22, 24, 26, 26, 28, 30 ]
-   La mediana è il valore centrale: $22$
-   
-3. *Moda:*
-   Il valore più frequente è *22* (appare due volte).
-   
-4. *Varianza:*
-   $$ s^2 = \frac{\sum (x_i - \bar{x})^2}{n-1} = 13.96 $$
-   
-5. *Deviazione Standard:*
-   $$ s = \sqrt{13.96} = 3.73 $$
-   
-6. *MAD:*
-   $$ \text{MAD} = \text{mediana}(|X_i - \text{mediana}(X)|) = 4 $$
-   
-*Soluzioni con R*
+1. La media usa tutti i valori ed è sensibile agli estremi. La mediana dipende dalla posizione dei valori ordinati ed è quindi più stabile quando pochi valori sono molto grandi o molto piccoli.
 
-I risultati eseguendo il codice R:
+2. In una distribuzione molto asimmetrica è spesso preferibile riportare mediana e IQR, accompagnati da un grafico. La media potrebbe essere trascinata dai valori molto alti.
 
-   - *Media:* 23.36
-   - *Mediana:* 22
-   - *Moda:* 22
-   - *Varianza:* 13.96
-   - *Deviazione standard:* 3.73
-   - *MAD:* 4
+3. La stessa media non implica la stessa esperienza individuale. Nel gruppo con deviazione standard più alta gli studenti sono più eterogenei: alcuni dormono molto meglio o molto peggio di altri.
 
-*Soluzioni alle Domande di Comprensione*
+4. Mancano il controllo dei valori mancanti, il confronto con la mediana, una misura robusta come IQR o MAD, e soprattutto un grafico della distribuzione.
 
-1. La media è il baricentro poiché minimizza la somma degli scarti quadrati.
-2. La media è più influenzata dai valori estremi rispetto alla mediana.
-3. La varianza campionaria corregge la sottostima della varianza popolazionale.
-4. La deviazione standard è la radice quadrata della varianza, consentendo un'interpretazione del risultato sulla scala dei dati grezzi.
-5. La deviazione standard è simile, ma non identica, al valore medio degli scarti assoluti tra ciascun valore della distribuzione e la media. In altre parole, rappresenta la "distanza tipica" media tra le osservazioni e il valore medio della distribuzione.
-6. La deviazione standard e il MAD (Median Absolute Deviation, o scarto medio assoluto) sono entrambi misure di variabilità che descrivono quanto i valori in un insieme di dati si discostino dal centro della distribuzione. Tuttavia, presentano alcune importanti differenze e somiglianze.
+5. Una possibile soluzione:
 
-  *Somiglianze*
-  
-  - Entrambe le misure quantificano la dispersione dei dati attorno a un punto centrale.
-  - Sia la deviazione standard che il MAD utilizzano lo scarto (la differenza tra ciascun valore e un punto centrale) per calcolare la variabilità.
-  
-  *Differenze*
-  
-  - *Punto centrale usato:* La deviazione standard si basa sulla media aritmetica, mentre il MAD si basa sulla mediana.
-  - *Trattamento degli scarti:* Nella deviazione standard, gli scarti vengono elevati al quadrato prima di essere mediati, quindi la radice quadrata viene applicata al risultato finale. Questo processo penalizza maggiormente gli scarti più grandi, rendendo la deviazione standard più sensibile agli outlier. Il MAD, invece, considera semplicemente il valore assoluto degli scarti, rendendolo meno influenzato dagli estremi.
-  - *Sensibilità agli outlier:* Poiché la deviazione standard dipende dai quadrati degli scarti, è più sensibile alle osservazioni estreme (outlier). Il MAD, essendo basato sulla mediana, è una misura più robusta e resiste meglio alla presenza di valori anomali.
-  
-  *Ridescrizione Intuitiva della Deviazione Standard*
-  
-  - La deviazione standard può essere vista come una misura della "dispersione tipica" dei dati attorno alla media, ma con un'enfasi particolare sugli scarti più grandi. Immagina di prendere ogni valore del dataset, calcolarne la distanza dalla media, amplificare queste distanze attraverso il quadrato, poi trovare una sorta di "distanza media" ponderata. Questo processo dà maggiore peso agli scarti più grandi, fornendo così una visione della variabilità che tiene conto sia delle fluttuazioni ordinarie sia di eventuali valori estremi. In sintesi, mentre il MAD offre una visione più resistente e diretta della variabilità centrata sulla mediana, la deviazione standard fornisce una misura più dettagliata e sensibile alla forma complessiva della distribuzione, inclusi i suoi possibili outliers.
+   ```r
+   studenti |>
+     summarise(across(
+       c(stress, sonno_qualita, ore_sonno),
+       list(
+         n_missing = ~sum(is.na(.x)),
+         media = ~mean(.x, na.rm = TRUE),
+         mediana = ~median(.x, na.rm = TRUE),
+         sd = ~sd(.x, na.rm = TRUE),
+         iqr = ~IQR(.x, na.rm = TRUE)
+       )
+     ))
+   ```
+
+6. La frase non dice come sono distribuiti i valori, quanta variabilità c'è, se esistono gruppi molto diversi o valori estremi. Inoltre interpreta la media come se rappresentasse automaticamente tutti gli studenti.
 :::
 
-::: {.callout-note collapse=true title="Informazioni sull'ambiente di sviluppo"}
+::: {.callout-note collapse="true" title="Informazioni sull'ambiente di sviluppo"}
 ```{r}
+#| label: loc-scale-session-info
 sessionInfo()
 ```
 :::
 
 ## Bibliografia {.unnumbered .unlisted}
-
-

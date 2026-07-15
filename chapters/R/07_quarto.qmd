@@ -1,320 +1,292 @@
 # Quarto {#sec-quarto}
 
-
 ## Introduzione {.unnumbered .unlisted}
 
-La *crisi della riproducibilità* scientifica rappresenta una delle sfide più importanti della ricerca contemporanea. Con questo termine ci si riferisce alla difficoltà, riscontrata in diverse discipline, di replicare i risultati degli studi scientifici. Sebbene le definizioni di riproducibilità varino tra i diversi ambiti, un'interpretazione ampiamente condivisa la identifica come la capacità di ottenere gli stessi risultati utilizzando i medesimi dati di input e seguendo gli stessi passaggi computazionali nei metodi e nelle analisi.
+Quarto è il luogo in cui un'analisi diventa leggibile, controllabile e riproducibile. In un file `.qmd` non scriviamo soltanto codice, ma costruiamo un documento in cui domanda di ricerca, dati, trasformazioni, risultati e interpretazione sono presenti nello stesso spazio.
 
-La pratica scientifica è profondamente radicata nella formazione accademica: ciò che viene insegnato nelle aule universitarie si riflette direttamente nel lavoro svolto nei laboratori, sul campo e nell'analisi dei dati. Riconoscendo questo stretto legame tra didattica e ricerca, molti studiosi sostengono l'importanza di integrare i metodi di riproducibilità nei corsi universitari di data science, sia a livello undergraduate che graduate [@dogucu2024reproducibility]. L'educazione alla data science che incorpora la riproducibilità nell'analisi dei dati viene infatti considerata la "controffensiva statistica" alla crisi della riproducibilità.
+Questa idea è particolarmente importante oggi. Un assistente basato sull'intelligenza artificiale può generare rapidamente una pipeline `dplyr`, un grafico `ggplot2` o un modello statistico. Questo non rende inutile imparare a lavorare con R e Quarto, anzi, rende ancora più importante saper controllare ciò che il codice fa. Se il codice è generato dall'intelligenza artificiale, lo studente non deve necessariamente averlo scritto tutto a mano, ma deve saper dire:
 
-In questo contesto si inserisce Quarto, uno strumento innovativo che affronta direttamente le sfide della crisi della riproducibilità. Quarto si colloca nella tradizione del *literate programming*, un approccio pioneristico introdotto da Donald Knuth negli anni '80. Questa metodologia nasce dalla visione di unificare codice e testo descrittivo in un unico documento, rendendo i programmi non solo eseguibili ma anche comprensibili agli esseri umani. L'obiettivo è superare la tradizionale separazione tra codice e documentazione, permettendo di spiegare non solo il funzionamento tecnico di un programma, ma anche le ragioni delle scelte implementative.
+- quali dati sono stati utilizzati;
+- quali trasformazioni sono state applicate;
+- quali casi sono stati esclusi;
+- quali risultati sono stati ottenuti;
+- quale interpretazione è giustificata e quale no.
 
-Questa filosofia risulta particolarmente pertinente nell'ambito della data science e dell'analisi statistica, dove riproducibilità e trasparenza sono requisiti imprescindibili. Quarto eccelle in questo contesto, offrendo la possibilità di integrare in codice, risultati e narrazione. La sua versatilità si manifesta nella capacità di produrre diversi tipi di output - dai report agli articoli scientifici, dalle presentazioni ai documenti tecnici - in vari formati come HTML, PDF e Word, combinando efficacemente testo interpretativo, risultati numerici e visualizzazioni grafiche.
+Nel progetto complessivo di questo modulo, Quarto svolge quindi una funzione ben precisa: collegare la parte operativa dell'analisi con la responsabilità scientifica dell'interpretazione. L'obiettivo non è produrre un documento elegante, ma rendere visibile il percorso che porta dai dati a una conclusione.
 
-Un punto di forza distintivo di Quarto è la sua flessibilità nel supportare molteplici linguaggi di programmazione, tra cui R, Python e Julia. Lo strumento può essere utilizzato secondo tre modalità principali: per presentare conclusioni condividendo i risultati senza esporre il codice sottostante; per documentare il processo analitico includendo sia il codice che i risultati, garantendo così piena trasparenza e riproducibilità; e per annotare l'analisi, integrando interpretazioni e motivazioni delle decisioni prese durante il processo analitico.
+Quarto si colloca nella tradizione del *literate programming*: il codice non viene separato dal ragionamento, ma inserito all'interno di una narrazione comprensibile. Per noi, questa idea ha una forma molto concreta:
 
-Nonostante Quarto sia tecnicamente uno strumento da riga di comando (CLI), l'integrazione con RStudio ne semplifica notevolmente l'utilizzo, rendendo l'installazione e l'operatività accessibili anche agli utenti meno esperti nell'uso del terminale. Questa caratteristica, unita alle sue potenti funzionalità, rende Quarto una naturale evoluzione del literate programming, offrendo un ambiente di lavoro che bilancia efficacemente praticità d'uso e rigore scientifico. In questo modo, Quarto si configura come una risposta concreta alle sfide della riproducibilità nella ricerca contemporanea, fornendo gli strumenti necessari per una scienza più trasparente e verificabile. L'obiettivo di questo capitolo è quello di fornire un'introduzione pratica a Quarto.
+> Un risultato non dovrebbe essere soltanto ottenuto. Dovrebbe poter essere ricostruito, controllato e spiegato.
 
+Questa è anche la ragione per cui Quarto è utile nell'epoca dell'intelligenza artificiale. L'AI può aiutare a scrivere il codice, ma non può assumersi la responsabilità dell'analisi. Quarto è il luogo in cui questa responsabilità diventa evidente.
 
-::: {.callout-tip collapse=true}
-## Prerequisiti
+::: {.callout-tip collapse=true title="Per approfondire"}
+Questi materiali non sono prerequisiti obbligatori per seguire il capitolo, ma possono essere utili per chi vuole approfondire.
 
-- Leggere *Reproducibility in the Classroom* [@dogucu2024reproducibility].
-- Leggere [An Introduction to R](https://intro2r.com/).
-- Leggere [R for Data Science (2e)](https://r4ds.hadley.nz/).
-- Leggere l'@sec-apx-latex-math.
+- *Reproducibility in the Classroom* [@dogucu2024reproducibility].
+- Documentazione ufficiale di Quarto: [https://quarto.org/docs/guide](https://quarto.org/docs/guide).
+- Appendice sulle formule: @sec-apx-latex-math.
 :::
 
 ::: {.callout-caution collapse=true title="Preparazione del Notebook"}
 
 ```{r}
 here::here("code", "_common.R") |> source()
-
-# Load packages
-if (!requireNamespace("pacman")) install.packages("pacman")
-pacman::p_load(tidyr)
 ```
 :::
 
-## Creare un documento Quarto
+::: {.callout-note title="Obiettivi di apprendimento"}
+Al termine di questo capitolo dovresti saper:
 
-Un file Quarto ha estensione `.qmd` e segue questa struttura:
+1. riconoscere le tre componenti di un file `.qmd`: intestazione YAML, testo Markdown e chunk di codice;
+2. eseguire e controllare un chunk;
+3. distinguere tra codice eseguito in Console e codice contenuto nel documento;
+4. compilare un documento da una sessione R pulita;
+5. inserire figure, tabelle, formule e citazioni essenziali;
+6. usare un assistente AI dentro un flusso Quarto senza delegargli il giudizio.
+:::
 
-![](../../figures/quarto_screenshot.png)
+## L'anatomia di un file `.qmd`
 
-Questo file include: 
+Un documento Quarto ha estensione `.qmd` e contiene tre elementi principali.
 
-1. un'intestazione YAML (metadati del documento);
-2. blocchi di codice delimitati da ```;
-3. testo scritto in Markdown con formattazioni semplici come titoli (`# Titolo`), corsivi (`*testo*`), ecc.
+1. **L'intestazione YAML**, delimitata da `---`, contiene i metadati del documento: titolo, autore, formato di output, bibliografia.
+2. **Il testo in Markdown** contiene la spiegazione: titoli, paragrafi, elenchi, enfasi, collegamenti.
+3. **I chunk di codice** contengono il codice R che produce risultati, tabelle o figure.
 
-### Editor visivo e sorgente
+Un esempio minimo:
 
-- **Editor visivo**: simile a Google Docs, offre un'interfaccia WYSIWYM (What You See Is What You Mean). Consente di inserire facilmente immagini, tabelle, citazioni e altro.
-- **Editor sorgente**: consente un controllo diretto sul Markdown, utile per debug e personalizzazioni avanzate.
+````
+---
+title: "Analisi preliminare"
+author: "Nome Cognome"
+format: html
+---
 
-### Blocchi di codice
+## Descrizione del campione
 
-I blocchi di codice (chiamati "chunks") eseguono codice e visualizzano i risultati. Ogni chunk è delimitato da ``` e può includere opzioni specifiche:
+Il campione è composto da adulti reclutati online.
 
-```r
-#| label: esempio
-#| echo: false
-1 + 1
+```{{r}}
+#| label: descrittive
+library(dplyr)
+dati <- read.csv("dati/campione.csv")
+summary(dati$eta)
 ```
 
-Le opzioni più comuni includono:
+L'età media è coerente con quanto atteso in un campione universitario.
+````
 
-- `echo: false` (nasconde il codice nel report),
-- `eval: false` (non esegue il codice),
-- `message: false` e `warning: false` (nasconde messaggi o avvisi).
+Questo esempio contiene già tutto l'essenziale: un titolo, un breve testo, un chunk che carica e descrive i dati e una frase che interpreta il risultato.
 
-### Figure
+::: {.callout-note collapse=true title="Editor visivo o editor sorgente?"}
+RStudio offre due modalità. L'**editor visivo** assomiglia a un word processor ed è comodo per scrivere testo, tabelle e citazioni. L'**editor sorgente**, invece, mostra il Markdown grezzo. Quando qualcosa non funziona, l'editor sorgente è spesso più utile, perché mostra tutti i simboli che Quarto deve interpretare.
 
-Le figure possono essere generate tramite codice (es. `ggplot()`) o inserite come file esterni. Le opzioni più comuni per il controllo delle dimensioni sono:
+Una regola pratica: scrivi pure in modalità visuale, ma impara a controllare e correggere in modalità sorgente.
+:::
 
-- `fig-width` e `fig-height` (dimensioni della figura in pollici),
-- `out-width` (percentuale di larghezza del documento),
-- `fig-asp` (rapporto d’aspetto, es. 0.618 per il rapporto aureo).
+## Il chunk: l'unità minima di controllo
 
-Esempio:
+Il chunk è il punto in cui il codice produce un risultato all'interno del documento.  In Quarto, le opzioni del chunk si scrivono all'inizio con il prefisso `#|`.
 
-```r
-#| fig-width: 6
-ggplot(data, aes(x, y)) + geom_point()
+````
+```{{r}}
+#| label: fig-eta
+#| fig-cap: "Distribuzione dell'età nel campione."
+#| echo: true
+#| warning: false
+ggplot(dati, aes(x = eta)) +
+  geom_histogram(bins = 20)
+```
+````
+
+Le opzioni più importanti sono poche.
+
+| Opzione | Effetto | Quando usarla |
+|---|---|---|
+| `label` | dà un nome al chunk | sempre: aiuta nei riferimenti e negli errori |
+| `echo: false` | nasconde il codice, mostra il risultato | quando il lettore non ha bisogno di vedere il codice |
+| `eval: false` | mostra il codice, ma non lo esegue | per esempi illustrativi |
+| `include: false` | esegue il codice, ma non mostra nulla | per setup e caricamento pacchetti |
+| `warning: false`, `message: false` | nasconde avvisi o messaggi | solo dopo averli letti e compresi |
+| `fig-cap`, `fig-width`, `fig-asp` | controllano le figure | quando una figura entra nel report |
+
+Un punto importante: `warning: false` non risolve un problema. Nasconde soltanto il messaggio. È possibile nascondere un avviso nel report finale, ma solo dopo aver compreso il suo significato.
+
+::: {.callout-important title="La regola d'oro"}
+**Se non sai spiegare a cosa serve un chunk, quel chunk non entra nel documento.** Questo vale sia per il codice scritto da te, sia per quello copiato da un tutorial, sia per quello suggerito da un assistente AI.
+:::
+
+## Il flusso di lavoro riproducibile
+
+Il valore di Quarto non sta nella sintassi in sé, ma nella disciplina che impone. Per iniziare, sono sufficienti quattro regole.
+
+**1. Un progetto, non file sparsi.** Lavora dentro un *RStudio Project* (`.Rproj`) con una struttura semplice:
+
+```
+progetto/
+├── progetto.Rproj
+├── data/          # dati grezzi, mai modificati
+├── code/          # script e funzioni
+└── report.qmd
 ```
 
-### Equazioni
+**2. Percorsi relativi, non percorsi assoluti.** Un percorso come `read.csv("/Users/corrado/Desktop/dati.csv")` funziona solo su un computer specifico. In un progetto riproducibile è meglio usare percorsi relativi alla cartella del progetto:
 
-Le equazioni possono essere scritte in LaTeX, così come spiegato nell'@sec-apx-latex-math.
+````
+```{{r}}
+#| eval: false
+dati <- read.csv(here::here("data", "campione.csv"))
+```
+````
 
-### Tabelle
+**3. Il documento deve contenere tutto ciò che serve.** Un errore frequente è creare un oggetto nella Console e poi usarlo in un chunk. Quando Quarto compila il documento, però, parte da una sessione R nuova: ciò che esiste solo nella Console non esiste per il documento.
 
-Le tabelle possono essere stampate direttamente o personalizzate con funzioni come `knitr::kable()` o pacchetti come `gt`:
+**4. Il test finale è il render da zero.** In RStudio: *Session → Restart R*, poi *Render*. Se il documento compila, l'analisi è ricostruibile. Se funziona solo dopo aver eseguito manualmente alcuni comandi nella Console, non è ancora riproducibile.
 
-```{r}
+::: {.callout-warning title="Il punto centrale"}
+Un'analisi non riproducibile è difficile da verificare. Ciò non significa, però, che un'analisi riproducibile sia automaticamente corretta: un errore può essere riprodotto perfettamente. Significa però che, se il percorso è esplicito, l'errore può essere individuato, discusso e corretto.
+:::
+
+## Figure, tabelle, formule, citazioni
+
+Un report scientifico non contiene solo output. Deve anche consentire al lettore di ritrovare figure, tabelle, formule e fonti.
+
+**Figure e tabelle.** Si etichettano e si richiamano nel testo. L'etichetta di una figura deve iniziare con `fig-`, quella di una tabella con `tbl-`.
+
+````
+```{{r}}
+#| label: tbl-mtcars
+#| tbl-cap: "Prime righe del dataset."
 knitr::kable(head(mtcars))
 ```
 
-### Caching
+Come mostrato nella @tbl-mtcars, ...
+````
 
-Per velocizzare i documenti con calcoli complessi, Quarto supporta la memorizzazione dei risultati:
+Il risultato:
 
-- `cache: true` salva i risultati di un chunk, evitando di ricalcolarli se il codice non cambia.
-- `dependson` specifica dipendenze tra chunk.
-
-### Gestione delle citazioni e delle bibliografie in Quarto
-
-Quarto offre un supporto avanzato per la generazione automatica di citazioni e bibliografie, consentendo l'applicazione di formati personalizzati come lo stile APA. Per includere riferimenti bibliografici, è necessario creare un file `.bib` (ad esempio, `references.bib`) contenente le citazioni nel formato BibTeX. Queste citazioni possono essere ottenute direttamente da Google Scholar o altri database accademici.
-
-Ecco un esempio di una citazione in formato BibTeX:
-
-```bibtex
-@article{ceccarini2024age,
-  title={Age-dependent changes in the anger superiority effect: Evidence from a visual search task},
-  author={Ceccarini, Francesco and Colpizzi, Ilaria and Caudek, Corrado},
-  journal={Psychonomic Bulletin \& Review},
-  pages={1--10},
-  year={2024},
-  publisher={Springer}
-}
+```{r}
+#| label: tbl-mtcars-demo
+#| tbl-cap: "Prime righe del dataset `mtcars`."
+knitr::kable(head(mtcars))
 ```
 
-Questa citazione deve essere inserita in un file `.bib`, ad esempio, `references.bib`. Tale file dovrà poi essere specificato nell'intestazione del documento Quarto.
+**Formule.** Le formule si scrivono in LaTeX, in linea (`$\bar{x}$`) o in display (`$$ ... $$`). I dettagli sono nell'@sec-apx-latex-math.
 
-#### Configurazione dell'intestazione YAML
-
-Nel file `.qmd`, è necessario aggiungere le seguenti righe all'intestazione YAML per collegare il file `references.bib` e configurare lo stile della bibliografia:
+**Citazioni.** Servono due cose: un file `.bib` con i riferimenti e una riga nello YAML.
 
 ```yaml
 bibliography: references.bib
-biblio-style: apalike
 csl: apa.csl
 ```
 
-- **`bibliography`**: specifica il percorso del file `.bib`. In questo esempio, si assume che il file si trovi nella stessa cartella del documento Quarto.
-- **`biblio-style`**: imposta lo stile delle citazioni. Ad esempio, `apalike` è uno stile simile allo stile APA.
-- **`csl`**: consente di utilizzare uno stile di citazione personalizzato, come `apa.csl`. Puoi scaricare facilmente questi stili dal [Zotero Style Repository](https://www.zotero.org/styles).
+Nel testo, `@ceccarini2024age` produce una citazione narrativa, come in @ceccarini2024age. La forma `[@ceccarini2024age]` produce invece una citazione fra parentesi [@ceccarini2024age]. La bibliografia finale viene generata automaticamente e contiene solo i lavori effettivamente citati.
 
-#### Esempio completo
+::: {.callout-note collapse=true title="Approfondimenti tecnici"}
+Questi aspetti sono utili, ma non sono necessari per iniziare.
 
-Di seguito è riportato un esempio completo di un documento Quarto che include una citazione e genera automaticamente la bibliografia:
-
-```markdown
----
-title: "Articolo di Esempio"
-author: "Autore di Esempio"
-date: "`r Sys.Date()`"
-bibliography: references.bib
-biblio-style: apalike
-csl: apa.csl
----
-
-## Introduzione
-
-In questo articolo, discutiamo i cambiamenti dipendenti dall'età nell'anger-superiority effect [@ceccarini2024age].
-
-## Risultati
-
-I risultati mostrano che...
-
-## Riferimenti
-```
-
-In questo esempio, l'identificatore `@ceccarini2024age` viene utilizzato per fare riferimento alla citazione contenuta nel file `references.bib`. Al momento della compilazione, Quarto genererà automaticamente la lista dei riferimenti bibliografici in base al formato specificato.
-
-#### Citazioni inline
-
-All'interno di un documento `.qmd`, le citazioni vengono aggiunte utilizzando il simbolo `@` seguito dall'identificativo della citazione specificato nel file `.bib`. Ad esempio:
-
-```markdown
-... come evidenziato da @ceccarini2024age, si osserva che...
-```
-
-Quarto genera automaticamente la bibliografia, includendo solo i riferimenti effettivamente citati nel documento. La bibliografia viene aggiunta alla fine del file renderizzato (ad esempio, in formato HTML o PDF). 
-
-Ad esempio, nel caso di un documento `.qmd`, il testo sopra sarà visualizzato così:
-
-> ... come evidenziato da Ceccarini et al. (2024), si osserva che...
-
-La citazione completa sarà inclusa automaticamente nella bibliografia, posizionata alla fine della pagina web o del documento finale. Si noti che Quarto gestisce automaticamente la formattazione e la posizione della bibliografia, garantendo coerenza e precisione. 
-
-::: {#exm-}
-Per fare un esempio pratico, possiamo inserire la citazione `@ceccarini2024age` direttamente nel file `.qmd` di questa pagina web. Quando il documento viene compilato, Quarto renderà la citazione in modo appropriato, come mostrato qui: @ceccarini2024age. 
-
-Si noti che, in fondo a questa pagina web, è presente un riferimento bibliografico corrispondente. Questo riferimento è stato aggiunto automaticamente da Quarto in risposta all'uso della citazione `@ceccarini2024age` nel testo del documento. Questo processo automatizzato semplifica la gestione delle citazioni e garantisce che tutti i riferimenti siano correttamente inclusi e formattati.
+- **Caching**: l'opzione `cache: true` salva i risultati di un chunk lento e li riutilizza se il codice non cambia. È utile per le analisi lunghe, ma può diventare pericoloso se non si capisce quando la cache è obsoleta. In caso di dubbio, cancellare la cartella `_cache` e ricompilare.
+- **Stili bibliografici**: i file `.csl` si possono scaricare dallo [Zotero Style Repository](https://www.zotero.org/styles).
+- **Formati di output**: Quarto può produrre HTML, PDF, Word e slide. La documentazione è qui: [https://quarto.org/docs/output-formats](https://quarto.org/docs/output-formats).
 :::
+
+## Quarto e l'AI: usare aiuto senza perdere controllo
+
+In questo corso, l'uso dell'AI non è vietato. Fa parte del modo contemporaneo di lavorare con il codice. Tuttavia, l'uso dell'AI non esime dalla responsabilità dell'analisi. Significa spostare una parte del lavoro dalla produzione del codice alla verifica del codice.
+
+È utile perché lascia una traccia di questa verifica. Un codice incollato nella Console può funzionare, ma poi sparisce. Un codice inserito in un chunk resta nel documento, può essere riletto, commentato, corretto e rieseguito.
+
+### Un protocollo di lavoro in quattro passi
+
+1. **Formula il problema, non solo il comando.** Non chiedere soltanto "Scrivimi il codice". Specifica il data frame, le variabili, il tipo di variabili, il risultato desiderato e i criteri di esclusione.
+2. **Incolla il codice in un chunk, non nella Console.** Il chunk lascia traccia; la Console no.
+3. **Verifica prima di accettare.** Usa la checklist qui sotto.
+4. **Documenta.** Sotto il chunk scrivi una frase che spieghi cosa è stato fatto e perché.
+
+### La checklist di verifica
+
+Prima di utilizzare un chunk generato con l'AI, chiediti:
+
+1. Il codice fa davvero ciò che ho chiesto?
+2. Usa le variabili corrette?
+3. Sta eliminando casi senza che me ne accorga (`filter()`, `drop_na()`, `na.omit()`, join che perdono righe)?
+4. Come tratta i valori mancanti? La scelta di impostare `na.rm = TRUE` non è un dettaglio tecnico.
+5. Il grafico o la tabella sono coerenti con il tipo di variabile?
+6. L'interpretazione è statisticamente e psicologicamente sensata?
+7. Il documento è stato compilato da una sessione R pulita?
+
+Un controllo semplice consiste nel stampare il numero di righe prima e dopo ogni trasformazione.
+
+````
+```{{r}}
+#| eval: false
+nrow(dati)
+dati_puliti <- dati |> filter(!is.na(rt), rt < 3000)
+nrow(dati_puliti)
+```
+````
+
+Se il campione si riduce da 240 a 97 osservazioni, bisogna saperlo prima di interpretare i risultati.
+
+::: {.callout-tip title="Trasparenza sull'uso dell'AI"}
+Quando si utilizzano strumenti AI in un report, una breve nota finale può essere sufficiente: indicare lo strumento utilizzato, le parti del report in cui è stato impiegato e come sono stati verificati i risultati. Non si tratta di un'ammissione di colpa, ma di una pratica di trasparenza simile alla dichiarazione del software statistico utilizzato.
+:::
+
+## Errori di compilazione: una diagnosi rapida
+
+| Sintomo | Causa probabile |
+|---|---|
+| `object 'dati' not found` in fase di render, ma funziona in Console | l'oggetto è stato creato in Console, non nel documento |
+| `cannot open file ...` | percorso assoluto o cartella sbagliata: controlla `here::here()` |
+| `there is no package called ...` | il pacchetto non è installato |
+| il documento mostra codice vecchio o risultati incoerenti | cache obsoleta: cancella `_cache` e `_files`, poi ricompila |
+| errore in un chunk e non sai quale | assegna un `label` a ogni chunk |
+| il chunk non viene eseguito | manca `{r}` dopo i backtick, oppure il chunk non è chiuso |
 
 ## Riflessioni conclusive {.unnumbered .unlisted}
 
-Quarto è uno strumento potente per la creazione di documenti riproducibili e ben strutturati, integrando codice, risultati e testo descrittivo in un unico file. Questa introduzione dovrebbe essere sufficiente per iniziare a lavorare con Quarto, ma c’è ancora molto da imparare. Il modo migliore per rimanere aggiornati è consultare il sito ufficiale di Quarto: [https://quarto.org](https://quarto.org).
+Per iniziare con Quarto, è sufficiente una struttura YAML, un testo Markdown, alcuni chunk di codice, alcune opzioni essenziali e una regola di metodo: compilare da una sessione pulita. Questo poco, però, cambia il significato del lavoro prodotto.
 
-Un argomento importante che non abbiamo trattato qui riguarda i dettagli di come comunicare in modo accurato le proprie idee agli altri. Per migliorare le proprie capacità di scrittura, @wickham2023r consigliano due libri: *Style: Lessons in Clarity and Grace* di Joseph M. Williams & Joseph Bizup, e *The Sense of Structure: Writing from the Reader’s Perspective* di George Gopen. Una serie di brevi articoli sulla scrittura sono offerti da George Gopen e sono disponibili su [https://www.georgegopen.com/litigation-articles.html](https://www.georgegopen.com/litigation-articles.html). 
+Un risultato copiato dalla Console in un documento Word è solo un'affermazione. Lo stesso risultato all'interno di un documento Quarto che viene compilato da zero è un'affermazione accompagnata dal percorso che ha portato alla sua produzione. Ciò non garantisce che l'analisi sia corretta, ma la rende ispezionabile.
 
-::: {.callout-tip title="Esercizio" collapse="true"}
-In questo esercizio esplorerai l'importanza della riproducibilità nella scienza dei dati e le funzionalità principali di Quarto. 
+Questa distinzione diventa ancora più importante quando parte del codice è stata scritta con l'aiuto dell'AI. Lo strumento può proporre del codice, ma la responsabilità di comprenderlo, verificarlo e interpretarlo rimane dello studente. Quarto è il luogo in cui questa responsabilità si esercita.
 
-**1. Concetti di base sulla riproducibilità**
+Per approfondire, la documentazione ufficiale ([https://quarto.org](https://quarto.org)) è la fonte più aggiornata e completa.  Sulla scrittura scientifica, @wickham2023r consigliano *Style: Lessons in Clarity and Grace* di Williams & Bizup e *The Sense of Structure* di George Gopen.
 
-1. Cos’è la *crisi della riproducibilità* e perché è rilevante nella scienza dei dati?
-2. In che modo Quarto può aiutare ad affrontare la crisi della riproducibilità?
-3. Spiega il concetto di *literate programming* e come si collega a Quarto.
+::: {.callout-tip title="Esercizi" collapse="true"}
 
-**2. Struttura di un file Quarto**
+**Esercizio 1 — Il documento minimo.**
+Crea un progetto RStudio con una cartella `data/` e un file `report.qmd`. Il documento deve caricare un data frame, produrre una tabella descrittiva etichettata (`tbl-`), produrre un grafico etichettato (`fig-`) e richiamarli entrambi nel testo con `@tbl-...` e `@fig-...`. Verifica che compili dopo *Session → Restart R*.
 
-4. Qual è l'estensione di un file Quarto e quali sono le sue tre sezioni principali?
-5. Qual è la differenza tra *editor visivo* ed *editor sorgente* in Quarto?
-6. Qual è la funzione dell’intestazione YAML in un file `.qmd`?
+**Esercizio 2 — Il documento sabotato.**
+Prendi il documento dell'Esercizio 1 e introduci, uno alla volta, questi tre errori. Per ciascuno: prevedi il messaggio di errore, poi verifica.
 
-**3. Blocchi di codice e opzioni**
+a. sostituisci `here::here("data", "file.csv")` con un percorso assoluto;
+b. crea un oggetto in Console e usalo in un chunk senza definirlo nel documento;
+c. rimuovi `{r}` dall'intestazione di un chunk.
 
-7. Come si scrive un blocco di codice in Quarto?
-8. Quali opzioni puoi utilizzare nei blocchi di codice per controllare l’esecuzione e la visualizzazione del codice e dei risultati?
-9. Scrivi un blocco di codice Quarto che calcola la media di un vettore di numeri e stampa il risultato senza mostrare il codice.
+**Esercizio 3 — Audit di codice AI.**
+Chiedi a un assistente AI: *"Scrivi il codice R per calcolare il tempo di reazione medio per gruppo sperimentale"*. Incolla la risposta in un chunk e rispondi per iscritto alla checklist. In particolare: quante righe entrano nell'analisi? Come vengono trattati gli `NA`? Il codice fa un'assunzione che tu non avevi dichiarato?
 
-**4. Figure e Tabelle**
+**Esercizio 4 — Il prompt migliore.**
+Riscrivi la richiesta dell'Esercizio 3 specificando nomi e tipi delle variabili, criterio di esclusione dei trial e trattamento dei valori mancanti. Confronta il codice ottenuto con quello precedente. Che cosa è cambiato? Che cosa resta comunque responsabilità tua?
 
-10. Quali opzioni di formattazione delle figure offre Quarto? 
-11. Come puoi creare una tabella formattata in Quarto usando `knitr::kable()`?
-
-**5. Citazioni e Bibliografia**
-
-12. Come si aggiunge una citazione bibliografica in Quarto?
-13. Quali file devono essere inclusi per gestire una bibliografia in Quarto?
-14. Scrivi un esempio di citazione in formato BibTeX e mostra come collegarla a un documento `.qmd`.
-
-**6. Considerazioni Finali**
-
-15. Quali sono i vantaggi di usare Quarto rispetto a strumenti più tradizionali come Word per la creazione di report scientifici?
+**Esercizio 5 — Concettuale.**
+In due paragrafi: perché un'analisi riproducibile non è automaticamente un'analisi corretta? E perché un'analisi non riproducibile non può essere verificata come corretta?
 :::
 
-::: {.callout-tip title="Soluzione" collapse="true"}
-**1. Concetti di base sulla riproducibilità**
+::: {.callout-tip title="Soluzioni (parziali)" collapse="true"}
 
-1. La *crisi della riproducibilità* è il fenomeno per cui molti studi scientifici non possono essere replicati con gli stessi metodi e dati. Questo mina la fiducia nella scienza e può portare a risultati non affidabili.
-2. Quarto aiuta la riproducibilità integrando codice, testo e risultati in un unico documento, rendendo più semplice verificare e riprodurre le analisi.
-3. *Literate programming* è un approccio introdotto da Donald Knuth che combina codice e spiegazioni testuali nello stesso file, migliorando la comprensione e documentazione delle analisi. Quarto segue questa filosofia.
+**Esercizio 2.**
 
-**2. Struttura di un file Quarto**
+a. `Error: cannot open file '/Users/.../file.csv': No such file or directory` sulla macchina di chiunque altro, e sulla tua se sposti la cartella. Il percorso assoluto lega il documento a un computer specifico.
+b. `Error: object 'x' not found`. Il render avviene in una sessione R nuova: ciò che sta nel *Global Environment* non esiste per il documento.
+c. Il blocco viene trattato come testo preformattato: il codice appare nel documento ma non viene eseguito. Non sempre compare un errore, ed è proprio questo che lo rende insidioso.
 
-4. L'estensione di un file Quarto è `.qmd`. Le tre sezioni principali sono:
+**Esercizio 3.** Gli aspetti da controllare quasi sempre sono questi: (i) `mean(rt)` restituisce `NA` se esiste anche un solo valore mancante, a meno di `na.rm = TRUE`; (ii) `group_by()` su una variabile codificata come numerica anziché come `factor` produce raggruppamenti corretti ma etichette poco informative; (iii) un eventuale `filter()` sui tempi di reazione implica un criterio di esclusione che va giustificato.
 
-   - L'intestazione YAML (metadati),
-   - Il codice (chunks),
-   - Il testo scritto in Markdown.
-   
-5. L'*editor visivo* è un’interfaccia intuitiva simile a Google Docs, mentre l'*editor sorgente* permette di scrivere direttamente in Markdown e codice.
-6. L'intestazione YAML definisce le proprietà del documento come titolo, autore, formato di output e opzioni di rendering.
-
-**3. Blocchi di codice e opzioni**
-
-7. Un blocco di codice in Quarto si scrive con tripli backtick (\```) e un linguaggio specificato:
-
-   ```r
-   #| echo: true
-   print("Esempio di codice in Quarto")
-   ```
-8. Alcune opzioni utili nei blocchi di codice sono:
-
-   - `echo: false` per nascondere il codice,
-   - `eval: false` per non eseguire il codice,
-   - `warning: false` e `message: false` per nascondere messaggi e avvisi.
-   
-9. Esempio di blocco di codice che calcola una media senza mostrare il codice:
-
-   ```r
-   #| echo: false
-   mean(c(1, 2, 3, 4, 5))
-   ```
-
-## Figure e Tabelle
-10. Le opzioni principali per le figure includono:
-
-    - `fig-width` e `fig-height` per le dimensioni,
-    - `out-width` per la larghezza relativa,
-    - `fig-asp` per il rapporto d’aspetto.
-    
-11. Per creare una tabella formattata con `knitr::kable()`:
-
-    ```r
-    knitr::kable(head(mtcars))
-    ```
-
-**5. Citazioni e Bibliografia**
-
-12. Le citazioni in Quarto si aggiungono usando il simbolo `@` seguito dal riferimento BibTeX (es. `@ceccarini2024age`).
-13. Per gestire la bibliografia in Quarto servono:
-
-    - Un file `.bib` con le citazioni,
-    - Un’intestazione YAML che collega il file `.bib` e specifica lo stile (`csl`).
-    
-14. Esempio di citazione BibTeX e collegamento in YAML:
-
-    ```bibtex
-    @article{ceccarini2024age,
-      title={Age-dependent changes in the anger superiority effect},
-      author={Ceccarini, Francesco et al.},
-      journal={Psychonomic Bulletin & Review},
-      year={2024}
-    }
-    ```
-    
-    YAML:
-    
-    ```yaml
-    bibliography: references.bib
-    biblio-style: apalike
-    ```
-
-**6. Considerazioni Finali**
-
-15. I vantaggi di Quarto rispetto a Word includono:
-
-    - maggiore riproducibilità e trasparenza,
-    - possibilità di integrare codice ed esecuzione in un unico documento,
-    - facilità di gestione delle citazioni automatiche,
-    - supporto per diversi formati di output (HTML, PDF, Word).
-    
+**Esercizio 5.** Riproducibilità e validità sono diverse. Un errore di codifica riprodotto fedelmente resta un errore: la riproducibilità garantisce che i passaggi siano ispezionabili, non che siano giusti. Il punto è che senza ispezionabilità la correttezza non è nemmeno una domanda a cui si possa rispondere: si può solo credere al risultato sulla fiducia.
 :::
 
 ::: {.callout-note collapse=true title="Informazioni sull'ambiente di sviluppo"}

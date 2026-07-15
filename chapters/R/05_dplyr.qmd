@@ -1,359 +1,550 @@
-# Usare `dplyr` {#sec-dplyr}
+# Trasformare i dati con `dplyr` {#sec-dplyr}
 
-## Introduzione {.unnumbered .unlisted}
+## Perché questo capitolo {.unnumbered .unlisted}
 
-L'obiettivo di questo capitolo è fornire un'introduzione alle funzioni principali del pacchetto `dplyr` per le operazioni di *data wrangling*, cioè per il preprocessing e la pulizia dei dati. In R, queste operazioni sono strettamente legate al concetto di "data tidying", che si riferisce all'organizzazione sistematica dei dati per facilitare l'analisi.[^1]
+Prima di descrivere, visualizzare o modellare i dati, è necessario trasformarli. Raramente un file appena importato è pronto per l'analisi: può contenere variabili inutili, nomi poco chiari, valori mancanti, codifiche diverse da quelle attese o informazioni che devono essere riorganizzate.
 
-[^1]: Per comprendere meglio il concetto di "data tidying", possiamo rifarci a una citazione tratta dal testo di riferimento [*R for Data Science (2e)*](https://r4ds.hadley.nz): "Tidy datasets are all alike, but every messy dataset is messy in its own way." 
+Il pacchetto `dplyr` rende queste operazioni esplicite e leggibili. In questo capitolo non cercheremo di imparare tutto il pacchetto `dplyr`. L'obiettivo è più limitato, ma anche più importante: imparare a leggere, modificare e controllare le trasformazioni più comuni dei dati.
 
-L'essenza del "data tidying" è organizzare i dati in un formato che sia facile da gestire e analizzare. Anche se gli stessi dati possono essere rappresentati in vari modi, non tutte le rappresentazioni sono ugualmente efficienti o facili da usare. Un dataset "tidy" segue tre principi fondamentali che lo rendono particolarmente pratico:
+Al termine del capitolo, dovresti essere in grado di:
 
-1. **Ogni variabile è una colonna**: ogni colonna nel dataset rappresenta una singola variabile.
-2. **Ogni osservazione è una riga**: ogni riga nel dataset rappresenta un'unica osservazione.
-3. **Ogni valore è una cella**: ogni cella del dataset contiene un singolo valore.
+- riconoscere i principali verbi di `dplyr`;
+- leggere una pipeline riga per riga;
+- selezionare variabili, filtrare le osservazioni e creare nuove colonne;
+- calcolare sintesi descrittive per l'intero campione o per gruppi;
+- verificare che una trasformazione abbia effettivamente prodotto il risultato desiderato;
+- valutare il codice `dplyr` prodotto con l'aiuto dell'AI.
 
-Il pacchetto R *{dplyr}* e gli altri pacchetti del tidyverse sono progettati specificamente per lavorare con dati in formato "tidy", permettendo agli utenti di eseguire operazioni di manipolazione e visualizzazione in modo più intuitivo ed efficiente.
-
-::: {.callout-tip collapse=true}
-## Prerequisiti
-
-- Leggere [R for Data Science (2e)](https://r4ds.hadley.nz).
-- Consultare [Data cleaning for social scientists](https://bookdown.org/f_lennert/data-prep_2days/).
-- Leggere il capitolo *Data Wrangling* di [Statistical Inference via Data Science: A ModernDive into R and the Tidyverse (Second Edition)](https://moderndive.com/v2/). 
-- Consultare [Introduction to Data Science: Data Wrangling and Visualization with R](https://rafalab.dfci.harvard.edu/dsbook-part-1/) [@irizarry2024introduction]
+::: {.callout-important title="Idea chiave"}
+`dplyr` non serve solo a "manipolare" dati. Consente di rendere visibile il percorso che porta dal file iniziale alla tabella utilizzata per l'analisi. Ogni riga di codice dovrebbe poter essere spiegata.
 :::
 
-::: {.callout-caution collapse=true title="Preparazione del Notebook"}
+## Dati ordinati: una convenzione utile
+
+Molti strumenti del `tidyverse`, incluso `dplyr`, funzionano meglio quando i dati
+sono organizzati in forma *tidy*. In un dataset tidy:
+
+1. ogni variabile è una colonna;
+2. ogni osservazione è una riga;
+3. ogni valore è una cella.
+
+Questa regola non è una legge naturale. Si tratta di una convenzione pratica. La sua utilità sta nel fatto che rende più semplice descrivere, trasformare e visualizzare i dati.
+
+Per esempio, se si studia la relazione tra stress accademico e qualità del sonno, si potrebbe avere una tabella in cui ogni riga rappresenta uno studente e ogni colonna rappresenta una variabile:
 
 ```{r}
-here::here("code", "_common.R") |> source()
+#| message: false
+#| warning: false
+library(dplyr)
+library(tibble)
 
-# Load packages
-if (!requireNamespace("pacman")) install.packages("pacman")
-pacman::p_load(tidyr, mice, missForest)
-```
-:::
-
-
-## Pipe
-
-Il pacchetto `dplyr`, così come l'intero ecosistema `tidyverse`, fa largo uso dell'operatore pipe, che consente di concatenare una sequenza di operazioni in modo leggibile ed efficiente. In R, esistono due principali notazioni per il pipe: 
-
-1. **`|>`**: introdotto nativamente a partire dalla versione 4.1.0 di R.
-2. **`%>%`**: introdotto dal pacchetto `magrittr`, ed è una delle componenti centrali del `tidyverse`.
-
-Entrambi gli operatori permettono di ottenere risultati simili e, per la maggior parte degli utilizzi, possono essere considerati intercambiabili. Tuttavia, è importante sottolineare alcune differenze:
-
-- **`|>`** è integrato nel linguaggio R e non richiede pacchetti aggiuntivi.
-- **`%>%`**, essendo parte di `magrittr`, richiede che il pacchetto sia installato e caricato (`library(magrittr)` o automaticamente tramite `tidyverse`).
-
-Consideriamo l'esempio seguente (che anticipa l'uso della funzione `filter()` che descriveremo in seguito). Un'operazione comune è filtrare un data frame e calcolare la media di una colonna. Con il pipe, questa sequenza di operazioni diventa più leggibile:
-
-```{r}
-# Usando %>%
-iris %>%
-  dplyr::filter(Species == "setosa") |> 
-  summarise(
-    mean_sepal_length = mean(Sepal.Length)
-  ) 
-```
-
-```{r}
-# Usando |>
-iris |> 
-  dplyr::filter(Species == "setosa") |> 
-  summarise(
-    mean_sepal_length = mean(Sepal.Length)
-  ) 
-```
-
-
-### Cosa fa la pipe?
-
-La pipe è uno strumento potente che permette di collegare in modo diretto l'output di una funzione come input della funzione successiva. Questo approccio riduce la necessità di creare variabili intermedie, migliora la leggibilità del codice e rende il flusso delle operazioni più chiaro e lineare.
-
-Ogni funzione applicata con la pipe riceve automaticamente l'output della funzione precedente come suo primo argomento. Ciò consente di scrivere sequenze di operazioni in un formato compatto e intuitivo.
-
-Ecco un altro esempio:
-
-```{r}
-# Utilizzo della pipe per trasformare un dataset
-df <- data.frame(
-  id = 1:5,
-  value = c(10, 20, 30, 40, 50)
+studenti <- tibble(
+  id = 1:10,
+  genere = c("F", "F", "M", "F", "M", "F", "M", "F", "M", "F"),
+  corso = c("psicologia", "psicologia", "scienze", "psicologia", "scienze",
+            "psicologia", "psicologia", "scienze", "psicologia", "scienze"),
+  stress = c(18, 25, 21, 30, 16, 28, 24, NA, 19, 27),
+  sonno_ore = c(7.2, 6.1, 6.8, 5.4, 7.5, 5.9, 6.2, 6.7, NA, 5.8),
+  caffeina = c(1, 3, 2, 4, 1, 3, 2, 2, 1, 4)
 )
 
-# Filtra i dati, seleziona colonne e calcola nuovi valori
-df_clean <- df |>
-  dplyr::filter(value > 20) |>
-  dplyr::select(id, value) |>
-  mutate(squared_value = value^2)
+studenti
 ```
 
-In questa sequenza, il dataset originale `df` viene filtrato, le colonne desiderate vengono selezionate e viene aggiunta una nuova colonna con il valore al quadrato.
+In questa tabella:
+
+- `id` identifica lo studente;
+- `genere` e `corso` sono variabili categoriali;
+- `stress`, `sonno_ore` e `caffeina` sono variabili numeriche;
+- `NA` indica un valore mancante.
+
+Prima di procedere, è sempre utile guardare la struttura dei dati:
 
 ```{r}
-head(df_clean)
+glimpse(studenti)
 ```
 
-In sintesi, la pipe è uno strumento fondamentale per scrivere codice R moderno e leggibile, indipendentemente dal fatto che si utilizzi `|>` o `%>%`. 
+## La pipe: leggere il codice come una sequenza di operazioni
 
-## Verbi
+In R moderno si usa spesso la pipe `|>`. La pipe prende il risultato di una riga
+e lo passa alla riga successiva.
 
-Le funzioni principali ("verbi) di `dplyr` sono le seguenti:
-
-| Verbo dplyr  | Descrizione                                               |
-|--------------|-----------------------------------------------------------|
-| `select()`   | Seleziona colonne                                          |
-| `filter()`   | Filtra righe                                               |
-| `arrange()`  | Riordina o organizza le righe                              |
-| `mutate()`   | Crea nuove colonne                                         |
-| `summarise()`| Riassume i valori                                          |
-| `group_by()` | Consente di eseguire operazioni di gruppo                  |
-
-I verbi di `dplyr` sono suddivisi in quattro gruppi, in base all'elemento su cui operano: righe, colonne, gruppi o tabelle.
-
-Inoltre, le diverse funzioni `bind_` e `_joins` permettono di combinare più tibbles (ovvero, data frame) in uno solo.
-
-Per fare un esempio prarico, usiamo nuovamente il dataset `msleep`.
+Questo permette di leggere il codice dall'alto verso il basso:
 
 ```{r}
-data(msleep)
-dim(msleep)
+studenti |>
+  filter(stress >= 20) |>
+  select(id, stress, sonno_ore)
 ```
 
-Esaminiamo i dati:
+Il codice può essere letto così:
+
+1. parti dalla tabella `studenti`;
+2. tieni solo gli studenti con `stress >= 20`;
+3. mostra solo le colonne `id`, `stress` e `sonno_ore`.
+
+La pipe non è indispensabile, ma rende il flusso dell'analisi più chiaro. Questo è particolarmente importante quando il codice viene prodotto o modificato con l'aiuto dell'intelligenza artificiale: una pipeline leggibile è più facile da controllare.
+
+::: {.callout-tip title="Come leggere una pipeline"}
+Quando leggi codice `dplyr`, chiediti sempre:
+
+1. quale tabella entra nella pipeline?
+2. quali righe vengono incluse o escluse?
+3. quali colonne vengono tenute, eliminate o create?
+4. quale tabella esce alla fine?
+:::
+
+## I verbi essenziali
+
+I verbi principali di `dplyr` corrispondono a operazioni molto semplici.
+
+| Verbo | Domanda a cui risponde |
+|---|---|
+| `select()` | Quali colonne mi servono? |
+| `filter()` | Quali righe voglio includere? |
+| `mutate()` | Quali nuove variabili voglio creare? |
+| `arrange()` | In quale ordine voglio vedere le righe? |
+| `group_by()` | Rispetto a quali gruppi voglio calcolare i risultati? |
+| `summarise()` | Quale sintesi voglio ottenere? |
+
+Questi verbi sono sufficienti per la maggior parte delle trasformazioni necessarie in una prima analisi esplorativa.
+
+## Selezionare colonne con `select()`
+
+`select()` serve a scegliere le variabili che vogliamo mantenere.
 
 ```{r}
-glimpse(msleep)
+studenti |>
+  select(id, stress, sonno_ore)
 ```
 
-Le colonne, nell'ordine, corrispondono a quanto segue:
+Questa operazione non modifica i valori. Cambia solo le colonne visibili nella tabella risultante.
 
-| Nome colonna   | Descrizione                                     |
-|----------------|-------------------------------------------------|
-| name           | Nome comune                                     |
-| genus          | Rango tassonomico                               |
-| vore           | Carnivoro, onnivoro o erbivoro?                 |
-| order          | Rango tassonomico                               |
-| conservation   | Stato di conservazione del mammifero            |
-| sleep_total    | Quantità totale di sonno, in ore                |
-| sleep_rem      | Sonno REM, in ore                               |
-| sleep_cycle    | Durata del ciclo di sonno, in ore               |
-| awake          | Quantità di tempo trascorso sveglio, in ore     |
-| brainwt        | Peso del cervello, in chilogrammi               |
-| bodywt         | Peso corporeo, in chilogrammi                   |
-
-## Righe
-
-I verbi più importanti che operano sulle righe di un dataset sono `filter()`, che seleziona le righe da includere senza modificarne l'ordine, e `arrange()`, che cambia l'ordine delle righe senza alterare la selezione delle righe presenti.
+Possiamo anche rimuovere una colonna utilizzando il segno meno:
 
 ```{r}
-msleep |>
-  dplyr::filter(sleep_total < 4) |>
-  arrange(sleep_total)
+studenti |>
+  select(-caffeina)
 ```
 
-Possiamo usare `filter()` speficicano più di una condizione logica.
+::: {.callout-warning title="Controllo"}
+Dopo  la funzione `select()`, controlla sempre se hai mantenuto tutte le variabili necessarie per l'analisi. Eliminare una colonna troppo presto può rendere difficile capire che cosa è successo nelle fasi successive.
+:::
+
+## Filtrare righe con `filter()`
+
+La funzione `filter()` serve a includere solo le osservazioni che soddisfano una determinata condizione.
 
 ```{r}
-msleep |>
-  dplyr::filter((sleep_total < 4 & bodywt > 100) | brainwt > 1) |>
-  arrange(sleep_total)
+studenti |>
+  filter(stress >= 20)
 ```
 
-## Colonne
-
-Esistono quattro verbi principali che modificano le colonne di un dataset senza cambiare le righe:
-
-- `relocate()` cambia la posizione delle colonne;
-- `rename()` modifica i nomi delle colonne;
-- `select()` seleziona le colonne da includere o escludere;
-- `mutate()` crea nuove colonne a partire da quelle esistenti.
+Possiamo combinare più condizioni:
 
 ```{r}
-msleep2 <- msleep |>
+studenti |>
+  filter(stress >= 20, sonno_ore < 6.5)
+```
+
+Questa pipeline include solo gli studenti con punteggio di stress almeno pari a
+20 e meno di 6.5 ore di sonno.
+
+Si possono usare anche operatori logici:
+
+| Operatore | Significato |
+|---|---|
+| `==` | uguale a |
+| `!=` | diverso da |
+| `>` | maggiore di |
+| `<` | minore di |
+| `>=` | maggiore o uguale a |
+| `<=` | minore o uguale a |
+| `&` | entrambe le condizioni sono vere |
+| `|` | almeno una delle condizioni è vera |
+| `%in%` | appartiene a un insieme di valori |
+
+Esempio:
+
+```{r}
+studenti |>
+  filter(corso %in% c("psicologia", "scienze"), caffeina >= 3)
+```
+
+::: {.callout-important title="Attenzione ai valori mancanti"}
+Quando una variabile contiene `NA`, una condizione logica può produrre risultati
+inattesi. Le righe con valori mancanti nella variabile utilizzata per il filtraggio vengono solitamente escluse dal risultato.
+:::
+
+Per controllare esplicitamente i valori mancanti possiamo usare `is.na()`:
+
+```{r}
+studenti |>
+  filter(is.na(stress) | is.na(sonno_ore))
+```
+
+Questa pipeline mostra gli studenti per cui manca il punteggio di stress oppure
+il numero di ore di sonno.
+
+## Creare variabili con `mutate()`
+
+La funzione `mutate()` serve a creare nuove colonne o modificare colonne esistenti.
+
+Per esempio, possiamo creare una variabile che indica se lo studente dorme meno
+di 6 ore:
+
+```{r}
+studenti |>
+  mutate(sonno_basso = sonno_ore < 6)
+```
+
+Possiamo anche creare una variabile categoriale a partire da una variabile
+numerica:
+
+```{r}
+studenti |>
   mutate(
-    rem_prop = sleep_rem / sleep_total * 100
+    livello_stress = case_when(
+      stress < 20 ~ "basso",
+      stress >= 20 & stress < 27 ~ "medio",
+      stress >= 27 ~ "alto",
+      TRUE ~ NA_character_
+    )
   ) |>
-  dplyr::select(name, vore, rem_prop, sleep_total) |>
-  arrange(desc(rem_prop))
-
-glimpse(msleep2)
+  select(id, stress, livello_stress)
 ```
 
-In questo esempio, utilizziamo `mutate()` per creare una nuova colonna `rem_prop` che rappresenta la percentuale di sonno REM sul totale del sonno. Successivamente, `select()` viene utilizzato per scegliere solo alcune colonne del dataset, e infine `desc(rem_prop)` ordina i valori di `rem_prop` in ordine decrescente, dal valore maggiore a quello minore.
+In questo esempio, `case_when()` assegna un'etichetta a seconda del valore di
+`stress`. L'ultima riga, `TRUE ~ NA_character_`, specifica che i casi non
+classificabili ricevono un valore mancante.
 
-Per cambiare il nome di una colonna possiamo usare `rename()`. Inoltre, possiamo cambiare l'ordine delle variabili con `relocate()`.
+::: {.callout-warning title="Controllo"}
+Dopo `mutate()`, controlla sempre la nuova variabile. Un errore nella definizione
+di una categoria può alterare l'interpretazione dell'intera analisi.
+:::
 
 ```{r}
-msleep2 |>
-  rename(rem_perc = rem_prop) |>
-  relocate(rem_perc, .before = name)
+studenti |>
+  mutate(
+    livello_stress = case_when(
+      stress < 20 ~ "basso",
+      stress >= 20 & stress < 27 ~ "medio",
+      stress >= 27 ~ "alto",
+      TRUE ~ NA_character_
+    )
+  ) |>
+  count(livello_stress)
 ```
 
-## Gruppi
+## Ordinare righe con `arrange()`
 
-Il verbo `group_by()` viene utilizzato per suddividere un dataset in gruppi, in base a una o più variabili, che siano rilevanti per l'analisi. Questo permette di eseguire operazioni di sintesi su ciascun gruppo separatamente, ottenendo informazioni aggregate.
-
-Ad esempio, nel codice seguente:
+La funzione `arrange()` cambia l'ordine delle righe.
 
 ```{r}
-msleep |>
-  group_by(order) |>
+studenti |>
+  arrange(stress)
+```
+
+Per ordinare in modo decrescente si usa `desc()`:
+
+```{r}
+studenti |>
+  arrange(desc(stress))
+```
+
+Questa operazione è utile per ispezionare i valori estremi, gli errori di inserimento e i casi che meritano attenzione.
+
+## Riassumere dati con `summarise()`
+
+La funzione `summarise()` riduce una tabella a una o più statistiche descrittive.
+
+```{r}
+studenti |>
   summarise(
-    avg_sleep = mean(sleep_total),
-    min_sleep = min(sleep_total),
-    max_sleep = max(sleep_total),
-    total = n()
-  ) |>
-  arrange(desc(avg_sleep))
+    n = n(),
+    stress_medio = mean(stress, na.rm = TRUE),
+    sonno_medio = mean(sonno_ore, na.rm = TRUE)
+  )
 ```
 
-1. `group_by(order)` suddivide il dataset `msleep` in gruppi, ciascuno corrispondente a un valore distinto della variabile `order`.
-  
-2. Successivamente, `summarise()` calcola diverse statistiche per ogni gruppo:
-   - `avg_sleep` è la media del totale del sonno (`sleep_total`) all'interno di ciascun gruppo.
-   - `min_sleep` è il valore minimo di `sleep_total` in ogni gruppo.
-   - `max_sleep` è il valore massimo di `sleep_total` in ogni gruppo.
-   - `total` è il numero di osservazioni (o righe) per ciascun gruppo, calcolato con la funzione `n()`.
+L'argomento `na.rm = TRUE` dice a R di ignorare i valori mancanti nel calcolo
+della media. Ciò non significa che i valori mancanti siano irrilevanti, ma solo che non bloccano il calcolo.
 
-3. Infine, `arrange(desc(avg_sleep))` ordina i risultati in ordine decrescente in base alla media del sonno totale (`avg_sleep`), mostrando prima i gruppi con la media di sonno più alta. 
-
-Questo tipo di approccio è utile quando si vuole analizzare come cambiano le caratteristiche dei dati a seconda dei gruppi specifici, fornendo una visione più dettagliata e utile.
-
-
-## Riflessioni conclusive {.unnumbered .unlisted}
-
-Il *data wrangling* è una delle fasi più importanti in qualsiasi pipeline di analisi dei dati. In questo capitolo abbiamo introdotto l'uso del pacchetto `tidyverse` di R per la manipolazione dei dati e il suo utilizzo in scenari di base. Tuttavia, il tidyverse è un ecosistema ampio e qui abbiamo trattato solo gli elementi fondamentali. Per approfondire, si consiglia di consultare ulteriori risorse come quelle disponibili sul sito web del tidyverse e il libro [*R for Data Science (2e)*](https://r4ds.hadley.nz), di cui esiste anche una [traduzione italiana](https://it.r4ds.hadley.nz).
-
-
-::: {.callout-tip title="Esercizio" collapse="true"}
-In questo esercizio, utilizzerai il pacchetto `dplyr` per imparare a manipolare e trasformare i dati della SWLS (Satisfaction With Life Scale). Gli esercizi ti aiuteranno a consolidare la conoscenza dei principali verbi di `dplyr`, inclusi `filter()`, `select()`, `mutate()`, `arrange()` e `group_by()`.
-
-**Parte 1: comprensione teorica**
-
-1. **Cos'è un dataset "tidy"?**  
-   - Descrivi con parole tue cosa significa avere un dataset "tidy" e quali sono le sue tre caratteristiche principali.
-
-2. **Cos’è la pipe (`%>%` o `|>`) e perché è utile?**  
-   - Spiega a cosa serve l’operatore pipe e fornisci un esempio di utilizzo.
-
-3. **Quali sono i verbi principali di `dplyr`?**  
-   - Elenca e spiega brevemente i sei verbi principali di `dplyr` per la manipolazione dei dati.
-
-4. **Cosa fa il verbo `group_by()`?**  
-   - Spiega il suo scopo e come viene utilizzato in combinazione con `summarise()`.
-
-**Parte 2: applicazione pratica con i dati SWLS**
-
-5. **Caricamento dei dati SWLS**  
-   - Crea un data frame in R contenente i punteggi SWLS che hai raccolto.
-
-6. **Selezione delle colonne**  
-   - Usa `select()` per mantenere solo le colonne con i punteggi degli item.
-
-7. **Filtraggio dei dati**  
-   - Usa `filter()` per selezionare solo gli individui che hanno un punteggio totale superiore a 20.
-
-8. **Creazione di una nuova colonna**  
-   - Usa `mutate()` per calcolare il punteggio totale della SWLS per ciascun individuo e salvarlo in una nuova colonna chiamata `punteggio_totale`.
-
-9. **Riordinamento dei dati**  
-   - Usa `arrange()` per ordinare il dataset in base al punteggio totale, dal più alto al più basso.
-
-10. **Raggruppamento e sintesi dei dati**  
-   - Usa `group_by()` e `summarise()` per calcolare la media e la deviazione standard del punteggio SWLS totale nel dataset.
-
-**Consegna**
-
-- Scrivi le risposte della **Parte 1** su carta.
-- Scrivi il codice e i risultati della **Parte 2** in un file `.R` e invialo come consegna.
+::: {.callout-important title="Non nascondere i mancanti"}
+Quando si utilizza `na.rm = TRUE` è necessario anche verificare quanti valori mancanti sono presenti. Una media calcolata su pochi casi può non essere molto significativa.
 :::
 
-::: {.callout-tip title="Soluzione" collapse="true"}
-**Parte 1: comprensione teorica**
+```{r}
+studenti |>
+  summarise(
+    n_totale = n(),
+    n_stress_mancante = sum(is.na(stress)),
+    n_sonno_mancante = sum(is.na(sonno_ore))
+  )
+```
 
-1. **Cos'è un dataset "tidy"?**  
-   - Un dataset "tidy" è un dataset organizzato in modo sistematico per facilitare l'analisi. Le sue tre caratteristiche principali sono:
-     1. Ogni variabile è una colonna.
-     2. Ogni osservazione è una riga.
-     3. Ogni valore è una cella.
+## Calcolare sintesi per gruppi con `group_by()`
 
-2. **Cos’è la pipe (`%>%` o `|>`) e perché è utile?**  
-   - La pipe (`%>%` o `|>`) permette di concatenare più operazioni di manipolazione dati in modo leggibile ed efficiente.
-   - Esempio:
-     ```r
-     df |> 
-       filter(score > 20) |> 
-       select(name, score)
-     ```
+La funzione `group_by()` da sola non produce una tabella finale interessante. Serve a indicare a R che le operazioni successive devono essere eseguite separatamente per ciascun gruppo.
 
-3. **Quali sono i verbi principali di `dplyr`?**  
-   - `select()`: Seleziona colonne.
-   - `filter()`: Filtra righe.
-   - `arrange()`: Riordina le righe.
-   - `mutate()`: Crea nuove colonne.
-   - `summarise()`: Riassume i dati.
-   - `group_by()`: Permette di raggruppare i dati.
+```{r}
+studenti |>
+  group_by(genere) |>
+  summarise(
+    n = n(),
+    stress_medio = mean(stress, na.rm = TRUE),
+    sonno_medio = mean(sonno_ore, na.rm = TRUE),
+    .groups = "drop"
+  )
+```
 
-4. **Cosa fa il verbo `group_by()`?**  
-   - `group_by()` suddivide i dati in gruppi, permettendo di applicare funzioni di aggregazione con `summarise()`.
-   - Esempio:
-     ```r
-     df |> 
-       group_by(gruppo) |> 
-       summarise(media = mean(score), sd = sd(score))
-     ```
+Questa pipeline può essere letta nel modo seguente:
 
-**Parte 2: applicazione pratica con i dati SWLS**
+1) parti dalla tabella `studenti`;
+2) separa le righe in base al genere;
+3) per ciascun gruppo, calcola il numero di casi, lo stress medio e il sonno medio;
+4) restituisci una tabella non più raggruppata.
 
-5. **Caricamento dei dati SWLS**  Per svolgere l'esercizio, simuliamo i dati di 10 individui su 5 item (numeri casuali da 1 a 7):
+La riga `.groups = "drop"` evita che il risultato mantenga informazioni di raggruppamento non necessarie. Per analisi semplici non è sempre indispensabile, ma rende il risultato più esplicito.
 
-   ```r
-   set.seed(123)
-   swls <- data.frame(
-     id = 1:10,
-     item1 = sample(1:7, 10, replace = TRUE),
-     item2 = sample(1:7, 10, replace = TRUE),
-     item3 = sample(1:7, 10, replace = TRUE),
-     item4 = sample(1:7, 10, replace = TRUE),
-     item5 = sample(1:7, 10, replace = TRUE)
-   )
-   print(swls)
-   ```
+## Contare casi con `count()`
 
-6. **Selezione delle colonne**  
-   ```r
-   swls_selected <- swls |> select(item1:item5)
-   ```
+Una delle operazioni più utili in EDA è contare quanti casi appartengono a
+ciascuna categoria.
 
-7. **Filtraggio dei dati**  
-   ```r
-   swls_filtered <- swls |> filter(rowSums(select(swls, item1:item5)) > 20)
-   ```
+```{r}
+studenti |>
+  count(corso)
+```
 
-8. **Creazione di una nuova colonna**  
-   ```r
-   swls <- swls |> mutate(punteggio_totale = rowSums(select(swls, item1:item5)))
-   ```
+Possiamo contare anche combinazioni di variabili:
 
-9. **Riordinamento dei dati**  
-   ```r
-   swls_sorted <- swls |> arrange(desc(punteggio_totale))
-   ```
+```{r}
+studenti |>
+  count(corso, genere)
+```
 
-10. **Raggruppamento e sintesi dei dati**  
-   ```r
-   swls_summary <- swls |> 
-     summarise(media = mean(punteggio_totale), sd = sd(punteggio_totale))
-   ```
+Questi controlli sono semplici, ma spesso rivelano problemi importanti: categorie scritte in modo incoerente, gruppi troppo piccoli o valori inattesi.
 
-**Conclusione**
+## Una pipeline completa
 
-Questi esercizi hanno mostrato come usare `dplyr` per manipolare dati in modo efficace e leggibile.
+Consideriamo una domanda semplice:
+
+> Tra gli studenti con dati completi su stress e sonno, qual è la media delle ore di sonno in base al livello di stress?
+
+Possiamo costruire una pipeline in più passaggi:
+
+```{r}
+sonno_per_stress <- studenti |>
+  filter(!is.na(stress), !is.na(sonno_ore)) |>
+  mutate(
+    livello_stress = case_when(
+      stress < 20 ~ "basso",
+      stress >= 20 & stress < 27 ~ "medio",
+      stress >= 27 ~ "alto"
+    )
+  ) |>
+  group_by(livello_stress) |>
+  summarise(
+    n = n(),
+    sonno_medio = mean(sonno_ore),
+    sonno_sd = sd(sonno_ore),
+    .groups = "drop"
+  ) |>
+  arrange(desc(sonno_medio))
+
+sonno_per_stress
+```
+
+Questa pipeline non è solo codice. Si tratta di una sequenza di decisioni:
+
+- escludiamo i casi con dati mancanti relativi a stress o sonno;
+- trasformiamo lo stress in tre categorie;
+- calcolare la media e la deviazione standard del sonno per ciascuna categoria;
+- ordiniamo i risultati.
+
+Ogni decisione dovrebbe poter essere giustificata.
+
+::: {.callout-tip title="Checklist dopo una pipeline"}
+Dopo una trasformazione importante, controlla sempre:
+
+1. quante righe sono rimaste;
+2. quali colonne sono presenti;
+3. se sono comparsi nuovi valori mancanti;
+4. se le categorie hanno una numerosità plausibile;
+5. se il risultato risponde davvero alla domanda iniziale.
 :::
 
+```{r}
+studenti |>
+  filter(!is.na(stress), !is.na(sonno_ore)) |>
+  summarise(n_righe = n())
+```
+
+## Usare l'AI con criterio
+
+L'AI può essere molto utile per scrivere codice `dplyr`. Per esempio, puoi
+chiedere:
+
+> Scrivi una pipeline `dplyr` che elimini i casi con valori mancanti per stress e sonno, crei tre livelli di stress e calcoli la media del sonno per ciascun livello.
+
+Questo è un uso legittimo dell'AI. Ma il controllo resta tuo.
+
+### Cosa puoi chiedere all'AI
+
+- Generare una prima bozza della pipeline;
+- spiegare una riga di codice;
+- correggere un errore sintattico;
+- suggerire una funzione adatta;
+- trasformare un codice lungo in uno più leggibile.
+
+### Cosa devi controllare tu
+
+- Che le variabili esistano davvero nel dataset;
+- che i nomi delle colonne siano corretti;
+- che i filtri non eliminino casi in modo non intenzionale;
+- che i valori mancanti siano trattati esplicitamente;
+- che le nuove variabili abbiano il significato psicologico desiderato;
+- che le statistiche calcolate siano appropriate per la domanda.
+
+::: {.callout-warning title="Errore frequente"}
+Un codice può essere sintatticamente corretto, ma concettualmente errato. Per esempio, una pipeline può calcolare la media di una variabile ordinale trattandola come se fosse a intervalli o può escludere tutti i casi con dati mancanti senza dichiararlo.
+:::
+
+## Leggere codice generato dall'AI
+
+Supponiamo che l'AI produca questo codice:
+
+```{r}
+studenti |>
+  filter(stress > 20 & sonno_ore > 6) |>
+  group_by(corso) |>
+  summarise(media_stress = mean(stress))
+```
+
+Il codice funziona, ma prima di usarlo dobbiamo capirlo.
+
+Domande da porsi:
+
+- Perché vengono mantenuti solo studenti con `stress > 20` e `sonno_ore > 6`?
+- Questa selezione risponde alla domanda di ricerca?
+- Che cosa succede ai valori mancanti?
+- La media dello stress per corso è la sintesi che volevamo?
+- È necessario aggiungere `na.rm = TRUE`?
+
+Una versione più esplicita potrebbe essere:
+
+```{r}
+studenti |>
+  filter(!is.na(stress), !is.na(sonno_ore)) |>
+  group_by(corso) |>
+  summarise(
+    n = n(),
+    media_stress = mean(stress),
+    media_sonno = mean(sonno_ore),
+    .groups = "drop"
+  )
+```
+
+Questa seconda versione chiarisce quali casi sono inclusi e quali statistiche vengono calcolate.
+
+## Funzioni utili da conoscere
+
+Oltre ai verbi principali, alcune funzioni tornano spesso:
+
+| Funzione | Uso tipico |
+|---|---|
+| `n()` | conta le righe in un gruppo |
+| `is.na()` | identifica valori mancanti |
+| `sum(is.na(x))` | conta i valori mancanti di `x` |
+| `mean(x, na.rm = TRUE)` | calcola la media ignorando i mancanti |
+| `sd(x, na.rm = TRUE)` | calcola la deviazione standard ignorando i mancanti |
+| `case_when()` | crea categorie a partire da condizioni |
+| `if_else()` | crea una variabile con due condizioni |
+| `desc()` | ordina in senso decrescente |
+| `count()` | conta casi per categoria |
+
+Non è necessario memorizzarle tutte subito. È però importante riconoscerle quando
+compaiono nel codice.
+
+## Cosa portare al capitolo successivo
+
+Da questo capitolo dovresti ricavare soprattutto tre idee:
+
+1. trasformare i dati significa prendere decisioni;
+2. `dplyr` rende queste decisioni visibili in forma di pipeline;
+3. l'AI può aiutare a scrivere codice, ma non può sostituire il controllo
+   sostanziale sull'analisi.
+
+Nel capitolo su `ggplot2` useremo la stessa logica: non impareremo tutti i modi possibili per creare grafici, ma la grammatica minima per costruire e valutare visualizzazioni coerenti con le domande dell'EDA.
+
+## Esercizi {.unnumbered .unlisted}
+
+::: {.callout-tip title="Esercizio 1: leggere una pipeline" collapse="true"}
+Considera il codice seguente:
+
+```r
+studenti |>
+  filter(!is.na(stress), stress >= 20) |>
+  mutate(sonno_basso = sonno_ore < 6) |>
+  group_by(sonno_basso) |>
+  summarise(
+    n = n(),
+    stress_medio = mean(stress),
+    .groups = "drop"
+  )
+```
+
+Rispondi:
+
+1. Quali righe vengono escluse?
+2. Quale nuova variabile viene creata?
+3. Che cosa rappresenta `n`?
+4. Quale domanda empirica potrebbe essere esplorata con questa pipeline?
+:::
+
+::: {.callout-tip title="Esercizio 2: trovare il problema" collapse="true"}
+L'AI ha prodotto questo codice:
+
+```r
+studenti |>
+  filter(stress > 25) |>
+  summarise(media_sonno = mean(sonno_ore))
+```
+
+Il codice è sintatticamente corretto. Quali controlli dovresti fare prima di
+fidarti del risultato? Prova a riscrivere la pipeline rendendo esplicito il
+trattamento dei valori mancanti e il numero di casi usati nel calcolo.
+:::
+
+::: {.callout-tip title="Esercizio 3: modificare una pipeline" collapse="true"}
+Parti da questa pipeline:
+
+```r
+studenti |>
+  group_by(corso) |>
+  summarise(media_stress = mean(stress, na.rm = TRUE))
+```
+
+Modificala in modo che restituisca, per ciascun corso:
+
+- il numero totale di studenti;
+- il numero di valori mancanti in `stress`;
+- la media di `stress`;
+- la media di `sonno_ore`.
+:::
+
+::: {.callout-tip title="Esercizio 4: prompt e controllo" collapse="true"}
+Scrivi un prompt per chiedere all'AI una pipeline `dplyr` che:
+
+1. usi la tabella `studenti`;
+2. escluda i casi con valori mancanti su `stress` o `sonno_ore`;
+3. crei una variabile `stress_alto`, uguale a `TRUE` se `stress >= 27`;
+4. calcoli media e deviazione standard di `sonno_ore` separatamente per
+   `stress_alto`.
+
+Poi indica almeno tre controlli che dovresti eseguire sul codice prodotto.
+:::
 
 ::: {.callout-note collapse=true title="Informazioni sull'ambiente di sviluppo"}
 ```{r}
@@ -362,3 +553,4 @@ sessionInfo()
 :::
 
 ## Bibliografia {.unnumbered .unlisted}
+

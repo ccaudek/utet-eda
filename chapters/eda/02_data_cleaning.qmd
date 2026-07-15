@@ -1,286 +1,412 @@
 ---
-title: "Flusso di lavoro per la pulizia dei dati"
-subtitle: "Dal caos al dataset analizzabile"
+title: "Pulizia dei dati"
+subtitle: "Dai dati grezzi a un dataset documentato"
 ---
 
-## Perché la pulizia dei dati è cruciale {.unnumbered}
+## Perché questo capitolo
 
-> *“Data scientists spend 80% of their time cleaning data and 20% complaining about cleaning data.”*
-> — Anonimo (ma tristemente accurato)
+L'analisi esplorativa dei dati precede la creazione di grafici e statistiche descrittive. Inizia quando apriamo un file e ci chiediamo se i dati in esso contenuti sono comprensibili, coerenti e pertinenti alla domanda di ricerca.
 
-Sebbene la fase più gratificante di un’analisi sia quella di trarre conclusioni e rispondere alle domande di ricerca, è innegabile che la parte più sostanziosa del lavoro risieda nella preparazione e nella pulizia dei dati. Questo passaggio, talvolta considerato “di routine”, è in realtà il fondamento di qualsiasi studio valido, poiché ne determina in modo decisivo la qualità, l’affidabilità e la chiarezza interpretativa.
+La pulizia dei dati non è una fase puramente tecnica. Ogni correzione, esclusione, ricodifica o trasformazione è una **decisione metodologica**. Alcune decisioni sono semplici, come correggere un nome di variabile scritto in modo incoerente. Altre decisioni sono più delicate, come ad esempio cosa fare con i valori mancanti, le risposte impossibili o le osservazioni duplicate.
 
-Trascurare o svolgere frettolosamente la pulizia dei dati può compromettere l’intero processo analitico. Un dataset non accuratamente curato può generare risultati distorti, introdurre errori difficili da individuare a posteriori e, soprattutto, portare a conclusioni fuorvianti o errate. Investire tempo in questa fase non è quindi una mera formalità, ma una scelta metodologica essenziale per garantire rigore e credibilità ai propri risultati.
+In questo capitolo useremo un principio semplice:
 
 ::: {.callout-important}
-
 ## Principio fondamentale
 
-**Non modificare mai i dati originali.**
-Lavora esclusivamente su copie e conserva sempre i dati grezzi intatti nella cartella `data/raw/`.
+**Non modificare mai i dati grezzi.**
+
+I dati originali devono restare intatti. Tutte le trasformazioni devono essere eseguite tramite codice e salvate in un nuovo file documentato.
 :::
 
-## Prerequisiti {.unnumbered .unlisted}
+Al termine del capitolo dovresti essere in grado di:
 
-::: {.callout-tip collapse=true}
+- distinguere i dati grezzi da quelli puliti;
+- ispezionare la struttura iniziale di un dataset;
+- riconoscere i problemi più comuni dei dati;
+- applicare semplici operazioni di pulizia;
+- verificare che il dataset pulito sia coerente;
+- documentare le decisioni prese durante la pulizia;
+- valutare criticamente il codice di pulizia prodotto con l'aiuto dell'AI.
 
-## Letture consigliate
+## La logica generale: quattro fasi
 
-- Lewis, C. — [Cleaning sample data in standardized way](https://cghlewis.com/blog/data_clean_03/).
-- @buchanan2021getting — [Getting Started Creating Data Dictionaries: How to Create a Shareable Data Set](https://journals.sagepub.com/doi/full/10.1177/2515245920928007).
-- [*Data Management in Large-Scale Education Research*](https://datamgmtinedresearch.com/document#document-dictionary) — capitolo “Documentation”.
+Useremo una sequenza in quattro fasi.
 
-:::
+| Fase | Domanda guida | Obiettivo |
+|---|---|---|
+| **Ispeziona** | Che cosa contiene il file? | Capire struttura, variabili, tipi di dato e problemi iniziali. |
+| **Pulisci** | Che cosa deve essere corretto? | Rinominare, ricodificare, gestire duplicati, missing e formati errati. |
+| **Valida** | Il dataset è coerente? | Controllare che i valori rispettino vincoli plausibili. |
+| **Documenta** | Che cosa è stato fatto? | Rendere esplicite e riproducibili tutte le decisioni. |
 
-::: {.callout-caution collapse=true title="Preparazione del Notebook"}
-```{r}
-here::here("code", "_common.R") |> 
-  source()
+Questa sequenza non va intesa come una ricetta rigida. Nella pratica si torna spesso indietro: un controllo può rivelare un problema che richiede una nuova correzione. L'importante è che il processo sia trasparente.
 
-# Load packages
-if (!requireNamespace("pacman")) install.packages("pacman")
-pacman::p_load(janitor, skimr, pointblank, mice, labelled, stringr)
-```
-:::
+## Un esempio ricorrente: stress e sonno
 
-## Un framework operativo in quattro fasi
+Supponiamo di aver raccolto dati da studenti universitari per studiare la relazione tra stress accademico e qualità del sonno. Il file grezzo contiene una riga per ogni studente e le seguenti variabili:
 
-Per affrontare in modo sistematico la fase di pulizia dei dati, non ci limiteremo a un elenco frammentario di operazioni, ma adotteremo un **quadro strutturato organizzato in quattro macro-fasi**:
+| Variabile | Significato atteso |
+|---|---|
+| `id` | Identificatore anonimo dello studente |
+| `eta` | Età in anni |
+| `genere` | Categoria dichiarata dallo studente |
+| `stress` | Punteggio di stress accademico, da 1 a 10 |
+| `sonno_ore` | Ore medie di sonno per notte |
+| `qualita_sonno` | Valutazione soggettiva del sonno, da 1 a 5 |
+| `data_compilazione` | Data di compilazione del questionario |
 
-1.  **Ispeziona**: comprendere la struttura, il contenuto e le caratteristiche iniziali del dataset.
-2.  **Pulisci**: correggere errori strutturali, formati errati e incongruenze semantiche.
-3.  **Valida**: verificare che i dati rispettino vincoli, regole di dominio e coerenza interna.
-4.  **Documenta**: garantire trasparenza, riproducibilità e facilità di manutenzione futura.
+Questo esempio ci accompagnerà nei capitoli successivi: prima controlleremo il dataset, poi esploreremo le singole variabili, visualizzeremo le distribuzioni, esamineremo la variabilità e, infine, studieremo le associazioni tra le variabili.
 
-| Fase | Obiettivo principale | Strumenti e approcci tipici |
-| :--- | :--- | :--- |
-| **Ispeziona** | Acquisire una comprensione iniziale della struttura e dei contenuti dei dati. | `glimpse()`, `skim()`, `summary()`, esplorazione visiva. |
-| **Pulisci** | Correggere errori formali, standardizzare valori e risolvere problemi di qualità. | `janitor`, `dplyr`/`tidyr`, tecniche di imputazione (es. `mice`). |
-| **Valida** | Assicurarsi che i dati puliti rispettino regole di business e vincoli attesi. | Pacchetto `pointblank`, assertazioni logiche, controlli incrociati. |
-| **Documenta** | Rendere esplicite tutte le trasformazioni e le scelte effettuate per garantire riproducibilità. | README del progetto, dizionario dati, commenti nel codice, script annotati. |
+## Prima regola: separare dati grezzi e dati puliti
 
-## Checklist operativa
+Una struttura minima del progetto potrebbe essere:
 
-Prima di procedere con l’analisi dei dati, è fondamentale condurre una verifica sistematica della loro qualità. Il controllo può essere organizzato attorno ai seguenti ambiti chiave:
-
-::: {.callout-note icon=false}
-
-### Checklist di data cleaning
-
-**Struttura**
-Verificare che il dataset abbia la forma attesa: numero di righe e colonne conforme alle previsioni, nomi delle variabili chiari, consistenti e ben formattati, e file salvato in un formato corretto e leggibile.
-
-**Completezza**
-Identificare e gestire dati duplicati, valori mancanti (sia espliciti che impliciti) e record incompleti o parziali che potrebbero inficiare l’analisi.
-
-**Validità**
-Accertarsi che ogni variabile sia del tipo corretto (numerico, testuale, data, ecc.), che i valori rientrino in intervalli o range plausibili, e che le categorie utilizzate siano tutte valide e coerenti.
-
-**Coerenza**
-Controllare l’uniformità nelle unità di misura, la consistenza nei formati di data e ora, e l’effettiva univocità degli identificatori.
-
-**Privacy e etica**
-Applicare i necessari trattamenti per la protezione dei dati personali, rimuovendo o anonimizzando le informazioni identificative, e garantire la conformità con il consenso informato ottenuto e con la normativa vigente, come il GDPR.
-
-:::
-## Caso di studio: questionario di *Math Self-Efficacy*
-
-Per illustrare in pratica il processo di pulizia dei dati, utilizzeremo un dataset realistico proveniente da uno **studio longitudinale randomizzato e controllato (RCT)**. La ricerca ha coinvolto diverse scuole, assegnate casualmente a un gruppo di trattamento o di controllo, ed è stato somministrato un questionario per valutare l'autoefficacia in matematica, composto da quattro item con risposte su scala Likert da 1 a 4.
-
-I dati, raccolti inizialmente su carta e successivamente digitalizzati, presentano le tipiche imperfezioni di questo tipo di acquisizione. Il nostro obiettivo è applicare il framework presentato per pulire e preparare i dati della **prima rilevazione** dello studio.
-
-### Struttura del progetto
-
-Il lavoro è organizzato per garantire trasparenza e riproducibilità:
-
-```
-project/
-├── data/
-│   ├── raw/        # Dati originali e immutabili
-│   └── processed/  # Dataset puliti e pronti per l'analisi
-├── scripts/
-│   └── 01_data_cleaning.R  # Codice di pulizia
-└── README.md                # Documentazione del progetto
+```text
+progetto_eda/
+├── data_raw/       # dati originali, mai modificati
+├── data_clean/     # dati puliti prodotti dal codice
+├── reports/        # file Quarto e report finali
+└── scripts/        # eventuali script R separati
 ```
 
-## FASE 1 · Ispeziona {#sec-ispeziona}
-
-### Importazione e primo controllo
-
-Il primo passo consiste nell'importare i dati grezzi e osservarne la struttura di base.
-
-```{r}
-svy_raw <- rio::import(
-  here("data", "w1_mathproj_stu_svy_raw.csv")
-)
-
-glimpse(svy_raw)
-```
-
-In questa fase è utile porsi alcune domande guida: il numero di osservazioni è plausibile rispetto al disegno di studio? Le variabili presenti corrispondono a quelle previste dal questionario? I tipi di dato (numerico, testuale, data) sono quelli attesi?
-
-### Esplorazione sintetica
-
-Per avere una panoramica più dettagliata si utilizza una funzione di riepilogo esplorativo.
-
-```{r}
-skim(svy_raw)
-```
-
-È importante prestare attenzione a: quantità e distribuzione dei valori mancanti; valori minimi e massimi di ciascuna variabile; eventuali pattern insoliti o sospetti.
+I dati grezzi devono essere conservati in `data_raw/`. Il dataset pulito deve essere salvato in `data_clean/`. In questo modo, se qualcosa va storto, è sempre possibile ricostruire il percorso dall'inizio.
 
 ::: {.callout-warning}
+## Errore comune
 
-### Segnali di allarme comuni
+Aprire un file `.csv` in Excel, correggere qualche cella manualmente e salvare il file sopra quello originale sembra un'operazione veloce, ma rende difficile verificare l'analisi.
 
-Durante l’ispezione, alcuni elementi richiedono particolare cautela:
-
-* Nomi di colonne generici (es. `X1`, `V2`);
-* Presenza di righe duplicate identiche;
-* Uso di codici speciali per indicare valori mancanti (es. `999`, `-99`, `"NULL"`);
-* Date importate come testo anziché come oggetti data.
-
+La domanda da porsi è: **Un'altra persona potrebbe ricostruire esattamente ciò che ho fatto?**
 :::
 
-## FASE 2 · Pulisci {#sec-pulisci}
+## Fase 1: ispeziona
 
-La pulizia deve essere eseguita seguendo un **ordine logico**, per evitare di introdurre nuovi errori durante la correzione di quelli esistenti.
-
-### Gestione dei duplicati
-
-Se presenti record duplicati, è necessario definirne una gestione esplicita.
+La prima cosa da fare è guardare il dataset senza modificarlo.
 
 ```{r}
-svy <- svy_raw |>
-  arrange(svy_date) |>           # Ordina per data
-  distinct(stu_id, .keep_all = TRUE) # Mantiene l'ultima osservazione per ID
+#| label: inspect-import
+#| eval: false
+
+library(readr)
+library(dplyr)
+
+stress_raw <- read_csv("data_raw/stress_sonno.csv")
+
+glimpse(stress_raw)
 ```
 
-**Decisione documentata**: in questo caso si è scelto di conservare il record più recente per ogni studente, ordinando per data di compilazione.
+In questa fase non cerchiamo ancora di correggere tutto. Cerchiamo piuttosto di capire che cosa abbiamo davanti.
 
-### Standardizzazione dei nomi delle variabili
+Domande utili:
 
-Utilizzare nomi chiari e coerenti migliora la leggibilità e previene errori.
+- Il numero di righe è plausibile?
+- Le variabili attese sono presenti?
+- I nomi delle colonne sono comprensibili?
+- Le variabili numeriche sono state importate come numeriche?
+- Le categorie sono scritte in modo coerente?
+- Ci sono codici speciali per i valori mancanti, come `999`, `-99`, `NA`, `N/A`, `non so`?
+
+Un controllo iniziale può essere effettuato con funzioni semplici.
 
 ```{r}
-svy <- svy |> janitor::clean_names()
+#| label: inspect-basic
+#| eval: false
+
+nrow(stress_raw)
+ncol(stress_raw)
+names(stress_raw)
+summary(stress_raw)
 ```
 
-Il risultato sarà un set di nomi in formato snake_case, tutti in minuscolo e privi di caratteri speciali.
-
-### De-identificazione
-
-La protezione della privacy è un passaggio imprescindibile. Vanno rimosse tutte le informazioni potenzialmente identificative prima di procedere con l'analisi.
+Se usi pacchetti come `skimr`, puoi ottenere una panoramica più ricca.
 
 ```{r}
-svy <- svy |> select(-svy_date)
+#| label: inspect-skim
+#| eval: false
+
+skimr::skim(stress_raw)
 ```
 
-### Correzione dei tipi di dato e dei valori
+::: {.callout-note}
+## Che cosa guardare subito
 
-A volte i valori necessitano di pulizia, ad esempio rimuovendo caratteri di formattazione indesiderati.
+Durante l'ispezione iniziale presta attenzione soprattutto a:
+
+- valori mancanti;
+- valori impossibili, come `stress = 99` su una scala da 1 a 10;
+- categorie duplicate per errore, come `F`, `femmina`, `Femmina`;
+- date lette come testo;
+- variabili numeriche lette come caratteri;
+- righe duplicate;
+- colonne che contengono informazioni identificative.
+:::
+
+## Fase 2: pulisci
+
+Dopo l'ispezione si costruisce una versione pulita del dataset. La pulizia deve avvenire tramite codice, non manualmente.
+
+### Rinominare le variabili
+
+I nomi chiari riducono gli errori. È utile usare nomi brevi, descrittivi e coerenti.
 
 ```{r}
-svy <- svy |>
+#| label: clean-names
+#| eval: false
+
+stress <- stress_raw |>
+  janitor::clean_names()
+```
+
+Dopo questa operazione è opportuno controllare i nuovi nomi.
+
+```{r}
+#| label: check-names
+#| eval: false
+
+names(stress)
+```
+
+### Eliminare informazioni identificative
+
+Se il dataset contiene nomi, indirizzi email, matricole o altre informazioni personali, queste devono essere rimosse o sostituite da identificatori anonimi prima dell'analisi.
+
+```{r}
+#| label: remove-identifiers
+#| eval: false
+
+stress <- stress |>
+  select(-email, -nome, -cognome)
+```
+
+Naturalmente questo codice è solo un esempio: le colonne da rimuovere dipendono dal dataset reale.
+
+### Gestire duplicati
+
+I duplicati non devono essere eliminati automaticamente. Bisogna prima capire perché esistono.
+
+```{r}
+#| label: check-duplicates
+#| eval: false
+
+stress |>
+  count(id) |>
+  filter(n > 1)
+```
+
+Se uno studente ha compilato il questionario due volte, dobbiamo decidere quale riga conservare. Per esempio, potremmo tenere in considerazione l'ultima compilazione.
+
+```{r}
+#| label: clean-duplicates
+#| eval: false
+
+stress <- stress |>
+  arrange(id, data_compilazione) |>
+  distinct(id, .keep_all = TRUE)
+```
+
+Questa scelta deve essere documentata. Non è sufficiente scrivere il codice, ma è necessario spiegare perché è stata presa quella decisione.
+
+### Ricodificare valori incoerenti
+
+Spesso i dati provenienti dai questionari contengono categorie scritte in modi diversi.
+
+```{r}
+#| label: recode-categories
+#| eval: false
+
+stress <- stress |>
   mutate(
-    math2 = str_remove_all(math2, "\\n"), # Rimuove interruzioni di riga
-    math2 = as.numeric(math2)             # Converte in numero
+    genere = case_when(
+      genere %in% c("F", "f", "Femmina", "femmina") ~ "femmina",
+      genere %in% c("M", "m", "Maschio", "maschio") ~ "maschio",
+      TRUE ~ "altro_o_non_indicato"
+    )
   )
 ```
 
-### Gestione dei valori mancanti
-
-Nel nostro caso i valori mancanti sono pochi e il pattern è plausibilmente *Missing at Random* (MAR).^[**MAR (Missing at Random)**: i dati mancano secondo un pattern spiegabile con le informazioni che abbiamo. Esempio concreto: se gli studenti più giovani tendono a saltare le domande più difficili, i valori mancanti dipendono dall'età (che è osservata nel dataset), non dal contenuto della risposta mancante stessa. Questo è importante perché permette di usare le variabili osservate (età, risposte ad altri item) per stimare ragionevolmente i valori mancanti. Al contrario, se i dati mancassero in modo completamente casuale (MCAR) o dipendessero dal valore non osservato stesso (MNAR), servirebbero strategie diverse.] Si procede con un'imputazione singola tramite *Predictive Mean Matching* (PMM).^[**PMM (Predictive Mean Matching)**: tecnica che imputa ogni valore mancante cercando nel dataset osservazioni "vicine" con caratteristiche simili. Funziona così: (1) si costruisce un modello predittivo usando le risposte complete, (2) per ogni caso con dato mancante, si identificano i 3-5 casi osservati con predizioni più simili, (3) si estrae casualmente uno di questi valori reali e si usa come imputazione. Questo approccio ha due vantaggi: garantisce che i valori imputati siano plausibili (perché provengono da risposte reali) e preserva meglio la variabilità naturale dei dati rispetto a metodi più semplici come la sostituzione con la media.]
+Dopo ogni ricodifica è necessario controllare il risultato.
 
 ```{r}
-imputed <- mice(
-  svy |> select(starts_with("math")),
-  m = 1, method = "pmm", seed = 123
-)
+#| label: check-categories
+#| eval: false
 
-math_cols <- svy |> select(starts_with("math")) |> names()
-svy[ , math_cols] <- complete(imputed) |> round()
+stress |>
+  count(genere)
 ```
+
+### Gestire valori mancanti
+
+I valori mancanti sono una delle parti più delicate della pulizia dei dati. Non indicano sempre la stessa cosa. Una risposta mancante può indicare che lo studente ha saltato la domanda, che la domanda non era pertinente, che c'è stato un errore di inserimento o che il dato è stato rimosso per motivi di privacy.
+
+Prima di decidere come procedere, è necessario quantificare il problema.
+
+```{r}
+#| label: check-missing
+#| eval: false
+
+stress |>
+  summarise(across(everything(), ~ sum(is.na(.))))
+```
+
+A volte i valori mancanti sono codificati con numeri o stringhe particolari.
+
+```{r}
+#| label: recode-missing
+#| eval: false
+
+stress <- stress |>
+  mutate(
+    stress = na_if(stress, 999),
+    sonno_ore = na_if(sonno_ore, -99)
+  )
+```
+
+::: {.callout-caution}
+## Non cancellare i missing troppo presto
+
+Molte funzioni R eliminano automaticamente i casi con valori mancanti o richiedono opzioni come `na.rm = TRUE`.
+
+Prima di eliminare osservazioni, chiediti:
+
+- quanti casi sto perdendo?
+- i casi eliminati sono simili agli altri?
+- la perdita di dati può modificare le conclusioni?
+- devo dichiarare questa scelta nel report?
+:::
+
+Per un capitolo introduttivo è sufficiente sapere che esistono diverse strategie: l'esclusione dei casi incompleti, l'analisi dei pattern di missing, l'imputazione semplice e l'imputazione multipla. La scelta dipende dal disegno dello studio, dalla quantità di dati mancanti e dalla plausibilità delle assunzioni.
+
+In questa sede, l'aspetto più importante non è imparare una tecnica avanzata di imputazione, ma non considerare i valori mancanti come un dettaglio trascurabile.
+
+## Fase 3: valida
+
+Dopo la pulizia, è necessario verificare che il dataset rispetti vincoli plausibili.
+
+Per esempio:
+
+- `stress` deve essere compreso tra 1 e 10;
+- `qualita_sonno` deve essere compresa tra 1 e 5;
+- `sonno_ore` non deve essere negativa;
+- ogni `id` dovrebbe comparire una sola volta;
+- le categorie di `genere` dovrebbero essere quelle previste.
+
+Alcuni controlli possono essere eseguiti con semplici filtri.
+
+```{r}
+#| label: validate-ranges
+#| eval: false
+
+stress |>
+  filter(stress < 1 | stress > 10)
+
+stress |>
+  filter(sonno_ore < 0 | sonno_ore > 16)
+```
+
+Possiamo anche sintetizzare i controlli in una piccola tabella.
+
+```{r}
+#| label: validate-summary
+#| eval: false
+
+stress |>
+  summarise(
+    n = n(),
+    id_duplicati = n() - n_distinct(id),
+    stress_fuori_range = sum(stress < 1 | stress > 10, na.rm = TRUE),
+    sonno_fuori_range = sum(sonno_ore < 0 | sonno_ore > 16, na.rm = TRUE),
+    missing_stress = sum(is.na(stress)),
+    missing_sonno = sum(is.na(sonno_ore))
+  )
+```
+
+Per progetti più complessi, è possibile utilizzare pacchetti dedicati alla validazione dei dati. Per questo percorso introduttivo, però, è più importante acquisire l'abitudine al controllo piuttosto che conoscere molti strumenti.
+
+## Fase 4: documenta
+
+La documentazione è parte integrante della pulizia, non un'aggiunta finale.
+
+Per ogni trasformazione importante, il report o lo script dovrebbe spiegare:
+
+| Decisione | Che cosa documentare |
+|---|---|
+| Rimozione di duplicati | Quale criterio è stato usato? |
+| Ricodifica di categorie | Quali valori sono stati uniti o rinominati? |
+| Gestione dei missing | Quanti valori mancavano? Come sono stati trattati? |
+| Esclusione di osservazioni | Quanti casi sono stati rimossi? Perché? |
+| Rimozione di identificatori | Quali informazioni personali sono state eliminate? |
+| Salvataggio del dataset pulito | Dove si trova il file finale? |
+
+Un esempio di annotazione nel report potrebbe essere il seguente.
+
+::: {.callout-note}
+## Esempio di decisione documentata
+
+Nel dataset grezzo erano presenti 3 studenti con due compilazioni del questionario. Per ciascuno di questi studenti è stata conservata la compilazione più recente, identificata tramite `data_compilazione`. Dopo questa operazione il dataset contiene una sola riga per studente.
+:::
+
+Il dataset pulito può essere salvato in `data_clean/`.
+
+```{r}
+#| label: save-clean-data
+#| eval: false
+
+readr::write_csv(stress, "data_clean/stress_sonno_clean.csv")
+```
+
+## Usare l'AI con criterio
+
+L'intelligenza artificiale può essere molto utile per la pulizia dei dati. Può suggerire il codice per importare i file, individuare i duplicati, ricodificare le categorie, calcolare i valori mancanti o produrre controlli di validazione.
+
+Tuttavia, non può decidere al posto tuo il significato di una risposta mancante, se una riga duplicata sia un errore o se un valore estremo sia impossibile o solo raro.
 
 ::: {.callout-tip}
+## Prompt utile
 
-### Quando è appropriata l'imputazione multipla?
+Puoi chiedere all'AI:
 
-✔ Per quantità moderate di dati mancanti  
-✔ Quando esistono altre variabili correlate per la stima  
-✘ Non è adatta se i dati mancanti sono eccessivi  
-✘ Va evitata con campioni di dimensioni molto ridotte
+> Ho un dataset con variabili `id`, `stress`, `sonno_ore`, `qualita_sonno` e `genere`. Scrivi il codice R con `dplyr` per controllare duplicati, valori mancanti e valori fuori range. Non eliminare nulla automaticamente: produci solo tabelle di controllo.
 
+Questo prompt è migliore di:
+
+> Pulisci il dataset.
+
+perché chiede controlli espliciti e impedisce trasformazioni automatiche non documentate.
 :::
 
-### Aggiunta di metadati ed etichette
+Dopo aver ricevuto il codice dall'AI, controlla sempre:
 
-Arricchire il dataset con metadati lo rende autoesplicativo e più facile da utilizzare nel tempo.
+- quali righe vengono eliminate;
+- quali variabili vengono trasformate;
+- quali valori vengono ricodificati;
+- se i missing vengono rimossi senza avviso;
+- se il codice modifica i dati grezzi;
+- se il risultato viene salvato in un nuovo file.
 
-```{r}
-svy <- svy |>
-  set_variable_labels(
-    math1 = "Math self-efficacy: item 1",
-    math2 = "Math self-efficacy: item 2",
-    math3 = "Math self-efficacy: item 3",
-    math4 = "Math self-efficacy: item 4"
-  )
-```
+## Checklist finale
 
-## FASE 3 · Valida {#sec-valida}
+Prima di passare all'analisi esplorativa vera e propria, verifica che:
 
-La validazione consente di verificare formalmente che i dati puliti rispettino i vincoli attesi, prevenendo errori che potrebbero compromettere le analisi successive.
+- i dati grezzi siano conservati senza modifiche;
+- il dataset pulito sia stato prodotto tramite codice;
+- i nomi delle variabili siano chiari e coerenti;
+- i tipi di dato siano appropriati;
+- i duplicati siano stati controllati;
+- i valori mancanti siano stati quantificati;
+- i valori fuori range siano stati identificati;
+- eventuali esclusioni o ricodifiche siano documentate;
+- il dataset pulito sia salvato in una cartella separata;
+- il report permetta a un'altra persona di ricostruire il processo.
 
-```{r}
-agent <- create_agent(svy) |>
-  rows_distinct(vars(stu_id)) |>          # Gli ID devono essere univoci
-  col_vals_between(vars(math1:math4), 1, 4) |>  # I punteggi devono essere tra 1 e 4
-  interrogate()
-```
+::: {.callout-important}
+## Messaggio chiave
 
-Interpretazione dei risultati:
-
-* **PASS** → Il dato soddisfa il vincolo e può essere utilizzato.
-* **FAIL** → È necessario interrompere il processo, individuare la causa del fallimento e correggere il problema.
-
-## FASE 4 · Documenta {#sec-documenta}
-
-La documentazione non è un'aggiunta opzionale, ma una **parte integrante e cruciale** del processo di pulizia. Comprende la creazione di dataset puliti in formati appropriati (es. `.csv`, `.rds`), un dizionario dati dettagliato e un file README che registri tutte le decisioni e le trasformazioni effettuate.
-
-Un dataset senza una documentazione adeguata diventa rapidamente **inutilizzabile e incomprensibile**, anche per il suo stesso creatore.
-
-## Criteri di qualità finale
-
-Prima di considerare conclusa la fase di pulizia e di passare all'analisi, assicurati che il tuo dataset soddisfi i seguenti criteri:
-
-* ✅ **Completo**: gestione appropriata di missing e duplicati.
-* ✅ **Valido**: i valori rientrano nei range e nelle categorie attese.
-* ✅ **Coerente**: uniformità di formati, unità di misura e identificatori.
-* ✅ **De-identificato**: rimozione di informazioni personali sensibili.
-* ✅ **Documentato**: tutte le scelte sono registrate e riproducibili.
-* ✅ **Analizzabile**: il dataset è pronto per essere utilizzato nei modelli statistici.
-
-::: {.callout-tip icon=false}
-
-### Messaggio chiave
-
-* La pulizia dei dati **non è una perdita di tempo**; è il fondamento di un'analisi robusta e credibile.
-* Un errore non documentato è molto più pericoloso di un errore esplicito, perché rischia di passare inosservato.
-* Un dataset di qualità è, per definizione, **pulito, validato, documentato e riproducibile**.
-
+Pulire i dati non significa renderli "belli" o eliminare ciò che disturba. Significa costruire un dataset che sia coerente con la domanda di ricerca, controllabile da altri e adatto alle analisi successive.
 :::
 
-## Riflessioni conclusive {.unnumbered .unlisted}
+## Collegamento con il capitolo successivo
 
-Nel processo di analisi dei dati, la fase di pulizia e pre-elaborazione è cruciale per garantire la qualità e l'integrità dei risultati finali. Sebbene questa fase possa sembrare meno interessante rispetto all'analisi vera e propria, essa costituisce la base su cui si costruiscono tutte le successive elaborazioni e interpretazioni. Attraverso una serie di passaggi strutturati, come quelli illustrati in questo capitolo, è possibile trasformare dati grezzi e disordinati in un dataset pulito, coerente e pronto per l'analisi. La cura nella gestione dei dati, dalla rimozione di duplicati alla creazione di un dizionario dei dati, è fondamentale per ottenere risultati affidabili e riproducibili.
+Nel prossimo capitolo useremo il dataset pulito per iniziare l'analisi esplorativa vera e propria. Inizieremo analizzando una variabile alla volta: distribuzioni, frequenze, valori mancanti, valori inattesi e primi segnali di struttura nei dati.
 
-**Prossimo capitolo**: utilizzeremo questi dati puliti per l’**analisi esplorativa vera e propria**, alla ricerca di pattern, anomalie e ipotesi.
-
-::: {.callout-note collapse=true title="Informazioni sull'ambiente di sviluppo"}
-```{r}
-sessionInfo()
-```
-:::
-
-## Bibliografia {.unnumbered .unlisted}
 
