@@ -106,6 +106,35 @@ cookieconsent.run({
   
 <style>html{ scroll-behavior: smooth; }</style>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <meta property="og:title" content="Considerazioni conclusive – Analisi esplorativa dei dati in psicologia">
 <meta property="og:description" content="">
@@ -353,19 +382,19 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/03_design.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Disegno di ricerca: quali conclusioni sono giustificate dai dati?</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Disegno della ricerca: quali conclusioni sono giustificate dai dati?</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/04_measurement.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">La misurazione in psicologia</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Misurare i costrutti psicologici</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/05_cognitive_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dalla descrizione alla spiegazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dalla descrizione alla spiegazione: modelli e processi psicologici</span></span></a>
   </div>
 </li>
       </ul>
@@ -382,13 +411,13 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/01_r_syntax.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sintassi minima per leggere codice R</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Pensare in operazioni: la sintassi essenziale di R</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/02_environment.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Ambiente di lavoro e progetti R</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Un ambiente di lavoro riproducibile</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -400,25 +429,25 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/05_dplyr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Trasformare i dati con <code>dplyr</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Trasformare tabelle con <code>dplyr</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/06_ggplot2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Visualizzare i dati con <code>ggplot2</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Rendere visibili i dati con <code>ggplot2</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/07_quarto.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quarto</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quarto: rendere esplicito il percorso dell’analisi</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/08_r_packages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Pacchetti</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Pacchetti: scegliere e dichiarare gli strumenti</span></span></a>
   </div>
 </li>
       </ul>
@@ -426,7 +455,7 @@ cookieconsent.run({
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../chapters/eda/introduction_eda.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">EDA</span></a>
+ <span class="menu-text">Statistica descrittiva ed EDA</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -435,13 +464,13 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/01_project_structure.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Organizzare un progetto di analisi dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Preparare l’analisi esplorativa</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/02_data_cleaning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulizia dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulire i dati senza nascondere le decisioni</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -453,37 +482,37 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/05_data_visualization_principles.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Principi della visualizzazione dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Visualizzare senza deformare</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/06_loc_scale.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Indicatori di tendenza centrale e variabilità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Distribuzione, posizione e variabilità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/07_introduction_normal_distribution.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Introduzione alla distribuzione normale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">La normale come modello di riferimento</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/08_correlation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Relazioni tra variabili</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Esplorare relazioni tra due variabili</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/09_causality_intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Dalla correlazione alla causalità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Dall’associazione alla domanda causale</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/11_outlier.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Valori inattesi e outlier</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Osservazioni inattese e outlier</span></span></a>
   </div>
 </li>
       </ul>
@@ -515,10 +544,14 @@ cookieconsent.run({
     <h2 id="toc-title">Sommario</h2>
    
   <ul class="collapse">
-  <li><a href="#cosa-hai-imparato" id="toc-cosa-hai-imparato" class="nav-link active" data-scroll-target="#cosa-hai-imparato">Cosa hai imparato</a></li>
-  <li><a href="#cosa-non-abbiamo-trattato" id="toc-cosa-non-abbiamo-trattato" class="nav-link" data-scroll-target="#cosa-non-abbiamo-trattato">Cosa non abbiamo trattato</a></li>
-  <li><a href="#il-passo-successivo" id="toc-il-passo-successivo" class="nav-link" data-scroll-target="#il-passo-successivo">Il passo successivo</a></li>
-  <li><a href="#continuità-non-discontinuità" id="toc-continuità-non-discontinuità" class="nav-link" data-scroll-target="#continuità-non-discontinuità">Continuità, non discontinuità</a></li>
+  <li><a href="#un-modo-di-lavorare" id="toc-un-modo-di-lavorare" class="nav-link active" data-scroll-target="#un-modo-di-lavorare">Un modo di lavorare</a></li>
+  <li><a href="#la-distribuzione-come-fondamento" id="toc-la-distribuzione-come-fondamento" class="nav-link" data-scroll-target="#la-distribuzione-come-fondamento">La distribuzione come fondamento</a></li>
+  <li><a href="#i-dati-non-arrivano-già-pronti" id="toc-i-dati-non-arrivano-già-pronti" class="nav-link" data-scroll-target="#i-dati-non-arrivano-già-pronti">I dati non arrivano già pronti</a></li>
+  <li><a href="#descrivere-senza-oltrepassare-i-dati" id="toc-descrivere-senza-oltrepassare-i-dati" class="nav-link" data-scroll-target="#descrivere-senza-oltrepassare-i-dati">Descrivere senza oltrepassare i dati</a></li>
+  <li><a href="#il-ruolo-dellintelligenza-artificiale" id="toc-il-ruolo-dellintelligenza-artificiale" class="nav-link" data-scroll-target="#il-ruolo-dellintelligenza-artificiale">Il ruolo dell’intelligenza artificiale</a></li>
+  <li><a href="#che-cosa-non-è-stato-sviluppato-qui" id="toc-che-cosa-non-è-stato-sviluppato-qui" class="nav-link" data-scroll-target="#che-cosa-non-è-stato-sviluppato-qui">Che cosa non è stato sviluppato qui</a></li>
+  <li><a href="#dallesplorazione-alla-modellizzazione" id="toc-dallesplorazione-alla-modellizzazione" class="nav-link" data-scroll-target="#dallesplorazione-alla-modellizzazione">Dall’esplorazione alla modellizzazione</a></li>
+  <li><a href="#un-workflow-che-rimane-aperto" id="toc-un-workflow-che-rimane-aperto" class="nav-link" data-scroll-target="#un-workflow-che-rimane-aperto">Un workflow che rimane aperto</a></li>
   <li><a href="#unultima-raccomandazione" id="toc-unultima-raccomandazione" class="nav-link" data-scroll-target="#unultima-raccomandazione">Un’ultima raccomandazione</a></li>
   </ul>
 <div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/epiloque/epiloque.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
@@ -546,78 +579,153 @@ cookieconsent.run({
 </header>
 
 
-<p>Questo sito ha gettato le basi per affrontare l’inferenza statistica bayesiana. Abbiamo percorso tre tappe: <em>pensare</em> (i concetti), <em>fare</em> (gli strumenti) e <em>guardare</em> (l’esplorazione). È il momento di fare un bilancio di quanto abbiamo appreso e di cosa ci aspetta.</p>
-<section id="cosa-hai-imparato" class="level2">
-<h2 class="anchored" data-anchor-id="cosa-hai-imparato">Cosa hai imparato</h2>
-<p><strong>Un modo di pensare.</strong> Prima ancora delle tecniche, hai incontrato un approccio, l’idea che l’analisi dei dati non sia una sequenza meccanica di operazioni, ma un dialogo critico tra domande di ricerca, strumenti di misura e osservazioni empiriche. Hai imparato che la misurazione non è mai neutrale, che le scale hanno proprietà diverse e che le conclusioni dipendono dal modo in cui i dati sono stati raccolti.</p>
-<p><strong>Un linguaggio.</strong> R non è solo un software, ma un modo per esprimere operazioni sui dati in modo preciso e riproducibile. La sintassi che hai imparato — oggetti, funzioni e pipeline con dplyr — è il vocabolario minimo per comunicare con il computer e con altri ricercatori. Il codice che scrivi oggi potrà essere riletto, verificato e riutilizzato in futuro.</p>
-<p><strong>Un’abitudine.</strong> L’analisi esplorativa non è un optional da sbrigare in fretta prima dei “veri” test statistici. È il momento in cui scopri se i tuoi dati hanno senso, se le assunzioni che stai per fare sono plausibili e se ci sono anomalie che richiedono attenzione. Hai imparato a visualizzare le distribuzioni, a identificare gli outlier e a verificare le relazioni: sono competenze che ti saranno utili in ogni progetto di ricerca.</p>
+<p>Questo modulo è partito da una domanda semplice soltanto in apparenza:</p>
+<blockquote class="blockquote">
+<p>Che cosa deve accadere prima che un insieme di osservazioni possa diventare evidenza scientifica?</p>
+</blockquote>
+<p>La risposta non coincide con l’apprendimento di alcuni comandi R o di una raccolta di statistiche descrittive. Prima dell’inferenza vengono il disegno, la misurazione, la costruzione del dataset analitico, il controllo della qualità dei dati e la comprensione delle distribuzioni osservate.</p>
+<p>Il percorso può essere riassunto così:</p>
+<p><span class="math display">\[
+\text{fenomeno}
+\longrightarrow
+\text{domanda}
+\longrightarrow
+\text{disegno}
+\longrightarrow
+\text{misurazione}
+\longrightarrow
+\text{dati}
+\longrightarrow
+\text{esplorazione}
+\longrightarrow
+\text{modello}.
+\]</span></p>
+<p>Ogni passaggio limita ciò che potremo concludere nei passaggi successivi. Un modello sofisticato non può correggere automaticamente una domanda vaga, una misura poco valida o un campione costruito attraverso esclusioni non documentate.</p>
+<section id="un-modo-di-lavorare" class="level2">
+<h2 class="anchored" data-anchor-id="un-modo-di-lavorare">Un modo di lavorare</h2>
+<p>La competenza principale sviluppata nel modulo non è una procedura particolare. È un modo di organizzare il ragionamento.</p>
+<p>Prima di eseguire un’operazione abbiamo imparato a specificarne l’input, lo scopo e il risultato atteso. Dopo l’esecuzione abbiamo controllato che la trasformazione avesse prodotto ciò che intendevamo ottenere.</p>
+<p>Questo schema ha attraversato l’intero percorso:</p>
+<p><span class="math display">\[
+\text{domanda}
+\longrightarrow
+\text{operazione}
+\longrightarrow
+\text{risultato}
+\longrightarrow
+\text{controllo}
+\longrightarrow
+\text{interpretazione}.
+\]</span></p>
+<p>R rende questa sequenza esplicita e riproducibile. Quarto collega il codice alla spiegazione. L’EDA rende visibile la struttura delle osservazioni prima che venga riassunta da un modello.</p>
+<p>La tecnologia non sostituisce però il giudizio. Il codice può terminare senza errori e usare la variabile sbagliata. Un grafico può essere elegante e nascondere metà del campione. Una media può essere calcolata correttamente su valori che non rappresentano il costrutto dichiarato.</p>
 </section>
-<section id="cosa-non-abbiamo-trattato" class="level2">
-<h2 class="anchored" data-anchor-id="cosa-non-abbiamo-trattato">Cosa non abbiamo trattato</h2>
-<p>Questo sito è volutamente propedeutico. Non abbiamo discusso:</p>
-<ul>
-<li><p><strong>Inferenza statistica</strong>: come trarre conclusioni su una popolazione a partire da un campione, come quantificare l’incertezza, come aggiornare le proprie credenze alla luce dei dati. Questo è il tema centrale del manuale “<em>Inferenza bayesiana in psicologia: Ragionare con l’incertezza. Fondamenti, workflow e applicazioni</em>”.</p></li>
-<li><p><strong>Modelli statistici</strong>: regressione, modelli gerarchici, modelli per dati longitudinali. Questi strumenti ti permetteranno di rispondere a domande di ricerca complesse.</p></li>
-<li><p><strong>Programmazione avanzata</strong>: funzioni personalizzate, simulazioni, ottimizzazione del codice. Queste competenze diventeranno utili man mano che i tuoi progetti cresceranno in complessità.</p></li>
-<li><p><strong>Stan e i metodi computazionali</strong>: il motore probabilistico che rende possibile l’inferenza bayesiana su modelli realistici.</p></li>
-</ul>
-<p>Tutti questi argomenti sono trattati nel manuale principale, che presuppone le competenze acquisite qui.</p>
+<section id="la-distribuzione-come-fondamento" class="level2">
+<h2 class="anchored" data-anchor-id="la-distribuzione-come-fondamento">La distribuzione come fondamento</h2>
+<p>L’idea statistica più importante del modulo è quella di distribuzione.</p>
+<p>Una distribuzione descrive quali valori compaiono, con quale frequenza, dove si concentrano e quanto siano dispersi. Media, mediana, deviazione standard, intervallo interquartile e correlazione sono riassunti di questa struttura; non la sostituiscono.</p>
+<p>Comprendere la deviazione standard ha significato comprendere una particolare misura della distanza dei valori dalla media. Confrontare i dati con la distribuzione normale ha poi mostrato che la regola 68–95–99,7 non appartiene alla deviazione standard in generale, ma a uno specifico modello della forma distributiva.</p>
+<p>Lo stesso principio vale per la correlazione. Un coefficiente riassume una componente della distribuzione congiunta, ma non mostra curvature, sottogruppi, valori influenti o problemi di misurazione. Per questo il grafico deve precedere il numero.</p>
 </section>
-<section id="il-passo-successivo" class="level2">
-<h2 class="anchored" data-anchor-id="il-passo-successivo">Il passo successivo</h2>
-<p>Il manuale “<em>Inferenza bayesiana in psicologia: Ragionare con l’incertezza. Fondamenti, workflow e applicazioni</em>” prosegue dove questo sito si conclude. Ecco cosa troverai:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 38%">
-<col style="width: 61%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Parte</th>
-<th style="text-align: left;">Contenuto</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;"><strong>I-II</strong></td>
-<td style="text-align: left;">La crisi di replicabilità e i limiti del paradigma frequentista</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><strong>III</strong></td>
-<td style="text-align: left;">I fondamenti della probabilità bayesiana come misura di credenza razionale</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"><strong>IV</strong></td>
-<td style="text-align: left;">L’inferenza bayesiana operativa: distribuzioni, MCMC, workflow</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><strong>V</strong></td>
-<td style="text-align: left;">Applicazioni: regressione, confronto tra gruppi, modelli multilivello</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"><strong>VI</strong></td>
-<td style="text-align: left;">Modelli formali del comportamento e validazione cross-studio</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><strong>VII</strong></td>
-<td style="text-align: left;">Riflessioni epistemologiche e Open Science</td>
-</tr>
-</tbody>
-</table>
-<p>Il sito <em>companion</em> (<a href="https://ccaudek.github.io/utet-companion/">ccaudek.github.io/utet-companion</a>) contiene il codice R e Stan per tutti gli esempi del manuale.</p>
+<section id="i-dati-non-arrivano-già-pronti" class="level2">
+<h2 class="anchored" data-anchor-id="i-dati-non-arrivano-già-pronti">I dati non arrivano già pronti</h2>
+<p>Un altro risultato fondamentale riguarda la preparazione dei dati.</p>
+<p>I dati grezzi conservano le tracce del processo con cui sono stati raccolti: codici speciali, duplicazioni, errori di registrazione, mancate risposte e differenze di formato. Usarli senza controlli può produrre risultati fortemente distorti.</p>
+<p>Non esiste tuttavia una procedura universale e automatica di pulizia. Ogni intervento modifica il dataset e può cambiare la popolazione effettivamente rappresentata.</p>
+<p>Abbiamo quindi adottato una regola generale:</p>
+<p><span class="math display">\[
+\text{discrepanza}
+\longrightarrow
+\text{verifica}
+\longrightarrow
+\text{decisione motivata}
+\longrightarrow
+\text{controllo dell'effetto}.
+\]</span></p>
+<p>Lo stesso vale per gli outlier. Un valore raro non è automaticamente un errore; un valore estremo non è necessariamente influente; un caso inatteso può segnalare un sottogruppo reale o un modello troppo semplice.</p>
+<p>Quando più decisioni sono plausibili, l’analisi di sensibilità è più informativa di un’esclusione nascosta.</p>
 </section>
-<section id="continuità-non-discontinuità" class="level2">
-<h2 class="anchored" data-anchor-id="continuità-non-discontinuità">Continuità, non discontinuità</h2>
-<p>Il passaggio dall’esplorazione all’inferenza non rappresenta una discontinuità, ma un’estensione naturale. L’EDA che hai praticato qui diventerà il <em>posterior predictive checking</em>, ovvero il confronto tra le previsioni del modello e i dati effettivi. Le distribuzioni che hai visualizzato diventeranno distribuzioni di probabilità con un’interpretazione ben precisa. Le domande che ti sei posto sui dati diventeranno ipotesi formalizzate in modelli. La correlazione che hai calcolato diventerà un coefficiente di regressione con un intervallo di credibilità.</p>
+<section id="descrivere-senza-oltrepassare-i-dati" class="level2">
+<h2 class="anchored" data-anchor-id="descrivere-senza-oltrepassare-i-dati">Descrivere senza oltrepassare i dati</h2>
+<p>L’EDA insegna anche a controllare il linguaggio.</p>
+<p>Una relazione osservata può essere descritta con precisione senza trasformarla in un effetto causale. Una differenza tra gruppi non stabilisce automaticamente che il gruppo o il trattamento abbia prodotto la differenza. Una capacità predittiva non identifica necessariamente un meccanismo.</p>
+<p>Il modulo ha quindi mantenuto distinto ciò che i dati mostrano direttamente da ciò che richiede un disegno, un modello o un’ipotesi ulteriore.</p>
+<p>Questa disciplina interpretativa non indebolisce la ricerca. La rende più chiara. Dire esattamente che cosa sappiamo permette anche di riconoscere che cosa dobbiamo ancora studiare.</p>
+</section>
+<section id="il-ruolo-dellintelligenza-artificiale" class="level2">
+<h2 class="anchored" data-anchor-id="il-ruolo-dellintelligenza-artificiale">Il ruolo dell’intelligenza artificiale</h2>
+<p>Gli assistenti AI possono generare codice, spiegare errori, proporre grafici e aiutare a organizzare un documento. Per questo non è necessario trasformare ogni studente o ricercatore in un programmatore professionista.</p>
+<p>È però necessario mantenere il controllo del procedimento.</p>
+<p>Una richiesta utile all’AI specifica il dataset, l’unità di analisi, il significato delle variabili, l’operazione desiderata, il trattamento dei mancanti e i controlli da produrre. Una richiesta vaga costringe invece l’assistente a inventare filtri, soglie, ricodifiche e criteri di esclusione.</p>
+<p>Il principio da conservare è:</p>
+<blockquote class="blockquote">
+<p>L’AI può tradurre una procedura dichiarata in codice; non deve sostituire il ricercatore nella definizione della procedura.</p>
+</blockquote>
+<p>Chi presenta l’analisi rimane responsabile della qualità dei dati, della correttezza delle trasformazioni e della proporzione tra risultati e conclusioni.</p>
+</section>
+<section id="che-cosa-non-è-stato-sviluppato-qui" class="level2">
+<h2 class="anchored" data-anchor-id="che-cosa-non-è-stato-sviluppato-qui">Che cosa non è stato sviluppato qui</h2>
+<p>Questo modulo non è un corso completo di probabilità, inferenza o modellizzazione statistica.</p>
+<p>La teoria delle variabili casuali, delle distribuzioni di probabilità, della covarianza e della correlazione è sviluppata nel modulo <a href="https://ccaudek.github.io/utet-prob/"><code>utet-prob</code></a>.</p>
+<p>Il confronto con l’inferenza frequentista è sviluppato nel modulo <a href="https://ccaudek.github.io/utet-frequentista/"><code>utet-frequentista</code></a>.</p>
+<p>Il manuale <em>Inferenza bayesiana in psicologia: Ragionare con l’incertezza</em> costituisce il nucleo teorico del percorso. Introduce la probabilità bayesiana, l’aggiornamento delle credenze, la modellizzazione, il workflow e le applicazioni psicologiche.</p>
+<p>Il <a href="https://ccaudek.github.io/utet-companion/"><code>Companion</code></a> è il laboratorio operativo associato al manuale. Sviluppa modelli in R, <code>brms</code> e Stan e approfondisce, tra gli altri temi, regressione, modelli gerarchici, controlli predittivi e causalità.</p>
+<p>La divisione dei ruoli è intenzionale. Questo sito prepara le domande e i dati; gli altri moduli sviluppano il linguaggio probabilistico e i modelli necessari per affrontare l’incertezza inferenziale.</p>
+</section>
+<section id="dallesplorazione-alla-modellizzazione" class="level2">
+<h2 class="anchored" data-anchor-id="dallesplorazione-alla-modellizzazione">Dall’esplorazione alla modellizzazione</h2>
+<p>Il passaggio successivo non consiste nell’abbandonare l’EDA per iniziare la “vera statistica”.</p>
+<p>Un modello è una rappresentazione selettiva del processo che potrebbe avere generato i dati. Per valutarlo dobbiamo continuare a confrontare ciò che il modello produce con ciò che abbiamo osservato.</p>
+<p>Nel workflow bayesiano, questa continuità diventa particolarmente evidente nei controlli predittivi. Il modello genera distribuzioni di dati plausibili e il ricercatore le confronta con distribuzioni, grafici e caratteristiche del dataset reale.</p>
+<p>L’EDA non si trasforma automaticamente in <em>posterior predictive checking</em>, ma prepara lo stesso atteggiamento:</p>
+<blockquote class="blockquote">
+<p>rendere esplicita un’aspettativa e confrontarla con ciò che i dati mostrano.</p>
+</blockquote>
+<p>Le competenze sviluppate qui rimangono quindi necessarie anche quando i modelli diventano più complessi. Una regressione, un modello multilivello o un modello cognitivo non eliminano la necessità di comprendere unità di analisi, distribuzioni, valori mancanti, osservazioni influenti e limiti della misura.</p>
+</section>
+<section id="un-workflow-che-rimane-aperto" class="level2">
+<h2 class="anchored" data-anchor-id="un-workflow-che-rimane-aperto">Un workflow che rimane aperto</h2>
+<p>L’analisi dei dati non è una sequenza lineare che procede una volta per tutte dalla pulizia al risultato finale.</p>
+<p>Un grafico può rivelare un problema di codifica. Un modello può mostrare che una variabile è stata misurata con una risoluzione insufficiente. Un controllo predittivo può suggerire che la distribuzione scelta non rappresenta le code o la variabilità tra persone. Una nuova domanda può richiedere un diverso dataset analitico.</p>
+<p>Il percorso è quindi iterativo:</p>
+<p><span class="math display">\[
+\text{domanda}
+\leftrightarrow
+\text{dati}
+\leftrightarrow
+\text{esplorazione}
+\leftrightarrow
+\text{modello}
+\leftrightarrow
+\text{controllo}.
+\]</span></p>
+<p>Tornare indietro non rappresenta un fallimento. È una parte normale del ragionamento scientifico.</p>
 </section>
 <section id="unultima-raccomandazione" class="level2">
 <h2 class="anchored" data-anchor-id="unultima-raccomandazione">Un’ultima raccomandazione</h2>
-<p>La statistica si impara facendola. I capitoli che hai letto, gli esercizi che hai svolto e il codice che hai scritto sono solo l’inizio, non la fine. Ogni dataset che incontrerai nella tua carriera sarà diverso e presenterà problemi nuovi che richiederanno soluzioni creative.</p>
-<p>L’atteggiamento che ti sarà più utile non è quello di chi cerca la “procedura giusta” da applicare meccanicamente, ma quello di chi si chiede: “Cosa mi stanno dicendo questi dati?”, “Le mie assunzioni sono ragionevoli?”, “Le mie conclusioni sono robuste?”.</p>
-<p>Questo atteggiamento curioso, critico e onesto è ciò che distingue l’analisi dei dati rigorosa dalla semplice produzione di numeri. È anche ciò che rende questo lavoro intellettualmente stimolante.</p>
-<p>Buon proseguimento.</p>
-<div class="callout callout-style-default callout-tip callout-titled">
+<p>La statistica non si impara accumulando procedure da applicare meccanicamente. Si impara formulando domande, osservando le conseguenze delle proprie decisioni e cercando spiegazioni quando i risultati non corrispondono alle aspettative.</p>
+<p>Di fronte a un nuovo dataset, le domande più utili rimarranno semplici:</p>
+<blockquote class="blockquote">
+<p>Che cosa rappresenta una riga?</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>Da dove proviene questa variabile?</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>Quali osservazioni entrano nel risultato?</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>Che cosa rende visibile questo grafico?</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>Quanto dipende la conclusione da una scelta analitica?</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>Sto descrivendo un’associazione oppure affermando qualcosa di più?</p>
+</blockquote>
+<p>Queste domande non impediscono di usare strumenti complessi. Permettono di usarli con responsabilità.</p>
+<p>Il risultato più importante del modulo non è quindi un insieme di comandi o formule. È l’abitudine a rendere esplicito il percorso che collega una domanda ai dati e i dati a una conclusione.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Risorse per continuare">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
@@ -628,9 +736,11 @@ cookieconsent.run({
 </div>
 <div class="callout-body-container callout-body">
 <ul>
-<li><strong>Manuale principale</strong>: <a href="https://ccaudek.github.io/utet-companion/">ccaudek.github.io/utet-companion</a></li>
-<li><strong>Teoria della probabilità</strong>: <a href="https://ccaudek.github.io/utet-prob/">ccaudek.github.io/utet-prob</a></li>
-<li><strong>Repository GitHub</strong>: <a href="https://github.com/ccaudek">github.com/ccaudek</a></li>
+<li><strong>Manuale principale:</strong> <em>Inferenza bayesiana in psicologia: Ragionare con l’incertezza</em></li>
+<li><strong>Companion operativo:</strong> <a href="https://ccaudek.github.io/utet-companion/">ccaudek.github.io/utet-companion</a></li>
+<li><strong>Modulo di probabilità:</strong> <a href="https://ccaudek.github.io/utet-prob/">ccaudek.github.io/utet-prob</a></li>
+<li><strong>Modulo frequentista:</strong> <a href="https://ccaudek.github.io/utet-frequentista/">ccaudek.github.io/utet-frequentista</a></li>
+<li><strong>Repository:</strong> <a href="https://github.com/ccaudek">github.com/ccaudek</a></li>
 </ul>
 </div>
 </div>
@@ -1061,8 +1171,8 @@ cookieconsent.run({
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../chapters/eda/11_outlier.html" class="pagination-link" aria-label="Valori inattesi e outlier">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Valori inattesi e outlier</span></span>
+      <a href="../../chapters/eda/11_outlier.html" class="pagination-link" aria-label="Osservazioni inattese e outlier">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Osservazioni inattese e outlier</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

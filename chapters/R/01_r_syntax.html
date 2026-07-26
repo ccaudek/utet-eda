@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.9.38">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>6&nbsp; Sintassi minima per leggere codice R – Analisi esplorativa dei dati in psicologia</title>
+<title>6&nbsp; Pensare in operazioni: la sintassi essenziale di R – Analisi esplorativa dei dati in psicologia</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -129,10 +129,34 @@ cookieconsent.run({
   });
 });
 </script><style>html{ scroll-behavior: smooth; }</style>
-<script src="../../site_libs/kePrint-0.0.1/kePrint.js"></script><link href="../../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
 <link href="../../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
-<script src="../../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
-<meta property="og:title" content="6&nbsp; Sintassi minima per leggere codice R – Analisi esplorativa dei dati in psicologia">
+<script src="../../site_libs/pagedtable-1.1/js/pagedtable.js"></script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+<meta property="og:title" content="6&nbsp; Pensare in operazioni: la sintassi essenziale di R – Analisi esplorativa dei dati in psicologia">
 <meta property="og:description" content="">
 <meta property="og:site_name" content="Analisi esplorativa dei dati in psicologia">
 <link rel="canonical" href="https://ccaudek.github.io/utet-eda/chapters/R/01_r_syntax.html">
@@ -315,7 +339,7 @@ cookieconsent.run({
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/R/introduction_r_lang.html">R</a></li><li class="breadcrumb-item"><a href="../../chapters/R/01_r_syntax.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sintassi minima per leggere codice R</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/R/introduction_r_lang.html">R</a></li><li class="breadcrumb-item"><a href="../../chapters/R/01_r_syntax.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Pensare in operazioni: la sintassi essenziale di R</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Ricerca" onclick="window.quartoOpenSearch();">
@@ -371,19 +395,19 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/03_design.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Disegno di ricerca: quali conclusioni sono giustificate dai dati?</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Disegno della ricerca: quali conclusioni sono giustificate dai dati?</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/04_measurement.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">La misurazione in psicologia</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Misurare i costrutti psicologici</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/05_cognitive_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dalla descrizione alla spiegazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dalla descrizione alla spiegazione: modelli e processi psicologici</span></span></a>
   </div>
 </li>
       </ul>
@@ -400,13 +424,13 @@ cookieconsent.run({
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/01_r_syntax.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sintassi minima per leggere codice R</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Pensare in operazioni: la sintassi essenziale di R</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/02_environment.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Ambiente di lavoro e progetti R</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Un ambiente di lavoro riproducibile</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -418,25 +442,25 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/05_dplyr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Trasformare i dati con <code>dplyr</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Trasformare tabelle con <code>dplyr</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/06_ggplot2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Visualizzare i dati con <code>ggplot2</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Rendere visibili i dati con <code>ggplot2</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/07_quarto.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quarto</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quarto: rendere esplicito il percorso dell’analisi</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/08_r_packages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Pacchetti</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Pacchetti: scegliere e dichiarare gli strumenti</span></span></a>
   </div>
 </li>
       </ul>
@@ -444,7 +468,7 @@ cookieconsent.run({
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../chapters/eda/introduction_eda.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">EDA</span></a>
+ <span class="menu-text">Statistica descrittiva ed EDA</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -453,13 +477,13 @@ cookieconsent.run({
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/01_project_structure.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Organizzare un progetto di analisi dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Preparare l’analisi esplorativa</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/02_data_cleaning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulizia dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulire i dati senza nascondere le decisioni</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -471,37 +495,37 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/05_data_visualization_principles.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Principi della visualizzazione dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Visualizzare senza deformare</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/06_loc_scale.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Indicatori di tendenza centrale e variabilità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Distribuzione, posizione e variabilità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/07_introduction_normal_distribution.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Introduzione alla distribuzione normale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">La normale come modello di riferimento</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/08_correlation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Relazioni tra variabili</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Esplorare relazioni tra due variabili</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/09_causality_intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Dalla correlazione alla causalità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Dall’associazione alla domanda causale</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/11_outlier.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Valori inattesi e outlier</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Osservazioni inattese e outlier</span></span></a>
   </div>
 </li>
       </ul>
@@ -531,23 +555,26 @@ cookieconsent.run({
         <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="2"><h2 id="toc-title">Sommario</h2>
    
   <ul class="collapse">
-<li><a href="#che-cosa-devi-saper-fare-alla-fine-del-capitolo" id="toc-che-cosa-devi-saper-fare-alla-fine-del-capitolo" class="nav-link active" data-scroll-target="#che-cosa-devi-saper-fare-alla-fine-del-capitolo"><span class="header-section-number">6.1</span> Che cosa devi saper fare alla fine del capitolo</a></li>
-  <li><a href="#il-codice-come-traccia-dellanalisi" id="toc-il-codice-come-traccia-dellanalisi" class="nav-link" data-scroll-target="#il-codice-come-traccia-dellanalisi"><span class="header-section-number">6.2</span> Il codice come traccia dell’analisi</a></li>
-  <li><a href="#la-grammatica-minima-di-r" id="toc-la-grammatica-minima-di-r" class="nav-link" data-scroll-target="#la-grammatica-minima-di-r"><span class="header-section-number">6.3</span> La grammatica minima di R</a></li>
-  <li><a href="#variabili-e-tipi-di-dati" id="toc-variabili-e-tipi-di-dati" class="nav-link" data-scroll-target="#variabili-e-tipi-di-dati"><span class="header-section-number">6.4</span> Variabili e tipi di dati</a></li>
-  <li><a href="#operatori-logici-selezionare-casi" id="toc-operatori-logici-selezionare-casi" class="nav-link" data-scroll-target="#operatori-logici-selezionare-casi"><span class="header-section-number">6.5</span> Operatori logici: selezionare casi</a></li>
-  <li><a href="#la-pipe-leggere-il-codice-come-una-sequenza-di-passi" id="toc-la-pipe-leggere-il-codice-come-una-sequenza-di-passi" class="nav-link" data-scroll-target="#la-pipe-leggere-il-codice-come-una-sequenza-di-passi"><span class="header-section-number">6.6</span> La pipe: leggere il codice come una sequenza di passi</a></li>
-  <li><a href="#leggere-un-blocco-di-codice-riga-per-riga" id="toc-leggere-un-blocco-di-codice-riga-per-riga" class="nav-link" data-scroll-target="#leggere-un-blocco-di-codice-riga-per-riga"><span class="header-section-number">6.7</span> Leggere un blocco di codice riga per riga</a></li>
-  <li><a href="#usare-lai-con-criterio" id="toc-usare-lai-con-criterio" class="nav-link" data-scroll-target="#usare-lai-con-criterio"><span class="header-section-number">6.8</span> Usare l’AI con criterio</a></li>
-  <li><a href="#messaggi-di-errore-non-sono-fallimenti" id="toc-messaggi-di-errore-non-sono-fallimenti" class="nav-link" data-scroll-target="#messaggi-di-errore-non-sono-fallimenti"><span class="header-section-number">6.9</span> Messaggi di errore: non sono fallimenti</a></li>
-  <li><a href="#mini-esempio-dalla-tabella-al-controllo" id="toc-mini-esempio-dalla-tabella-al-controllo" class="nav-link" data-scroll-target="#mini-esempio-dalla-tabella-al-controllo"><span class="header-section-number">6.10</span> Mini-esempio: dalla tabella al controllo</a></li>
-  <li><a href="#cosa-rimandiamo-ai-capitoli-successivi" id="toc-cosa-rimandiamo-ai-capitoli-successivi" class="nav-link" data-scroll-target="#cosa-rimandiamo-ai-capitoli-successivi"><span class="header-section-number">6.11</span> Cosa rimandiamo ai capitoli successivi</a></li>
-  <li><a href="#esercizi" id="toc-esercizi" class="nav-link" data-scroll-target="#esercizi"><span class="header-section-number">6.12</span> Esercizi</a></li>
+<li><a href="#prima-del-codice-descrivere-il-compito" id="toc-prima-del-codice-descrivere-il-compito" class="nav-link active" data-scroll-target="#prima-del-codice-descrivere-il-compito"><span class="header-section-number">6.1</span> Prima del codice: descrivere il compito</a></li>
+  <li><a href="#oggetti-dare-un-nome-a-un-risultato" id="toc-oggetti-dare-un-nome-a-un-risultato" class="nav-link" data-scroll-target="#oggetti-dare-un-nome-a-un-risultato"><span class="header-section-number">6.2</span> Oggetti: dare un nome a un risultato</a></li>
+  <li><a href="#funzioni-trasformare-un-input" id="toc-funzioni-trasformare-un-input" class="nav-link" data-scroll-target="#funzioni-trasformare-un-input"><span class="header-section-number">6.3</span> Funzioni: trasformare un input</a></li>
+  <li><a href="#argomenti-precisare-il-comportamento" id="toc-argomenti-precisare-il-comportamento" class="nav-link" data-scroll-target="#argomenti-precisare-il-comportamento"><span class="header-section-number">6.4</span> Argomenti: precisare il comportamento</a></li>
+  <li><a href="#data-frame-casi-e-variabili" id="toc-data-frame-casi-e-variabili" class="nav-link" data-scroll-target="#data-frame-casi-e-variabili"><span class="header-section-number">6.5</span> Data frame: casi e variabili</a></li>
+  <li><a href="#tipi-di-dato-che-cosa-pu%C3%B2-significare-un-valore" id="toc-tipi-di-dato-che-cosa-può-significare-un-valore" class="nav-link" data-scroll-target="#tipi-di-dato-che-cosa-pu%C3%B2-significare-un-valore"><span class="header-section-number">6.6</span> Tipi di dato: che cosa può significare un valore?</a></li>
+  <li><a href="#sequenze-unanalisi-%C3%A8-un-ordine-di-passaggi" id="toc-sequenze-unanalisi-è-un-ordine-di-passaggi" class="nav-link" data-scroll-target="#sequenze-unanalisi-%C3%A8-un-ordine-di-passaggi"><span class="header-section-number">6.7</span> Sequenze: un’analisi è un ordine di passaggi</a></li>
+  <li><a href="#condizioni-decidere-quali-casi-soddisfano-una-regola" id="toc-condizioni-decidere-quali-casi-soddisfano-una-regola" class="nav-link" data-scroll-target="#condizioni-decidere-quali-casi-soddisfano-una-regola"><span class="header-section-number">6.8</span> Condizioni: decidere quali casi soddisfano una regola</a></li>
+  <li><a href="#input-trasformazione-e-output" id="toc-input-trasformazione-e-output" class="nav-link" data-scroll-target="#input-trasformazione-e-output"><span class="header-section-number">6.9</span> Input, trasformazione e output</a></li>
+  <li><a href="#controllare-una-procedura" id="toc-controllare-una-procedura" class="nav-link" data-scroll-target="#controllare-una-procedura"><span class="header-section-number">6.10</span> Controllare una procedura</a></li>
+  <li><a href="#gli-errori-come-informazioni" id="toc-gli-errori-come-informazioni" class="nav-link" data-scroll-target="#gli-errori-come-informazioni"><span class="header-section-number">6.11</span> Gli errori come informazioni</a></li>
+  <li><a href="#come-formulare-una-richiesta-allai" id="toc-come-formulare-una-richiesta-allai" class="nav-link" data-scroll-target="#come-formulare-una-richiesta-allai"><span class="header-section-number">6.12</span> Come formulare una richiesta all’AI</a></li>
+  <li><a href="#come-verificare-il-codice-ricevuto" id="toc-come-verificare-il-codice-ricevuto" class="nav-link" data-scroll-target="#come-verificare-il-codice-ricevuto"><span class="header-section-number">6.13</span> Come verificare il codice ricevuto</a></li>
+  <li><a href="#un-esempio-completo" id="toc-un-esempio-completo" class="nav-link" data-scroll-target="#un-esempio-completo"><span class="header-section-number">6.14</span> Un esempio completo</a></li>
+  <li><a href="#che-cosa-non-serve-ancora" id="toc-che-cosa-non-serve-ancora" class="nav-link" data-scroll-target="#che-cosa-non-serve-ancora"><span class="header-section-number">6.15</span> Che cosa non serve ancora</a></li>
   </ul><div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/R/01_r_syntax.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/R/introduction_r_lang.html">R</a></li><li class="breadcrumb-item"><a href="../../chapters/R/01_r_syntax.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sintassi minima per leggere codice R</span></a></li></ol></nav><div class="quarto-title">
-<h1 class="title"><span id="sec-r" class="quarto-section-identifier"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sintassi minima per leggere codice R</span></span></h1>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/R/introduction_r_lang.html">R</a></li><li class="breadcrumb-item"><a href="../../chapters/R/01_r_syntax.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Pensare in operazioni: la sintassi essenziale di R</span></a></li></ol></nav><div class="quarto-title">
+<h1 class="title"><span id="sec-r" class="quarto-section-identifier"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Pensare in operazioni: la sintassi essenziale di R</span></span></h1>
 </div>
 
 
@@ -561,502 +588,591 @@ cookieconsent.run({
   
 
 
-</header><section id="perché-questo-capitolo-esiste" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="perché-questo-capitolo-esiste">Perché questo capitolo esiste</h2>
-<p>Per analizzare i dati psicologici con R non è necessario diventare programmatori. È necessario, però, imparare a leggere il codice, capire quali operazioni compie, verificare che siano coerenti con la domanda di ricerca e correggere gli errori più comuni.</p>
-<p>Oggi, molti passaggi di codice possono essere scritti con l’aiuto dell’intelligenza artificiale. Questo non rende la sintassi di R inutile, ma la rende diversa: non è necessario memorizzare ogni dettaglio del linguaggio, ma è importante conoscere a sufficienza R da non utilizzare codice che non si comprende.</p>
-<p>In questo capitolo useremo quindi R come una lingua di lavoro minima. L’obiettivo è arrivare a leggere un blocco di codice e saper rispondere a tre domande:</p>
-<ol type="1">
-<li>cosa entra nell’analisi?</li>
-<li>quali trasformazioni vengono applicate ai dati?</li>
-<li>che cosa produce il codice come risultato?</li>
-</ol>
-<div class="callout callout-style-default callout-note callout-titled" title="Idea guida">
+</header><div class="callout callout-style-default callout-note callout-titled" title="In sintesi">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Nota</span>Idea guida
+<span class="screen-reader-only">Nota</span>In sintesi
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>L’AI può aiutare a scrivere codice. Tuttavia, non può sostituire la responsabilità di capire che cosa fa il codice e se quel codice è adatto ai dati e alla domanda di ricerca.</p>
+<p><strong>Da sapere</strong> Per usare R non è necessario imparare a programmare in senso professionale. È però necessario saper trasformare una domanda in una sequenza di operazioni: identificare i dati in ingresso, specificare che cosa deve essere modificato o calcolato, stabilire eventuali condizioni e controllare il risultato.</p>
+<p><strong>Da saper fare</strong> Leggere un breve blocco di codice come una procedura; riconoscere oggetti, funzioni, argomenti, condizioni e risultati; descrivere con precisione un compito a un assistente AI; verificare che il codice prodotto usi i dati corretti e non introduca trasformazioni inattese.</p>
 </div>
 </div>
-</section><section id="che-cosa-devi-saper-fare-alla-fine-del-capitolo" class="level2" data-number="6.1"><h2 data-number="6.1" class="anchored" data-anchor-id="che-cosa-devi-saper-fare-alla-fine-del-capitolo">
-<span class="header-section-number">6.1</span> Che cosa devi saper fare alla fine del capitolo</h2>
-<p>Al termine di questo capitolo, non è necessario che tu sappia scrivere codice complesso da zero. Dovresti però sapere:</p>
-<ul>
-<li>riconoscere un oggetto creato in R;</li>
-<li>leggere una funzione e i suoi argomenti;</li>
-<li>capire il significato della pipe <code>|&gt;</code>;</li>
-<li>distinguere vettori, variabili e data frame;</li>
-<li>riconoscere valori mancanti (<code>NA</code>);</li>
-<li>leggere condizioni logiche semplici;</li>
-<li>capire quando un codice seleziona righe o colonne;</li>
-<li>spiegare a parole il funzionamento di un breve blocco di codice;</li>
-<li>usare l’AI per ottenere aiuto senza perdere il controllo dell’analisi.</li>
-</ul>
-<p>In questa sede non tratteremo tutti i dettagli della programmazione in R. Le funzioni più avanzate, i cicli, la scrittura di funzioni personalizzate e le tecniche di programmazione verranno illustrate solo quando necessario.</p>
-</section><section id="il-codice-come-traccia-dellanalisi" class="level2" data-number="6.2"><h2 data-number="6.2" class="anchored" data-anchor-id="il-codice-come-traccia-dellanalisi">
-<span class="header-section-number">6.2</span> Il codice come traccia dell’analisi</h2>
-<p>Un’analisi statistica non è soltanto il risultato finale. È una sequenza di decisioni:</p>
-<ul>
-<li>quali dati sono stati caricati;</li>
-<li>quali casi sono stati esclusi;</li>
-<li>quali variabili sono state trasformate;</li>
-<li>quali statistiche sono state calcolate;</li>
-<li>quali grafici sono stati prodotti.</li>
-</ul>
-<p>In R queste decisioni vengono scritte in forma esplicita. Per esempio:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sleep_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"data/sleep_stress.csv"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">sleep_data</span><span class="op">$</span><span class="va">sleep_quality</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Questo codice dice due cose:</p>
-<ol type="1">
-<li>viene letto un file di dati e il risultato viene salvato nell’oggetto <code>sleep_data</code>;</li>
-<li>viene calcolata la media della variabile <code>sleep_quality</code>, ignorando i valori mancanti.</li>
-</ol>
-<p>La sintassi serve a questo: rendere visibile ciò che è stato fatto. Anche se il codice è stato suggerito dall’AI, deve poter essere letto, discusso e controllato.</p>
-</section><section id="la-grammatica-minima-di-r" class="level2" data-number="6.3"><h2 data-number="6.3" class="anchored" data-anchor-id="la-grammatica-minima-di-r">
-<span class="header-section-number">6.3</span> La grammatica minima di R</h2>
-<section id="oggetti-salvare-un-risultato-con-un-nome" class="level3" data-number="6.3.1"><h3 data-number="6.3.1" class="anchored" data-anchor-id="oggetti-salvare-un-risultato-con-un-nome">
-<span class="header-section-number">6.3.1</span> Oggetti: salvare un risultato con un nome</h3>
-<p>In R si lavora creando oggetti. Un oggetto è un nome che contiene un valore, un dataset, un risultato o un grafico.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress</span> <span class="op">&lt;-</span> <span class="fl">18</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Il simbolo <code>&lt;-</code> significa “assegna a”. La riga si legge così:</p>
+<section id="introduzione" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="introduzione">Introduzione</h2>
+<p>Questo capitolo non è una guida completa a R. Non presenta tutte le strutture del linguaggio e non chiede di memorizzare una lunga serie di comandi. Esistono manuali e corsi specifici per chi vuole approfondire la programmazione.</p>
+<p>Qui l’obiettivo è diverso. Vogliamo acquisire il modo di pensare necessario per usare R come strumento di analisi e per collaborare in modo responsabile con un assistente AI.</p>
+<p>Quando chiediamo a R di calcolare una media, selezionare alcuni partecipanti o costruire una nuova variabile, stiamo descrivendo una procedura. Dobbiamo sapere da quali dati parte, quali operazioni compie, in quale ordine le esegue e che cosa restituisce. La sintassi è il modo in cui questa procedura viene scritta.</p>
+<p>Un assistente AI può tradurre una descrizione precisa in codice. Non può però decidere autonomamente che cosa rappresentino le righe, quali valori siano plausibili, perché alcuni dati manchino o quale risultato risponda davvero alla domanda scientifica.</p>
+<p>La competenza essenziale consiste quindi nel saper passare in entrambe le direzioni:</p>
+<p><span class="math display">\[
+\text{domanda in linguaggio naturale}
+\longleftrightarrow
+\text{sequenza di operazioni}
+\longleftrightarrow
+\text{codice R}.
+\]</span></p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Prerequisiti">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Consiglio</span>Prerequisiti
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Non sono richieste conoscenze precedenti di programmazione. È utile ricordare dalla Parte sui fondamenti che una riga rappresenta un’unità osservata, una colonna rappresenta una variabile e un valore numerico deve essere interpretato alla luce del disegno e della misurazione.</p>
+</div>
+</div>
+</section><section id="panoramica-del-capitolo" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="panoramica-del-capitolo">Panoramica del capitolo</h2>
+<p>Il capitolo introduce un metodo generale per leggere e progettare una procedura di analisi. Partiremo dalla distinzione tra input e output, vedremo come R conserva risultati in oggetti e come le funzioni trasformano gli input. Affronteremo poi l’ordine delle operazioni, le condizioni logiche e i controlli. Soltanto dopo useremo questi concetti per formulare richieste efficaci a un assistente AI e verificare il codice ricevuto.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Preparazione del notebook">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Preparazione del notebook
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Gli esempi usano soltanto funzioni incluse in R base. Esegui ogni blocco separatamente e osserva che cosa compare nell’ambiente e nella console. Non cercare di memorizzare i comandi: prova invece a spiegare con una frase che cosa entra, che cosa accade e che cosa viene prodotto.</p>
+</div>
+</div>
+</section><section id="prima-del-codice-descrivere-il-compito" class="level2" data-number="6.1"><h2 data-number="6.1" class="anchored" data-anchor-id="prima-del-codice-descrivere-il-compito">
+<span class="header-section-number">6.1</span> Prima del codice: descrivere il compito</h2>
+<p>Supponiamo di avere un dataset chiamato <code>dati_studenti</code> e di voler conoscere la media della qualità del sonno.</p>
+<p>Prima di scrivere codice possiamo formulare la procedura:</p>
 <blockquote class="blockquote">
-<p>salva il valore <code>18</code> in un oggetto chiamato <code>stress</code>.</p>
+<p>Prendi la variabile <code>qualita_sonno</code> dal dataset <code>dati_studenti</code>, escludi dal calcolo i valori mancanti e restituisci la media.</p>
 </blockquote>
-<p>Da quel momento, il nome <code>stress</code> può essere riutilizzato:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress</span> <span class="op">+</span> <span class="fl">2</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<p>I nomi degli oggetti dovrebbero essere chiari. Un nome come <code>x</code> è rapido, ma poco informativo. Un nome come <code>stress_score</code> è molto più esplicativo.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Poco chiaro</span></span>
-<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fl">18</span></span>
-<span></span>
-<span><span class="co"># Più chiaro</span></span>
-<span><span class="va">stress_score</span> <span class="op">&lt;-</span> <span class="fl">18</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="callout callout-style-default callout-warning callout-titled" title="Errore comune">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Avviso</span>Errore comune
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Se R risponde con un messaggio come <code>object 'stress_scorè not found</code>, significa che stai usando un oggetto che non esiste nella sessione corrente oppure che il nome è stato scritto in modo diverso.</p>
-</div>
-</div>
-</section><section id="funzioni-chiedere-a-r-di-fare-qualcosa" class="level3" data-number="6.3.2"><h3 data-number="6.3.2" class="anchored" data-anchor-id="funzioni-chiedere-a-r-di-fare-qualcosa">
-<span class="header-section-number">6.3.2</span> Funzioni: chiedere a R di fare qualcosa</h3>
-<p>Una funzione è un comando che riceve uno o più input e restituisce un risultato.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">18</span>, <span class="fl">22</span>, <span class="fl">19</span>, <span class="fl">25</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Questa riga usa la funzione <code><a href="https://rdrr.io/r/base/mean.html">mean()</a></code> per calcolare la media di un insieme di valori. La struttura generale è:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">funzione</span><span class="op">(</span><span class="va">argomento1</span>, <span class="va">argomento2</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Molto del codice R può essere compreso riconoscendo questa struttura. Per esempio:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">stress_score</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="va">stress_score</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">sleep_data</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<p>In tutti e tre i casi R applica una funzione a un oggetto.</p>
-</section><section id="argomenti-specificare-come-deve-lavorare-una-funzione" class="level3" data-number="6.3.3"><h3 data-number="6.3.3" class="anchored" data-anchor-id="argomenti-specificare-come-deve-lavorare-una-funzione">
-<span class="header-section-number">6.3.3</span> Argomenti: specificare come deve lavorare una funzione</h3>
-<p>Le funzioni spesso hanno degli argomenti, ovvero delle opzioni che ne modificano il comportamento.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">sleep_data</span><span class="op">$</span><span class="va">sleep_quality</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<p>In questo caso, l’opzione <code>na.rm = TRUE</code> chiede a R di rimuovere i valori mancanti prima di calcolare la media.</p>
-<p>Questa piccola opzione è molto importante. Se ci sono dati mancanti e non specifichiamo come gestirli, il risultato potrebbe essere <code>NA</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">7</span>, <span class="fl">6</span>, <span class="cn">NA</span>, <span class="fl">8</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">7</span>, <span class="fl">6</span>, <span class="cn">NA</span>, <span class="fl">8</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="callout callout-style-default callout-important callout-titled" title="Cosa devi controllare tu">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Cosa devi controllare tu
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Quando l’AI produce codice con <code>na.rm = TRUE</code>, non limitarti ad accettarlo. Chiediti: quanti valori mancanti ci sono? Perché mancano? È corretto ignorarli in questa analisi?</p>
-</div>
-</div>
-</section><section id="vettori-più-valori-dello-stesso-tipo" class="level3" data-number="6.3.4"><h3 data-number="6.3.4" class="anchored" data-anchor-id="vettori-più-valori-dello-stesso-tipo">
-<span class="header-section-number">6.3.4</span> Vettori: più valori dello stesso tipo</h3>
-<p>Un vettore è una sequenza di valori. Spesso viene creato con la funzione <code><a href="https://rdrr.io/r/base/c.html">c()</a></code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">swls_scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">16</span>, <span class="fl">23</span>, <span class="fl">25</span>, <span class="fl">11</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Questo oggetto contiene cinque punteggi. Possiamo calcolare alcune statistiche:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">swls_scores</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">swls_scores</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">swls_scores</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Per questo corso è sufficiente sapere che molte variabili in un dataset possono essere considerate come vettori: una colonna di punteggi, una colonna di età, una colonna con il gruppo sperimentale, ecc.</p>
-</section><section id="data-frame-una-tabella-di-dati" class="level3" data-number="6.3.5"><h3 data-number="6.3.5" class="anchored" data-anchor-id="data-frame-una-tabella-di-dati">
-<span class="header-section-number">6.3.5</span> Data frame: una tabella di dati</h3>
-<p>La struttura più importante per l’analisi dei dati è il data frame. Un data frame è una tabella in cui:</p>
-<ul>
-<li>ogni riga rappresenta un caso o un partecipante;</li>
-<li>ogni colonna rappresenta una variabile.</li>
-</ul>
-<p>Per esempio:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sleep_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
-<span>  id <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,</span>
-<span>  stress <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">18</span>, <span class="fl">22</span>, <span class="fl">19</span>, <span class="fl">25</span>, <span class="fl">21</span><span class="op">)</span>,</span>
-<span>  sleep_quality <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">7</span>, <span class="fl">6</span>, <span class="fl">8</span>, <span class="fl">5</span>, <span class="cn">NA</span><span class="op">)</span></span>
+<p>Questa frase contiene già quasi tutto ciò che serve. Identifica l’input, specifica la variabile, descrive l’operazione, stabilisce come trattare un caso particolare e indica l’output atteso.</p>
+<p>In R la stessa procedura può essere scritta così:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span></span>
+<span>  <span class="va">dati_studenti</span><span class="op">$</span><span class="va">qualita_sonno</span>,</span>
+<span>  na.rm <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Questo dataset contiene cinque partecipanti e tre variabili: <code>id</code>, <code>stress</code> e <code>sleep_quality</code>.</p>
-<p>Per ispezionare una tabella possiamo usare:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">sleep_data</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">sleep_data</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">sleep_data</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Questi comandi non sono analisi finali. Si tratta di controlli preliminari. Prima di calcolare qualunque risultato, è necessario sapere cosa contiene il dataset.</p>
-</section></section><section id="variabili-e-tipi-di-dati" class="level2" data-number="6.4"><h2 data-number="6.4" class="anchored" data-anchor-id="variabili-e-tipi-di-dati">
-<span class="header-section-number">6.4</span> Variabili e tipi di dati</h2>
-<p>R distingue diversi tipi di valori. Per l’EDA è sufficiente riconoscere i seguenti casi principali:</p>
-<div class="cell">
-<div class="cell-output-display">
-<table class="table table-striped table-hover caption-top table-sm small">
-<thead><tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">Tipo.di.dato</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">Esempio</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">Domanda.da.porsi</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left; width: 10em;">Numerico</td>
-<td style="text-align: left; width: 15em;">`21`, `3.5`, `18.9`</td>
-<td style="text-align: left; width: 20em;">Ha senso calcolare media o deviazione standard?</td>
-</tr>
-<tr class="even">
-<td style="text-align: left; width: 10em;">Testo</td>
-<td style="text-align: left; width: 15em;">`"femmina"`, `"controllo"`</td>
-<td style="text-align: left; width: 20em;">Deve essere trattato come categoria?</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left; width: 10em;">Logico</td>
-<td style="text-align: left; width: 15em;">`TRUE`, `FALSE`</td>
-<td style="text-align: left; width: 20em;">Esprime una condizione vera/falsa?</td>
-</tr>
-<tr class="even">
-<td style="text-align: left; width: 10em;">Fattore/categoria</td>
-<td style="text-align: left; width: 15em;">`gruppo`, `genere`</td>
-<td style="text-align: left; width: 20em;">Quali livelli possibili ha?</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left; width: 10em;">Mancante</td>
-<td style="text-align: left; width: 15em;">`NA`</td>
-<td style="text-align: left; width: 20em;">Perché manca questo valore?</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>Un errore frequente è trattare una variabile come se fosse numerica quando R l’ha letta come testo, oppure trattare i numeri come se rappresentassero delle quantità, quando in realtà sono dei codici di categoria.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">sleep_data</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Questa riga è spesso più importante di un calcolo statistico: permette di verificare come R ha interpretato le variabili.</p>
-</section><section id="operatori-logici-selezionare-casi" class="level2" data-number="6.5"><h2 data-number="6.5" class="anchored" data-anchor-id="operatori-logici-selezionare-casi">
-<span class="header-section-number">6.5</span> Operatori logici: selezionare casi</h2>
-<p>Molte analisi richiedono la selezione di alcuni casi. Per farlo, si utilizzano condizioni logiche.</p>
-<table class="caption-top table">
-<thead><tr class="header">
-<th>Operatore</th>
-<th>Significato</th>
-<th>Esempio</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td><code>&gt;</code></td>
-<td>maggiore di</td>
-<td><code>stress &gt; 20</code></td>
-</tr>
-<tr class="even">
-<td><code>&lt;</code></td>
-<td>minore di</td>
-<td><code>sleep_quality &lt; 6</code></td>
-</tr>
-<tr class="odd">
-<td><code>==</code></td>
-<td>uguale a</td>
-<td><code>group == "controllo"</code></td>
-</tr>
-<tr class="even">
-<td><code>!=</code></td>
-<td>diverso da</td>
-<td><code>group != "controllo"</code></td>
-</tr>
-<tr class="odd">
-<td><code>&amp;</code></td>
-<td>e</td>
-<td><code>stress &gt; 20 &amp; sleep_quality &lt; 6</code></td>
-</tr>
-<tr class="even">
-<td><code>|</code></td>
-<td>oppure</td>
-<td><code>group == "A" | group == "B"</code></td>
-</tr>
-</tbody>
-</table>
-<p>Attenzione: per verificare l’uguaglianza si usa <code>==</code>, non <code>=</code>. Scrivere <code>group = "controllo"</code> all’interno di una condizione è un errore comune.</p>
-</section><section id="la-pipe-leggere-il-codice-come-una-sequenza-di-passi" class="level2" data-number="6.6"><h2 data-number="6.6" class="anchored" data-anchor-id="la-pipe-leggere-il-codice-come-una-sequenza-di-passi">
-<span class="header-section-number">6.6</span> La pipe: leggere il codice come una sequenza di passi</h2>
-<p>Nei capitoli successivi useremo spesso la pipe <code>|&gt;</code>. La pipe si legge come “poi” oppure “passa il risultato a”.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sleep_data</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Questa istruzione si legge così:</p>
-<blockquote class="blockquote">
-<p>prendi <code>sleep_data</code>, poi applica <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code>.</p>
-</blockquote>
-<p>La pipe diventa utile quando le operazioni sono più di una:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sleep_data</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">stress</span> <span class="op">&gt;</span> <span class="fl">20</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Questa sequenza si legge così:</p>
-<ol type="1">
-<li>prendi <code>sleep_data</code>;</li>
-<li>conserva solo i casi con <code>stress &gt; 20</code>;</li>
-<li>produci un riepilogo del risultato.</li>
-</ol>
-<p>Nei capitoli su <code>dplyr</code> useremo la stessa logica con funzioni più leggibili come <code><a href="https://rdrr.io/r/stats/filter.html">filter()</a></code>, <code>select()</code>, <code>mutate()</code> e <code>summarise()</code>.</p>
-</section><section id="leggere-un-blocco-di-codice-riga-per-riga" class="level2" data-number="6.7"><h2 data-number="6.7" class="anchored" data-anchor-id="leggere-un-blocco-di-codice-riga-per-riga">
-<span class="header-section-number">6.7</span> Leggere un blocco di codice riga per riga</h2>
-<p>Consideriamo un esempio vicino ai temi del modulo:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sleep_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"data/sleep_stress.csv"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">sleep_data</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">stress</span> <span class="op">&gt;</span> <span class="fl">20</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Per leggerlo, non è necessario conoscere tutto R, basta procedere con ordine:</p>
-<ol type="1">
-<li>
-<code>read.csv("data/sleep_stress.csv")</code> legge un file CSV;</li>
-<li>il risultato viene salvato in <code>sleep_data</code>;</li>
-<li>
-<code>sleep_data |&gt; ...</code> prende quel dataset come punto di partenza;</li>
-<li>
-<code>subset(stress &gt; 20)</code> conserva solo alcuni casi;</li>
-<li>
-<code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> produce un riepilogo.</li>
-</ol>
-<p>La domanda metodologica è: cosa abbiamo escluso? In questo caso, l’analisi riguarda solo gli studenti con un punteggio di stress superiore a 20. Se non ce ne accorgiamo, potremmo interpretare il risultato come se riguardasse l’intero campione.</p>
-<div class="callout callout-style-default callout-tip callout-titled" title="Metodo di lettura">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Consiglio</span>Metodo di lettura
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Quando incontri codice generato dall’AI, non leggerlo tutto insieme. Leggilo riga per riga e trasforma ogni riga in una frase in linguaggio naturale.</p>
-</div>
-</div>
-</section><section id="usare-lai-con-criterio" class="level2" data-number="6.8"><h2 data-number="6.8" class="anchored" data-anchor-id="usare-lai-con-criterio">
-<span class="header-section-number">6.8</span> Usare l’AI con criterio</h2>
-<p>In questa parte del corso, l’uso dell’AI è ammesso e incoraggiato, a condizione che serva a imparare e a lavorare meglio. Tuttavia, ogni uso dell’AI deve lasciare lo studente in grado di spiegare il codice utilizzato.</p>
-<section id="cosa-puoi-chiedere-allai" class="level3" data-number="6.8.1"><h3 data-number="6.8.1" class="anchored" data-anchor-id="cosa-puoi-chiedere-allai">
-<span class="header-section-number">6.8.1</span> Cosa puoi chiedere all’AI</h3>
-<p>Puoi chiedere, per esempio:</p>
-<blockquote class="blockquote">
-<p>Ho un dataset R chiamato sleep_data con le variabili stress e sleep_quality. Scrivi un codice R semplice per calcolare la media di sleep_quality e spiega ogni riga.</p>
-</blockquote>
-<p>Oppure:</p>
-<blockquote class="blockquote">
-<p>Questo codice R genera un errore. Spiegami il messaggio di errore e proponi una correzione senza usare funzioni avanzate.</p>
-</blockquote>
-</section><section id="cosa-devi-controllare-tu" class="level3" data-number="6.8.2"><h3 data-number="6.8.2" class="anchored" data-anchor-id="cosa-devi-controllare-tu">
-<span class="header-section-number">6.8.2</span> Cosa devi controllare tu</h3>
-<p>Dopo aver ricevuto codice dall’AI, controlla sempre:</p>
-<ul>
-<li>i nomi delle variabili sono presenti nel dataset?</li>
-<li>il codice elimina righe o valori mancanti?</li>
-<li>il risultato è coerente con il tipo di variabile?</li>
-<li>il grafico o la statistica sono adeguati alla domanda?</li>
-<li>sei in grado di spiegare ogni riga?</li>
-</ul></section><section id="prompt-utile" class="level3" data-number="6.8.3"><h3 data-number="6.8.3" class="anchored" data-anchor-id="prompt-utile">
-<span class="header-section-number">6.8.3</span> Prompt utile</h3>
-<p>Un buon prompt per imparare R non è:</p>
-<blockquote class="blockquote">
-<p>Scrivi il codice per fare l’analisi.</p>
-</blockquote>
-<p>È meglio chiedere:</p>
-<blockquote class="blockquote">
-<p>Scrivi un codice R semplice e commentato riga per riga. Usa solo funzioni di base o funzioni già introdotte nel corso. Alla fine, indicami quali controlli devo effettuare per verificare che il risultato sia corretto.</p>
-</blockquote>
-</section></section><section id="messaggi-di-errore-non-sono-fallimenti" class="level2" data-number="6.9"><h2 data-number="6.9" class="anchored" data-anchor-id="messaggi-di-errore-non-sono-fallimenti">
-<span class="header-section-number">6.9</span> Messaggi di errore: non sono fallimenti</h2>
-<p>Gli errori fanno parte del lavoro con R. Alcuni messaggi ricorrenti sono:</p>
+<p>Capire il codice non significa ricordare ogni simbolo. Significa riconoscere la procedura espressa dalla sintassi.</p>
+<p>Prima di chiedere aiuto a un’AI, è quindi utile rispondere a quattro domande:</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 50%">
 <col style="width: 50%">
 </colgroup>
 <thead><tr class="header">
-<th>Messaggio</th>
-<th>Possibile significato</th>
+<th>Domanda</th>
+<th>Esempio</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td><code>object not found</code></td>
-<td>Il nome dell’oggetto è sbagliato o l’oggetto non è stato creato.</td>
+<td>Qual è l’input?</td>
+<td>Il data frame <code>dati_studenti</code>
+</td>
 </tr>
 <tr class="even">
-<td><code>could not find function</code></td>
-<td>La funzione è scritta male o il pacchetto non è stato caricato.</td>
+<td>Quale parte dell’input interessa?</td>
+<td>La colonna <code>qualita_sonno</code>
+</td>
 </tr>
 <tr class="odd">
-<td><code>non-numeric argument</code></td>
-<td>Stai usando un’operazione numerica su un valore non numerico.</td>
+<td>Quale operazione deve essere eseguita?</td>
+<td>Calcolare la media</td>
 </tr>
 <tr class="even">
-<td><code>NAs introduced by coercion</code></td>
-<td>R ha provato a convertire qualcosa in numero ma alcuni valori non erano numeri.</td>
+<td>Quali condizioni o controlli servono?</td>
+<td>Gestire e contare i valori mancanti</td>
 </tr>
 </tbody>
 </table>
-<p>Quando compare un errore, il primo passo non è cambiare codice a caso. Il primo passo è capire che cosa R sta dicendo.</p>
-<p>Una buona richiesta all’AI è:</p>
+<p>Queste domande valgono in R, Python, Julia e in quasi ogni altro linguaggio. Cambia la notazione, non la struttura del problema.</p>
+</section><section id="oggetti-dare-un-nome-a-un-risultato" class="level2" data-number="6.2"><h2 data-number="6.2" class="anchored" data-anchor-id="oggetti-dare-un-nome-a-un-risultato">
+<span class="header-section-number">6.2</span> Oggetti: dare un nome a un risultato</h2>
+<p>R conserva dati e risultati in <strong>oggetti</strong>. Un oggetto permette di assegnare un nome a qualcosa che vogliamo usare in seguito.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">punteggio_stress</span> <span class="op">&lt;-</span> <span class="fl">18</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>La riga si legge:</p>
 <blockquote class="blockquote">
-<p>Spiegami questo errore R in modo semplice. Prima spiegami che cosa significa, poi mostrami come controllare il problema nel dataset.</p>
+<p>Calcola il valore a destra e salvalo con il nome <code>punteggio_stress</code>.</p>
 </blockquote>
-</section><section id="mini-esempio-dalla-tabella-al-controllo" class="level2" data-number="6.10"><h2 data-number="6.10" class="anchored" data-anchor-id="mini-esempio-dalla-tabella-al-controllo">
-<span class="header-section-number">6.10</span> Mini-esempio: dalla tabella al controllo</h2>
-<p>Immaginiamo di avere questi dati:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sleep_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
-<span>  id <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">6</span>,</span>
-<span>  stress <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">18</span>, <span class="fl">22</span>, <span class="fl">19</span>, <span class="fl">25</span>, <span class="fl">21</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
-<span>  sleep_quality <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">7</span>, <span class="fl">6</span>, <span class="fl">8</span>, <span class="fl">5</span>, <span class="cn">NA</span>, <span class="fl">6</span><span class="op">)</span></span>
+<p>La freccia <code>&lt;-</code> non esegue un’analisi statistica. Registra un risultato nello stato corrente del lavoro.</p>
+<p>Possiamo poi usare quel nome in una nuova operazione:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">punteggio_stress</span> <span class="op">+</span> <span class="fl">2</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>L’idea importante non è la freccia in sé. È la possibilità di costruire una procedura per passaggi, assegnando nomi comprensibili ai risultati intermedi.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">punteggi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">18</span>, <span class="fl">22</span>, <span class="fl">19</span>, <span class="fl">25</span><span class="op">)</span></span>
+<span><span class="va">media_stress</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">punteggi</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>La prima riga crea i dati in ingresso. La seconda applica un’operazione e conserva il risultato.</p>
+<p>Nomi come <code>x</code>, <code>a1</code> o <code>temp</code> possono essere comodi per chi scrive velocemente, ma rendono più difficile controllare il codice. In un’analisi riproducibile, <code>punteggi_stress</code> e <code>media_stress</code> comunicano già una parte del ragionamento.</p>
+<div class="callout callout-style-default callout-important callout-titled" title="Un oggetto non è il fenomeno">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Importante</span>Un oggetto non è il fenomeno
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Un oggetto chiamato <code>stress</code> non è lo stress psicologico. È un valore o una colonna che abbiamo deciso di interpretare in quel modo. Il significato scientifico viene dal disegno e dalla misurazione, non dal nome assegnato in R.</p>
+</div>
+</div>
+</section><section id="funzioni-trasformare-un-input" class="level2" data-number="6.3"><h2 data-number="6.3" class="anchored" data-anchor-id="funzioni-trasformare-un-input">
+<span class="header-section-number">6.3</span> Funzioni: trasformare un input</h2>
+<p>Una <strong>funzione</strong> descrive un’operazione. Riceve uno o più input e restituisce un risultato.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">18</span>, <span class="fl">22</span>, <span class="fl">19</span>, <span class="fl">25</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>La funzione è <code><a href="https://rdrr.io/r/base/mean.html">mean()</a></code>. L’input è il vettore creato da <code><a href="https://rdrr.io/r/base/c.html">c()</a></code>. L’output è un singolo numero.</p>
+<p>La struttura generale è:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">funzione</span><span class="op">(</span><span class="va">input</span>, <span class="va">altre_opzioni</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Possiamo leggere molti comandi R chiedendoci:</p>
+<blockquote class="blockquote">
+<p>Quale funzione viene applicata a quale oggetto?</p>
+</blockquote>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">punteggi</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">punteggi</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">punteggi</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">punteggi</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Le quattro righe usano lo stesso input e pongono domande differenti: quanti valori contiene, qual è la media, quanto sono dispersi e quale riepilogo generale possiamo ottenere.</p>
+<p>Una funzione non modifica necessariamente l’oggetto originario. Spesso produce un nuovo risultato. Se vogliamo conservarlo, dobbiamo assegnarlo a un nome.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">deviazione_stress</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">punteggi</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Questa distinzione è importante quando si legge codice generato dall’AI: dobbiamo capire quali oggetti vengono soltanto consultati e quali risultati vengono salvati o sovrascritti.</p>
+</section><section id="argomenti-precisare-il-comportamento" class="level2" data-number="6.4"><h2 data-number="6.4" class="anchored" data-anchor-id="argomenti-precisare-il-comportamento">
+<span class="header-section-number">6.4</span> Argomenti: precisare il comportamento</h2>
+<p>Le funzioni possiedono <strong>argomenti</strong> che specificano come deve essere eseguita l’operazione.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">punteggi</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>L’argomento <code>na.rm = TRUE</code> chiede di rimuovere i valori mancanti dal calcolo.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">punteggi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">18</span>, <span class="fl">22</span>, <span class="cn">NA</span>, <span class="fl">25</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">punteggi</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">punteggi</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>La seconda istruzione produce un numero perché esclude <code>NA</code>. Questo non significa che l’esclusione sia automaticamente corretta. Il codice risolve un problema computazionale; il ricercatore deve ancora affrontare il problema metodologico.</p>
+<p>Dobbiamo sapere quanti valori mancano, perché mancano e quali osservazioni vengono effettivamente usate. Un buon assistente AI dovrebbe aiutarci a effettuare questi controlli, non soltanto aggiungere <code>na.rm = TRUE</code>.</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="Una soluzione sintattica può nascondere una decisione">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Avviso</span>Una soluzione sintattica può nascondere una decisione
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>na.rm = TRUE</code> evita che il risultato sia <code>NA</code>, ma modifica l’insieme dei dati usati nel calcolo. Ogni opzione che cambia i dati o il comportamento di una funzione deve poter essere spiegata.</p>
+</div>
+</div>
+</section><section id="data-frame-casi-e-variabili" class="level2" data-number="6.5"><h2 data-number="6.5" class="anchored" data-anchor-id="data-frame-casi-e-variabili">
+<span class="header-section-number">6.5</span> Data frame: casi e variabili</h2>
+<p>Per l’analisi dei dati, l’oggetto centrale è il <strong>data frame</strong>. È una tabella in cui le righe rappresentano unità osservate e le colonne rappresentano variabili.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dati_studenti</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
+<span>  id <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,</span>
+<span>  stress <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">18</span>, <span class="fl">22</span>, <span class="fl">19</span>, <span class="fl">25</span>, <span class="fl">21</span><span class="op">)</span>,</span>
+<span>  qualita_sonno <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">7</span>, <span class="fl">6</span>, <span class="fl">8</span>, <span class="fl">5</span>, <span class="cn">NA</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Prima di calcolare la relazione tra stress e sonno, possiamo effettuare dei controlli minimi:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">sleep_data</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">sleep_data</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">sleep_data</span><span class="op">$</span><span class="va">stress</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">sleep_data</span><span class="op">$</span><span class="va">sleep_quality</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Queste righe non rispondono ancora alla domanda di ricerca. Queste righe servono a capire se i dati sono leggibili, se ci sono valori mancanti e quali valori appaiono plausibili.</p>
-</section><section id="cosa-rimandiamo-ai-capitoli-successivi" class="level2" data-number="6.11"><h2 data-number="6.11" class="anchored" data-anchor-id="cosa-rimandiamo-ai-capitoli-successivi">
-<span class="header-section-number">6.11</span> Cosa rimandiamo ai capitoli successivi</h2>
-<p>Questo capitolo introduce solo la sintassi minima. I dettagli verranno ripresi quando necessario:</p>
-<ul>
-<li>l’organizzazione dei file e dei progetti sarà trattata nel capitolo sull’ambiente di lavoro;</li>
-<li>l’importazione e il controllo dei dati saranno trattati nel capitolo sulle funzioni di utilità;</li>
-<li>la trasformazione ordinata dei dati sarà trattata con <code>dplyr</code>;</li>
-<li>la visualizzazione sarà trattata con <code>ggplot2</code>;</li>
-<li>la scrittura di report riproducibili sarà trattata nel capitolo su Quarto;</li>
-<li>la programmazione vera e propria resterà un approfondimento, non un prerequisito per iniziare.</li>
-</ul></section><section id="esercizi" class="level2" data-number="6.12"><h2 data-number="6.12" class="anchored" data-anchor-id="esercizi">
-<span class="header-section-number">6.12</span> Esercizi</h2>
-<div class="callout callout-style-default callout-important callout-titled" title="Esercizio 1: leggere codice">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Esercizio 1: leggere codice
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Leggi il codice seguente e scrivi, in linguaggio naturale, che cosa fa ogni riga.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">swls_scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">16</span>, <span class="fl">23</span>, <span class="fl">25</span>, <span class="fl">11</span>, <span class="cn">NA</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">swls_scores</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">swls_scores</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Poi rispondi:</p>
+<p>La sintassi crea una tabella, ma la struttura scientifica viene dal disegno. In questo esempio assumiamo che ogni riga rappresenti uno studente e che <code>id</code> identifichi l’unità osservata.</p>
+<p>Possiamo esaminare l’oggetto con:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">dati_studenti</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">dati_studenti</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code><a href="https://rdrr.io/r/utils/str.html">str()</a></code> mostra come R ha memorizzato colonne e tipi di dato. <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> produce un riepilogo. Questi controlli precedono l’analisi perché una colonna può essere stata letta come testo, un codice numerico può rappresentare una categoria e una variabile può contenere valori mancanti inattesi.</p>
+<p>Per indicare una singola colonna si usa spesso <code>$</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dati_studenti</span><span class="op">$</span><span class="va">stress</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>La riga si legge:</p>
+<blockquote class="blockquote">
+<p>Prendi la variabile <code>stress</code> dal data frame <code>dati_studenti</code>.</p>
+</blockquote>
+<p>Non serve conoscere tutti i modi possibili per selezionare una colonna. In questo momento è sufficiente riconoscere la relazione tra tabella e variabile.</p>
+</section><section id="tipi-di-dato-che-cosa-può-significare-un-valore" class="level2" data-number="6.6"><h2 data-number="6.6" class="anchored" data-anchor-id="tipi-di-dato-che-cosa-può-significare-un-valore">
+<span class="header-section-number">6.6</span> Tipi di dato: che cosa può significare un valore?</h2>
+<p>R deve sapere come trattare ciò che incontra. Un valore può essere numerico, testuale, logico o categorico. Può anche essere mancante.</p>
+<p>Il tipo informatico non coincide automaticamente con il significato scientifico. I numeri <code>1</code> e <code>2</code> possono essere quantità, categorie o codici. La stringa <code>"alto"</code> può rappresentare un livello ordinato oppure una semplice etichetta.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">dati_studenti</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Questo comando mostra il tipo assegnato da R. Il controllo successivo spetta a noi: quel tipo è coerente con il significato della variabile?</p>
+<p>Per esempio, se <code>gruppo</code> è codificato con <code>0</code> e <code>1</code>, R può trattarlo come numerico. Il ricercatore deve sapere che i valori sono etichette di condizioni e non quantità psicologiche.</p>
+<p>La domanda corretta non è soltanto:</p>
+<blockquote class="blockquote">
+<p>R ha letto la colonna come numero?</p>
+</blockquote>
+<p>È anche:</p>
+<blockquote class="blockquote">
+<p>Che cosa rappresentano questi numeri e quali operazioni hanno senso?</p>
+</blockquote>
+</section><section id="sequenze-unanalisi-è-un-ordine-di-passaggi" class="level2" data-number="6.7"><h2 data-number="6.7" class="anchored" data-anchor-id="sequenze-unanalisi-è-un-ordine-di-passaggi">
+<span class="header-section-number">6.7</span> Sequenze: un’analisi è un ordine di passaggi</h2>
+<p>Il risultato di una procedura dipende dall’ordine delle operazioni.</p>
+<p>Supponiamo di voler descrivere la qualità del sonno soltanto per gli studenti con stress superiore a 20. La procedura è:</p>
 <ol type="1">
-<li>perché compare <code>na.rm = TRUE</code>?</li>
-<li>che cosa succederebbe togliendolo?</li>
-<li>che tipo di variabile rappresenta <code>swls_scores</code>?</li>
+<li>partire dal dataset;</li>
+<li>conservare le righe che soddisfano la condizione;</li>
+<li>selezionare la variabile di interesse;</li>
+<li>calcolare il riepilogo.</li>
 </ol>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-important callout-titled" title="Esercizio 2: diagnosticare un errore">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Esercizio 2: diagnosticare un errore
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Il codice seguente produce un errore:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress_score</span> <span class="op">&lt;-</span> <span class="fl">18</span></span>
-<span><span class="va">stress_score</span> <span class="op">+</span> <span class="va">sleep_score</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Rispondi:</p>
-<ol type="1">
-<li>quale oggetto non è stato creato?</li>
-<li>quale messaggio di errore ti aspetti?</li>
-<li>come potresti chiedere all’AI di spiegarti il problema senza farti scrivere direttamente tutta la soluzione?</li>
-</ol>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-important callout-titled" title="Esercizio 3: controllare codice prodotto dall'AI">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Esercizio 3: controllare codice prodotto dall’AI
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>L’AI propone questo codice:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sleep_data</span> <span class="op">|&gt;</span></span>
+<p>Con funzioni di R base possiamo scrivere:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti_stress_alto</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span></span>
+<span>  <span class="va">dati_studenti</span>,</span>
+<span>  <span class="va">stress</span> <span class="op">&gt;</span> <span class="fl">20</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span></span>
+<span>  <span class="va">studenti_stress_alto</span><span class="op">$</span><span class="va">qualita_sonno</span></span>
+<span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>La prima istruzione produce un nuovo data frame. La seconda usa quel risultato.</p>
+<p>La <strong>pipe</strong> <code>|&gt;</code> permette di scrivere la stessa idea come un flusso:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dati_studenti</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">stress</span> <span class="op">&gt;</span> <span class="fl">20</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Rispondi:</p>
-<ol type="1">
-<li>quali casi vengono esclusi?</li>
-<li>il riepilogo finale riguarda tutto il dataset o solo un sottoinsieme?</li>
-<li>quale frase aggiungeresti in un report Quarto per spiegare questa scelta?</li>
-</ol>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-important callout-titled" title="Esercizio 4: scrivere un prompt migliore">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<p>La pipe si legge come <em>poi passa il risultato al passaggio successivo</em>. Il suo valore didattico non sta nel risparmiare caratteri, ma nel rendere visibile la sequenza.</p>
+<p>Questa versione produce il riepilogo di tutte le colonne del sottoinsieme. Se desideriamo soltanto <code>qualita_sonno</code>, dobbiamo specificarlo. Il codice deve corrispondere esattamente alla procedura immaginata.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Tradurre il codice in frasi">
+<div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Esercizio 4: scrivere un prompt migliore
+<span class="screen-reader-only">Consiglio</span>Tradurre il codice in frasi
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Quando ricevi un blocco dall’AI, leggi ogni passaggio come una frase:</p>
+<blockquote class="blockquote">
+<p>Parti da questi dati.<br>
+Conserva queste righe.<br>
+Usa questa variabile.<br>
+Calcola questo risultato.</p>
+</blockquote>
+<p>Se non riesci a formulare una frase per una riga, chiedi una spiegazione prima di usarla.</p>
+</div>
+</div>
+</section><section id="condizioni-decidere-quali-casi-soddisfano-una-regola" class="level2" data-number="6.8"><h2 data-number="6.8" class="anchored" data-anchor-id="condizioni-decidere-quali-casi-soddisfano-una-regola">
+<span class="header-section-number">6.8</span> Condizioni: decidere quali casi soddisfano una regola</h2>
+<p>Molte operazioni dipendono da una condizione che può essere vera o falsa.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dati_studenti</span><span class="op">$</span><span class="va">stress</span> <span class="op">&gt;</span> <span class="fl">20</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>R confronta ogni valore con 20 e produce una sequenza di <code>TRUE</code> e <code>FALSE</code>. Questa sequenza può essere usata per selezionare righe.</p>
+<p>Gli operatori essenziali sono pochi:</p>
+<table class="caption-top table">
+<thead><tr class="header">
+<th>Operatore</th>
+<th>Domanda</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>
+<code>&gt;</code> e <code>&lt;</code>
+</td>
+<td>Il valore è maggiore o minore?</td>
+</tr>
+<tr class="even">
+<td>
+<code>&gt;=</code> e <code>&lt;=</code>
+</td>
+<td>Il valore supera o raggiunge una soglia?</td>
+</tr>
+<tr class="odd">
+<td><code>==</code></td>
+<td>Il valore è uguale a quello indicato?</td>
+</tr>
+<tr class="even">
+<td><code>!=</code></td>
+<td>Il valore è diverso?</td>
+</tr>
+<tr class="odd">
+<td><code>&amp;</code></td>
+<td>Entrambe le condizioni sono vere?</td>
+</tr>
+<tr class="even">
+<td><code>|</code></td>
+<td>Almeno una delle condizioni è vera?</td>
+</tr>
+</tbody>
+</table>
+<p>Per esempio:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dati_studenti</span><span class="op">$</span><span class="va">stress</span> <span class="op">&gt;</span> <span class="fl">20</span> <span class="op">&amp;</span></span>
+<span>  <span class="va">dati_studenti</span><span class="op">$</span><span class="va">qualita_sonno</span> <span class="op">&lt;</span> <span class="fl">7</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>La sintassi è semplice; la decisione sostantiva può non esserlo. Perché è stata scelta la soglia 20? È definita prima dell’analisi? Produce un gruppo interpretabile? Quanti casi vengono esclusi?</p>
+<p>L’AI può scrivere la condizione. Non può giustificare una soglia se non le forniamo il contesto scientifico.</p>
+</section><section id="input-trasformazione-e-output" class="level2" data-number="6.9"><h2 data-number="6.9" class="anchored" data-anchor-id="input-trasformazione-e-output">
+<span class="header-section-number">6.9</span> Input, trasformazione e output</h2>
+<p>Quasi ogni blocco di codice può essere compreso attraverso tre elementi:</p>
+<p><span class="math display">\[
+\text{input}
+\longrightarrow
+\text{trasformazione}
+\longrightarrow
+\text{output}.
+\]</span></p>
+<p>Consideriamo:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">media_sonno</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span></span>
+<span>  <span class="va">dati_studenti</span><span class="op">$</span><span class="va">qualita_sonno</span>,</span>
+<span>  na.rm <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>L’input è la colonna <code>qualita_sonno</code>. La trasformazione consiste nell’escludere i valori mancanti e calcolare la media. L’output è un numero salvato in <code>media_sonno</code>.</p>
+<p>Questa lettura permette di controllare anche procedure più lunghe. Dopo ogni passaggio possiamo chiederci quale oggetto sia stato prodotto e se possieda la struttura attesa.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti_stress_alto</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span></span>
+<span>  <span class="va">dati_studenti</span>,</span>
+<span>  <span class="va">stress</span> <span class="op">&gt;</span> <span class="fl">20</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">studenti_stress_alto</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">studenti_stress_alto</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Il controllo <code><a href="https://rdrr.io/r/base/nrow.html">nrow()</a></code> mostra quante righe sono rimaste. <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> permette di verificare se il sottoinsieme appare plausibile. Non dobbiamo aspettare il risultato finale per accorgerci che una condizione ha escluso quasi tutti i dati.</p>
+</section><section id="controllare-una-procedura" class="level2" data-number="6.10"><h2 data-number="6.10" class="anchored" data-anchor-id="controllare-una-procedura">
+<span class="header-section-number">6.10</span> Controllare una procedura</h2>
+<p>Un codice che termina senza errori non è necessariamente corretto. Il controllo deve avvenire a più livelli.</p>
+<p>Dobbiamo verificare che i nomi esistano, che i tipi di dato siano appropriati e che l’output abbia forma e dimensione attese. Dobbiamo poi controllare che le operazioni corrispondano alla domanda e che esclusioni, ricodifiche e valori mancanti siano documentati.</p>
+<p>Un controllo minimo del dataset può essere:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">dati_studenti</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">dati_studenti</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">dati_studenti</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Se applichiamo un filtro:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti_stress_alto</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span></span>
+<span>  <span class="va">dati_studenti</span>,</span>
+<span>  <span class="va">stress</span> <span class="op">&gt;</span> <span class="fl">20</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">dati_studenti</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">studenti_stress_alto</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Il confronto rende visibile l’effetto dell’operazione.</p>
+<div class="callout callout-style-default callout-important callout-titled" title="Verificare significa produrre evidenza">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Importante</span>Verificare significa produrre evidenza
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Non basta dire «il codice sembra giusto». Un controllo mostra concretamente quanti casi sono rimasti, quali valori sono stati creati, quali categorie esistono e se il risultato cambia come previsto quando modifichiamo l’input.</p>
+</div>
+</div>
+</section><section id="gli-errori-come-informazioni" class="level2" data-number="6.11"><h2 data-number="6.11" class="anchored" data-anchor-id="gli-errori-come-informazioni">
+<span class="header-section-number">6.11</span> Gli errori come informazioni</h2>
+<p>Un messaggio di errore indica che R non ha potuto completare una procedura. Non è un giudizio sul ricercatore e non richiede di modificare istruzioni a caso.</p>
+<p>Se scriviamo:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">media_sonno</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>prima di avere creato l’oggetto, R segnala che l’oggetto non è stato trovato. Il messaggio suggerisce di controllare il nome e i passaggi precedenti.</p>
+<p>Se chiediamo una media di valori testuali, il problema non riguarda necessariamente <code><a href="https://rdrr.io/r/base/mean.html">mean()</a></code>. Potrebbe indicare che la colonna è stata importata con il tipo sbagliato oppure che non rappresenta una quantità.</p>
+<p>Il metodo di diagnosi consiste nel localizzare il passaggio, identificare l’input ricevuto dalla funzione e controllare se possiede il tipo e la struttura richiesti.</p>
+<p>Una richiesta utile all’AI è:</p>
+<blockquote class="blockquote">
+<p>Spiega questo errore senza riscrivere subito tutto il codice. Indica quale oggetto o passaggio devo controllare e proponi un comando semplice per verificare la tua ipotesi.</p>
+</blockquote>
+<p>In questo modo l’assistente contribuisce alla diagnosi invece di sostituire un blocco opaco con un altro blocco opaco.</p>
+</section><section id="come-formulare-una-richiesta-allai" class="level2" data-number="6.12"><h2 data-number="6.12" class="anchored" data-anchor-id="come-formulare-una-richiesta-allai">
+<span class="header-section-number">6.12</span> Come formulare una richiesta all’AI</h2>
+<p>Una richiesta generica come «fammi l’analisi» lascia troppe decisioni implicite. L’assistente dovrà indovinare struttura dei dati, variabili, trattamento dei mancanti, pacchetti e forma del risultato.</p>
+<p>Una richiesta controllabile descrive invece il problema come una procedura.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Struttura di un prompt utile">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Consiglio</span>Struttura di un prompt utile
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Puoi usare una formulazione di questo tipo:</p>
+<blockquote class="blockquote">
+<p>Ho un data frame R chiamato <code>dati_studenti</code>. Ogni riga rappresenta uno studente. Le variabili rilevanti sono <code>stress</code> e <code>qualita_sonno</code>; entrambe sono punteggi numerici e possono contenere <code>NA</code>.</p>
+<p>Voglio calcolare numerosità, media e deviazione standard di <code>qualita_sonno</code> per gli studenti con <code>stress &gt; 20</code>. Usa soltanto R base e codice semplice. Salva il sottoinsieme in un nuovo oggetto senza modificare il dataset originale.</p>
+<p>Spiega ogni passaggio in linguaggio naturale. Aggiungi controlli che mostrino quanti casi vengono esclusi e quanti valori mancanti entrano nel calcolo. Non interpretare psicologicamente il risultato.</p>
+</blockquote>
+</div>
+</div>
+<p>Il prompt comunica unità di analisi, nomi, tipi di variabile, obiettivo, condizione, gestione degli oggetti, vincoli tecnici e controlli desiderati.</p>
+<p>Questa precisione non serve soltanto a ottenere codice migliore. Costringe anche chi formula la richiesta a chiarire l’analisi prima di eseguirla.</p>
+</section><section id="come-verificare-il-codice-ricevuto" class="level2" data-number="6.13"><h2 data-number="6.13" class="anchored" data-anchor-id="come-verificare-il-codice-ricevuto">
+<span class="header-section-number">6.13</span> Come verificare il codice ricevuto</h2>
+<p>Dopo aver ricevuto il codice, non è necessario comprenderne ogni dettaglio interno. È necessario però ricostruirne la logica.</p>
+<p>Per ogni blocco dovremmo riuscire a stabilire quale oggetto usa, quale nuovo oggetto produce, quali righe o colonne modifica, come gestisce i mancanti e quale output restituisce.</p>
+<p>È utile chiedere all’AI di separare la procedura in passaggi e di includere controlli intermedi. Possiamo anche richiedere una versione più semplice quando propone funzioni o pacchetti non ancora introdotti.</p>
+<p>Un buon messaggio di revisione può essere:</p>
+<blockquote class="blockquote">
+<p>Riscrivi la soluzione usando il minor numero possibile di concetti nuovi. Non usare una funzione che non sia necessaria. Dopo ogni trasformazione mostra un controllo dell’oggetto prodotto.</p>
+</blockquote>
+<p>Se l’assistente modifica il dataset originale, possiamo chiedere:</p>
+<blockquote class="blockquote">
+<p>Conserva i dati originali e salva ogni trasformazione importante in un oggetto con un nome descrittivo.</p>
+</blockquote>
+<p>Se propone una soglia o elimina valori mancanti senza giustificazione:</p>
+<blockquote class="blockquote">
+<p>Indica quali decisioni analitiche hai introdotto e separale dalle operazioni puramente tecniche.</p>
+</blockquote>
+<div class="callout callout-style-default callout-warning callout-titled" title="L'AI non conosce ciò che non le dici">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Avviso</span>L’AI non conosce ciò che non le dici
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Un assistente può inferire il significato di una variabile dal nome, ma questa inferenza può essere sbagliata. Deve ricevere informazioni sull’unità di analisi, sulla codifica, sulla scala di misura e sul disegno quando queste influenzano l’operazione.</p>
+</div>
+</div>
+</section><section id="un-esempio-completo" class="level2" data-number="6.14"><h2 data-number="6.14" class="anchored" data-anchor-id="un-esempio-completo">
+<span class="header-section-number">6.14</span> Un esempio completo</h2>
+<p>Creiamo un piccolo dataset:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dati_studenti</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
+<span>  id <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">6</span>,</span>
+<span>  stress <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">18</span>, <span class="fl">22</span>, <span class="fl">19</span>, <span class="fl">25</span>, <span class="fl">21</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
+<span>  qualita_sonno <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">7</span>, <span class="fl">6</span>, <span class="fl">8</span>, <span class="fl">5</span>, <span class="cn">NA</span>, <span class="fl">6</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>La domanda è:</p>
+<blockquote class="blockquote">
+<p>Qual è la qualità media del sonno tra gli studenti con stress superiore a 20?</p>
+</blockquote>
+<p>La procedura può essere descritta così: controllare la struttura, selezionare i casi, verificare quanti casi rimangono, contare i valori mancanti e calcolare la media.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">dati_studenti</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">studenti_stress_alto</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span></span>
+<span>  <span class="va">dati_studenti</span>,</span>
+<span>  <span class="va">stress</span> <span class="op">&gt;</span> <span class="fl">20</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">studenti_stress_alto</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">studenti_stress_alto</span><span class="op">$</span><span class="va">qualita_sonno</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span></span>
+<span>  <span class="va">studenti_stress_alto</span><span class="op">$</span><span class="va">qualita_sonno</span>,</span>
+<span>  na.rm <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Ogni riga ha una funzione riconoscibile. <code><a href="https://rdrr.io/r/utils/str.html">str()</a></code> controlla l’input. <code><a href="https://rdrr.io/r/base/subset.html">subset()</a></code> applica la condizione. <code><a href="https://rdrr.io/r/base/nrow.html">nrow()</a></code> mostra l’effetto del filtro. <code><a href="https://rdrr.io/r/base/NA.html">is.na()</a></code> identifica i mancanti e <code><a href="https://rdrr.io/r/base/sum.html">sum()</a></code> li conta. <code><a href="https://rdrr.io/r/base/mean.html">mean()</a></code> produce infine la statistica richiesta.</p>
+<p>L’esempio è semplice, ma contiene una decisione che deve essere giustificata: la soglia <code>stress &gt; 20</code>. Il codice può applicarla; il metodo di ricerca deve spiegare perché quella soglia sia appropriata.</p>
+</section><section id="che-cosa-non-serve-ancora" class="level2" data-number="6.15"><h2 data-number="6.15" class="anchored" data-anchor-id="che-cosa-non-serve-ancora">
+<span class="header-section-number">6.15</span> Che cosa non serve ancora</h2>
+<p>Per usare R in questo modulo non è necessario conoscere cicli, ricorsione, programmazione orientata agli oggetti, metaprogrammazione o sviluppo di pacchetti. Non è necessario neppure memorizzare tutte le varianti disponibili per selezionare, trasformare o riassumere dati.</p>
+<p>Nei capitoli successivi introdurremo soltanto gli strumenti che rendono più chiari e riproducibili compiti ricorrenti. Useremo <code>dplyr</code> per esprimere trasformazioni di tabelle, <code>ggplot2</code> per costruire grafici e Quarto per integrare codice, risultati e spiegazioni.</p>
+<p>Il criterio sarà sempre lo stesso: introdurre una nuova sintassi soltanto quando rende più comprensibile un’operazione necessaria.</p>
+</section><section id="riflessioni-conclusive" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="riflessioni-conclusive">Riflessioni conclusive</h2>
+<p>La competenza iniziale in R non consiste nel ricordare molti comandi. Consiste nel vedere un’analisi come una procedura composta da input, operazioni, condizioni, risultati e controlli.</p>
+<p>Gli oggetti assegnano nomi ai dati e ai risultati intermedi. Le funzioni trasformano gli input. Gli argomenti precisano il comportamento. Le condizioni selezionano casi. La sequenza stabilisce l’ordine delle operazioni. I controlli mostrano se la procedura ha prodotto ciò che ci aspettavamo.</p>
+<p>Queste idee appartengono alla programmazione in generale e rimangono valide anche quando l’AI genera la sintassi. Anzi, diventano ancora più importanti: per chiedere codice utile dobbiamo descrivere chiaramente il problema; per usarlo responsabilmente dobbiamo saperne ricostruire la logica.</p>
+<p>Nel prossimo capitolo collocheremo queste operazioni in un ambiente di lavoro ordinato. File, cartelle, progetti e documenti riproducibili permetteranno di conservare non soltanto il risultato, ma l’intero percorso che lo ha prodotto.</p>
+</section><section id="esercizi" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="esercizi">Esercizi</h2>
+<ol type="1">
+<li>
+<p>Leggi il codice seguente e descrivilo usando le parole <em>input</em>, <em>operazione</em> e <em>output</em>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">punteggi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">16</span>, <span class="fl">23</span>, <span class="fl">25</span>, <span class="fl">11</span>, <span class="cn">NA</span><span class="op">)</span></span>
+<span><span class="va">media_punteggi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">punteggi</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+</li>
+<li><p>Nel codice precedente, quale decisione viene nascosta dall’argomento <code>na.rm = TRUE</code>? Quale controllo aggiungeresti prima della media?</p></li>
+<li>
+<p>Considera:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dati_studenti</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">stress</span> <span class="op">&gt;</span> <span class="fl">20</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Quali righe vengono escluse? Il riepilogo riguarda una sola variabile o l’intero sottoinsieme? Quale controllo useresti per conoscere la numerosità finale?</p>
+</li>
+<li>
+<p>L’AI propone di sostituire il dataset originale con il risultato di un filtro:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dati_studenti</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">dati_studenti</span>, <span class="va">stress</span> <span class="op">&gt;</span> <span class="fl">20</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Quale rischio introduce questa scelta? Formula una richiesta che chieda di conservare i dati originali.</p>
+</li>
+<li><p>Trasforma la richiesta «calcola la media del sonno» in un prompt che specifichi il nome del data frame, l’unità di analisi, la variabile, il trattamento dei mancanti, l’output e almeno un controllo.</p></li>
+<li><p>Un codice termina senza errori ma restituisce una media pari a <code>1.4</code> per una variabile che codifica <code>1 = controllo</code> e <code>2 = intervento</code>. Il problema è sintattico o interpretativo? Che cosa dovrebbe essere calcolato per descrivere la variabile?</p></li>
+<li><p>R riceve una colonna come testo e <code><a href="https://rdrr.io/r/base/mean.html">mean()</a></code> produce un avviso. Quali due ipotesi controlleresti prima di chiedere all’AI di convertire automaticamente la colonna in numeri?</p></li>
+<li><p>Scrivi in linguaggio naturale una procedura che, partendo da un data frame, selezioni un gruppo, conti i casi, controlli i valori mancanti e calcoli una statistica descrittiva. Non scrivere codice.</p></li>
+</ol>
+<div class="callout callout-style-default callout-tip callout-titled" title="Soluzioni">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Consiglio</span>Soluzioni
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Trasforma questo prompt generico:</p>
-<blockquote class="blockquote">
-<p>Fammi l’analisi in R.</p>
-</blockquote>
-<p>in un prompt più utile per imparare. Il nuovo prompt deve chiedere all’AI di:</p>
+<ol type="1">
+<li><p>L’input è il vettore <code>punteggi</code>. L’operazione consiste nell’escludere i valori mancanti e calcolare la media. L’output viene salvato nell’oggetto <code>media_punteggi</code>.</p></li>
+<li><p>La media usa soltanto i valori osservati. Prima del calcolo possiamo contare i mancanti con <code>sum(is.na(punteggi))</code> e chiederci perché manchino.</p></li>
+<li><p>Vengono conservate soltanto le righe con <code>stress &gt; 20</code>; le righe con condizione falsa o non valutabile non entrano nel sottoinsieme. <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> riepiloga tutte le colonne rimaste. <code><a href="https://rdrr.io/r/base/nrow.html">nrow()</a></code> mostra la numerosità finale.</p></li>
+<li><p>Il dataset originale viene sovrascritto e non è più disponibile con lo stesso nome. Possiamo chiedere: «Non modificare <code>dati_studenti</code>; salva il sottoinsieme in un nuovo oggetto chiamato <code>studenti_stress_alto</code>».</p></li>
+<li><p>Un esempio è: «Ho un data frame chiamato <code>dati_studenti</code>, con una riga per studente. Calcola la media di <code>qualita_sonno</code>. La variabile è numerica e può contenere <code>NA</code>. Prima conta i valori mancanti e mostra quanti casi entrano nel calcolo. Usa R base, salva il risultato in <code>media_sonno</code> e spiega ogni passaggio».</p></li>
+<li><p>Il codice può essere sintatticamente corretto, ma la media dei codici non descrive in modo trasparente la composizione dei gruppi. Sono più appropriate frequenze e proporzioni.</p></li>
+<li><p>Dobbiamo controllare se la colonna contiene numeri memorizzati come testo oppure categorie o annotazioni che non dovrebbero essere convertite. Dobbiamo inoltre cercare simboli, separatori decimali o codici dei mancanti.</p></li>
+<li><p>Una possibile procedura è: partire dal dataset originale; conservare le righe appartenenti al gruppo di interesse in un nuovo oggetto; contare le righe rimaste; contare i mancanti nella variabile; calcolare la statistica sui valori disponibili; conservare e descrivere il risultato.</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="Punti chiave">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Punti chiave
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <ul>
-<li>usare codice semplice;</li>
-<li>spiegare ogni riga;</li>
-<li>indicare quali controlli fare;</li>
-<li>non interpretare i risultati oltre ciò che il codice permette.</li>
+<li>Un compito deve essere descritto prima di essere tradotto in codice.</li>
+<li>La struttura fondamentale è input, trasformazione e output.</li>
+<li>Gli oggetti conservano dati e risultati con un nome.</li>
+<li>Le funzioni applicano operazioni; gli argomenti ne precisano il comportamento.</li>
+<li>Le condizioni producono decisioni vere o false per ciascuna osservazione.</li>
+<li>L’ordine dei passaggi modifica il risultato.</li>
+<li>Un codice senza errori può essere metodologicamente sbagliato.</li>
+<li>I controlli intermedi rendono visibili esclusioni, trasformazioni e valori mancanti.</li>
+<li>Un buon prompt descrive dati, obiettivo, vincoli e verifiche richieste.</li>
+<li>L’AI genera sintassi; il ricercatore mantiene la responsabilità dell’analisi.</li>
 </ul>
 </div>
 </div>
 </div>
-</section><section id="cosa-portare-al-capitolo-successivo" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="cosa-portare-al-capitolo-successivo">Cosa portare al capitolo successivo</h2>
-<p>La sintassi di R non va imparata come una serie di regole astratte. Va utilizzata come strumento per rendere esplicite le operazioni sui dati.</p>
-<p>Per proseguire, ti serviranno soprattutto queste idee:</p>
-<ul>
-<li>un oggetto salva qualcosa con un nome;</li>
-<li>una funzione applica un’operazione;</li>
-<li>gli argomenti modificano il comportamento della funzione;</li>
-<li>i data frame sono tabelle di casi e variabili;</li>
-<li>i valori mancanti devono essere riconosciuti e gestiti;</li>
-<li>la pipe permette di leggere il codice come una sequenza di passaggi;</li>
-<li>il codice prodotto dall’AI deve sempre essere controllato.</li>
-</ul>
-<p>Questi elementi saranno collocati in un ambiente di lavoro ordinato nel prossimo capitolo: file, cartelle, progetti e documenti riproducibili.</p>
-</section><section id="bibliografia" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="bibliografia">Bibliografia</h2>
+<div class="callout callout-style-default callout-note callout-titled" title="Ambiente di sviluppo">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Ambiente di sviluppo
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Il capitolo usa soltanto R base. Le informazioni sull’ambiente possono essere ottenute con:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.6.1 (2026-06-24)
+Platform: aarch64-apple-darwin23
+Running under: macOS Tahoe 26.5.2
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] C.UTF-8/UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8
+
+time zone: Europe/Zagreb
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+loaded via a namespace (and not attached):
+ [1] htmlwidgets_1.6.4 compiler_4.6.1    fastmap_1.2.0     cli_3.6.6        
+ [5] tools_4.6.1       htmltools_0.5.9   otel_0.2.0        yaml_2.3.12      
+ [9] rmarkdown_2.31    knitr_1.51        jsonlite_2.0.0    xfun_0.60        
+[13] digest_0.6.39     rlang_1.3.0       evaluate_1.0.5   </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
 
 
 </section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
@@ -1484,8 +1600,8 @@ cookieconsent.run({
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../chapters/R/02_environment.html" class="pagination-link" aria-label="Ambiente di lavoro e progetti R">
-        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Ambiente di lavoro e progetti R</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../chapters/R/02_environment.html" class="pagination-link" aria-label="Un ambiente di lavoro riproducibile">
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Un ambiente di lavoro riproducibile</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

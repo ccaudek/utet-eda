@@ -107,6 +107,35 @@ cookieconsent.run({
   
 <style>html{ scroll-behavior: smooth; }</style>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <meta property="og:title" content="R – Analisi esplorativa dei dati in psicologia">
 <meta property="og:description" content="">
@@ -354,19 +383,19 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/03_design.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Disegno di ricerca: quali conclusioni sono giustificate dai dati?</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Disegno della ricerca: quali conclusioni sono giustificate dai dati?</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/04_measurement.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">La misurazione in psicologia</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Misurare i costrutti psicologici</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/05_cognitive_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dalla descrizione alla spiegazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dalla descrizione alla spiegazione: modelli e processi psicologici</span></span></a>
   </div>
 </li>
       </ul>
@@ -383,13 +412,13 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/01_r_syntax.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sintassi minima per leggere codice R</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Pensare in operazioni: la sintassi essenziale di R</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/02_environment.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Ambiente di lavoro e progetti R</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Un ambiente di lavoro riproducibile</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -401,25 +430,25 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/05_dplyr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Trasformare i dati con <code>dplyr</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Trasformare tabelle con <code>dplyr</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/06_ggplot2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Visualizzare i dati con <code>ggplot2</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Rendere visibili i dati con <code>ggplot2</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/07_quarto.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quarto</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quarto: rendere esplicito il percorso dell’analisi</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/08_r_packages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Pacchetti</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Pacchetti: scegliere e dichiarare gli strumenti</span></span></a>
   </div>
 </li>
       </ul>
@@ -427,7 +456,7 @@ cookieconsent.run({
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../chapters/eda/introduction_eda.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">EDA</span></a>
+ <span class="menu-text">Statistica descrittiva ed EDA</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -436,13 +465,13 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/01_project_structure.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Organizzare un progetto di analisi dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Preparare l’analisi esplorativa</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/02_data_cleaning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulizia dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulire i dati senza nascondere le decisioni</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -454,37 +483,37 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/05_data_visualization_principles.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Principi della visualizzazione dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Visualizzare senza deformare</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/06_loc_scale.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Indicatori di tendenza centrale e variabilità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Distribuzione, posizione e variabilità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/07_introduction_normal_distribution.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Introduzione alla distribuzione normale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">La normale come modello di riferimento</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/08_correlation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Relazioni tra variabili</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Esplorare relazioni tra due variabili</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/09_causality_intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Dalla correlazione alla causalità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Dall’associazione alla domanda causale</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/11_outlier.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Valori inattesi e outlier</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Osservazioni inattese e outlier</span></span></a>
   </div>
 </li>
       </ul>
@@ -516,15 +545,18 @@ cookieconsent.run({
     <h2 id="toc-title">Sommario</h2>
    
   <ul class="collapse">
-  <li><a href="#perché-usare-ancora-r" id="toc-perché-usare-ancora-r" class="nav-link active" data-scroll-target="#perché-usare-ancora-r">Perché usare ancora R</a></li>
-  <li><a href="#che-cosa-significa-imparare-r-oggi" id="toc-che-cosa-significa-imparare-r-oggi" class="nav-link" data-scroll-target="#che-cosa-significa-imparare-r-oggi">Che cosa significa imparare R oggi</a></li>
-  <li><a href="#quattro-competenze-da-sviluppare" id="toc-quattro-competenze-da-sviluppare" class="nav-link" data-scroll-target="#quattro-competenze-da-sviluppare">Quattro competenze da sviluppare</a></li>
-  <li><a href="#usare-lai-con-criterio" id="toc-usare-lai-con-criterio" class="nav-link" data-scroll-target="#usare-lai-con-criterio">Usare l’AI con criterio</a></li>
-  <li><a href="#che-cosa-non-faremo" id="toc-che-cosa-non-faremo" class="nav-link" data-scroll-target="#che-cosa-non-faremo">Che cosa non faremo</a></li>
-  <li><a href="#mappa-della-sezione" id="toc-mappa-della-sezione" class="nav-link" data-scroll-target="#mappa-della-sezione">Mappa della sezione</a></li>
-  <li><a href="#collegamento-con-il-resto-del-progetto" id="toc-collegamento-con-il-resto-del-progetto" class="nav-link" data-scroll-target="#collegamento-con-il-resto-del-progetto">Collegamento con il resto del progetto</a></li>
-  <li><a href="#come-studiare-questa-sezione" id="toc-come-studiare-questa-sezione" class="nav-link" data-scroll-target="#come-studiare-questa-sezione">Come studiare questa sezione</a></li>
-  <li><a href="#cosa-portare-con-sé" id="toc-cosa-portare-con-sé" class="nav-link" data-scroll-target="#cosa-portare-con-sé">Cosa portare con sé</a></li>
+  <li><a href="#perché-r-rimane-importante" id="toc-perché-r-rimane-importante" class="nav-link active" data-scroll-target="#perché-r-rimane-importante">Perché R rimane importante</a></li>
+  <li><a href="#imparare-a-descrivere-una-procedura" id="toc-imparare-a-descrivere-una-procedura" class="nav-link" data-scroll-target="#imparare-a-descrivere-una-procedura">Imparare a descrivere una procedura</a></li>
+  <li><a href="#usare-lai-senza-delegare-lanalisi" id="toc-usare-lai-senza-delegare-lanalisi" class="nav-link" data-scroll-target="#usare-lai-senza-delegare-lanalisi">Usare l’AI senza delegare l’analisi</a></li>
+  <li><a href="#il-controllo-viene-prima-dellinterpretazione" id="toc-il-controllo-viene-prima-dellinterpretazione" class="nav-link" data-scroll-target="#il-controllo-viene-prima-dellinterpretazione">Il controllo viene prima dell’interpretazione</a></li>
+  <li><a href="#un-percorso-deliberatamente-essenziale" id="toc-un-percorso-deliberatamente-essenziale" class="nav-link" data-scroll-target="#un-percorso-deliberatamente-essenziale">Un percorso deliberatamente essenziale</a></li>
+  <li><a href="#mappa-della-parte" id="toc-mappa-della-parte" class="nav-link" data-scroll-target="#mappa-della-parte">Mappa della Parte</a></li>
+  <li><a href="#dal-progetto-alla-tabella" id="toc-dal-progetto-alla-tabella" class="nav-link" data-scroll-target="#dal-progetto-alla-tabella">Dal progetto alla tabella</a></li>
+  <li><a href="#dalla-tabella-alla-trasformazione" id="toc-dalla-tabella-alla-trasformazione" class="nav-link" data-scroll-target="#dalla-tabella-alla-trasformazione">Dalla tabella alla trasformazione</a></li>
+  <li><a href="#dalla-trasformazione-alla-rappresentazione" id="toc-dalla-trasformazione-alla-rappresentazione" class="nav-link" data-scroll-target="#dalla-trasformazione-alla-rappresentazione">Dalla trasformazione alla rappresentazione</a></li>
+  <li><a href="#dallanalisi-al-documento" id="toc-dallanalisi-al-documento" class="nav-link" data-scroll-target="#dallanalisi-al-documento">Dall’analisi al documento</a></li>
+  <li><a href="#come-lavorare-con-i-capitoli" id="toc-come-lavorare-con-i-capitoli" class="nav-link" data-scroll-target="#come-lavorare-con-i-capitoli">Come lavorare con i capitoli</a></li>
+  <li><a href="#che-cosa-dovrebbe-rimanere" id="toc-che-cosa-dovrebbe-rimanere" class="nav-link" data-scroll-target="#che-cosa-dovrebbe-rimanere">Che cosa dovrebbe rimanere</a></li>
   </ul>
 <div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/R/introduction_r_lang.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
     </div>
@@ -552,148 +584,89 @@ cookieconsent.run({
 
 
 <p><em>Capire, controllare e documentare analisi nell’epoca dell’AI.</em></p>
-<p>Questa sezione introduce R come strumento per lavorare con i dati in modo trasparente e riproducibile. Non ha l’obiettivo di trasformare gli studenti in programmatori. Il suo obiettivo è più limitato, ma molto importante: fornire le competenze minime necessarie per leggere, eseguire, modificare, controllare e documentare l’analisi dei dati psicologici.</p>
-<p>Oggi, questo obiettivo va formulato in modo diverso rispetto al passato. Gli strumenti di intelligenza artificiale possono generare codice, correggere errori, suggerire grafici, spiegare funzioni e proporre soluzioni alternative. Questo è utile e in questo manuale non viene trattato come qualcosa da evitare. Nella ricerca contemporanea, l’uso di strumenti di supporto alla scrittura del codice è ormai una pratica comune.</p>
-<p>Tuttavia, l’uso dell’AI non esime dalla responsabilità dell’analisi. Chi presenta un risultato deve essere in grado di spiegare cosa fa il codice, perché è stato usato, quali dati ha trasformato, quali osservazioni ha incluso o escluso, quali assunzioni incorpora e quali limiti ci sono nell’interpretazione.</p>
-<div class="callout callout-style-simple callout-note no-icon">
-<div class="callout-body d-flex">
+<div class="callout callout-style-default callout-note callout-titled" title="In sintesi">
+<div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
+<i class="callout-icon"></i>
 </div>
-<div class="callout-body-container">
-<p>L’obiettivo non è imparare R per scrivere ogni comando a mano. L’obiettivo è imparare a sufficienza R per capire, controllare e modificare il codice che si utilizza, anche quando è stato prodotto con l’aiuto dell’intelligenza artificiale.</p>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>In sintesi
 </div>
 </div>
+<div class="callout-body-container callout-body">
+<p>Questa Parte non insegna a programmare in senso professionale e non offre una guida completa a R. Introduce il modo di pensare necessario per trasformare una domanda in una sequenza di operazioni, leggere il codice prodotto anche con l’aiuto dell’AI e verificare che dati, trasformazioni e risultati corrispondano realmente all’analisi desiderata.</p>
+<p>L’obiettivo non è scrivere tutto il codice da soli. È mantenere il controllo scientifico del lavoro.</p>
 </div>
-<section id="perché-usare-ancora-r" class="level2">
-<h2 class="anchored" data-anchor-id="perché-usare-ancora-r">Perché usare ancora R</h2>
-<p>R è un linguaggio nato per l’analisi statistica. In psicologia e nelle scienze sociali è molto utilizzato perché consente di organizzare, trasformare, visualizzare i dati, stimare i modelli, produrre report riproducibili e condividere in modo esplicito le procedure di analisi.</p>
-<p>Per il percorso di questo Companion, R serve soprattutto a tre scopi.</p>
-<p>In primo luogo, rende visibili le operazioni eseguite sui dati. Se calcoliamo una media, filtriamo alcune osservazioni, ricodifichiamo una variabile o produciamo un grafico, il codice lascia una traccia controllabile di tutte le operazioni eseguite. Questo è essenziale per evitare che l’analisi diventi una sequenza di passaggi impliciti e difficili da verificare.</p>
-<p>In secondo luogo, permette di riprodurre i risultati. Un’analisi non dovrebbe dipendere dalla memoria di chi l’ha eseguita o da passaggi manuali difficili da ricostruire. Se i dati, il codice e il testo sono organizzati correttamente, un’altra persona può comprendere il percorso seguito e, almeno in linea di principio, riprodurlo.</p>
-<p>In terzo luogo, R collega l’analisi operativa alle domande metodologiche discusse nella prima parte del manuale. Le variabili, i campioni, le scale di misura, i valori mancanti, i disegni di ricerca e i limiti dell’inferenza non sono concetti astratti, ma diventano colonne di una tabella, righe di un dataset, condizioni di filtro, grafici, statistiche descrittive e modelli.</p>
+</div>
+<section id="perché-r-rimane-importante" class="level2">
+<h2 class="anchored" data-anchor-id="perché-r-rimane-importante">Perché R rimane importante</h2>
+<p>Gli assistenti di intelligenza artificiale possono generare codice, spiegare errori, adattare grafici e proporre trasformazioni. Questo rende meno necessario memorizzare molti dettagli sintattici, ma non rende meno importante comprendere ciò che il codice fa.</p>
+<p>Chi presenta un risultato deve sapere quali dati sono stati usati, quali osservazioni sono state incluse o escluse, come sono state costruite le variabili e quale operazione ha prodotto una tabella o un grafico. Deve inoltre distinguere una difficoltà tecnica da una decisione metodologica.</p>
+<p>R è utile perché rende queste operazioni esplicite. Una trasformazione eseguita attraverso il codice lascia una traccia controllabile. Se il progetto è organizzato correttamente, la stessa procedura può essere rieseguita quando cambiano i dati, verificata da un’altra persona e integrata nel documento che presenta i risultati.</p>
+<p>R non è quindi il fine del percorso. È l’ambiente in cui il passaggio dalla domanda all’analisi può diventare trasparente:</p>
+<p><span class="math display">\[
+\text{domanda}
+\longrightarrow
+\text{dati}
+\longrightarrow
+\text{operazioni}
+\longrightarrow
+\text{risultato}
+\longrightarrow
+\text{interpretazione}.
+\]</span></p>
 </section>
-<section id="che-cosa-significa-imparare-r-oggi" class="level2">
-<h2 class="anchored" data-anchor-id="che-cosa-significa-imparare-r-oggi">Che cosa significa imparare R oggi</h2>
-<p>Imparare R non significa memorizzare molte funzioni. Significa riconoscere alcuni schemi ricorrenti. La maggior parte del codice che useremo nel companion può essere compresa se si conoscono pochi elementi fondamentali:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Elemento</th>
-<th>Perché serve</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>oggetto &lt;- valore</code></td>
-<td>Capire che un risultato viene salvato con un nome.</td>
-</tr>
-<tr class="even">
-<td><code>funzione(argomento = valore)</code></td>
-<td>Leggere la struttura di quasi tutti i comandi R.</td>
-</tr>
-<tr class="odd">
-<td><code>dati |&gt; funzione()</code></td>
-<td>Capire una sequenza di operazioni applicate a una tabella.</td>
-</tr>
-<tr class="even">
-<td><code>select()</code>, <code>filter()</code>, <code>mutate()</code></td>
-<td>Capire come si scelgono, filtrano e trasformano variabili e osservazioni.</td>
-</tr>
-<tr class="odd">
-<td><code>group_by()</code> e <code>summarise()</code></td>
-<td>Capire come si calcolano statistiche per gruppi.</td>
-</tr>
-<tr class="even">
-<td><code>NA</code>, <code>is.na()</code>, <code>na.rm = TRUE</code></td>
-<td>Riconoscere e gestire i dati mancanti.</td>
-</tr>
-<tr class="odd">
-<td><code>ggplot(..., aes(...)) + geom_*()</code></td>
-<td>Leggere la grammatica di base dei grafici.</td>
-</tr>
-<tr class="even">
-<td>blocchi di codice R in Quarto</td>
-<td>Capire dove il codice viene eseguito in un documento Quarto.</td>
-</tr>
-<tr class="odd">
-<td><code>pacchetto::funzione()</code></td>
-<td>Sapere da quale pacchetto proviene una funzione.</td>
-</tr>
-</tbody>
-</table>
-<p>Questa è la grammatica minima. Non permette di fare tutto, ma di certo non si è più ciechi davanti al codice. Consente di chiedere aiuto in modo più preciso, di riconoscere gli errori più comuni, di modificare gli esempi esistenti e di verificare se una soluzione proposta dall’AI è plausibile.</p>
+<section id="imparare-a-descrivere-una-procedura" class="level2">
+<h2 class="anchored" data-anchor-id="imparare-a-descrivere-una-procedura">Imparare a descrivere una procedura</h2>
+<p>La competenza fondamentale non consiste nel ricordare molte funzioni. Consiste nel saper descrivere una procedura in modo sufficientemente preciso da poterla tradurre in codice e controllare dopo l’esecuzione.</p>
+<p>Di fronte a un compito dovremmo riuscire a stabilire quale sia l’input, quale trasformazione debba essere applicata, quali condizioni debbano essere rispettate e quale output ci aspettiamo.</p>
+<p>Supponiamo di voler calcolare la qualità media del sonno per anno di corso. Prima di pensare alla sintassi dobbiamo chiarire che ogni riga rappresenta uno studente, che <code>anno</code> definisce i gruppi, che <code>qualita_sonno</code> è la variabile da riassumere e che i valori mancanti devono essere contati prima di essere esclusi dal calcolo.</p>
+<p>La procedura può essere formulata così:</p>
+<blockquote class="blockquote">
+<p>Parti dalla tabella degli studenti, forma i gruppi definiti dall’anno di corso, conta quante osservazioni possiedono una misura del sonno e calcola la media separatamente per ciascun gruppo.</p>
+</blockquote>
+<p>Questa descrizione contiene la logica dell’analisi. R e l’AI devono tradurla in una forma eseguibile senza modificarne implicitamente il significato.</p>
 </section>
-<section id="quattro-competenze-da-sviluppare" class="level2">
-<h2 class="anchored" data-anchor-id="quattro-competenze-da-sviluppare">Quattro competenze da sviluppare</h2>
-<p>In questa sezione lavoreremo soprattutto su quattro competenze.</p>
-<section id="leggere-il-codice" class="level3">
-<h3 class="anchored" data-anchor-id="leggere-il-codice">Leggere il codice</h3>
-<p>Leggere il codice significa saper spiegare, in linguaggio comune, cosa fa una sequenza di comandi. Per esempio: “questo codice prende il dataset, seleziona alcune variabili, elimina i casi con valori mancanti, calcola una media per gruppo e produce un grafico”.</p>
-<p>Questa competenza è più importante della semplice memorizzazione. Anche se un comando è stato scritto dall’AI, lo studente deve essere in grado di spiegare l’operazione eseguita.</p>
-</section>
-<section id="eseguire-il-codice" class="level3">
-<h3 class="anchored" data-anchor-id="eseguire-il-codice">Eseguire il codice</h3>
-<p>Eseguire il codice significa saper aprire un progetto, caricare i pacchetti necessari, importare i dati, lanciare i comandi e osservare l’output. Si tratta di una competenza pratica, ma non banale: molti errori derivano da file posizionati in modo errato, pacchetti non caricati, nomi di variabili scritti in modo diverso o dati letti con un formato inaspettato.</p>
-</section>
-<section id="modificare-il-codice" class="level3">
-<h3 class="anchored" data-anchor-id="modificare-il-codice">Modificare il codice</h3>
-<p>Modificare il codice significa prendere un esempio funzionante e adattarlo a un nuovo problema. Questa è una competenza fondamentale per chi muove i primi passi nel settore. Spesso non partiremo da una pagina vuota, ma da un esempio, da una soluzione generata dall’AI o da un frammento di codice già presente nel Companion. Il compito sarà capire quali parti cambiare e quali lasciare invariate.</p>
-</section>
-<section id="verificare-il-codice" class="level3">
-<h3 class="anchored" data-anchor-id="verificare-il-codice">Verificare il codice</h3>
-<p>Verificare il codice significa controllare che l’analisi faccia davvero ciò che pensiamo. Per esempio, dopo un filtro, dobbiamo chiederci quante osservazioni sono rimaste; dopo una ricodifica, dobbiamo controllare i valori della nuova variabile e, dopo un grafico, dobbiamo chiederci se il tipo di visualizzazione è coerente con il tipo di dati.</p>
-<p>Questa è la competenza più importante nell’epoca dell’intelligenza artificiale. L’AI può generare codice formalmente corretto, ma che potrebbe non essere adatto alla domanda, al dataset o al disegno della ricerca. Il controllo resta comunque responsabilità di chi conduce l’analisi.</p>
-</section>
-</section>
-<section id="usare-lai-con-criterio" class="level2">
-<h2 class="anchored" data-anchor-id="usare-lai-con-criterio">Usare l’AI con criterio</h2>
-<p>L’AI può essere un buon assistente per lavorare con R. Può aiutare a:</p>
+<section id="usare-lai-senza-delegare-lanalisi" class="level2">
+<h2 class="anchored" data-anchor-id="usare-lai-senza-delegare-lanalisi">Usare l’AI senza delegare l’analisi</h2>
+<p>L’AI è particolarmente efficace quando riceve una descrizione concreta del problema. Una richiesta generica come «analizza questi dati» obbliga l’assistente a inventare decisioni su variabili, esclusioni, mancanti, pacchetti e output.</p>
+<p>Una richiesta controllabile specifica invece la struttura del dataset, l’unità rappresentata dalle righe, i nomi e il significato delle variabili, il risultato desiderato e i controlli da includere.</p>
+<p>Il contributo dell’AI riguarda soprattutto la traduzione tra linguaggio naturale e sintassi. La responsabilità metodologica rimane del ricercatore. L’assistente non conosce automaticamente il disegno dello studio, la validità delle misure, il significato dei codici o la ragione per cui una soglia dovrebbe essere usata.</p>
+<p>Per questo motivo non useremo codice che non siamo in grado di spiegare almeno a grandi linee. Non è necessario ricordare ogni argomento di una funzione, ma deve essere possibile riconoscere:</p>
 <ul>
-<li>scrivere una prima versione del codice;</li>
-<li>spiegare un messaggio di errore;</li>
-<li>proporre una pipeline <code>dplyr</code>;</li>
-<li>suggerire un grafico con <code>ggplot2</code>;</li>
-<li>trasformare un codice disordinato in un codice più leggibile;</li>
-<li>commentare un blocco di codice;</li>
-<li>proporre controlli diagnostici.</li>
+<li>da quale oggetto parte il codice;</li>
+<li>quali righe, colonne o valori modifica;</li>
+<li>quali osservazioni entrano nel risultato;</li>
+<li>quale nuovo oggetto o output produce;</li>
+<li>quale controllo mostra che l’operazione ha funzionato come previsto.</li>
 </ul>
-<p>Tuttavia, l’AI non conosce automaticamente il contesto della ricerca. Non conosce la domanda teorica originaria, né come è stato costruito il campione, né cosa rappresentano le variabili, quali sono le codifiche speciali, quali osservazioni devono essere escluse o quale interpretazione è giustificata dal disegno.</p>
-<p>Per questo motivo, ogni utilizzo dell’AI dovrebbe essere accompagnato da alcune domande di controllo:</p>
-<ol type="1">
-<li>Il codice usa il dataset corretto?</li>
-<li>I nomi delle variabili corrispondono a quelli reali?</li>
-<li>Le variabili sono trattate nel modo giusto, per esempio come variabili numeriche, categoriali o ordinali?</li>
-<li>I valori mancanti sono gestiti in modo esplicito?</li>
-<li>La pipeline elimina alcune osservazioni? Se sì, quante e perché?</li>
-<li>Il grafico o la statistica sono coerenti con la domanda?</li>
-<li>Il risultato viene interpretato come descrizione, associazione, previsione o causalità?</li>
-<li>Il codice è inserito in un documento riproducibile?</li>
-</ol>
-<div class="callout callout-style-simple callout-warning no-icon">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-body-container">
-<p>Una regola pratica: non usare mai del codice che non sapresti spiegare almeno a grandi linee. Non è necessario ricordare ogni dettaglio sintattico, ma è importante sapere quali sono gli input, gli output e le trasformazioni che avvengono nel mezzo.</p>
-</div>
-</div>
-</div>
+<p>Questa breve lista è necessaria perché costituisce un protocollo operativo da applicare a ogni soluzione generata dall’AI.</p>
 </section>
-<section id="che-cosa-non-faremo" class="level2">
-<h2 class="anchored" data-anchor-id="che-cosa-non-faremo">Che cosa non faremo</h2>
-<p>Questa sezione non è un manuale completo di R. In rete si trovano molte risorse, spesso eccellenti, che spiegano in dettaglio la sintassi del linguaggio, la programmazione avanzata, la costruzione di pacchetti, le tecniche di ottimizzazione e molti altri aspetti.</p>
-<p>Qui faremo una scelta diversa. Tratteremo solo gli argomenti necessari per iniziare a lavorare con i dati psicologici nel contesto di questo progetto. Alcuni dettagli verranno semplificati. Alcuni argomenti verranno solo menzionati. Altri saranno rimandati a materiali esterni o a approfondimenti facoltativi.</p>
-<p>Questa scelta non impoverisce il percorso. Al contrario, lo rende più adatto allo scopo. Per gli studenti che si avvicinano per la prima volta alla statistica, il problema principale non è conoscere tutte le possibilità offerte da R, ma costruire un rapporto non intimidatorio e responsabile con il codice.</p>
+<section id="il-controllo-viene-prima-dellinterpretazione" class="level2">
+<h2 class="anchored" data-anchor-id="il-controllo-viene-prima-dellinterpretazione">Il controllo viene prima dell’interpretazione</h2>
+<p>Un codice che termina senza errori non è necessariamente corretto.</p>
+<p>Può usare la variabile sbagliata, trattare codici categoriali come quantità, eliminare osservazioni senza renderlo evidente o calcolare una statistica su un sottoinsieme diverso da quello richiesto. Può anche produrre un grafico elegante che suggerisce una conclusione non sostenuta dal disegno.</p>
+<p>Il controllo deve accompagnare ogni trasformazione. Dopo un filtro verifichiamo quante righe rimangono. Dopo la creazione di una variabile esaminiamo i valori prodotti. Dopo una sintesi controlliamo quale unità rappresenti ciascuna riga. Prima di interpretare un grafico contiamo quante osservazioni vi entrano.</p>
+<p>Il principio generale sarà:</p>
+<p><span class="math display">\[
+\text{operazione}
+\longrightarrow
+\text{conseguenza attesa}
+\longrightarrow
+\text{controllo osservabile}.
+\]</span></p>
+<p>L’AI può essere invitata a produrre questi controlli. Non dovrebbe limitarsi a fornire il risultato finale.</p>
 </section>
-<section id="mappa-della-sezione" class="level2">
-<h2 class="anchored" data-anchor-id="mappa-della-sezione">Mappa della sezione</h2>
-<p>I capitoli successivi sono organizzati per accompagnare gradualmente il passaggio dalla comprensione del codice all’analisi riproducibile.</p>
+<section id="un-percorso-deliberatamente-essenziale" class="level2">
+<h2 class="anchored" data-anchor-id="un-percorso-deliberatamente-essenziale">Un percorso deliberatamente essenziale</h2>
+<p>Questa Parte introduce soltanto ciò che serve per iniziare a lavorare con dati psicologici e affrontare la successiva sezione dedicata all’EDA.</p>
+<p>Non studieremo la programmazione avanzata, lo sviluppo di software o tutte le possibilità del linguaggio. Non sarà necessario imparare cicli complessi, metaprogrammazione, sistemi di classi o costruzione di pacchetti.</p>
+<p>Il percorso privilegia invece pochi concetti trasferibili a qualunque linguaggio: oggetti, input, trasformazioni, condizioni, sequenze, output e controlli. R fornisce la notazione concreta con cui applicarli ai dati.</p>
+<p>Questa scelta non riduce il rigore. Elimina ciò che non è necessario per concentrare l’attenzione sulle decisioni che determinano il significato dell’analisi.</p>
+</section>
+<section id="mappa-della-parte" class="level2">
+<h2 class="anchored" data-anchor-id="mappa-della-parte">Mappa della Parte</h2>
+<p>I capitoli seguono il percorso che conduce da una domanda formulata in linguaggio naturale a un’analisi documentata e riproducibile.</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 33%">
@@ -703,95 +676,87 @@ cookieconsent.run({
 <thead>
 <tr class="header">
 <th>Capitolo</th>
-<th>Funzione principale</th>
+<th>Funzione nel percorso</th>
 <th>Domanda guida</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><strong>Sintassi di base</strong></td>
-<td>Introdurre la grammatica minima per leggere codice R.</td>
-<td>Che cosa sta facendo questo comando?</td>
+<td><a href="01_r_syntax.html" class="quarto-xref"><span>6&nbsp; Pensare in operazioni: la sintassi essenziale di R</span></a></td>
+<td>Tradurre un compito in input, operazioni e output</td>
+<td>Che cosa sta facendo il codice?</td>
 </tr>
 <tr class="even">
-<td><strong>Ambiente di lavoro</strong></td>
-<td>Organizzare file, progetti e percorsi.</td>
-<td>Dove sono i dati e come rendo l’analisi riproducibile?</td>
+<td><a href="02_environment.html" class="quarto-xref"><span>7&nbsp; Un ambiente di lavoro riproducibile</span></a></td>
+<td>Organizzare file, cartelle e dipendenze</td>
+<td>Da che cosa dipende l’analisi?</td>
 </tr>
 <tr class="odd">
-<td><strong>Funzioni utili</strong></td>
-<td>Importare dati, controllare tabelle e svolgere operazioni comuni.</td>
-<td>Il dataset è stato letto e controllato correttamente?</td>
+<td><a href="03_utility_functions.html" class="quarto-xref"><span>8&nbsp; Dal file alla tabella controllata</span></a></td>
+<td>Importare e controllare una tabella</td>
+<td>I dati ottenuti corrispondono a ciò che lo studio dovrebbe contenere?</td>
 </tr>
 <tr class="even">
-<td><strong>Programmazione</strong></td>
-<td>Presentare alcuni strumenti per capire codice più articolato.</td>
-<td>Quando serve automatizzare o generalizzare un’operazione?</td>
+<td><a href="05_dplyr.html" class="quarto-xref"><span>9&nbsp; Trasformare tabelle con dplyr</span></a></td>
+<td>Trasformare righe, colonne e valori</td>
+<td>Che cosa cambia dopo ogni operazione?</td>
 </tr>
 <tr class="odd">
-<td><strong>dplyr</strong></td>
-<td>Trasformare dati in modo leggibile.</td>
-<td>Quali righe e colonne sto usando, creando o modificando?</td>
+<td><a href="06_ggplot2.html" class="quarto-xref"><span>10&nbsp; Rendere visibili i dati con ggplot2</span></a></td>
+<td>Rendere visibili distribuzioni e relazioni</td>
+<td>Che cosa voglio mostrare e quale grafico lo rende visibile?</td>
 </tr>
 <tr class="even">
-<td><strong>ggplot2</strong></td>
-<td>Visualizzare distribuzioni, confronti e relazioni.</td>
-<td>Quale grafico rende visibile il pattern rilevante?</td>
+<td><a href="07_quarto.html" class="quarto-xref"><span>11&nbsp; Quarto: rendere esplicito il percorso dell’analisi</span></a></td>
+<td>Collegare testo, codice e risultati</td>
+<td>Il percorso può essere ricostruito dall’inizio?</td>
 </tr>
 <tr class="odd">
-<td><strong>Quarto</strong></td>
-<td>Integrare testo, codice e output in un documento riproducibile.</td>
-<td>Come comunico un’analisi in modo trasparente?</td>
-</tr>
-<tr class="even">
-<td><strong>Pacchetti</strong></td>
-<td>Capire come R viene esteso da librerie specializzate.</td>
-<td>Da dove vengono le funzioni che sto usando?</td>
+<td><a href="08_r_packages.html" class="quarto-xref"><span>12&nbsp; Pacchetti: scegliere e dichiarare gli strumenti</span></a></td>
+<td>Scegliere e dichiarare strumenti esterni</td>
+<td>Quali dipendenze sono realmente necessarie?</td>
 </tr>
 </tbody>
 </table>
-<p>Questa mappa non va letta come un programma di programmazione generale. Ogni capitolo è concepito per preparare il lavoro successivo nella sezione EDA, in cui useremo R per esplorare dati reali o simulati, costruire grafici, calcolare statistiche descrittive e analizzare modelli, anomalie e relazioni tra variabili.</p>
+<p>La sequenza è progressiva, ma i capitoli possono essere consultati anche durante il lavoro. Un problema di percorso rimanda all’ambiente; una tabella inattesa ai controlli d’importazione; una pipeline poco chiara al capitolo su <code>dplyr</code>; un grafico difficile da interpretare al capitolo su <code>ggplot2</code>.</p>
 </section>
-<section id="collegamento-con-il-resto-del-progetto" class="level2">
-<h2 class="anchored" data-anchor-id="collegamento-con-il-resto-del-progetto">Collegamento con il resto del progetto</h2>
-<p>La prima parte del modulo ha trattato il tema della genesi dei dati: domande di ricerca, campioni, disegni, misure, costrutti e modelli. La sezione dedicata a R mostra come rendere operative queste idee.</p>
-<p>Per esempio, se vogliamo studiare la relazione tra lo stress accademico e la qualità del sonno, R ci permette di:</p>
-<ul>
-<li>importare il file con le risposte degli studenti;</li>
-<li>verificare quante osservazioni e variabili contiene;</li>
-<li>verificare la presenza di dati mancanti;</li>
-<li>distinguere le variabili numeriche, ordinali e categoriali;</li>
-<li>calcolare le statistiche descrittive;</li>
-<li>produrre grafici;</li>
-<li>documentare ogni passaggio in un report.</li>
-</ul>
-<p>La sezione EDA utilizzerà questi strumenti per esplorare i dati prima di passare a modelli più formali. Il manuale principale sull’inferenza bayesiana riprenderà poi i temi dell’incertezza, della stima e del confronto tra modelli. In questo percorso, R non è il fine, ma il mezzo che rende possibile il passaggio controllato dalla domanda ai dati, dai dati all’analisi e dall’analisi all’interpretazione.</p>
+<section id="dal-progetto-alla-tabella" class="level2">
+<h2 class="anchored" data-anchor-id="dal-progetto-alla-tabella">Dal progetto alla tabella</h2>
+<p>Il lavoro comincia da una cartella di progetto. Al suo interno devono essere riconoscibili i dati originali, i documenti che contengono il codice e gli output prodotti.</p>
+<p>Una procedura riproducibile non dipende da oggetti creati casualmente nella Console o da file collocati in una cartella personale. Usa percorsi relativi e può essere eseguita nuovamente dopo il riavvio di R.</p>
+<p>L’importazione rappresenta il primo vero passaggio analitico. Il fatto che un file sia stato letto senza errori non dimostra che la tabella sia corretta. Occorre confrontare righe, colonne, tipi e valori con ciò che sappiamo del disegno e della misurazione.</p>
+<p>Questa attenzione protegge da un errore frequente: iniziare a trasformare o visualizzare dati che non sono stati ancora compresi.</p>
 </section>
-<section id="come-studiare-questa-sezione" class="level2">
-<h2 class="anchored" data-anchor-id="come-studiare-questa-sezione">Come studiare questa sezione</h2>
-<p>Per trarre beneficio da questa parte, non è necessario memorizzare tutto. È più utile adottare alcune abitudini.</p>
-<p>In primo luogo, esegui il codice e osserva l’output. Chiediti sempre che cosa è cambiato dopo ogni comando.</p>
-<p>In secondo luogo, modifica piccoli dettagli. Cambia una variabile, un filtro, il titolo di un grafico o un’opzione della funzione. Spesso, vedere che cosa succede è il modo più efficace per capire.</p>
-<p>In terzo luogo, considera l’AI come un interlocutore, non come un sostituto. Puoi chiedere spiegazioni, alternative e correzioni, ma ricorda sempre di verificare il risultato sul dataset reale.</p>
-<p>In quarto luogo, scrivi brevi commenti. Anche una frase semplice può chiarire il rapporto tra il codice e la domanda di ricerca.</p>
-<p>Infine, conserva il codice in un progetto ben organizzato e, quando possibile, in un documento Quarto. L’analisi diventa più solida dal punto di vista scientifico quando può essere ricostruita.</p>
+<section id="dalla-tabella-alla-trasformazione" class="level2">
+<h2 class="anchored" data-anchor-id="dalla-tabella-alla-trasformazione">Dalla tabella alla trasformazione</h2>
+<p>Una volta controllata la tabella, <code>dplyr</code> permette di descrivere trasformazioni mediante pochi verbi. Selezionare colonne, filtrare righe, creare variabili e produrre riepiloghi sono operazioni semplici, ma incorporano decisioni sostantive.</p>
+<p>Un filtro modifica il campione analizzato. Una ricodifica introduce una nuova definizione. Una sintesi modifica l’unità rappresentata dalle righe. Il codice deve rendere visibili queste conseguenze e conservarne una traccia.</p>
+<p>L’AI può costruire una pipeline, ma la richiesta deve stabilire quali trasformazioni siano necessarie e quali non debbano essere introdotte.</p>
 </section>
-<section id="cosa-portare-con-sé" class="level2">
-<h2 class="anchored" data-anchor-id="cosa-portare-con-sé">Cosa portare con sé</h2>
-<p>Al termine di questa sezione, non sarà necessario conoscere ogni aspetto di R, ma sarà importante saper fare alcune cose essenziali:</p>
-<ol type="1">
-<li>aprire un progetto e orientarsi tra file, dati e script;</li>
-<li>leggere un blocco di codice R e spiegarne il senso generale;</li>
-<li>eseguire il codice e riconoscere gli output principali;</li>
-<li>importare un dataset e controllarne la struttura;</li>
-<li>gestire in modo consapevole valori mancanti e tipi di variabili;</li>
-<li>usare o modificare semplici pipeline <code>dplyr</code>;</li>
-<li>leggere e adattare grafici <code>ggplot2</code>;</li>
-<li>integrare testo, codice e risultati in Quarto;</li>
-<li>usare l’AI per ottenere supporto senza perdere controllo sull’analisi;</li>
-<li>distinguere un errore di sintassi da un errore concettuale.</li>
-</ol>
-<p>Queste competenze sono sufficienti per iniziare la parte di analisi esplorativa dei dati (EDA). In particolare, sono sufficienti per adottare un approccio attivo nei confronti del codice: non subirlo passivamente o copiarlo meccanicamente, ma utilizzarlo come strumento per rendere il ragionamento sui dati più chiaro, controllabile e comunicabile.</p>
+<section id="dalla-trasformazione-alla-rappresentazione" class="level2">
+<h2 class="anchored" data-anchor-id="dalla-trasformazione-alla-rappresentazione">Dalla trasformazione alla rappresentazione</h2>
+<p><code>ggplot2</code> verrà usato per tradurre una domanda esplorativa in una rappresentazione. Non impareremo tutte le geometrie o le opzioni grafiche. Ci concentreremo sulla scelta di ciò che deve diventare visibile.</p>
+<p>Un istogramma mostra la forma di una distribuzione. Le barre mostrano la composizione di categorie. Punti e boxplot rendono visibili differenze e variabilità tra gruppi. Un diagramma di dispersione mostra come due misure cambino insieme.</p>
+<p>Il grafico non parla da solo. Deve essere letto alla luce dell’unità di analisi, dei valori mancanti e del disegno. Un’associazione visiva non diventa una relazione causale perché è rappresentata con chiarezza.</p>
+</section>
+<section id="dallanalisi-al-documento" class="level2">
+<h2 class="anchored" data-anchor-id="dallanalisi-al-documento">Dall’analisi al documento</h2>
+<p>Quarto riunisce domanda, codice, risultato e interpretazione in un unico documento eseguibile. Il render da una sessione pulita verifica che l’analisi non dipenda da passaggi nascosti.</p>
+<p>Il documento finale non deve essere un deposito di output. Ogni tabella e figura deve rispondere a una domanda e ogni interpretazione deve poter essere collegata al codice che ha prodotto l’evidenza.</p>
+<p>Quando il codice proviene dall’AI, Quarto offre il luogo in cui sottoporlo a controllo. Le dipendenze diventano visibili, gli errori possono essere localizzati e il testo può essere confrontato con i risultati aggiornati.</p>
+</section>
+<section id="come-lavorare-con-i-capitoli" class="level2">
+<h2 class="anchored" data-anchor-id="come-lavorare-con-i-capitoli">Come lavorare con i capitoli</h2>
+<p>Il modo più utile per studiare questa Parte è procedere per piccole variazioni. Esegui un esempio, descrivi a parole che cosa fa, modifica un elemento e osserva che cosa cambia.</p>
+<p>Quando usi l’AI, chiedi una soluzione semplice, limitata agli strumenti già introdotti e accompagnata da controlli. Se una risposta introduce un nuovo pacchetto, una soglia o un’esclusione, chiedi quale problema risolva e quale effetto abbia sui dati.</p>
+<p>Non è necessario partire da una pagina vuota. È normale adattare esempi, documentazione e codice generato. La competenza consiste nel sapere quali parti possono cambiare senza alterare la domanda e quali modifiche rappresentano invece una nuova decisione analitica.</p>
+</section>
+<section id="che-cosa-dovrebbe-rimanere" class="level2">
+<h2 class="anchored" data-anchor-id="che-cosa-dovrebbe-rimanere">Che cosa dovrebbe rimanere</h2>
+<p>Alla fine della Parte non sarà importante ricordare ogni comando. Sarà importante riconoscere la struttura di un’analisi.</p>
+<p>Di fronte a un blocco di codice dovremmo saper identificare l’input, la trasformazione e l’output. Di fronte a una tabella dovremmo sapere che cosa rappresenta una riga. Di fronte a un filtro dovremmo chiedere quanti casi esclude. Di fronte a un grafico dovremmo sapere quale caratteristica rende visibile. Di fronte a un errore dovremmo localizzare la dipendenza o il passaggio che lo produce.</p>
+<p>Soprattutto, dovremmo essere in grado di usare l’AI come assistente senza trasferirle la responsabilità scientifica dell’analisi.</p>
+<p>Queste competenze sono sufficienti per iniziare la Parte dedicata all’analisi esplorativa dei dati. Da quel momento R verrà usato per osservare distribuzioni, variabilità, relazioni e anomalie, mantenendo sempre visibile il percorso che conduce dai dati all’interpretazione.</p>
 
 
 </section>
@@ -1219,13 +1184,13 @@ cookieconsent.run({
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../chapters/key_notions/05_cognitive_models.html" class="pagination-link" aria-label="Dalla descrizione alla spiegazione">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dalla descrizione alla spiegazione</span></span>
+      <a href="../../chapters/key_notions/05_cognitive_models.html" class="pagination-link" aria-label="Dalla descrizione alla spiegazione: modelli e processi psicologici">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dalla descrizione alla spiegazione: modelli e processi psicologici</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../chapters/R/01_r_syntax.html" class="pagination-link" aria-label="Sintassi minima per leggere codice R">
-        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sintassi minima per leggere codice R</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../chapters/R/01_r_syntax.html" class="pagination-link" aria-label="Pensare in operazioni: la sintassi essenziale di R">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Pensare in operazioni: la sintassi essenziale di R</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

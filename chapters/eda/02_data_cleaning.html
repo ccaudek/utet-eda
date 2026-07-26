@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.9.38">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>14&nbsp; Pulizia dei dati – Analisi esplorativa dei dati in psicologia</title>
+<title>14&nbsp; Pulire i dati senza nascondere le decisioni – Analisi esplorativa dei dati in psicologia</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -130,9 +130,34 @@ cookieconsent.run({
 });
 </script><style>html{ scroll-behavior: smooth; }</style>
 <link href="../../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
-<script src="../../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
-<meta property="og:title" content="14&nbsp; Pulizia dei dati – Analisi esplorativa dei dati in psicologia">
-<meta property="og:description" content="Dai dati grezzi a un dataset documentato">
+<script src="../../site_libs/pagedtable-1.1/js/pagedtable.js"></script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+<meta property="og:title" content="14&nbsp; Pulire i dati senza nascondere le decisioni – Analisi esplorativa dei dati in psicologia">
+<meta property="og:description" content="">
 <meta property="og:site_name" content="Analisi esplorativa dei dati in psicologia">
 <link rel="canonical" href="https://ccaudek.github.io/utet-eda/chapters/eda/02_data_cleaning.html">
 </head>
@@ -314,7 +339,7 @@ cookieconsent.run({
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/02_data_cleaning.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulizia dei dati</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">Statistica descrittiva ed EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/02_data_cleaning.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulire i dati senza nascondere le decisioni</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Ricerca" onclick="window.quartoOpenSearch();">
@@ -370,19 +395,19 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/03_design.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Disegno di ricerca: quali conclusioni sono giustificate dai dati?</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Disegno della ricerca: quali conclusioni sono giustificate dai dati?</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/04_measurement.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">La misurazione in psicologia</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Misurare i costrutti psicologici</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/05_cognitive_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dalla descrizione alla spiegazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dalla descrizione alla spiegazione: modelli e processi psicologici</span></span></a>
   </div>
 </li>
       </ul>
@@ -399,13 +424,13 @@ cookieconsent.run({
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/01_r_syntax.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sintassi minima per leggere codice R</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Pensare in operazioni: la sintassi essenziale di R</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/02_environment.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Ambiente di lavoro e progetti R</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Un ambiente di lavoro riproducibile</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -417,25 +442,25 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/05_dplyr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Trasformare i dati con <code>dplyr</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Trasformare tabelle con <code>dplyr</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/06_ggplot2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Visualizzare i dati con <code>ggplot2</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Rendere visibili i dati con <code>ggplot2</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/07_quarto.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quarto</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quarto: rendere esplicito il percorso dell’analisi</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/08_r_packages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Pacchetti</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Pacchetti: scegliere e dichiarare gli strumenti</span></span></a>
   </div>
 </li>
       </ul>
@@ -443,7 +468,7 @@ cookieconsent.run({
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../chapters/eda/introduction_eda.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">EDA</span></a>
+ <span class="menu-text">Statistica descrittiva ed EDA</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -452,13 +477,13 @@ cookieconsent.run({
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/01_project_structure.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Organizzare un progetto di analisi dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Preparare l’analisi esplorativa</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/02_data_cleaning.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulizia dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulire i dati senza nascondere le decisioni</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -470,37 +495,37 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/05_data_visualization_principles.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Principi della visualizzazione dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Visualizzare senza deformare</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/06_loc_scale.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Indicatori di tendenza centrale e variabilità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Distribuzione, posizione e variabilità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/07_introduction_normal_distribution.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Introduzione alla distribuzione normale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">La normale come modello di riferimento</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/08_correlation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Relazioni tra variabili</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Esplorare relazioni tra due variabili</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/09_causality_intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Dalla correlazione alla causalità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Dall’associazione alla domanda causale</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/11_outlier.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Valori inattesi e outlier</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Osservazioni inattese e outlier</span></span></a>
   </div>
 </li>
       </ul>
@@ -530,25 +555,24 @@ cookieconsent.run({
         <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="2"><h2 id="toc-title">Sommario</h2>
    
   <ul class="collapse">
-<li><a href="#perch%C3%A9-questo-capitolo" id="toc-perché-questo-capitolo" class="nav-link active" data-scroll-target="#perch%C3%A9-questo-capitolo"><span class="header-section-number">14.1</span> Perché questo capitolo</a></li>
-  <li><a href="#la-logica-generale-quattro-fasi" id="toc-la-logica-generale-quattro-fasi" class="nav-link" data-scroll-target="#la-logica-generale-quattro-fasi"><span class="header-section-number">14.2</span> La logica generale: quattro fasi</a></li>
-  <li><a href="#un-esempio-ricorrente-stress-e-sonno" id="toc-un-esempio-ricorrente-stress-e-sonno" class="nav-link" data-scroll-target="#un-esempio-ricorrente-stress-e-sonno"><span class="header-section-number">14.3</span> Un esempio ricorrente: stress e sonno</a></li>
-  <li><a href="#prima-regola-separare-dati-grezzi-e-dati-puliti" id="toc-prima-regola-separare-dati-grezzi-e-dati-puliti" class="nav-link" data-scroll-target="#prima-regola-separare-dati-grezzi-e-dati-puliti"><span class="header-section-number">14.4</span> Prima regola: separare dati grezzi e dati puliti</a></li>
-  <li><a href="#fase-1-ispeziona" id="toc-fase-1-ispeziona" class="nav-link" data-scroll-target="#fase-1-ispeziona"><span class="header-section-number">14.5</span> Fase 1: ispeziona</a></li>
-  <li><a href="#fase-2-pulisci" id="toc-fase-2-pulisci" class="nav-link" data-scroll-target="#fase-2-pulisci"><span class="header-section-number">14.6</span> Fase 2: pulisci</a></li>
-  <li><a href="#fase-3-valida" id="toc-fase-3-valida" class="nav-link" data-scroll-target="#fase-3-valida"><span class="header-section-number">14.7</span> Fase 3: valida</a></li>
-  <li><a href="#fase-4-documenta" id="toc-fase-4-documenta" class="nav-link" data-scroll-target="#fase-4-documenta"><span class="header-section-number">14.8</span> Fase 4: documenta</a></li>
-  <li><a href="#usare-lai-con-criterio" id="toc-usare-lai-con-criterio" class="nav-link" data-scroll-target="#usare-lai-con-criterio"><span class="header-section-number">14.9</span> Usare l’AI con criterio</a></li>
-  <li><a href="#checklist-finale" id="toc-checklist-finale" class="nav-link" data-scroll-target="#checklist-finale"><span class="header-section-number">14.10</span> Checklist finale</a></li>
-  <li><a href="#collegamento-con-il-capitolo-successivo" id="toc-collegamento-con-il-capitolo-successivo" class="nav-link" data-scroll-target="#collegamento-con-il-capitolo-successivo"><span class="header-section-number">14.11</span> Collegamento con il capitolo successivo</a></li>
+<li><a href="#i-dati-grezzi-possono-produrre-risultati-plausibili-e-sbagliati" id="toc-i-dati-grezzi-possono-produrre-risultati-plausibili-e-sbagliati" class="nav-link active" data-scroll-target="#i-dati-grezzi-possono-produrre-risultati-plausibili-e-sbagliati"><span class="header-section-number">14.1</span> I dati grezzi possono produrre risultati plausibili e sbagliati</a></li>
+  <li><a href="#unanomalia-%C3%A8-una-domanda-non-una-correzione" id="toc-unanomalia-è-una-domanda-non-una-correzione" class="nav-link" data-scroll-target="#unanomalia-%C3%A8-una-domanda-non-una-correzione"><span class="header-section-number">14.2</span> Un’anomalia è una domanda, non una correzione</a></li>
+  <li><a href="#la-pulizia-%C3%A8-un-processo-di-inferenza" id="toc-la-pulizia-è-un-processo-di-inferenza" class="nav-link" data-scroll-target="#la-pulizia-%C3%A8-un-processo-di-inferenza"><span class="header-section-number">14.3</span> La pulizia è un processo di inferenza</a></li>
+  <li><a href="#correzioni-sostenute-dal-codebook" id="toc-correzioni-sostenute-dal-codebook" class="nav-link" data-scroll-target="#correzioni-sostenute-dal-codebook"><span class="header-section-number">14.4</span> Correzioni sostenute dal codebook</a></li>
+  <li><a href="#categorie-incoerenti-e-perdita-di-informazione" id="toc-categorie-incoerenti-e-perdita-di-informazione" class="nav-link" data-scroll-target="#categorie-incoerenti-e-perdita-di-informazione"><span class="header-section-number">14.5</span> Categorie incoerenti e perdita di informazione</a></li>
+  <li><a href="#duplicazioni-e-unit%C3%A0-di-analisi" id="toc-duplicazioni-e-unità-di-analisi" class="nav-link" data-scroll-target="#duplicazioni-e-unit%C3%A0-di-analisi"><span class="header-section-number">14.6</span> Duplicazioni e unità di analisi</a></li>
+  <li><a href="#i-valori-mancanti-possono-cambiare-la-popolazione-osservata" id="toc-i-valori-mancanti-possono-cambiare-la-popolazione-osservata" class="nav-link" data-scroll-target="#i-valori-mancanti-possono-cambiare-la-popolazione-osservata"><span class="header-section-number">14.7</span> I valori mancanti possono cambiare la popolazione osservata</a></li>
+  <li><a href="#valori-estremi-errore-rarit%C3%A0-o-parte-della-popolazione" id="toc-valori-estremi-errore-rarità-o-parte-della-popolazione" class="nav-link" data-scroll-target="#valori-estremi-errore-rarit%C3%A0-o-parte-della-popolazione"><span class="header-section-number">14.8</span> Valori estremi: errore, rarità o parte della popolazione?</a></li>
+  <li><a href="#dalla-verifica-della-fonte-alla-correzione" id="toc-dalla-verifica-della-fonte-alla-correzione" class="nav-link" data-scroll-target="#dalla-verifica-della-fonte-alla-correzione"><span class="header-section-number">14.9</span> Dalla verifica della fonte alla correzione</a></li>
+  <li><a href="#validare-significa-confrontare-prima-e-dopo" id="toc-validare-significa-confrontare-prima-e-dopo" class="nav-link" data-scroll-target="#validare-significa-confrontare-prima-e-dopo"><span class="header-section-number">14.10</span> Validare significa confrontare prima e dopo</a></li>
+  <li><a href="#pulizia-flessibilit%C3%A0-analitica-e-crisi-della-replicabilit%C3%A0" id="toc-pulizia-flessibilità-analitica-e-crisi-della-replicabilità" class="nav-link" data-scroll-target="#pulizia-flessibilit%C3%A0-analitica-e-crisi-della-replicabilit%C3%A0"><span class="header-section-number">14.11</span> Pulizia, flessibilità analitica e crisi della replicabilità</a></li>
+  <li><a href="#un-registro-delle-decisioni" id="toc-un-registro-delle-decisioni" class="nav-link" data-scroll-target="#un-registro-delle-decisioni"><span class="header-section-number">14.12</span> Un registro delle decisioni</a></li>
+  <li><a href="#usare-lai-come-assistente-alla-diagnosi" id="toc-usare-lai-come-assistente-alla-diagnosi" class="nav-link" data-scroll-target="#usare-lai-come-assistente-alla-diagnosi"><span class="header-section-number">14.13</span> Usare l’AI come assistente alla diagnosi</a></li>
   </ul><div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/eda/02_data_cleaning.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/02_data_cleaning.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulizia dei dati</span></a></li></ol></nav><div class="quarto-title">
-<h1 class="title">
-<span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulizia dei dati</span>
-</h1>
-<p class="subtitle lead">Dai dati grezzi a un dataset documentato</p>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">Statistica descrittiva ed EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/02_data_cleaning.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulire i dati senza nascondere le decisioni</span></a></li></ol></nav><div class="quarto-title">
+<h1 class="title"><span id="sec-data-cleaning" class="quarto-section-identifier"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulire i dati senza nascondere le decisioni</span></span></h1>
 </div>
 
 
@@ -562,439 +586,598 @@ cookieconsent.run({
   
 
 
-</header><section id="perché-questo-capitolo" class="level2" data-number="14.1"><h2 data-number="14.1" class="anchored" data-anchor-id="perché-questo-capitolo">
-<span class="header-section-number">14.1</span> Perché questo capitolo</h2>
-<p>L’analisi esplorativa dei dati precede la creazione di grafici e statistiche descrittive. Inizia quando apriamo un file e ci chiediamo se i dati in esso contenuti sono comprensibili, coerenti e pertinenti alla domanda di ricerca.</p>
-<p>La pulizia dei dati non è una fase puramente tecnica. Ogni correzione, esclusione, ricodifica o trasformazione è una <strong>decisione metodologica</strong>. Alcune decisioni sono semplici, come correggere un nome di variabile scritto in modo incoerente. Altre decisioni sono più delicate, come ad esempio cosa fare con i valori mancanti, le risposte impossibili o le osservazioni duplicate.</p>
-<p>In questo capitolo useremo un principio semplice:</p>
-<div class="callout callout-style-default callout-important callout-titled">
+</header><div class="callout callout-style-default callout-note callout-titled" title="In sintesi">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Principio fondamentale
+<span class="screen-reader-only">Nota</span>In sintesi
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Non modificare mai i dati grezzi.</strong></p>
-<p>I dati originali devono restare intatti. Tutte le trasformazioni devono essere eseguite tramite codice e salvate in un nuovo file documentato.</p>
+<p><strong>Da sapere</strong> I dati grezzi non sono normalmente pronti per l’analisi. Codici speciali, duplicazioni, errori di registrazione, categorie incoerenti e valori mancanti possono deformare distribuzioni, associazioni e composizione del campione. La pulizia è quindi necessaria, ma non è un procedimento automatico: ogni intervento richiede una giustificazione legata al disegno, al codebook e alla provenienza dei dati.</p>
+<p><strong>Da saper fare</strong> Distinguere un’anomalia da un errore confermato; diagnosticare prima di correggere; quantificare l’effetto di esclusioni e ricodifiche; confrontare dati grezzi e dati preparati; documentare le decisioni; chiedere all’AI controlli e proposte senza autorizzarla a modificare automaticamente il dataset.</p>
 </div>
 </div>
-<p>Al termine del capitolo dovresti essere in grado di:</p>
-<ul>
-<li>distinguere i dati grezzi da quelli puliti;</li>
-<li>ispezionare la struttura iniziale di un dataset;</li>
-<li>riconoscere i problemi più comuni dei dati;</li>
-<li>applicare semplici operazioni di pulizia;</li>
-<li>verificare che il dataset pulito sia coerente;</li>
-<li>documentare le decisioni prese durante la pulizia;</li>
-<li>valutare criticamente il codice di pulizia prodotto con l’aiuto dell’AI.</li>
-</ul></section><section id="la-logica-generale-quattro-fasi" class="level2" data-number="14.2"><h2 data-number="14.2" class="anchored" data-anchor-id="la-logica-generale-quattro-fasi">
-<span class="header-section-number">14.2</span> La logica generale: quattro fasi</h2>
-<p>Useremo una sequenza in quattro fasi.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
-</colgroup>
-<thead><tr class="header">
-<th>Fase</th>
-<th>Domanda guida</th>
-<th>Obiettivo</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td><strong>Ispeziona</strong></td>
-<td>Che cosa contiene il file?</td>
-<td>Capire struttura, variabili, tipi di dato e problemi iniziali.</td>
-</tr>
-<tr class="even">
-<td><strong>Pulisci</strong></td>
-<td>Che cosa deve essere corretto?</td>
-<td>Rinominare, ricodificare, gestire duplicati, missing e formati errati.</td>
-</tr>
-<tr class="odd">
-<td><strong>Valida</strong></td>
-<td>Il dataset è coerente?</td>
-<td>Controllare che i valori rispettino vincoli plausibili.</td>
-</tr>
-<tr class="even">
-<td><strong>Documenta</strong></td>
-<td>Che cosa è stato fatto?</td>
-<td>Rendere esplicite e riproducibili tutte le decisioni.</td>
-</tr>
-</tbody>
-</table>
-<p>Questa sequenza non va intesa come una ricetta rigida. Nella pratica si torna spesso indietro: un controllo può rivelare un problema che richiede una nuova correzione. L’importante è che il processo sia trasparente.</p>
-</section><section id="un-esempio-ricorrente-stress-e-sonno" class="level2" data-number="14.3"><h2 data-number="14.3" class="anchored" data-anchor-id="un-esempio-ricorrente-stress-e-sonno">
-<span class="header-section-number">14.3</span> Un esempio ricorrente: stress e sonno</h2>
-<p>Supponiamo di aver raccolto dati da studenti universitari per studiare la relazione tra stress accademico e qualità del sonno. Il file grezzo contiene una riga per ogni studente e le seguenti variabili:</p>
-<table class="caption-top table">
-<thead><tr class="header">
-<th>Variabile</th>
-<th>Significato atteso</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td><code>id</code></td>
-<td>Identificatore anonimo dello studente</td>
-</tr>
-<tr class="even">
-<td><code>eta</code></td>
-<td>Età in anni</td>
-</tr>
-<tr class="odd">
-<td><code>genere</code></td>
-<td>Categoria dichiarata dallo studente</td>
-</tr>
-<tr class="even">
-<td><code>stress</code></td>
-<td>Punteggio di stress accademico, da 1 a 10</td>
-</tr>
-<tr class="odd">
-<td><code>sonno_ore</code></td>
-<td>Ore medie di sonno per notte</td>
-</tr>
-<tr class="even">
-<td><code>qualita_sonno</code></td>
-<td>Valutazione soggettiva del sonno, da 1 a 5</td>
-</tr>
-<tr class="odd">
-<td><code>data_compilazione</code></td>
-<td>Data di compilazione del questionario</td>
-</tr>
-</tbody>
-</table>
-<p>Questo esempio ci accompagnerà nei capitoli successivi: prima controlleremo il dataset, poi esploreremo le singole variabili, visualizzeremo le distribuzioni, esamineremo la variabilità e, infine, studieremo le associazioni tra le variabili.</p>
-</section><section id="prima-regola-separare-dati-grezzi-e-dati-puliti" class="level2" data-number="14.4"><h2 data-number="14.4" class="anchored" data-anchor-id="prima-regola-separare-dati-grezzi-e-dati-puliti">
-<span class="header-section-number">14.4</span> Prima regola: separare dati grezzi e dati puliti</h2>
-<p>Una struttura minima del progetto potrebbe essere:</p>
-<pre class="text"><code>progetto_eda/
-├── data_raw/       # dati originali, mai modificati
-├── data_clean/     # dati puliti prodotti dal codice
-├── reports/        # file Quarto e report finali
-└── scripts/        # eventuali script R separati</code></pre>
-<p>I dati grezzi devono essere conservati in <code>data_raw/</code>. Il dataset pulito deve essere salvato in <code>data_clean/</code>. In questo modo, se qualcosa va storto, è sempre possibile ricostruire il percorso dall’inizio.</p>
-<div class="callout callout-style-default callout-warning callout-titled">
+<section id="introduzione" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="introduzione">Introduzione</h2>
+<p>Il file prodotto da un questionario, da un laboratorio o da una piattaforma online è un punto di partenza, non il dataset finale.</p>
+<p>Una colonna può contenere <code>999</code> per indicare una risposta mancante. La stessa categoria può essere registrata come <code>F</code>, <code>f</code> e <code>femmina</code>. Una persona può comparire due volte perché ha riaperto il questionario. Un tempo di risposta molto breve può derivare da una prova anticipata, da un errore tecnico oppure da una risposta realmente eccezionale.</p>
+<p>Se questi problemi vengono ignorati, le statistiche descrittive non rappresentano fedelmente né le osservazioni raccolte né la popolazione a cui vorremmo riferirci. Una media può essere trascinata da codici speciali trattati come numeri reali; una relazione può dipendere da poche righe duplicate; l’eliminazione automatica dei casi incompleti può lasciare nel campione soprattutto i partecipanti più facili da misurare.</p>
+<p>La pulizia è dunque indispensabile. Tuttavia, non esiste un comando capace di distinguere automaticamente ciò che è errato da ciò che è raro, ciò che manca per caso da ciò che manca in modo sistematico, o una duplicazione accidentale da una misura ripetuta prevista dal disegno.</p>
+<p>La domanda centrale non è:</p>
+<blockquote class="blockquote">
+<p>Come posso rendere il dataset ordinato?</p>
+</blockquote>
+<p>È piuttosto:</p>
+<blockquote class="blockquote">
+<p>Quale trasformazione è giustificata dall’evidenza disponibile, e come modifica ciò che il dataset rappresenta?</p>
+</blockquote>
+<div class="callout callout-style-default callout-tip callout-titled" title="Prerequisiti">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Avviso</span>Errore comune
+<span class="screen-reader-only">Consiglio</span>Prerequisiti
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Aprire un file <code>.csv</code> in Excel, correggere qualche cella manualmente e salvare il file sopra quello originale sembra un’operazione veloce, ma rende difficile verificare l’analisi.</p>
-<p>La domanda da porsi è: <strong>Un’altra persona potrebbe ricostruire esattamente ciò che ho fatto?</strong></p>
+<p>Il capitolo prosegue il lavoro iniziato in <a href="01_project_structure.html" class="quarto-xref"><span>Capitolo 13</span></a>. Presuppone inoltre i principi di progettazione, misurazione e riproducibilità discussi in <a href="../key_notions/03_design.html" class="quarto-xref"><span>Capitolo 3</span></a>, <a href="../key_notions/04_measurement.html" class="quarto-xref"><span>Capitolo 4</span></a> e <a href="../R/07_quarto.html" class="quarto-xref"><span>Capitolo 11</span></a>.</p>
 </div>
 </div>
-</section><section id="fase-1-ispeziona" class="level2" data-number="14.5"><h2 data-number="14.5" class="anchored" data-anchor-id="fase-1-ispeziona">
-<span class="header-section-number">14.5</span> Fase 1: ispeziona</h2>
-<p>La prima cosa da fare è guardare il dataset senza modificarlo.</p>
+</section><section id="panoramica-del-capitolo" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="panoramica-del-capitolo">Panoramica del capitolo</h2>
+<p>Partiremo dalla distinzione tra dato insolito ed errore confermato. Vedremo poi come codici mancanti, duplicazioni, categorie incoerenti ed esclusioni possano alterare i risultati. Un piccolo esempio in R mostrerà una procedura basata su diagnosi, decisione, trasformazione e validazione. Concluderemo collegando la pulizia ai gradi di libertà del ricercatore e alla crisi della replicabilità.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Preparazione del notebook">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Preparazione del notebook
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Gli esempi usano <code>dplyr</code> e un dataset didattico costruito nel documento. Le anomalie sono intenzionali. Alcune possono essere risolte perché il testo fornisce il codebook o una verifica della fonte; altre devono rimanere segnalate finché non disponiamo di evidenza sufficiente.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://readr.tidyverse.org">readr</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">stress_raw</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="st">"data_raw/stress_sonno.csv"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">stress_raw</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<span><span class="va">dati_grezzi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
+<span>  id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"S01"</span>, <span class="st">"S02"</span>, <span class="st">"S03"</span>, <span class="st">"S03"</span>,</span>
+<span>    <span class="st">"S04"</span>, <span class="st">"S05"</span>, <span class="st">"S06"</span>, <span class="st">"S07"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  data_compilazione <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"2026-03-01"</span>, <span class="st">"2026-03-01"</span>,</span>
+<span>    <span class="st">"2026-03-02"</span>, <span class="st">"2026-03-04"</span>,</span>
+<span>    <span class="st">"2026-03-03"</span>, <span class="st">"2026-03-03"</span>,</span>
+<span>    <span class="st">"2026-03-04"</span>, <span class="st">"2026-03-05"</span></span>
+<span>  <span class="op">)</span><span class="op">)</span>,</span>
+<span>  anno <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"primo"</span>, <span class="st">"primo"</span>, <span class="st">"secondo"</span>, <span class="st">"secondo"</span>,</span>
+<span>    <span class="st">"terzo"</span>, <span class="st">"primo"</span>, <span class="st">"terzo"</span>, <span class="st">"terzo"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  genere <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"F"</span>, <span class="st">"femmina"</span>, <span class="st">"M"</span>, <span class="st">"M"</span>,</span>
+<span>    <span class="st">"F"</span>, <span class="st">"non indicato"</span>, <span class="st">"f"</span>, <span class="st">"maschio"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  stress <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
+<span>    <span class="fl">7</span>, <span class="fl">999</span>, <span class="fl">5</span>, <span class="fl">6</span>,</span>
+<span>    <span class="fl">11</span>, <span class="fl">8</span>, <span class="cn">NA</span>, <span class="fl">3</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  sonno_ore <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
+<span>    <span class="fl">6.5</span>, <span class="fl">7.2</span>, <span class="fl">5.8</span>, <span class="fl">6.0</span>,</span>
+<span>    <span class="fl">5.1</span>, <span class="op">-</span><span class="fl">99</span>, <span class="fl">8.0</span>, <span class="fl">28</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>In questa fase non cerchiamo ancora di correggere tutto. Cerchiamo piuttosto di capire che cosa abbiamo davanti.</p>
-<p>Domande utili:</p>
-<ul>
-<li>Il numero di righe è plausibile?</li>
-<li>Le variabili attese sono presenti?</li>
-<li>I nomi delle colonne sono comprensibili?</li>
-<li>Le variabili numeriche sono state importate come numeriche?</li>
-<li>Le categorie sono scritte in modo coerente?</li>
-<li>Ci sono codici speciali per i valori mancanti, come <code>999</code>, <code>-99</code>, <code>NA</code>, <code>N/A</code>, <code>non so</code>?</li>
-</ul>
-<p>Un controllo iniziale può essere effettuato con funzioni semplici.</p>
+</div>
+</div>
+</section><section id="i-dati-grezzi-possono-produrre-risultati-plausibili-e-sbagliati" class="level2" data-number="14.1"><h2 data-number="14.1" class="anchored" data-anchor-id="i-dati-grezzi-possono-produrre-risultati-plausibili-e-sbagliati">
+<span class="header-section-number">14.1</span> I dati grezzi possono produrre risultati plausibili e sbagliati</h2>
+<p>Il pericolo più evidente è un errore che interrompe il codice. Più insidioso è un dato problematico che R riesce comunque a elaborare.</p>
+<p>Se calcoliamo direttamente la media di <code>stress</code>, il codice <code>999</code> viene trattato come un punteggio reale:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">stress_raw</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">stress_raw</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">stress_raw</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">stress_raw</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span></span>
+<span>  <span class="va">dati_grezzi</span><span class="op">$</span><span class="va">stress</span>,</span>
+<span>  na.rm <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 148.4286</code></pre>
 </div>
-<p>Se usi pacchetti come <code>skimr</code>, puoi ottenere una panoramica più ricca.</p>
+</div>
+<p>R non conosce il questionario. Dal suo punto di vista, <code>999</code> è un numero come gli altri. Il risultato è tecnicamente corretto rispetto ai valori presenti nella colonna, ma non descrive lo stress degli studenti.</p>
+<p>Lo stesso problema si verifica con <code>-99</code> nelle ore di sonno. Una statistica può quindi essere calcolata senza messaggi di errore e risultare profondamente distorta.</p>
+<p>Questo esempio chiarisce perché l’ispezione dei dati non sia una formalità. Prima di descrivere una variabile dobbiamo sapere quali valori sono possibili, quali codici possiedono un significato speciale e come la colonna è stata prodotta.</p>
+</section><section id="unanomalia-è-una-domanda-non-una-correzione" class="level2" data-number="14.2"><h2 data-number="14.2" class="anchored" data-anchor-id="unanomalia-è-una-domanda-non-una-correzione">
+<span class="header-section-number">14.2</span> Un’anomalia è una domanda, non una correzione</h2>
+<p>Un valore fuori dall’intervallo previsto segnala una discrepanza. Non ne stabilisce la causa.</p>
+<p>Il punteggio <code>stress = 11</code> è incompatibile con una scala da 1 a 10. Potrebbe derivare da un errore di trascrizione, da una regola di scoring diversa da quella documentata oppure dall’importazione della colonna sbagliata. Il valore <code>sonno_ore = 28</code> sembra implausibile come media giornaliera, ma non sappiamo ancora se rappresenti una risposta errata, una misura settimanale oppure un problema di unità.</p>
+<p>La prima operazione deve rendere visibili i casi:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">skimr</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/skimr/reference/skim.html">skim</a></span><span class="op">(</span><span class="va">stress_raw</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Nota</span>Che cosa guardare subito
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Durante l’ispezione iniziale presta attenzione soprattutto a:</p>
-<ul>
-<li>valori mancanti;</li>
-<li>valori impossibili, come <code>stress = 99</code> su una scala da 1 a 10;</li>
-<li>categorie duplicate per errore, come <code>F</code>, <code>femmina</code>, <code>Femmina</code>;</li>
-<li>date lette come testo;</li>
-<li>variabili numeriche lette come caratteri;</li>
-<li>righe duplicate;</li>
-<li>colonne che contengono informazioni identificative.</li>
-</ul>
-</div>
-</div>
-</section><section id="fase-2-pulisci" class="level2" data-number="14.6"><h2 data-number="14.6" class="anchored" data-anchor-id="fase-2-pulisci">
-<span class="header-section-number">14.6</span> Fase 2: pulisci</h2>
-<p>Dopo l’ispezione si costruisce una versione pulita del dataset. La pulizia deve avvenire tramite codice, non manualmente.</p>
-<section id="rinominare-le-variabili" class="level3" data-number="14.6.1"><h3 data-number="14.6.1" class="anchored" data-anchor-id="rinominare-le-variabili">
-<span class="header-section-number">14.6.1</span> Rinominare le variabili</h3>
-<p>I nomi chiari riducono gli errori. È utile usare nomi brevi, descrittivi e coerenti.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress</span> <span class="op">&lt;-</span> <span class="va">stress_raw</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">janitor</span><span class="fu">::</span><span class="fu"><a href="https://sfirke.github.io/janitor/reference/clean_names.html">clean_names</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Dopo questa operazione è opportuno controllare i nuovi nomi.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">stress</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section><section id="eliminare-informazioni-identificative" class="level3" data-number="14.6.2"><h3 data-number="14.6.2" class="anchored" data-anchor-id="eliminare-informazioni-identificative">
-<span class="header-section-number">14.6.2</span> Eliminare informazioni identificative</h3>
-<p>Se il dataset contiene nomi, indirizzi email, matricole o altre informazioni personali, queste devono essere rimosse o sostituite da identificatori anonimi prima dell’analisi.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress</span> <span class="op">&lt;-</span> <span class="va">stress</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">email</span>, <span class="op">-</span><span class="va">nome</span>, <span class="op">-</span><span class="va">cognome</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Naturalmente questo codice è solo un esempio: le colonne da rimuovere dipendono dal dataset reale.</p>
-</section><section id="gestire-duplicati" class="level3" data-number="14.6.3"><h3 data-number="14.6.3" class="anchored" data-anchor-id="gestire-duplicati">
-<span class="header-section-number">14.6.3</span> Gestire duplicati</h3>
-<p>I duplicati non devono essere eliminati automaticamente. Bisogna prima capire perché esistono.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">n</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Se uno studente ha compilato il questionario due volte, dobbiamo decidere quale riga conservare. Per esempio, potremmo tenere in considerazione l’ultima compilazione.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress</span> <span class="op">&lt;-</span> <span class="va">stress</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">data_compilazione</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html">distinct</a></span><span class="op">(</span><span class="va">id</span>, .keep_all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Questa scelta deve essere documentata. Non è sufficiente scrivere il codice, ma è necessario spiegare perché è stata presa quella decisione.</p>
-</section><section id="ricodificare-valori-incoerenti" class="level3" data-number="14.6.4"><h3 data-number="14.6.4" class="anchored" data-anchor-id="ricodificare-valori-incoerenti">
-<span class="header-section-number">14.6.4</span> Ricodificare valori incoerenti</h3>
-<p>Spesso i dati provenienti dai questionari contengono categorie scritte in modi diversi.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress</span> <span class="op">&lt;-</span> <span class="va">stress</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
-<span>    genere <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html">case_when</a></span><span class="op">(</span></span>
-<span>      <span class="va">genere</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"F"</span>, <span class="st">"f"</span>, <span class="st">"Femmina"</span>, <span class="st">"femmina"</span><span class="op">)</span> <span class="op">~</span> <span class="st">"femmina"</span>,</span>
-<span>      <span class="va">genere</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"M"</span>, <span class="st">"m"</span>, <span class="st">"Maschio"</span>, <span class="st">"maschio"</span><span class="op">)</span> <span class="op">~</span> <span class="st">"maschio"</span>,</span>
-<span>      <span class="cn">TRUE</span> <span class="op">~</span> <span class="st">"altro_o_non_indicato"</span></span>
-<span>    <span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dati_grezzi</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span></span>
+<span>    <span class="va">stress</span> <span class="op">&lt;</span> <span class="fl">1</span> <span class="op">|</span></span>
+<span>      <span class="va">stress</span> <span class="op">&gt;</span> <span class="fl">10</span> <span class="op">|</span></span>
+<span>      <span class="va">sonno_ore</span> <span class="op">&lt;</span> <span class="fl">0</span> <span class="op">|</span></span>
+<span>      <span class="va">sonno_ore</span> <span class="op">&gt;</span> <span class="fl">16</span></span>
 <span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["id"],"name":[1],"type":["chr"],"align":["left"]},{"label":["data_compilazione"],"name":[2],"type":["date"],"align":["right"]},{"label":["anno"],"name":[3],"type":["chr"],"align":["left"]},{"label":["genere"],"name":[4],"type":["chr"],"align":["left"]},{"label":["stress"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["sonno_ore"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"S02","2":"2026-03-01","3":"primo","4":"femmina","5":"999","6":"7.2"},{"1":"S04","2":"2026-03-03","3":"terzo","4":"F","5":"11","6":"5.1"},{"1":"S05","2":"2026-03-03","3":"primo","4":"non indicato","5":"8","6":"-99.0"},{"1":"S07","2":"2026-03-05","3":"terzo","4":"maschio","5":"3","6":"28.0"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
 </div>
-<p>Dopo ogni ricodifica è necessario controllare il risultato.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span><span class="op">(</span><span class="va">genere</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</section><section id="gestire-valori-mancanti" class="level3" data-number="14.6.5"><h3 data-number="14.6.5" class="anchored" data-anchor-id="gestire-valori-mancanti">
-<span class="header-section-number">14.6.5</span> Gestire valori mancanti</h3>
-<p>I valori mancanti sono una delle parti più delicate della pulizia dei dati. Non indicano sempre la stessa cosa. Una risposta mancante può indicare che lo studente ha saltato la domanda, che la domanda non era pertinente, che c’è stato un errore di inserimento o che il dato è stato rimosso per motivi di privacy.</p>
-<p>Prima di decidere come procedere, è necessario quantificare il problema.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="op">(</span><span class="op">)</span>, <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>A volte i valori mancanti sono codificati con numeri o stringhe particolari.</p>
+<p>Il filtro non “pulisce” nulla. Produce una lista di osservazioni che richiedono una verifica.</p>
+<div class="callout callout-style-default callout-important callout-titled" title="Segnalare prima di modificare">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Importante</span>Segnalare prima di modificare
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Un valore insolito non deve essere eliminato, troncato o sostituito soltanto perché disturba il riepilogo. L’intervento è giustificato quando possiamo collegarlo a una regola del codebook, a una verifica del dato originale o a un criterio definito dal disegno.</p>
+</div>
+</div>
+<p>La distinzione fondamentale è quindi tra <strong>anomalia osservata</strong> ed <strong>errore confermato</strong>. L’anomalia nasce dal confronto con un’aspettativa; l’errore richiede evidenza sulla causa.</p>
+</section><section id="la-pulizia-è-un-processo-di-inferenza" class="level2" data-number="14.3"><h2 data-number="14.3" class="anchored" data-anchor-id="la-pulizia-è-un-processo-di-inferenza">
+<span class="header-section-number">14.3</span> La pulizia è un processo di inferenza</h2>
+<p>Ogni decisione di pulizia contiene un ragionamento.</p>
+<p>Quando troviamo due righe con lo stesso identificatore, osserviamo una duplicazione. Per stabilire se sia un problema dobbiamo sapere che cosa rappresenta una riga. In uno studio longitudinale, identificatori ripetuti sono necessari. In un questionario trasversale con una sola compilazione prevista, possono indicare un invio ripetuto.</p>
+<p>Quando troviamo <code>999</code>, osserviamo un valore estremo. Soltanto il codebook può dirci che significa “nessuna risposta”. Quando troviamo categorie scritte in modi diversi, dobbiamo verificare che siano davvero etichette equivalenti e non categorie che il ricercatore sta unificando per comodità.</p>
+<p>La sequenza appropriata è:</p>
+<p><span class="math display">\[
+\text{discrepanza}
+\longrightarrow
+\text{ipotesi sulla causa}
+\longrightarrow
+\text{evidenza}
+\longrightarrow
+\text{decisione}
+\longrightarrow
+\text{controllo dell'effetto}.
+\]</span></p>
+<p>Chiamare tutto questo “pulizia” può farlo apparire come un lavoro di manutenzione. In realtà, è una forma di inferenza sul processo che ha generato i dati.</p>
+</section><section id="correzioni-sostenute-dal-codebook" class="level2" data-number="14.4"><h2 data-number="14.4" class="anchored" data-anchor-id="correzioni-sostenute-dal-codebook">
+<span class="header-section-number">14.4</span> Correzioni sostenute dal codebook</h2>
+<p>Supponiamo che il codebook specifichi che <code>999</code> nella scala di stress e <code>-99</code> nelle ore di sonno indicano risposte mancanti. In questo caso la ricodifica è giustificata:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress</span> <span class="op">&lt;-</span> <span class="va">stress</span> <span class="op">|&gt;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dati_preparati</span> <span class="op">&lt;-</span> <span class="va">dati_grezzi</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
 <span>    stress <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/na_if.html">na_if</a></span><span class="op">(</span><span class="va">stress</span>, <span class="fl">999</span><span class="op">)</span>,</span>
 <span>    sonno_ore <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/na_if.html">na_if</a></span><span class="op">(</span><span class="va">sonno_ore</span>, <span class="op">-</span><span class="fl">99</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div class="callout callout-style-default callout-caution callout-titled">
+<p>Non stiamo eliminando osservazioni. Stiamo correggendo il significato informatico di due codici: da numeri apparentemente osservati a valori mancanti.</p>
+<p>Dopo la trasformazione dobbiamo verificare il risultato:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dati_preparati</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
+<span>    n_stress_mancante <span class="op">=</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">stress</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    n_sonno_mancante <span class="op">=</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">sonno_ore</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["n_stress_mancante"],"name":[1],"type":["int"],"align":["right"]},{"label":["n_sonno_mancante"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"2","2":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Il controllo mostra quante celle sono state ricodificate. Nel registro delle decisioni dovremmo indicare la fonte della regola, non soltanto il comando usato.</p>
+</section><section id="categorie-incoerenti-e-perdita-di-informazione" class="level2" data-number="14.5"><h2 data-number="14.5" class="anchored" data-anchor-id="categorie-incoerenti-e-perdita-di-informazione">
+<span class="header-section-number">14.5</span> Categorie incoerenti e perdita di informazione</h2>
+<p>Nel dataset, <code>F</code>, <code>f</code> e <code>femmina</code> sembrano indicare la stessa categoria; analogamente, <code>M</code> e <code>maschio</code> sembrano equivalenti. Poiché questa corrispondenza è confermata dal questionario, possiamo uniformare le etichette:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dati_preparati</span> <span class="op">&lt;-</span> <span class="va">dati_preparati</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>    genere <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html">case_when</a></span><span class="op">(</span></span>
+<span>      <span class="va">genere</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"F"</span>, <span class="st">"f"</span>, <span class="st">"femmina"</span><span class="op">)</span> <span class="op">~</span></span>
+<span>        <span class="st">"femmina"</span>,</span>
+<span>      <span class="va">genere</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"M"</span>, <span class="st">"m"</span>, <span class="st">"maschio"</span><span class="op">)</span> <span class="op">~</span></span>
+<span>        <span class="st">"maschio"</span>,</span>
+<span>      <span class="cn">TRUE</span> <span class="op">~</span> <span class="va">genere</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>La clausola finale conserva le categorie che non abbiamo autorizzazione a modificare. In particolare, <code>non indicato</code> non viene trasformato automaticamente in <code>altro</code>, perché le due espressioni possono avere significati differenti.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dati_preparati</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span><span class="op">(</span><span class="va">genere</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["genere"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"femmina","2":"4"},{"1":"maschio","2":"3"},{"1":"non indicato","2":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Una ricodifica può sembrare innocua, ma modifica la composizione delle categorie. Il controllo dopo la trasformazione deve quindi mostrare non soltanto che il codice ha funzionato, ma anche quali frequenze ha prodotto.</p>
+</section><section id="duplicazioni-e-unità-di-analisi" class="level2" data-number="14.6"><h2 data-number="14.6" class="anchored" data-anchor-id="duplicazioni-e-unità-di-analisi">
+<span class="header-section-number">14.6</span> Duplicazioni e unità di analisi</h2>
+<p>Nel nostro esempio <code>S03</code> compare due volte. Il protocollo stabilisce che ogni studente debba comparire una sola volta e che, in caso di invio ripetuto accidentale, venga conservata la compilazione più recente.</p>
+<p>Questa regola permette di applicare una trasformazione esplicita:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dati_preparati</span> <span class="op">&lt;-</span> <span class="va">dati_preparati</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span></span>
+<span>    <span class="va">id</span>,</span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html">desc</a></span><span class="op">(</span><span class="va">data_compilazione</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html">distinct</a></span><span class="op">(</span></span>
+<span>    <span class="va">id</span>,</span>
+<span>    .keep_all <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>L’ordinamento decrescente colloca per prima la compilazione più recente; <code><a href="https://dplyr.tidyverse.org/reference/distinct.html">distinct()</a></code> conserva quella riga.</p>
+<p>Il codice non rende la regola automaticamente corretta. La sua giustificazione proviene dal protocollo. Con una domanda diversa potremmo conservare entrambe le compilazioni, confrontarle oppure escludere il partecipante. Queste alternative produrrebbero dataset differenti.</p>
+<p>Dopo la decisione controlliamo che l’unità di analisi prevista sia stata ottenuta:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dati_preparati</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
+<span>    n_righe <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    n_id <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html">n_distinct</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span>,</span>
+<span>    duplicazioni <span class="op">=</span></span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html">n_distinct</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["n_righe"],"name":[1],"type":["int"],"align":["right"]},{"label":["n_id"],"name":[2],"type":["int"],"align":["right"]},{"label":["duplicazioni"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"7","2":"7","3":"0"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+</section><section id="i-valori-mancanti-possono-cambiare-la-popolazione-osservata" class="level2" data-number="14.7"><h2 data-number="14.7" class="anchored" data-anchor-id="i-valori-mancanti-possono-cambiare-la-popolazione-osservata">
+<span class="header-section-number">14.7</span> I valori mancanti possono cambiare la popolazione osservata</h2>
+<p>Dopo avere ricodificato i codici speciali, alcune righe non possiedono entrambe le misure. Una soluzione rapida consiste nel conservare soltanto i casi completi:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dati_completi</span> <span class="op">&lt;-</span> <span class="va">dati_preparati</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span></span>
+<span>    <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">stress</span><span class="op">)</span>,</span>
+<span>    <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">sonno_ore</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Il codice è semplice. La decisione non lo è.</p>
+<p>Se la probabilità di avere dati completi differisce tra gruppi, il nuovo campione può rappresentare una popolazione diversa. Nel dataset didattico possiamo controllare la completezza per anno:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dati_preparati</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>    completo <span class="op">=</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/stats/complete.cases.html">complete.cases</a></span><span class="op">(</span></span>
+<span>        <span class="va">stress</span>,</span>
+<span>        <span class="va">sonno_ore</span></span>
+<span>      <span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span><span class="op">(</span></span>
+<span>    <span class="va">anno</span>,</span>
+<span>    <span class="va">completo</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["anno"],"name":[1],"type":["chr"],"align":["left"]},{"label":["completo"],"name":[2],"type":["lgl"],"align":["right"]},{"label":["n"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"primo","2":"FALSE","3":"2"},{"1":"primo","2":"TRUE","3":"1"},{"1":"secondo","2":"TRUE","3":"1"},{"1":"terzo","2":"FALSE","3":"1"},{"1":"terzo","2":"TRUE","3":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Se gli studenti del primo anno hanno più valori mancanti, l’analisi dei soli casi completi li rappresenterà meno. Le stime non saranno distorte soltanto perché il campione è più piccolo; potranno esserlo perché il meccanismo che determina l’assenza dei dati è collegato alle caratteristiche che vogliamo studiare.</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="La completezza non è neutralità">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Attenzione</span>Non cancellare i missing troppo presto
+<span class="screen-reader-only">Avviso</span>La completezza non è neutralità
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Molte funzioni R eliminano automaticamente i casi con valori mancanti o richiedono opzioni come <code>na.rm = TRUE</code>.</p>
-<p>Prima di eliminare osservazioni, chiediti:</p>
-<ul>
-<li>quanti casi sto perdendo?</li>
-<li>i casi eliminati sono simili agli altri?</li>
-<li>la perdita di dati può modificare le conclusioni?</li>
-<li>devo dichiarare questa scelta nel report?</li>
-</ul>
+<p>L’eliminazione dei casi incompleti non “toglie soltanto i mancanti”. Separa le persone che hanno fornito tutte le informazioni da quelle che non le hanno fornite. Prima di procedere dobbiamo chiederci se questa separazione sia plausibilmente irrilevante per la domanda.</p>
 </div>
 </div>
-<p>Per un capitolo introduttivo è sufficiente sapere che esistono diverse strategie: l’esclusione dei casi incompleti, l’analisi dei pattern di missing, l’imputazione semplice e l’imputazione multipla. La scelta dipende dal disegno dello studio, dalla quantità di dati mancanti e dalla plausibilità delle assunzioni.</p>
-<p>In questa sede, l’aspetto più importante non è imparare una tecnica avanzata di imputazione, ma non considerare i valori mancanti come un dettaglio trascurabile.</p>
-</section></section><section id="fase-3-valida" class="level2" data-number="14.7"><h2 data-number="14.7" class="anchored" data-anchor-id="fase-3-valida">
-<span class="header-section-number">14.7</span> Fase 3: valida</h2>
-<p>Dopo la pulizia, è necessario verificare che il dataset rispetti vincoli plausibili.</p>
-<p>Per esempio:</p>
-<ul>
-<li>
-<code>stress</code> deve essere compreso tra 1 e 10;</li>
-<li>
-<code>qualita_sonno</code> deve essere compresa tra 1 e 5;</li>
-<li>
-<code>sonno_ore</code> non deve essere negativa;</li>
-<li>ogni <code>id</code> dovrebbe comparire una sola volta;</li>
-<li>le categorie di <code>genere</code> dovrebbero essere quelle previste.</li>
-</ul>
-<p>Alcuni controlli possono essere eseguiti con semplici filtri.</p>
+<p>In un capitolo introduttivo non è necessario scegliere subito una tecnica avanzata per i dati mancanti. È necessario evitare che l’esclusione avvenga in modo silenzioso e descrivere come cambia il campione.</p>
+</section><section id="valori-estremi-errore-rarità-o-parte-della-popolazione" class="level2" data-number="14.8"><h2 data-number="14.8" class="anchored" data-anchor-id="valori-estremi-errore-rarità-o-parte-della-popolazione">
+<span class="header-section-number">14.8</span> Valori estremi: errore, rarità o parte della popolazione?</h2>
+<p>La pulizia viene talvolta descritta come eliminazione degli <em>outlier</em>. Questa formulazione è pericolosa perché confonde una posizione statistica con un errore.</p>
+<p>Una persona può avere un punteggio molto lontano dagli altri e appartenere comunque alla popolazione di interesse. Eliminandola, rendiamo il campione più omogeneo ma forse meno rappresentativo. In psicologia clinica, del lavoro o dello sviluppo, proprio i casi rari possono essere sostantivamente importanti.</p>
+<p>Un valore estremo dovrebbe quindi attivare tre domande narrative. È possibile secondo lo strumento di misura? È coerente con le altre informazioni sulla stessa osservazione? La conclusione cambia se lo includiamo oppure lo escludiamo?</p>
+<p>L’ultima domanda introduce l’<strong>analisi di sensibilità</strong>. Quando più decisioni sono ragionevoli, possiamo mostrare come cambiano le descrizioni sotto alternative trasparenti, invece di scegliere in segreto quella che produce il risultato preferito.</p>
+<p>Nel nostro esempio, <code>stress = 11</code> e <code>sonno_ore = 28</code> rimangono segnalati finché non controlliamo la fonte. Non devono entrare nelle statistiche come se fossero valori validi, ma non devono neppure essere corretti per intuizione.</p>
+</section><section id="dalla-verifica-della-fonte-alla-correzione" class="level2" data-number="14.9"><h2 data-number="14.9" class="anchored" data-anchor-id="dalla-verifica-della-fonte-alla-correzione">
+<span class="header-section-number">14.9</span> Dalla verifica della fonte alla correzione</h2>
+<p>Supponiamo di tornare ai questionari originali. Verifichiamo che per <code>S04</code> il valore corretto dello stress sia <code>1</code>, mentre per <code>S07</code> le ore di sonno siano <code>8</code>, non <code>28</code>.</p>
+<p>A questo punto la correzione può essere espressa nel codice:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">stress</span> <span class="op">&lt;</span> <span class="fl">1</span> <span class="op">|</span> <span class="va">stress</span> <span class="op">&gt;</span> <span class="fl">10</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">stress</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">sonno_ore</span> <span class="op">&lt;</span> <span class="fl">0</span> <span class="op">|</span> <span class="va">sonno_ore</span> <span class="op">&gt;</span> <span class="fl">16</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Possiamo anche sintetizzare i controlli in una piccola tabella.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
-<span>    n <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>    id_duplicati <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html">n_distinct</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span>,</span>
-<span>    stress_fuori_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">stress</span> <span class="op">&lt;</span> <span class="fl">1</span> <span class="op">|</span> <span class="va">stress</span> <span class="op">&gt;</span> <span class="fl">10</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>    sonno_fuori_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">sonno_ore</span> <span class="op">&lt;</span> <span class="fl">0</span> <span class="op">|</span> <span class="va">sonno_ore</span> <span class="op">&gt;</span> <span class="fl">16</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>    missing_stress <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">stress</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    missing_sonno <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">sonno_ore</span><span class="op">)</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dati_preparati</span> <span class="op">&lt;-</span> <span class="va">dati_preparati</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>    stress <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html">if_else</a></span><span class="op">(</span></span>
+<span>      <span class="va">id</span> <span class="op">==</span> <span class="st">"S04"</span> <span class="op">&amp;</span></span>
+<span>        <span class="va">stress</span> <span class="op">==</span> <span class="fl">11</span>,</span>
+<span>      <span class="fl">1</span>,</span>
+<span>      <span class="va">stress</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    sonno_ore <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html">if_else</a></span><span class="op">(</span></span>
+<span>      <span class="va">id</span> <span class="op">==</span> <span class="st">"S07"</span> <span class="op">&amp;</span></span>
+<span>        <span class="va">sonno_ore</span> <span class="op">==</span> <span class="fl">28</span>,</span>
+<span>      <span class="fl">8</span>,</span>
+<span>      <span class="va">sonno_ore</span></span>
+<span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Per progetti più complessi, è possibile utilizzare pacchetti dedicati alla validazione dei dati. Per questo percorso introduttivo, però, è più importante acquisire l’abitudine al controllo piuttosto che conoscere molti strumenti.</p>
-</section><section id="fase-4-documenta" class="level2" data-number="14.8"><h2 data-number="14.8" class="anchored" data-anchor-id="fase-4-documenta">
-<span class="header-section-number">14.8</span> Fase 4: documenta</h2>
-<p>La documentazione è parte integrante della pulizia, non un’aggiunta finale.</p>
-<p>Per ogni trasformazione importante, il report o lo script dovrebbe spiegare:</p>
+<p>La condizione identifica in modo preciso le celle corrette. Nel registro scriveremo che i valori sono stati verificati sulla fonte originale.</p>
+<p>Una correzione manuale nel file avrebbe potuto produrre lo stesso dataset, ma avrebbe cancellato la storia della decisione. Il codice conserva invece la relazione tra valore osservato, evidenza e intervento.</p>
+</section><section id="validare-significa-confrontare-prima-e-dopo" class="level2" data-number="14.10"><h2 data-number="14.10" class="anchored" data-anchor-id="validare-significa-confrontare-prima-e-dopo">
+<span class="header-section-number">14.10</span> Validare significa confrontare prima e dopo</h2>
+<p>La pulizia non termina quando il codice viene eseguito. Dobbiamo verificare che il dataset risultante rispetti le aspettative e che le trasformazioni non abbiano prodotto conseguenze inattese.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dati_preparati</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
+<span>    n_righe <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    n_id <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html">n_distinct</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span>,</span>
+<span>    stress_fuori_intervallo <span class="op">=</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span></span>
+<span>        <span class="va">stress</span> <span class="op">&lt;</span> <span class="fl">1</span> <span class="op">|</span></span>
+<span>          <span class="va">stress</span> <span class="op">&gt;</span> <span class="fl">10</span>,</span>
+<span>        na.rm <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>      <span class="op">)</span>,</span>
+<span>    sonno_fuori_intervallo <span class="op">=</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span></span>
+<span>        <span class="va">sonno_ore</span> <span class="op">&lt;</span> <span class="fl">0</span> <span class="op">|</span></span>
+<span>          <span class="va">sonno_ore</span> <span class="op">&gt;</span> <span class="fl">16</span>,</span>
+<span>        na.rm <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>      <span class="op">)</span>,</span>
+<span>    stress_mancante <span class="op">=</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">stress</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    sonno_mancante <span class="op">=</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">sonno_ore</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["n_righe"],"name":[1],"type":["int"],"align":["right"]},{"label":["n_id"],"name":[2],"type":["int"],"align":["right"]},{"label":["stress_fuori_intervallo"],"name":[3],"type":["int"],"align":["right"]},{"label":["sonno_fuori_intervallo"],"name":[4],"type":["int"],"align":["right"]},{"label":["stress_mancante"],"name":[5],"type":["int"],"align":["right"]},{"label":["sonno_mancante"],"name":[6],"type":["int"],"align":["right"]}],"data":[{"1":"7","2":"7","3":"0","4":"0","5":"2","6":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Questo controllo risponde a domande locali. Per valutare l’effetto complessivo dobbiamo confrontare anche numerosità e composizione:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
+<span>  versione <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"grezzi"</span>,</span>
+<span>    <span class="st">"preparati"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  n_righe <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">dati_grezzi</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">dati_preparati</span><span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  n_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
+<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html">n_distinct</a></span><span class="op">(</span></span>
+<span>      <span class="va">dati_grezzi</span><span class="op">$</span><span class="va">id</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html">n_distinct</a></span><span class="op">(</span></span>
+<span>      <span class="va">dati_preparati</span><span class="op">$</span><span class="va">id</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["versione"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n_righe"],"name":[2],"type":["int"],"align":["right"]},{"label":["n_id"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"grezzi","2":"8","3":"7"},{"1":"preparati","2":"7","3":"7"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>In un progetto reale confronteremmo anche distribuzioni, frequenze dei gruppi e percentuali di dati mancanti. La domanda è se il cambiamento osservato corrisponda esattamente alle decisioni documentate.</p>
+</section><section id="pulizia-flessibilità-analitica-e-crisi-della-replicabilità" class="level2" data-number="14.11"><h2 data-number="14.11" class="anchored" data-anchor-id="pulizia-flessibilità-analitica-e-crisi-della-replicabilità">
+<span class="header-section-number">14.11</span> Pulizia, flessibilità analitica e crisi della replicabilità</h2>
+<p>La crisi della replicabilità ha mostrato che risultati scientifici fragili non derivano soltanto da errori statistici finali. Possono nascere lungo l’intero percorso che conduce dai dati grezzi al risultato pubblicato.</p>
+<p>La pulizia offre molti <strong>gradi di libertà del ricercatore</strong>. Possiamo scegliere quale duplicato conservare, quale soglia definisca un valore anomalo, quanti item mancanti siano accettabili, quali partecipanti escludere e come costruire un punteggio. Molte alternative possono apparire ragionevoli considerate singolarmente.</p>
+<p>Il problema emerge quando le decisioni vengono prese dopo avere osservato il loro effetto sul risultato e soltanto il percorso finale viene riportato. Non è necessaria la frode. È sufficiente una successione di scelte flessibili, influenzate dalle aspettative, perché l’analisi finisca per favorire un pattern particolare.</p>
+<p>Questo problema è discusso nel manuale e nel Companion nel quadro della crisi della replicabilità e dei <em>researcher degrees of freedom</em>. Qui ne ricaviamo una conseguenza operativa: i criteri di pulizia dovrebbero essere definiti prima di osservare gli esiti principali quando ciò è possibile; le decisioni emerse successivamente devono essere registrate; le alternative ragionevoli dovrebbero essere confrontate con analisi di sensibilità.</p>
+<p>La riproducibilità del codice è necessaria ma non sufficiente. Un criterio arbitrario può essere applicato in modo perfettamente riproducibile. Occorre rendere riproducibile anche la <strong>giustificazione</strong> della scelta.</p>
+</section><section id="un-registro-delle-decisioni" class="level2" data-number="14.12"><h2 data-number="14.12" class="anchored" data-anchor-id="un-registro-delle-decisioni">
+<span class="header-section-number">14.12</span> Un registro delle decisioni</h2>
+<p>Il registro può essere breve, purché colleghi ogni intervento alla sua evidenza.</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
 </colgroup>
 <thead><tr class="header">
+<th>Problema osservato</th>
+<th>Evidenza utilizzata</th>
 <th>Decisione</th>
-<th>Che cosa documentare</th>
+<th>Effetto verificato</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td>Rimozione di duplicati</td>
-<td>Quale criterio è stato usato?</td>
+<td>
+<code>999</code> in <code>stress</code>
+</td>
+<td>Codebook</td>
+<td>Ricodificato come <code>NA</code>
+</td>
+<td>Aumenta di uno il conteggio dei mancanti</td>
 </tr>
 <tr class="even">
-<td>Ricodifica di categorie</td>
-<td>Quali valori sono stati uniti o rinominati?</td>
+<td>Due righe per <code>S03</code>
+</td>
+<td>Protocollo e date</td>
+<td>Conservata la compilazione più recente</td>
+<td>Una riga per identificatore</td>
 </tr>
 <tr class="odd">
-<td>Gestione dei missing</td>
-<td>Quanti valori mancavano? Come sono stati trattati?</td>
+<td>
+<code>stress = 11</code> per <code>S04</code>
+</td>
+<td>Questionario originale</td>
+<td>Corretto in <code>1</code>
+</td>
+<td>Nessun valore fuori intervallo</td>
 </tr>
 <tr class="even">
-<td>Esclusione di osservazioni</td>
-<td>Quanti casi sono stati rimossi? Perché?</td>
-</tr>
-<tr class="odd">
-<td>Rimozione di identificatori</td>
-<td>Quali informazioni personali sono state eliminate?</td>
-</tr>
-<tr class="even">
-<td>Salvataggio del dataset pulito</td>
-<td>Dove si trova il file finale?</td>
+<td>
+<code>sonno_ore = 28</code> per <code>S07</code>
+</td>
+<td>Questionario originale</td>
+<td>Corretto in <code>8</code>
+</td>
+<td>Nessun valore fuori intervallo</td>
 </tr>
 </tbody>
 </table>
-<p>Un esempio di annotazione nel report potrebbe essere il seguente.</p>
-<div class="callout callout-style-default callout-note callout-titled">
+<p>Questa tabella non sostituisce il codice. Il codice mostra <em>come</em> è avvenuta la trasformazione; il registro spiega <em>perché</em>.</p>
+</section><section id="usare-lai-come-assistente-alla-diagnosi" class="level2" data-number="14.13"><h2 data-number="14.13" class="anchored" data-anchor-id="usare-lai-come-assistente-alla-diagnosi">
+<span class="header-section-number">14.13</span> Usare l’AI come assistente alla diagnosi</h2>
+<p>Una richiesta generica come «pulisci il dataset» delega all’assistente decisioni che non può giustificare. L’AI potrebbe eliminare duplicati, convertire valori fuori intervallo in mancanti o unire categorie basandosi soltanto sulla loro apparenza.</p>
+<p>È preferibile separare diagnosi e intervento.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Un prompt per diagnosticare senza modificare">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Nota</span>Esempio di decisione documentata
+<span class="screen-reader-only">Consiglio</span>Un prompt per diagnosticare senza modificare
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Nel dataset grezzo erano presenti 3 studenti con due compilazioni del questionario. Per ciascuno di questi studenti è stata conservata la compilazione più recente, identificata tramite <code>data_compilazione</code>. Dopo questa operazione il dataset contiene una sola riga per studente.</p>
+<blockquote class="blockquote">
+<p>Ho un data frame chiamato <code>dati_grezzi</code>, con una riga prevista per studente. Le variabili <code>stress</code> e <code>sonno_ore</code> dovrebbero variare rispettivamente da 1 a 10 e da 0 a 16. Il codebook indica <code>999</code> come mancante per <code>stress</code> e <code>-99</code> come mancante per <code>sonno_ore</code>.</p>
+<p>Non modificare il dataset. Scrivi codice R semplice che segnali identificatori ripetuti, codici mancanti speciali, valori fuori intervallo e grafie differenti delle categorie. Per ogni controllo mostra le righe coinvolte e il loro numero. Distingui ciò che può essere ricodificato usando il codebook da ciò che richiede una verifica della fonte.</p>
+</blockquote>
 </div>
 </div>
-<p>Il dataset pulito può essere salvato in <code>data_clean/</code>.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/write_delim.html">write_csv</a></span><span class="op">(</span><span class="va">stress</span>, <span class="st">"data_clean/stress_sonno_clean.csv"</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section><section id="usare-lai-con-criterio" class="level2" data-number="14.9"><h2 data-number="14.9" class="anchored" data-anchor-id="usare-lai-con-criterio">
-<span class="header-section-number">14.9</span> Usare l’AI con criterio</h2>
-<p>L’intelligenza artificiale può essere molto utile per la pulizia dei dati. Può suggerire il codice per importare i file, individuare i duplicati, ricodificare le categorie, calcolare i valori mancanti o produrre controlli di validazione.</p>
-<p>Tuttavia, non può decidere al posto tuo il significato di una risposta mancante, se una riga duplicata sia un errore o se un valore estremo sia impossibile o solo raro.</p>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
+<p>Dopo avere verificato i problemi, una seconda richiesta può chiedere trasformazioni specifiche. Il prompt dovrebbe indicare quale evidenza autorizza ciascuna modifica, chiedere di conservare <code>dati_grezzi</code> e creare un nuovo oggetto, e richiedere un confronto prima–dopo.</p>
+<p>Quando l’AI propone di escludere osservazioni, la domanda decisiva è:</p>
+<blockquote class="blockquote">
+<p>Come cambia la composizione del campione, e quali gruppi vengono rappresentati meno?</p>
+</blockquote>
+</section><section id="riflessioni-conclusive" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="riflessioni-conclusive">Riflessioni conclusive</h2>
+<p>I dati grezzi non sono immediatamente utilizzabili perché conservano tracce del processo di raccolta: codici speciali, errori, duplicazioni, mancate risposte e differenze di formato. Ignorare questi aspetti può produrre statistiche fortemente distorte. Eliminarli in modo automatico può produrre un problema diverso: un campione più ordinato ma meno rappresentativo.</p>
+<p>La pulizia richiede quindi un equilibrio. Dobbiamo intervenire abbastanza da rendere i dati coerenti con il disegno e la misurazione, ma non così liberamente da trasformarli nella forma che preferiamo.</p>
+<p>Ogni anomalia deve essere prima resa visibile. La causa deve essere ricostruita attraverso codebook, protocollo o fonte originale. La trasformazione deve essere espressa nel codice e il suo effetto deve essere quantificato. Quando più scelte sono ragionevoli, l’analisi di sensibilità è più informativa di una decisione nascosta.</p>
+<p>Questo modo di lavorare risponde direttamente alle lezioni della crisi della replicabilità. Riduce la flessibilità non dichiarata e permette ad altri di comprendere non soltanto quali dati siano stati analizzati, ma perché il dataset abbia assunto quella forma.</p>
+<p>Nel capitolo successivo potremo finalmente descrivere le variabili. Le statistiche e i grafici avranno significato soltanto perché il percorso dai dati grezzi al dataset analitico è stato reso esplicito.</p>
+</section><section id="esercizi" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="esercizi">Esercizi</h2>
+<ol type="1">
+<li><p>Spiega perché <code>999</code> può produrre una media sintatticamente corretta ma scientificamente priva di significato.</p></li>
+<li><p>Un identificatore compare tre volte. Descrivi due disegni nei quali la ripetizione avrebbe significati differenti e richiederebbe decisioni diverse.</p></li>
+<li><p>Una scala da 0 a 40 contiene il valore <code>44</code>. Quali fonti controlleresti prima di trasformarlo in <code>NA</code>?</p></li>
+<li><p>L’esclusione dei casi incompleti riduce il campione da 300 a 210 persone. Quali confronti useresti per valutare se il campione rimanente sia ancora rappresentativo di quello reclutato?</p></li>
+<li><p>L’AI unifica automaticamente <code>"altro"</code>, <code>"non indicato"</code> e <code>"preferisco non rispondere"</code>. Perché questa trasformazione può essere problematica?</p></li>
+<li><p>Scrivi una voce del registro delle decisioni per una correzione verificata sul questionario originale.</p></li>
+<li><p>Due regole plausibili per costruire un punteggio producono campioni di numerosità diversa. Come useresti un’analisi di sensibilità?</p></li>
+<li><p>Formula un prompt che chieda all’AI di diagnosticare problemi nei dati senza eliminare, correggere o ricodificare automaticamente alcun valore.</p></li>
+</ol>
+<div class="callout callout-style-default callout-tip callout-titled" title="Soluzioni">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Consiglio</span>Prompt utile
+<span class="screen-reader-only">Consiglio</span>Soluzioni
 </div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Puoi chiedere all’AI:</p>
-<blockquote class="blockquote">
-<p>Ho un dataset con variabili <code>id</code>, <code>stress</code>, <code>sonno_ore</code>, <code>qualita_sonno</code> e <code>genere</code>. Scrivi il codice R con <code>dplyr</code> per controllare duplicati, valori mancanti e valori fuori range. Non eliminare nulla automaticamente: produci solo tabelle di controllo.</p>
-</blockquote>
-<p>Questo prompt è migliore di:</p>
-<blockquote class="blockquote">
-<p>Pulisci il dataset.</p>
-</blockquote>
-<p>perché chiede controlli espliciti e impedisce trasformazioni automatiche non documentate.</p>
+<ol type="1">
+<li><p>R tratta <code>999</code> come un normale numero se non riceve informazioni sul suo significato. Il calcolo è coerente con i valori memorizzati, ma il codice speciale non rappresenta il costrutto misurato e distorce la statistica.</p></li>
+<li><p>In uno studio trasversale con una sola risposta prevista, le tre righe possono indicare invii duplicati. In uno studio longitudinale possono rappresentare tre momenti programmati. Nel primo caso occorre una regola per risolvere la duplicazione; nel secondo servono identificatore e variabile temporale.</p></li>
+<li><p>Controllerei il codebook, l’intervallo teorico e quello effettivamente usato nella versione del questionario, il file originale e l’eventuale procedura di scoring. Verificherei inoltre che la colonna importata sia quella corretta.</p></li>
+<li><p>Confronterei gruppi, età e altre variabili disponibili tra casi completi e incompleti. Esaminerei dove si concentrano i mancanti e se la probabilità di completezza è associata alle variabili centrali dello studio.</p></li>
+<li><p>Le etichette possono rappresentare scelte differenti. Unificarle perde informazione e può alterare la composizione delle categorie senza una giustificazione nel questionario o nel protocollo.</p></li>
+<li><p>La voce dovrebbe indicare il valore osservato, la fonte consultata, il valore corretto, la riga interessata e il controllo eseguito dopo la trasformazione.</p></li>
+<li><p>Applicherei entrambe le regole in versioni separate del dataset e confronterei numerosità, distribuzioni e risultati. Una conclusione che cambia molto tra regole ragionevoli deve essere presentata come sensibile alla scelta di scoring.</p></li>
+<li><p>Il prompt dovrebbe specificare unità di analisi, intervalli, codici speciali e variabili centrali. Dovrebbe chiedere tabelle con righe coinvolte e numerosità, distinguere problemi risolvibili dal codebook da problemi che richiedono verifica e vietare modifiche al dataset.</p></li>
+</ol>
 </div>
 </div>
-<p>Dopo aver ricevuto il codice dall’AI, controlla sempre:</p>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="Punti chiave">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Punti chiave
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <ul>
-<li>quali righe vengono eliminate;</li>
-<li>quali variabili vengono trasformate;</li>
-<li>quali valori vengono ricodificati;</li>
-<li>se i missing vengono rimossi senza avviso;</li>
-<li>se il codice modifica i dati grezzi;</li>
-<li>se il risultato viene salvato in un nuovo file.</li>
-</ul></section><section id="checklist-finale" class="level2" data-number="14.10"><h2 data-number="14.10" class="anchored" data-anchor-id="checklist-finale">
-<span class="header-section-number">14.10</span> Checklist finale</h2>
-<p>Prima di passare all’analisi esplorativa vera e propria, verifica che:</p>
-<ul>
-<li>i dati grezzi siano conservati senza modifiche;</li>
-<li>il dataset pulito sia stato prodotto tramite codice;</li>
-<li>i nomi delle variabili siano chiari e coerenti;</li>
-<li>i tipi di dato siano appropriati;</li>
-<li>i duplicati siano stati controllati;</li>
-<li>i valori mancanti siano stati quantificati;</li>
-<li>i valori fuori range siano stati identificati;</li>
-<li>eventuali esclusioni o ricodifiche siano documentate;</li>
-<li>il dataset pulito sia salvato in una cartella separata;</li>
-<li>il report permetta a un’altra persona di ricostruire il processo.</li>
+<li>I dati grezzi possono produrre risultati tecnicamente validi ma scientificamente distorti.</li>
+<li>Un’anomalia segnala una domanda; non autorizza automaticamente una correzione.</li>
+<li>La causa deve essere ricostruita mediante codebook, protocollo o fonte originale.</li>
+<li>Duplicati e valori estremi devono essere interpretati alla luce del disegno.</li>
+<li>I casi completi possono rappresentare una popolazione diversa dal campione reclutato.</li>
+<li>La pulizia modifica il dataset e deve essere valutata confrontando prima e dopo.</li>
+<li>Le scelte di pulizia costituiscono gradi di libertà del ricercatore.</li>
+<li>Codice riproducibile e giustificazione trasparente sono entrambi necessari.</li>
+<li>Le alternative ragionevoli possono essere confrontate con analisi di sensibilità.</li>
+<li>L’AI dovrebbe diagnosticare e implementare decisioni confermate, non inventarle.</li>
 </ul>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="Ambiente di sviluppo">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Messaggio chiave
+<span class="screen-reader-only">Nota</span>Ambiente di sviluppo
 </div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Pulire i dati non significa renderli “belli” o eliminare ciò che disturba. Significa costruire un dataset che sia coerente con la domanda di ricerca, controllabile da altri e adatto alle analisi successive.</p>
+<p>Il capitolo usa <code>dplyr</code>. Le informazioni sulla sessione possono essere ottenute con:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.6.1 (2026-06-24)
+Platform: aarch64-apple-darwin23
+Running under: macOS Tahoe 26.5.2
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] C.UTF-8/UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8
+
+time zone: Europe/Zagreb
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] dplyr_1.2.1
+
+loaded via a namespace (and not attached):
+ [1] digest_0.6.39     R6_2.6.1          fastmap_1.2.0     tidyselect_1.2.1 
+ [5] xfun_0.60         magrittr_2.0.5    glue_1.8.1        tibble_3.3.1     
+ [9] knitr_1.51        pkgconfig_2.0.3   htmltools_0.5.9   generics_0.1.4   
+[13] rmarkdown_2.31    lifecycle_1.0.5   cli_3.6.6         vctrs_0.7.3      
+[17] compiler_4.6.1    tools_4.6.1       pillar_1.11.1     evaluate_1.0.5   
+[21] yaml_2.3.12       otel_0.2.0        rlang_1.3.0       jsonlite_2.0.0   
+[25] htmlwidgets_1.6.4</code></pre>
 </div>
 </div>
-</section><section id="collegamento-con-il-capitolo-successivo" class="level2" data-number="14.11"><h2 data-number="14.11" class="anchored" data-anchor-id="collegamento-con-il-capitolo-successivo">
-<span class="header-section-number">14.11</span> Collegamento con il capitolo successivo</h2>
-<p>Nel prossimo capitolo useremo il dataset pulito per iniziare l’analisi esplorativa vera e propria. Inizieremo analizzando una variabile alla volta: distribuzioni, frequenze, valori mancanti, valori inattesi e primi segnali di struttura nei dati.</p>
+</div>
+</div>
+</div>
 
 
 </section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
@@ -1417,8 +1600,8 @@ cookieconsent.run({
     }
   });
   </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="../../chapters/eda/01_project_structure.html" class="pagination-link" aria-label="Organizzare un progetto di analisi dei dati">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Organizzare un progetto di analisi dei dati</span></span>
+      <a href="../../chapters/eda/01_project_structure.html" class="pagination-link" aria-label="Preparare l'analisi esplorativa">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Preparare l’analisi esplorativa</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

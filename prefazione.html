@@ -107,6 +107,35 @@ cookieconsent.run({
   
 <style>html{ scroll-behavior: smooth; }</style>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <meta property="og:title" content="Prefazione – Analisi esplorativa dei dati in psicologia">
 <meta property="og:description" content="">
@@ -354,19 +383,19 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapters/key_notions/03_design.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Disegno di ricerca: quali conclusioni sono giustificate dai dati?</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Disegno della ricerca: quali conclusioni sono giustificate dai dati?</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapters/key_notions/04_measurement.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">La misurazione in psicologia</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Misurare i costrutti psicologici</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapters/key_notions/05_cognitive_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dalla descrizione alla spiegazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dalla descrizione alla spiegazione: modelli e processi psicologici</span></span></a>
   </div>
 </li>
       </ul>
@@ -383,13 +412,13 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapters/R/01_r_syntax.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sintassi minima per leggere codice R</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Pensare in operazioni: la sintassi essenziale di R</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapters/R/02_environment.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Ambiente di lavoro e progetti R</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Un ambiente di lavoro riproducibile</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -401,25 +430,25 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapters/R/05_dplyr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Trasformare i dati con <code>dplyr</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Trasformare tabelle con <code>dplyr</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapters/R/06_ggplot2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Visualizzare i dati con <code>ggplot2</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Rendere visibili i dati con <code>ggplot2</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapters/R/07_quarto.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quarto</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quarto: rendere esplicito il percorso dell’analisi</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapters/R/08_r_packages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Pacchetti</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Pacchetti: scegliere e dichiarare gli strumenti</span></span></a>
   </div>
 </li>
       </ul>
@@ -427,7 +456,7 @@ cookieconsent.run({
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="./chapters/eda/introduction_eda.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">EDA</span></a>
+ <span class="menu-text">Statistica descrittiva ed EDA</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -436,13 +465,13 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapters/eda/01_project_structure.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Organizzare un progetto di analisi dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Preparare l’analisi esplorativa</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapters/eda/02_data_cleaning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulizia dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulire i dati senza nascondere le decisioni</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -454,37 +483,37 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapters/eda/05_data_visualization_principles.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Principi della visualizzazione dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Visualizzare senza deformare</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapters/eda/06_loc_scale.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Indicatori di tendenza centrale e variabilità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Distribuzione, posizione e variabilità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapters/eda/07_introduction_normal_distribution.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Introduzione alla distribuzione normale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">La normale come modello di riferimento</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapters/eda/08_correlation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Relazioni tra variabili</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Esplorare relazioni tra due variabili</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapters/eda/09_causality_intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Dalla correlazione alla causalità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Dall’associazione alla domanda causale</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapters/eda/11_outlier.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Valori inattesi e outlier</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Osservazioni inattese e outlier</span></span></a>
   </div>
 </li>
       </ul>
@@ -516,8 +545,10 @@ cookieconsent.run({
     <h2 id="toc-title">Sommario</h2>
    
   <ul class="collapse">
-  <li><a href="#tre-pilastri" id="toc-tre-pilastri" class="nav-link active" data-scroll-target="#tre-pilastri">Tre pilastri</a></li>
-  <li><a href="#perché-questi-materiali-insieme" id="toc-perché-questi-materiali-insieme" class="nav-link" data-scroll-target="#perché-questi-materiali-insieme">Perché questi materiali insieme?</a></li>
+  <li><a href="#pensare-dati-misure-e-disegni" id="toc-pensare-dati-misure-e-disegni" class="nav-link active" data-scroll-target="#pensare-dati-misure-e-disegni">Pensare: dati, misure e disegni</a></li>
+  <li><a href="#fare-usare-r-senza-diventare-programmatori" id="toc-fare-usare-r-senza-diventare-programmatori" class="nav-link" data-scroll-target="#fare-usare-r-senza-diventare-programmatori">Fare: usare R senza diventare programmatori</a></li>
+  <li><a href="#guardare-esplorare-prima-di-modellizzare" id="toc-guardare-esplorare-prima-di-modellizzare" class="nav-link" data-scroll-target="#guardare-esplorare-prima-di-modellizzare">Guardare: esplorare prima di modellizzare</a></li>
+  <li><a href="#perché-questi-materiali-sono-riuniti" id="toc-perché-questi-materiali-sono-riuniti" class="nav-link" data-scroll-target="#perché-questi-materiali-sono-riuniti">Perché questi materiali sono riuniti?</a></li>
   <li><a href="#il-progetto-complessivo" id="toc-il-progetto-complessivo" class="nav-link" data-scroll-target="#il-progetto-complessivo">Il progetto complessivo</a></li>
   <li><a href="#a-chi-è-destinato" id="toc-a-chi-è-destinato" class="nav-link" data-scroll-target="#a-chi-è-destinato">A chi è destinato</a></li>
   <li><a href="#come-procedere" id="toc-come-procedere" class="nav-link" data-scroll-target="#come-procedere">Come procedere</a></li>
@@ -547,56 +578,181 @@ cookieconsent.run({
 </header>
 
 
-<p>Questo sito raccoglie i materiali propedeutici al manuale <em>Inferenza bayesiana in psicologia: Ragionare con l’incertezza</em>. Prima di affrontare la modellazione statistica vera e propria, è necessario consolidare le fondamenta metodologiche. Questa preparazione si articola attorno a tre pilastri essenziali.</p>
-<section id="tre-pilastri" class="level2">
-<h2 class="anchored" data-anchor-id="tre-pilastri">Tre pilastri</h2>
-<p><strong>Pensare.</strong> La sezione <em>Fondamenti</em> affronta le questioni preliminari a qualsiasi analisi: cosa significa quantificare un costrutto psicologico? Come si progetta uno studio che generi evidenze interpretabili? Quali sono i limiti epistemologici intrinseci alla nostra capacità di apprendere dai dati? Senza una riflessione su questi aspetti, anche l’analisi più raffinata rischia di produrre risultati formalmente corretti ma sostanzialmente vuoti.</p>
-<p><strong>Fare.</strong> La sezione <em>R</em> fornisce gli strumenti operativi per manipolare i dati e implementare le analisi. R è il linguaggio che accompagnerà l’intero percorso, dalla gestione dei dati grezzi alla stima di modelli bayesiani. L’obiettivo non è l’apprendimento mnemonico dei comandi, ma lo sviluppo di una <strong>competenza algoritmica</strong>, ovvero la capacità di tradurre un disegno di ricerca in un flusso di codice funzionante e replicabile.</p>
-<p><strong>Guardare.</strong> La sezione <em>EDA</em> (Exploratory Data Analysis) è dedicata all’esplorazione critica dei dati prima di ogni inferenza formale. Visualizzare le distribuzioni, identificare le anomalie dei dati e verificare le assunzioni non sono passaggi meccanici, ma il lavoro che distingue un’analisi robusta da una basata su premesse fragili. Come ricordava John Tukey, è meglio rispondere in modo approssimativo alla domanda giusta piuttosto che rispondere in maniera esatta a quella sbagliata. L’EDA è l’esercizio che ci aiuta a porre e a porci le domande giuste.</p>
+<p>Questo sito raccoglie materiali metodologici e operativi collegati al manuale <em>Inferenza bayesiana in psicologia: Ragionare con l’incertezza</em>. Il manuale costituisce il nucleo concettuale del progetto e può essere letto autonomamente. Questo modulo diventa particolarmente utile quando si vuole lavorare direttamente con i dati e seguire le implementazioni del Companion.</p>
+<p>Prima di stimare un modello occorre capire:</p>
+<ul>
+<li>come sono stati generati i dati;</li>
+<li>che cosa rappresentano le variabili;</li>
+<li>come organizzare e controllare il dataset;</li>
+<li>quali caratteristiche emergono da tabelle e grafici;</li>
+<li>quali domande il disegno consente realmente di affrontare.</li>
+</ul>
+<p>Il percorso è costruito attorno a tre attività: <strong>pensare</strong>, <strong>fare</strong> e <strong>guardare</strong>.</p>
+<section id="pensare-dati-misure-e-disegni" class="level2">
+<h2 class="anchored" data-anchor-id="pensare-dati-misure-e-disegni">Pensare: dati, misure e disegni</h2>
+<p>La parte <strong>Fondamenti</strong> affronta le questioni preliminari a qualsiasi analisi.</p>
+<p>Che cosa significa quantificare un costrutto psicologico? Qual è l’unità di analisi? Come vengono selezionati i partecipanti? Quali conclusioni descrittive, associative o causali sono sostenute dal disegno?</p>
+<p>Una procedura statistica può essere eseguita correttamente e produrre comunque una conclusione poco informativa, se la variabile non rappresenta adeguatamente il costrutto o se il disegno non identifica il confronto di interesse.</p>
+<p>Per questo motivo, la prima competenza richiesta non è tecnica. È la capacità di collegare:</p>
+<p><span class="math display">\[
+\text{domanda}
+\longrightarrow
+\text{disegno}
+\longrightarrow
+\text{misura}
+\longrightarrow
+\text{dati}.
+\]</span></p>
 </section>
-<section id="perché-questi-materiali-insieme" class="level2">
-<h2 class="anchored" data-anchor-id="perché-questi-materiali-insieme">Perché questi materiali insieme?</h2>
-<p>Il lettore potrebbe chiedersi perché un sito di supporto a un manuale di statistica bayesiana includa argomenti così diversi: programmazione, misurazione psicologica e statistica descrittiva. La risposta è che nella pratica della ricerca questi argomenti non sono affatto separati.</p>
-<p>Ogni analisi dei dati inizia con una domanda (<em>pensare</em>), richiede strumenti per essere implementata (<em>fare</em>), e passa attraverso un’esplorazione preliminare (<em>guardare</em>). Solo dopo questi passaggi ha senso stimare i modelli e trarre le conclusioni. I capitoli seguenti costruiscono questa sequenza, preparando il terreno per l’inferenza bayesiana trattata nel manuale principale.</p>
+<section id="fare-usare-r-senza-diventare-programmatori" class="level2">
+<h2 class="anchored" data-anchor-id="fare-usare-r-senza-diventare-programmatori">Fare: usare R senza diventare programmatori</h2>
+<p>La parte <strong>R</strong> fornisce gli strumenti minimi per lavorare con i dati in modo trasparente e riproducibile.</p>
+<p>L’obiettivo non è memorizzare l’intero linguaggio, scrivere algoritmi complessi o sviluppare software. Al termine del percorso dovresti saper:</p>
+<ul>
+<li>leggere un comando semplice;</li>
+<li>riconoscere oggetti, funzioni e argomenti;</li>
+<li>modificare nomi di variabili e opzioni;</li>
+<li>importare e trasformare piccoli dataset;</li>
+<li>comprendere messaggi di errore elementari;</li>
+<li>controllare che il codice esegua davvero l’operazione richiesta;</li>
+<li>conservare un documento riproducibile dell’analisi.</li>
+</ul>
+<p>Questa è una <strong>competenza operativa e di controllo</strong>. È sufficiente per usare esempi, documentazione e assistenti AI senza dipendere ciecamente dal codice generato.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Usare l'AI come assistente">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Consiglio</span>Usare l’AI come assistente
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Un assistente AI può aiutarti a:</p>
+<ul>
+<li>spiegare un comando;</li>
+<li>proporre una trasformazione;</li>
+<li>correggere un errore;</li>
+<li>adattare un grafico;</li>
+<li>commentare un risultato.</li>
+</ul>
+<p>Per ottenere una risposta controllabile, indica sempre:</p>
+<ul>
+<li>struttura e nomi delle variabili;</li>
+<li>risultato desiderato;</li>
+<li>pacchetti che intendi usare;</li>
+<li>trattamento dei valori mancanti;</li>
+<li>eventuali vincoli sul formato dell’output.</li>
+</ul>
+<p>Esegui poi il codice un passaggio alla volta e verifica gli oggetti prodotti. Il fatto che il codice funzioni senza errori non dimostra che l’analisi sia corretta.</p>
+</div>
+</div>
+</section>
+<section id="guardare-esplorare-prima-di-modellizzare" class="level2">
+<h2 class="anchored" data-anchor-id="guardare-esplorare-prima-di-modellizzare">Guardare: esplorare prima di modellizzare</h2>
+<p>La parte <strong>EDA</strong> (<em>Exploratory Data Analysis</em>) è dedicata all’esplorazione critica dei dati prima dell’inferenza formale.</p>
+<p>Tabelle e grafici servono a esaminare:</p>
+<ul>
+<li>distribuzioni e variabilità;</li>
+<li>valori mancanti;</li>
+<li>osservazioni insolite;</li>
+<li>differenze tra gruppi;</li>
+<li>relazioni tra variabili;</li>
+<li>possibili errori di codifica;</li>
+<li>caratteristiche che il modello dovrà spiegare.</li>
+</ul>
+<p>L’EDA non è una procedura automatica per «verificare le assunzioni» né una ricerca indiscriminata di risultati interessanti. È un dialogo disciplinato tra domanda, dati e rappresentazioni.</p>
+<p>Una media può nascondere asimmetria o sottogruppi. Un coefficiente di correlazione può nascondere una relazione non lineare. Un grafico può rivelare che l’unità di analisi è stata interpretata in modo sbagliato.</p>
+<p>L’obiettivo non è produrre molti grafici, ma porre domande migliori.</p>
+</section>
+<section id="perché-questi-materiali-sono-riuniti" class="level2">
+<h2 class="anchored" data-anchor-id="perché-questi-materiali-sono-riuniti">Perché questi materiali sono riuniti?</h2>
+<p>Programmazione, misurazione e statistica descrittiva non sono fasi indipendenti.</p>
+<p>Ogni analisi richiede una sequenza simile:</p>
+<p><span class="math display">\[
+\text{domanda}
+\longrightarrow
+\text{dati ordinati}
+\longrightarrow
+\text{esplorazione}
+\longrightarrow
+\text{modello}
+\longrightarrow
+\text{controllo}.
+\]</span></p>
+<p>La domanda stabilisce che cosa vogliamo apprendere. Il disegno e la misura determinano quali dati vengono prodotti. R consente di organizzare e documentare le operazioni. L’EDA mostra quali strutture il modello dovrà rappresentare.</p>
+<p>Solo dopo questi passaggi ha senso affrontare l’inferenza formale.</p>
 </section>
 <section id="il-progetto-complessivo" class="level2">
 <h2 class="anchored" data-anchor-id="il-progetto-complessivo">Il progetto complessivo</h2>
-<p>Questo sito fa parte di un ecosistema di risorse didattiche:</p>
+<p>Questo sito fa parte di un insieme di risorse con funzioni complementari.</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
 <th style="text-align: left;">Risorsa</th>
-<th style="text-align: left;">Contenuto</th>
-<th style="text-align: left;">Link</th>
+<th style="text-align: left;">Contenuto principale</th>
+<th style="text-align: left;">Collegamento</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;"><strong>Manuale principale</strong></td>
-<td style="text-align: left;">Inferenza bayesiana, modelli, workflow</td>
-<td style="text-align: left;"><a href="https://ccaudek.github.io/utet-companion/">utet-companion</a></td>
+<td style="text-align: left;"><strong>Manuale UTET</strong></td>
+<td style="text-align: left;">Ragionamento bayesiano, modellizzazione e workflow scientifico</td>
+<td style="text-align: left;"><a href="https://ccaudek.github.io/utet-companion/guida-al-manuale/">Guida al manuale</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>Questo sito</strong></td>
-<td style="text-align: left;">EDA, R, concetti fondamentali</td>
+<td style="text-align: left;">Dati, misurazione, R essenziale e analisi esplorativa</td>
 <td style="text-align: left;"><a href="https://ccaudek.github.io/utet-eda/">utet-eda</a></td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;"><strong>Teoria della probabilità</strong></td>
-<td style="text-align: left;">Fondamenti probabilistici</td>
+<td style="text-align: left;"><strong>Probabilità per la psicologia</strong></td>
+<td style="text-align: left;">Probabilità condizionata, distribuzioni, verosimiglianza e teorema di Bayes</td>
 <td style="text-align: left;"><a href="https://ccaudek.github.io/utet-prob/">utet-prob</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Inferenza frequentista</strong></td>
+<td style="text-align: left;">Stime, intervalli di confidenza, test e potenza</td>
+<td style="text-align: left;"><a href="https://ccaudek.github.io/utet-frequentista/">utet-frequentista</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Companion</strong></td>
+<td style="text-align: left;">Implementazione dei modelli con R, <code>brms</code> e Stan; diagnostica e controlli predittivi</td>
+<td style="text-align: left;"><a href="https://ccaudek.github.io/utet-companion/">utet-companion</a></td>
 </tr>
 </tbody>
 </table>
-<p>Il manuale cartaceo <em>Inferenza bayesiana in psicologia: Ragionare con l’incertezza</em> è pensato per essere letto in modo autonomo, ma i materiali online permettono di approfondire gli aspetti computazionali e di vedere il codice in azione.</p>
+<p>Il manuale cartaceo è pensato per essere letto autonomamente. I moduli online permettono di recuperare prerequisiti, eseguire il codice e approfondire gli aspetti computazionali.</p>
 </section>
 <section id="a-chi-è-destinato" class="level2">
 <h2 class="anchored" data-anchor-id="a-chi-è-destinato">A chi è destinato</h2>
-<p>Questo materiale è rivolto agli studenti di psicologia che si avvicinano per la prima volta all’analisi dei dati, ma anche a chi desidera consolidare le proprie competenze. Non sono richieste conoscenze pregresse di programmazione o statistica avanzata.</p>
+<p>Il modulo è rivolto principalmente a:</p>
+<ul>
+<li>studenti di psicologia che iniziano l’analisi dei dati;</li>
+<li>lettori del manuale senza esperienza di R;</li>
+<li>ricercatori che vogliono consolidare un workflow riproducibile;</li>
+<li>persone che usano strumenti AI e desiderano controllare il codice prodotto.</li>
+</ul>
+<p>Non sono richieste conoscenze pregresse di programmazione o statistica avanzata.</p>
 </section>
 <section id="come-procedere" class="level2">
 <h2 class="anchored" data-anchor-id="come-procedere">Come procedere</h2>
-<p>Il percorso suggerito è sequenziale: prima i fondamenti concettuali, poi gli strumenti, infine l’esplorazione. Tuttavia, i capitoli sono progettati anche per essere consultati come riferimento durante il lavoro pratico. Il codice è riproducibile e i dataset sono disponibili nel repository.</p>
+<p>Se parti da zero, il percorso consigliato è:</p>
+<ol type="1">
+<li><strong>Fondamenti</strong>, per comprendere dati, misure e disegni;</li>
+<li><strong>R</strong>, per acquisire la sintassi operativa essenziale;</li>
+<li><strong>EDA</strong>, per descrivere e visualizzare i dati.</li>
+</ol>
+<p>I capitoli possono anche essere consultati singolarmente durante il lavoro pratico.</p>
+<p>Per ogni esempio:</p>
+<ol type="1">
+<li>esegui il codice;</li>
+<li>descrivi a parole che cosa fa;</li>
+<li>modifica un elemento;</li>
+<li>osserva il risultato;</li>
+<li>controlla se l’output risponde alla domanda.</li>
+</ol>
+<p>Il codice, da solo, non costituisce una spiegazione. La competenza consiste nel collegare ogni istruzione a una scelta sui dati e a una domanda di ricerca.</p>
 
 
 </section>

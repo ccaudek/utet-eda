@@ -133,12 +133,36 @@ cookieconsent.run({
 });
 </script><style>html{ scroll-behavior: smooth; }</style>
 <link href="../../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
-<script src="../../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<script src="../../site_libs/pagedtable-1.1/js/pagedtable.js"></script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 <meta property="og:title" content="15&nbsp; Esplorare una variabile alla volta – Analisi esplorativa dei dati in psicologia">
-<meta property="og:description" content="Capire i dati prima di cercare relazioni">
-<meta property="og:image" content="https://ccaudek.github.io/utet-eda/chapters/eda/03_exploring_univariate_data_files/figure-html/barplot-gender-1.png">
+<meta property="og:description" content="">
+<meta property="og:image" content="https://ccaudek.github.io/utet-eda/chapters/eda/03_exploring_univariate_data_files/figure-html/fig-univariate-year-1.png">
 <meta property="og:site_name" content="Analisi esplorativa dei dati in psicologia">
-<meta property="og:image:alt" content="Distribuzione del genere dichiarato nel campione didattico.">
 <meta property="og:image:height" content="960">
 <meta property="og:image:width" content="1344">
 <link rel="canonical" href="https://ccaudek.github.io/utet-eda/chapters/eda/03_exploring_univariate_data.html">
@@ -321,7 +345,7 @@ cookieconsent.run({
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/03_exploring_univariate_data.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Esplorare una variabile alla volta</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">Statistica descrittiva ed EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/03_exploring_univariate_data.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Esplorare una variabile alla volta</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Ricerca" onclick="window.quartoOpenSearch();">
@@ -377,19 +401,19 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/03_design.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Disegno di ricerca: quali conclusioni sono giustificate dai dati?</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Disegno della ricerca: quali conclusioni sono giustificate dai dati?</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/04_measurement.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">La misurazione in psicologia</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Misurare i costrutti psicologici</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/05_cognitive_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dalla descrizione alla spiegazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dalla descrizione alla spiegazione: modelli e processi psicologici</span></span></a>
   </div>
 </li>
       </ul>
@@ -406,13 +430,13 @@ cookieconsent.run({
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/01_r_syntax.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sintassi minima per leggere codice R</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Pensare in operazioni: la sintassi essenziale di R</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/02_environment.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Ambiente di lavoro e progetti R</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Un ambiente di lavoro riproducibile</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -424,25 +448,25 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/05_dplyr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Trasformare i dati con <code>dplyr</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Trasformare tabelle con <code>dplyr</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/06_ggplot2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Visualizzare i dati con <code>ggplot2</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Rendere visibili i dati con <code>ggplot2</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/07_quarto.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quarto</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quarto: rendere esplicito il percorso dell’analisi</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/08_r_packages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Pacchetti</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Pacchetti: scegliere e dichiarare gli strumenti</span></span></a>
   </div>
 </li>
       </ul>
@@ -450,7 +474,7 @@ cookieconsent.run({
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../chapters/eda/introduction_eda.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">EDA</span></a>
+ <span class="menu-text">Statistica descrittiva ed EDA</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -459,13 +483,13 @@ cookieconsent.run({
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/01_project_structure.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Organizzare un progetto di analisi dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Preparare l’analisi esplorativa</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/02_data_cleaning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulizia dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulire i dati senza nascondere le decisioni</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -477,37 +501,37 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/05_data_visualization_principles.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Principi della visualizzazione dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Visualizzare senza deformare</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/06_loc_scale.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Indicatori di tendenza centrale e variabilità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Distribuzione, posizione e variabilità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/07_introduction_normal_distribution.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Introduzione alla distribuzione normale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">La normale come modello di riferimento</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/08_correlation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Relazioni tra variabili</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Esplorare relazioni tra due variabili</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/09_causality_intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Dalla correlazione alla causalità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Dall’associazione alla domanda causale</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/11_outlier.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Valori inattesi e outlier</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Osservazioni inattese e outlier</span></span></a>
   </div>
 </li>
       </ul>
@@ -537,25 +561,26 @@ cookieconsent.run({
         <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="2"><h2 id="toc-title">Sommario</h2>
    
   <ul class="collapse">
-<li><a href="#perch%C3%A9-questo-capitolo" id="toc-perché-questo-capitolo" class="nav-link active" data-scroll-target="#perch%C3%A9-questo-capitolo"><span class="header-section-number">15.1</span> Perché questo capitolo</a></li>
-  <li><a href="#una-sequenza-minima" id="toc-una-sequenza-minima" class="nav-link" data-scroll-target="#una-sequenza-minima"><span class="header-section-number">15.2</span> Una sequenza minima</a></li>
-  <li><a href="#un-esempio-ricorrente-stress-e-sonno" id="toc-un-esempio-ricorrente-stress-e-sonno" class="nav-link" data-scroll-target="#un-esempio-ricorrente-stress-e-sonno"><span class="header-section-number">15.3</span> Un esempio ricorrente: stress e sonno</a></li>
-  <li><a href="#primo-controllo-valori-mancanti-e-valori-inattesi" id="toc-primo-controllo-valori-mancanti-e-valori-inattesi" class="nav-link" data-scroll-target="#primo-controllo-valori-mancanti-e-valori-inattesi"><span class="header-section-number">15.4</span> Primo controllo: valori mancanti e valori inattesi</a></li>
-  <li><a href="#variabili-categoriali-contare-prima-di-interpretare" id="toc-variabili-categoriali-contare-prima-di-interpretare" class="nav-link" data-scroll-target="#variabili-categoriali-contare-prima-di-interpretare"><span class="header-section-number">15.5</span> Variabili categoriali: contare prima di interpretare</a></li>
-  <li><a href="#variabili-numeriche-guardare-forma-centro-e-variabilit%C3%A0" id="toc-variabili-numeriche-guardare-forma-centro-e-variabilità" class="nav-link" data-scroll-target="#variabili-numeriche-guardare-forma-centro-e-variabilit%C3%A0"><span class="header-section-number">15.6</span> Variabili numeriche: guardare forma, centro e variabilità</a></li>
-  <li><a href="#variabili-ordinali-numeri-che-non-sono-sempre-quantit%C3%A0-continue" id="toc-variabili-ordinali-numeri-che-non-sono-sempre-quantità-continue" class="nav-link" data-scroll-target="#variabili-ordinali-numeri-che-non-sono-sempre-quantit%C3%A0-continue"><span class="header-section-number">15.7</span> Variabili ordinali: numeri che non sono sempre quantità continue</a></li>
-  <li><a href="#confrontare-una-variabile-numerica-tra-gruppi" id="toc-confrontare-una-variabile-numerica-tra-gruppi" class="nav-link" data-scroll-target="#confrontare-una-variabile-numerica-tra-gruppi"><span class="header-section-number">15.8</span> Confrontare una variabile numerica tra gruppi</a></li>
-  <li><a href="#quale-grafico-scegliere" id="toc-quale-grafico-scegliere" class="nav-link" data-scroll-target="#quale-grafico-scegliere"><span class="header-section-number">15.9</span> Quale grafico scegliere?</a></li>
-  <li><a href="#usare-lai-con-criterio" id="toc-usare-lai-con-criterio" class="nav-link" data-scroll-target="#usare-lai-con-criterio"><span class="header-section-number">15.10</span> Usare l’AI con criterio</a></li>
-  <li><a href="#cosa-portare-al-capitolo-successivo" id="toc-cosa-portare-al-capitolo-successivo" class="nav-link" data-scroll-target="#cosa-portare-al-capitolo-successivo"><span class="header-section-number">15.11</span> Cosa portare al capitolo successivo</a></li>
+<li><a href="#la-distribuzione-empirica" id="toc-la-distribuzione-empirica" class="nav-link active" data-scroll-target="#la-distribuzione-empirica"><span class="header-section-number">15.1</span> La distribuzione empirica</a></li>
+  <li><a href="#prima-dei-numeri-viene-il-significato" id="toc-prima-dei-numeri-viene-il-significato" class="nav-link" data-scroll-target="#prima-dei-numeri-viene-il-significato"><span class="header-section-number">15.2</span> Prima dei numeri viene il significato</a></li>
+  <li><a href="#variabili-categoriali-descrivere-la-composizione" id="toc-variabili-categoriali-descrivere-la-composizione" class="nav-link" data-scroll-target="#variabili-categoriali-descrivere-la-composizione"><span class="header-section-number">15.3</span> Variabili categoriali: descrivere la composizione</a></li>
+  <li><a href="#variabili-ordinali-conservare-lordine" id="toc-variabili-ordinali-conservare-lordine" class="nav-link" data-scroll-target="#variabili-ordinali-conservare-lordine"><span class="header-section-number">15.4</span> Variabili ordinali: conservare l’ordine</a></li>
+  <li><a href="#variabili-numeriche-forma-posizione-e-dispersione" id="toc-variabili-numeriche-forma-posizione-e-dispersione" class="nav-link" data-scroll-target="#variabili-numeriche-forma-posizione-e-dispersione"><span class="header-section-number">15.5</span> Variabili numeriche: forma, posizione e dispersione</a></li>
+  <li><a href="#media-e-mediana-rispondono-a-domande-differenti" id="toc-media-e-mediana-rispondono-a-domande-differenti" class="nav-link" data-scroll-target="#media-e-mediana-rispondono-a-domande-differenti"><span class="header-section-number">15.6</span> Media e mediana rispondono a domande differenti</a></li>
+  <li><a href="#la-dispersione-non-%C3%A8-rumore-da-eliminare" id="toc-la-dispersione-non-è-rumore-da-eliminare" class="nav-link" data-scroll-target="#la-dispersione-non-%C3%A8-rumore-da-eliminare"><span class="header-section-number">15.7</span> La dispersione non è rumore da eliminare</a></li>
+  <li><a href="#i-valori-estremi-appartengono-prima-di-tutto-alla-distribuzione" id="toc-i-valori-estremi-appartengono-prima-di-tutto-alla-distribuzione" class="nav-link" data-scroll-target="#i-valori-estremi-appartengono-prima-di-tutto-alla-distribuzione"><span class="header-section-number">15.8</span> I valori estremi appartengono prima di tutto alla distribuzione</a></li>
+  <li><a href="#i-valori-mancanti-fanno-parte-della-descrizione" id="toc-i-valori-mancanti-fanno-parte-della-descrizione" class="nav-link" data-scroll-target="#i-valori-mancanti-fanno-parte-della-descrizione"><span class="header-section-number">15.9</span> I valori mancanti fanno parte della descrizione</a></li>
+  <li><a href="#limiti-risoluzione-e-accumuli-di-valori" id="toc-limiti-risoluzione-e-accumuli-di-valori" class="nav-link" data-scroll-target="#limiti-risoluzione-e-accumuli-di-valori"><span class="header-section-number">15.10</span> Limiti, risoluzione e accumuli di valori</a></li>
+  <li><a href="#campione-e-popolazione" id="toc-campione-e-popolazione" class="nav-link" data-scroll-target="#campione-e-popolazione"><span class="header-section-number">15.11</span> Campione e popolazione</a></li>
+  <li><a href="#una-lettura-integrata-della-variabile" id="toc-una-lettura-integrata-della-variabile" class="nav-link" data-scroll-target="#una-lettura-integrata-della-variabile"><span class="header-section-number">15.12</span> Una lettura integrata della variabile</a></li>
+  <li><a href="#leda-%C3%A8-un-ciclo-non-una-checklist" id="toc-leda-è-un-ciclo-non-una-checklist" class="nav-link" data-scroll-target="#leda-%C3%A8-un-ciclo-non-una-checklist"><span class="header-section-number">15.13</span> L’EDA è un ciclo, non una checklist</a></li>
+  <li><a href="#chiedere-allai-una-lettura-non-un-verdetto" id="toc-chiedere-allai-una-lettura-non-un-verdetto" class="nav-link" data-scroll-target="#chiedere-allai-una-lettura-non-un-verdetto"><span class="header-section-number">15.14</span> Chiedere all’AI una lettura, non un verdetto</a></li>
+  <li><a href="#che-cosa-non-appartiene-ancora-a-questo-capitolo" id="toc-che-cosa-non-appartiene-ancora-a-questo-capitolo" class="nav-link" data-scroll-target="#che-cosa-non-appartiene-ancora-a-questo-capitolo"><span class="header-section-number">15.15</span> Che cosa non appartiene ancora a questo capitolo</a></li>
   </ul><div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/eda/03_exploring_univariate_data.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/03_exploring_univariate_data.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Esplorare una variabile alla volta</span></a></li></ol></nav><div class="quarto-title">
-<h1 class="title">
-<span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Esplorare una variabile alla volta</span>
-</h1>
-<p class="subtitle lead">Capire i dati prima di cercare relazioni</p>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">Statistica descrittiva ed EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/03_exploring_univariate_data.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Esplorare una variabile alla volta</span></a></li></ol></nav><div class="quarto-title">
+<h1 class="title"><span id="sec-univariate" class="quarto-section-identifier"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Esplorare una variabile alla volta</span></span></h1>
 </div>
 
 
@@ -569,481 +594,107 @@ cookieconsent.run({
   
 
 
-</header><section id="perché-questo-capitolo" class="level2" data-number="15.1"><h2 data-number="15.1" class="anchored" data-anchor-id="perché-questo-capitolo">
-<span class="header-section-number">15.1</span> Perché questo capitolo</h2>
-<p>L’analisi esplorativa dei dati inizia con una domanda semplice: <strong>Che cosa contiene ciascuna variabile?</strong></p>
-<p>Prima di studiare le correlazioni, confrontare i gruppi o stimare i modelli, è necessario conoscere le variabili una alla volta. Una variabile può presentare valori mancanti, categorie riportate in modo incoerente, distribuzioni asimmetriche, gruppi molto sbilanciati o valori inattesi. Se non li osserviamo all’inizio, rischiamo di costruire analisi apparentemente corrette su dati che non abbiamo davvero compreso.</p>
-<p>In psicologia, questa fase è particolarmente importante. Le variabili possono rappresentare caratteristiche sociodemografiche, risposte a item, punteggi di scala, tempi di reazione, valutazioni soggettive o indicatori fisiologici. Ogni variabile ha un significato teorico e un’origine empirica. Esplorare una variabile non significa soltanto produrre un grafico, ma anche chiedersi cosa quel grafico ci dice del fenomeno osservato.</p>
-<p>Al termine del capitolo dovresti essere in grado di:</p>
-<ul>
-<li>distinguere le variabili categoriali da quelle numeriche;</li>
-<li>controllare i valori mancanti e quelli inattesi;</li>
-<li>scegliere rappresentazioni grafiche semplici e appropriate;</li>
-<li>leggere frequenze, proporzioni, istogrammi e boxplot;</li>
-<li>evitare interpretazioni premature;</li>
-<li>controllare criticamente il codice e i commenti prodotti con l’aiuto dell’AI.</li>
-</ul>
-<div class="callout callout-style-default callout-important callout-titled">
+</header><div class="callout callout-style-default callout-note callout-titled" title="In sintesi">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Idea guida
+<span class="screen-reader-only">Nota</span>In sintesi
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>L’analisi univariata non permette di trarre conclusioni. Serve per <strong>orientarsi</strong>.</p>
-<p>Prima di domandarci se due variabili sono associate, dobbiamo capire come si comporta ciascuna variabile da sola.</p>
+<p><strong>Da sapere</strong> Esplorare una variabile significa ricostruirne la distribuzione empirica: quali valori compaiono, con quale frequenza, quali mancano e come le osservazioni si concentrano o si disperdono. La distribuzione non è una proprietà puramente numerica: riflette il costrutto, lo strumento di misura, il campionamento e le decisioni prese durante la preparazione dei dati.</p>
+<p><strong>Da saper fare</strong> Collegare il tipo di variabile alle descrizioni appropriate; distinguere frequenze, proporzioni e riassunti numerici; leggere forma, posizione e dispersione; riconoscere limiti della scala e osservazioni insolite; formulare descrizioni che riguardino il campione senza trasformarle prematuramente in affermazioni sulla popolazione.</p>
 </div>
 </div>
-</section><section id="una-sequenza-minima" class="level2" data-number="15.2"><h2 data-number="15.2" class="anchored" data-anchor-id="una-sequenza-minima">
-<span class="header-section-number">15.2</span> Una sequenza minima</h2>
-<p>Quando esploriamo una variabile, possiamo seguire una sequenza molto semplice.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
-</colgroup>
-<thead><tr class="header">
-<th>Passo</th>
-<th>Domanda guida</th>
-<th>Esempio di controllo</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td>1. Identificare</td>
-<td>Che tipo di variabile è?</td>
-<td>Categoriale, ordinale, numerica, punteggio di scala</td>
-</tr>
-<tr class="even">
-<td>2. Controllare</td>
-<td>Ci sono valori mancanti o impossibili?</td>
-<td>
-<code>NA</code>, valori fuori scala, categorie inattese</td>
-</tr>
-<tr class="odd">
-<td>3. Contare o riassumere</td>
-<td>Dove si concentrano i valori?</td>
-<td>Frequenze, proporzioni, minimo, massimo, mediana</td>
-</tr>
-<tr class="even">
-<td>4. Visualizzare</td>
-<td>Quale grafico mostra meglio la distribuzione?</td>
-<td>Barre, istogramma, boxplot</td>
-</tr>
-<tr class="odd">
-<td>5. Interpretare con cautela</td>
-<td>Che cosa posso dire e che cosa no?</td>
-<td>Descrizione, non ancora spiegazione causale</td>
-</tr>
-</tbody>
-</table>
-<p>Questa sequenza verrà ripresa più volte nei capitoli successivi. L’EDA è un processo iterativo: spesso un grafico rivela un problema che ci costringe a tornare alle fasi di controllo o di pulizia.</p>
-</section><section id="un-esempio-ricorrente-stress-e-sonno" class="level2" data-number="15.3"><h2 data-number="15.3" class="anchored" data-anchor-id="un-esempio-ricorrente-stress-e-sonno">
-<span class="header-section-number">15.3</span> Un esempio ricorrente: stress e sonno</h2>
-<p>Useremo un piccolo dataset didattico su studenti universitari. Ogni riga rappresenta uno studente. Le variabili principali sono:</p>
-<table class="caption-top table">
-<thead><tr class="header">
-<th>Variabile</th>
-<th>Tipo</th>
-<th>Significato</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td><code>genere</code></td>
-<td>categoriale</td>
-<td>genere dichiarato</td>
-</tr>
-<tr class="even">
-<td><code>anno</code></td>
-<td>categoriale/ordinale</td>
-<td>anno di corso</td>
-</tr>
-<tr class="odd">
-<td><code>stress</code></td>
-<td>numerica discreta</td>
-<td>stress accademico, da 1 a 10</td>
-</tr>
-<tr class="even">
-<td><code>sonno_ore</code></td>
-<td>numerica continua</td>
-<td>ore medie di sonno per notte</td>
-</tr>
-<tr class="odd">
-<td><code>qualita_sonno</code></td>
-<td>ordinale</td>
-<td>qualità soggettiva del sonno, da 1 a 5</td>
-</tr>
-</tbody>
-</table>
-<p>Nel capitolo precedente abbiamo visto che un dataset deve essere controllato e documentato. Qui si assume di avere già una versione pulita, ma si continuerà comunque a controllare ciò che si fa.</p>
+<section id="introduzione" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="introduzione">Introduzione</h2>
+<p>Dopo avere definito il dataset analitico e documentato le decisioni di pulizia, possiamo iniziare a descrivere i dati. Il primo passo consiste nell’osservare una variabile alla volta.</p>
+<p>Questa scelta può sembrare elementare. In realtà, molte analisi diventano difficili da interpretare perché si cercano subito relazioni, differenze tra gruppi o modelli complessi senza avere prima compreso le variabili che vi entrano.</p>
+<p>Una correlazione può essere dominata da pochi valori estremi. Una media può nascondere una distribuzione fortemente asimmetrica. Una categoria può contenere pochissime osservazioni. Una scala può concentrare quasi tutte le risposte al valore massimo, lasciando poco spazio per osservare differenze individuali.</p>
+<p>L’analisi univariata risponde quindi a una domanda preliminare:</p>
+<blockquote class="blockquote">
+<p>Che cosa rappresentano concretamente i valori osservati in questa variabile?</p>
+</blockquote>
+<p>La risposta richiede più di un comando. Dobbiamo conoscere la definizione della variabile, i valori che potrebbe assumere, il modo in cui è stata misurata e la popolazione da cui proviene il campione.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Prerequisiti">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Consiglio</span>Prerequisiti
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Il capitolo presuppone che il percorso dai dati grezzi al dataset analitico sia stato documentato, come discusso in <a href="01_project_structure.html" class="quarto-xref"><span>Capitolo 13</span></a> e <a href="02_data_cleaning.html" class="quarto-xref"><span>Capitolo 14</span></a>. Se l’esplorazione rivela valori impossibili, categorie inattese o duplicazioni, è necessario tornare a quei passaggi prima di proseguire.</p>
+</div>
+</div>
+</section><section id="panoramica-del-capitolo" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="panoramica-del-capitolo">Panoramica del capitolo</h2>
+<p>Il concetto centrale sarà la distribuzione empirica. Vedremo come cambia la sua descrizione quando la variabile è categoriale, ordinale o numerica. Per le variabili numeriche distingueremo forma, posizione e dispersione, evitando di ridurre tutto a una media. Discuteremo poi valori mancanti, limiti della scala, osservazioni estreme e rapporto tra campione e popolazione. La sintassi rimarrà essenziale: il codice servirà a rendere visibili queste caratteristiche, non a introdurre un nuovo catalogo di funzioni.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Preparazione del notebook">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Preparazione del notebook
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Gli esempi usano <code>dplyr</code> e <code>ggplot2</code>, già introdotti nella Parte su R. Il dataset è simulato e contiene una riga per studente. I valori mancanti sono inseriti intenzionalmente.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/">tibble</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">2026</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">stress_sonno</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span></span>
-<span>  id <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">120</span>,</span>
-<span>  genere <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"F"</span>, <span class="st">"M"</span>, <span class="st">"Altro/non dichiarato"</span><span class="op">)</span>,</span>
-<span>                  size <span class="op">=</span> <span class="fl">120</span>,</span>
-<span>                  replace <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                  prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.58</span>, <span class="fl">.38</span>, <span class="fl">.04</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  anno <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Primo"</span>, <span class="st">"Secondo"</span>, <span class="st">"Terzo"</span><span class="op">)</span>,</span>
-<span>                size <span class="op">=</span> <span class="fl">120</span>,</span>
-<span>                replace <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.42</span>, <span class="fl">.34</span>, <span class="fl">.24</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  stress <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">pmin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">pmax</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">120</span>, mean <span class="op">=</span> <span class="fl">6.2</span>, sd <span class="op">=</span> <span class="fl">1.8</span><span class="op">)</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span>, <span class="fl">10</span><span class="op">)</span>,</span>
-<span>  sonno_ore <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">120</span>, mean <span class="op">=</span> <span class="fl">7.0</span>, sd <span class="op">=</span> <span class="fl">1.1</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span>,</span>
-<span>  qualita_sonno <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">pmin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">pmax</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">120</span>, mean <span class="op">=</span> <span class="fl">3.1</span>, sd <span class="op">=</span> <span class="fl">1.0</span><span class="op">)</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span>, <span class="fl">5</span><span class="op">)</span></span>
+<span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">120</span></span>
+<span></span>
+<span><span class="va">studenti</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
+<span>  id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq_len</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>,</span>
+<span>  anno <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"primo"</span>, <span class="st">"secondo"</span>, <span class="st">"terzo"</span><span class="op">)</span>,</span>
+<span>      size <span class="op">=</span> <span class="va">n</span>,</span>
+<span>      replace <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>      prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.44</span>, <span class="fl">.34</span>, <span class="fl">.22</span><span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"primo"</span>, <span class="st">"secondo"</span>, <span class="st">"terzo"</span><span class="op">)</span>,</span>
+<span>    ordered <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  stress <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span></span>
+<span>    <span class="fl">1</span> <span class="op">+</span> <span class="fl">9</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/stats/Beta.html">rbeta</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">2.8</span>, <span class="fl">2.2</span><span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  qualita_sonno <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span></span>
+<span>      <span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,</span>
+<span>      size <span class="op">=</span> <span class="va">n</span>,</span>
+<span>      replace <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>      prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.08</span>, <span class="fl">.17</span>, <span class="fl">.33</span>, <span class="fl">.29</span>, <span class="fl">.13</span><span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    levels <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,</span>
+<span>    ordered <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Introduciamo alcuni valori mancanti per rendere l'esempio realistico.</span></span>
-<span><span class="va">stress_sonno</span><span class="op">$</span><span class="va">sonno_ore</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">7</span>, <span class="fl">48</span>, <span class="fl">91</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
-<span><span class="va">stress_sonno</span><span class="op">$</span><span class="va">qualita_sonno</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">13</span>, <span class="fl">62</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">stress_sonno</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Rows: 120
-Columns: 6
-$ id            &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1…
-$ genere        &lt;chr&gt; "F", "M", "F", "M", "M", "F", "F", "M", "F", "F", "M", "…
-$ anno          &lt;chr&gt; "Secondo", "Primo", "Primo", "Primo", "Primo", "Terzo", …
-$ stress        &lt;dbl&gt; 6, 4, 5, 6, 10, 5, 7, 6, 4, 6, 9, 7, 6, 5, 3, 8, 4, 8, 1…
-$ sonno_ore     &lt;dbl&gt; 6.1, 6.4, 8.6, 5.7, 6.8, 9.1, NA, 5.5, 6.3, 7.5, 6.6, 6.…
-$ qualita_sonno &lt;dbl&gt; 3, 4, 3, 4, 4, 3, 3, 2, 4, 3, 5, 1, NA, 4, 4, 3, 2, 3, 3…</code></pre>
-</div>
-</div>
-</section><section id="primo-controllo-valori-mancanti-e-valori-inattesi" class="level2" data-number="15.4"><h2 data-number="15.4" class="anchored" data-anchor-id="primo-controllo-valori-mancanti-e-valori-inattesi">
-<span class="header-section-number">15.4</span> Primo controllo: valori mancanti e valori inattesi</h2>
-<p>Prima di creare i grafici, è consigliabile verificare che le variabili non presentino valori mancanti o valori fuori scala.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress_sonno</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="op">(</span></span>
-<span>      <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>      <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">.x</span><span class="op">)</span><span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
-<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div data-pagedtable="false">
-  <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["genere"],"name":[2],"type":["int"],"align":["right"]},{"label":["anno"],"name":[3],"type":["int"],"align":["right"]},{"label":["stress"],"name":[4],"type":["int"],"align":["right"]},{"label":["sonno_ore"],"name":[5],"type":["int"],"align":["right"]},{"label":["qualita_sonno"],"name":[6],"type":["int"],"align":["right"]}],"data":[{"1":"0","2":"0","3":"0","4":"0","5":"3","6":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
+<span><span class="va">studenti</span><span class="op">$</span><span class="va">stress</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">9</span>, <span class="fl">54</span>, <span class="fl">103</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
+<span><span class="va">studenti</span><span class="op">$</span><span class="va">qualita_sonno</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">17</span>, <span class="fl">61</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
-<p>Questo controllo risponde a una domanda pratica: <strong>quante osservazioni potrei perdere se una funzione elimina automaticamente i valori mancanti?</strong></p>
-<p>Per le variabili con scale definite, controlliamo anche i valori minimo e massimo.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress_sonno</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
-<span>    stress_min <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">stress</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>    stress_max <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">stress</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>    sonno_min <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">sonno_ore</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>    sonno_max <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">sonno_ore</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>    qualita_min <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">qualita_sonno</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>    qualita_max <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">qualita_sonno</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div data-pagedtable="false">
-  <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["stress_min"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["stress_max"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sonno_min"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["sonno_max"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["qualita_min"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["qualita_max"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"3","2":"10","3":"4.3","4":"9.8","5":"1","6":"5"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Avviso</span>Errore comune
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Non partire dalla media. Inizia chiedendoti se i valori sono plausibili.</p>
-<p>Una media può essere calcolata anche quando una variabile contiene codici errati, valori fuori scala o valori mancanti trattati in modo scorretto.</p>
-</div>
-</div>
-</section><section id="variabili-categoriali-contare-prima-di-interpretare" class="level2" data-number="15.5"><h2 data-number="15.5" class="anchored" data-anchor-id="variabili-categoriali-contare-prima-di-interpretare">
-<span class="header-section-number">15.5</span> Variabili categoriali: contare prima di interpretare</h2>
-<p>Una variabile categoriale assegna ogni osservazione a una categoria. Esempi tipici sono il genere, il gruppo sperimentale, la diagnosi, la condizione o l’anno di corso.</p>
-<p>La prima analisi da effettuare è il conteggio delle categorie.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress_sonno</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span><span class="op">(</span><span class="va">genere</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div data-pagedtable="false">
-  <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["genere"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"Altro/non dichiarato","2":"3"},{"1":"F","2":"69"},{"1":"M","2":"48"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-</div>
-</div>
-<p>I conteggi assoluti sono utili, ma spesso vogliamo anche le proporzioni.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress_sonno</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span><span class="op">(</span><span class="va">genere</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>proporzione <span class="op">=</span> <span class="va">n</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div data-pagedtable="false">
-  <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["genere"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]},{"label":["proporzione"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"Altro/non dichiarato","2":"3","3":"0.025"},{"1":"F","2":"69","3":"0.575"},{"1":"M","2":"48","3":"0.400"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-</div>
-</div>
-<p>Le proporzioni aiutano a comprendere la composizione del campione. Tuttavia, non risolvono da sole il problema della rappresentatività. Se il campione è di convenienza, una proporzione descrive <strong>questi dati</strong>, non necessariamente la popolazione degli studenti universitari.</p>
-<section id="grafico-a-barre" class="level3" data-number="15.5.1"><h3 data-number="15.5.1" class="anchored" data-anchor-id="grafico-a-barre">
-<span class="header-section-number">15.5.1</span> Grafico a barre</h3>
-<p>Per una singola variabile categoriale, il grafico più semplice è il grafico a barre.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">stress_sonno</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">genere</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
-<span>    x <span class="op">=</span> <span class="st">"Genere dichiarato"</span>,</span>
-<span>    y <span class="op">=</span> <span class="st">"Numero di studenti"</span>,</span>
-<span>    title <span class="op">=</span> <span class="st">"Quante osservazioni ci sono in ciascuna categoria?"</span></span>
-<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><a href="03_exploring_univariate_data_files/figure-html/barplot-gender-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Distribuzione del genere dichiarato nel campione didattico."><img src="03_exploring_univariate_data_files/figure-html/barplot-gender-1.png" class="img-fluid figure-img" width="672" alt="Distribuzione del genere dichiarato nel campione didattico."></a></p>
-<figcaption>Distribuzione del genere dichiarato nel campione didattico.</figcaption></figure>
-</div>
-</div>
-</div>
-<p>Questo grafico risponde a una domanda descrittiva: qual è la composizione del campione rispetto a questa variabile?</p>
-<p>Non risponde a domande causali e non è sufficiente per stabilire se il campione sia rappresentativo.</p>
-</section><section id="due-variabili-categoriali" class="level3" data-number="15.5.2"><h3 data-number="15.5.2" class="anchored" data-anchor-id="due-variabili-categoriali">
-<span class="header-section-number">15.5.2</span> Due variabili categoriali</h3>
-<p>A volte, vogliamo vedere come due variabili categoriali interagiscono tra loro. Per esempio, potremmo chiederci come si distribuiscono gli anni di corso nei diversi gruppi di genere.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress_sonno</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span><span class="op">(</span><span class="va">genere</span>, <span class="va">anno</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div data-pagedtable="false">
-  <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["genere"],"name":[1],"type":["chr"],"align":["left"]},{"label":["anno"],"name":[2],"type":["chr"],"align":["left"]},{"label":["n"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"Altro/non dichiarato","2":"Primo","3":"2"},{"1":"Altro/non dichiarato","2":"Terzo","3":"1"},{"1":"F","2":"Primo","3":"29"},{"1":"F","2":"Secondo","3":"27"},{"1":"F","2":"Terzo","3":"13"},{"1":"M","2":"Primo","3":"24"},{"1":"M","2":"Secondo","3":"16"},{"1":"M","2":"Terzo","3":"8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-</div>
-</div>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">stress_sonno</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">genere</span>, fill <span class="op">=</span> <span class="va">anno</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"fill"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
-<span>    x <span class="op">=</span> <span class="st">"Genere dichiarato"</span>,</span>
-<span>    y <span class="op">=</span> <span class="st">"Proporzione"</span>,</span>
-<span>    fill <span class="op">=</span> <span class="st">"Anno di corso"</span>,</span>
-<span>    title <span class="op">=</span> <span class="st">"La composizione per anno è simile nei gruppi?"</span></span>
-<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><a href="03_exploring_univariate_data_files/figure-html/barplot-gender-year-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Distribuzione dell’anno di corso per genere dichiarato."><img src="03_exploring_univariate_data_files/figure-html/barplot-gender-year-1.png" class="img-fluid figure-img" width="672" alt="Distribuzione dell’anno di corso per genere dichiarato."></a></p>
-<figcaption>Distribuzione dell’anno di corso per genere dichiarato.</figcaption></figure>
-</div>
-</div>
-</div>
-<p>Usando l’opzione <code>position = "fill"</code>, tutte le barre hanno la stessa altezza. Questo rende più facile il confronto delle proporzioni interne, ma nasconde il numero assoluto di osservazioni in ciascun gruppo. Per questo motivo, quando le numerosità sono molto diverse, è opportuno considerare sia i conteggi sia le proporzioni.</p>
-</section></section><section id="variabili-numeriche-guardare-forma-centro-e-variabilità" class="level2" data-number="15.6"><h2 data-number="15.6" class="anchored" data-anchor-id="variabili-numeriche-guardare-forma-centro-e-variabilità">
-<span class="header-section-number">15.6</span> Variabili numeriche: guardare forma, centro e variabilità</h2>
-<p>Una variabile numerica assegna a ogni osservazione un valore su una scala quantitativa. Esempi di variabili numeriche sono i punteggi di scala, i tempi di reazione, le ore di sonno, l’età o il numero di errori.</p>
-<p>Le prime domande da porsi riguardo a una variabile numerica sono:</p>
-<ul>
-<li>quali sono i valori minimo e massimo?</li>
-<li>dove si concentrano i valori?</li>
-<li>la distribuzione è simmetrica o asimmetrica?</li>
-<li>Ci sono valori molto lontani dagli altri?</li>
-<li>la media è un riassunto sensato o sarebbe meglio usare la mediana e i quartili?</li>
-</ul>
-<section id="riassunti-numerici-iniziali" class="level3" data-number="15.6.1"><h3 data-number="15.6.1" class="anchored" data-anchor-id="riassunti-numerici-iniziali">
-<span class="header-section-number">15.6.1</span> Riassunti numerici iniziali</h3>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress_sonno</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
-<span>    n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">sonno_ore</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    missing <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">sonno_ore</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    minimo <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">sonno_ore</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>    q25 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">sonno_ore</span>, <span class="fl">.25</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>    mediana <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">sonno_ore</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>    media <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">sonno_ore</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>    q75 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">sonno_ore</span>, <span class="fl">.75</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>    massimo <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">sonno_ore</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div data-pagedtable="false">
-  <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["n"],"name":[1],"type":["int"],"align":["right"]},{"label":["missing"],"name":[2],"type":["int"],"align":["right"]},{"label":["minimo"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["q25"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["mediana"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["media"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["q75"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["massimo"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"117","2":"3","3":"4.3","4":"6.4","5":"7.1","6":"7.075214","7":"7.8","8":"9.8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-</div>
-</div>
-<p>Questa tabella non sostituisce il grafico. È utile per farsi un’idea iniziale: quante osservazioni sono disponibili, qual è l’intervallo dei valori e quanto la media differisce dalla mediana.</p>
-</section><section id="istogramma" class="level3" data-number="15.6.2"><h3 data-number="15.6.2" class="anchored" data-anchor-id="istogramma">
-<span class="header-section-number">15.6.2</span> Istogramma</h3>
-<p>L’istogramma mostra la forma della distribuzione raggruppando i valori in intervalli.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">stress_sonno</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">sonno_ore</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>binwidth <span class="op">=</span> <span class="fl">0.5</span>, boundary <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
-<span>    x <span class="op">=</span> <span class="st">"Ore medie di sonno per notte"</span>,</span>
-<span>    y <span class="op">=</span> <span class="st">"Numero di studenti"</span>,</span>
-<span>    title <span class="op">=</span> <span class="st">"Dove si concentrano le ore di sonno?"</span></span>
-<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><a href="03_exploring_univariate_data_files/figure-html/histogram-sleep-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Distribuzione delle ore medie di sonno."><img src="03_exploring_univariate_data_files/figure-html/histogram-sleep-1.png" class="img-fluid figure-img" width="672" alt="Distribuzione delle ore medie di sonno."></a></p>
-<figcaption>Distribuzione delle ore medie di sonno.</figcaption></figure>
-</div>
-</div>
-</div>
-<p>L’istogramma è sensibile alla scelta dell’ampiezza dei bin. Modificare il parametro “binwidth” può rendere la distribuzione più frastagliata o più liscia. Per questo motivo, l’istogramma deve essere considerato uno strumento esplorativo e non un’immagine definitiva della realtà.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">stress_sonno</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">sonno_ore</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>binwidth <span class="op">=</span> <span class="fl">1</span>, boundary <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
-<span>    x <span class="op">=</span> <span class="st">"Ore medie di sonno per notte"</span>,</span>
-<span>    y <span class="op">=</span> <span class="st">"Numero di studenti"</span>,</span>
-<span>    title <span class="op">=</span> <span class="st">"Stessi dati, bin più larghi"</span></span>
-<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><a href="03_exploring_univariate_data_files/figure-html/histogram-sleep-binwidths-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="La scelta del binwidth può modificare l’aspetto dell’istogramma."><img src="03_exploring_univariate_data_files/figure-html/histogram-sleep-binwidths-1.png" class="img-fluid figure-img" width="672" alt="La scelta del binwidth può modificare l’aspetto dell’istogramma."></a></p>
-<figcaption>La scelta del binwidth può modificare l’aspetto dell’istogramma.</figcaption></figure>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Nota</span>Cosa osservare in un istogramma
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Quando guardi un istogramma, chiediti:</p>
-<ul>
-<li>la distribuzione presenta un solo picco o più picchi?</li>
-<li>è circa simmetrica o asimmetrica?</li>
-<li>ci sono valori isolati?</li>
-<li>ci sono limiti artificiali dovuti alla scala di misura?</li>
-<li>la forma suggerisce che una media possa essere fuorviante?</li>
-</ul>
-</div>
-</div>
-</section><section id="boxplot" class="level3" data-number="15.6.3"><h3 data-number="15.6.3" class="anchored" data-anchor-id="boxplot">
-<span class="header-section-number">15.6.3</span> Boxplot</h3>
-<p>Il boxplot riassume la distribuzione dei dati utilizzando la mediana, i quartili e i valori potenzialmente estremi.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">stress_sonno</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">sonno_ore</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">geom_boxplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
-<span>    x <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>    y <span class="op">=</span> <span class="st">"Ore medie di sonno per notte"</span>,</span>
-<span>    title <span class="op">=</span> <span class="st">"Mediana, quartili e valori estremi"</span></span>
-<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><a href="03_exploring_univariate_data_files/figure-html/boxplot-sleep-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Boxplot delle ore medie di sonno."><img src="03_exploring_univariate_data_files/figure-html/boxplot-sleep-1.png" class="img-fluid figure-img" width="672" alt="Boxplot delle ore medie di sonno."></a></p>
-<figcaption>Boxplot delle ore medie di sonno.</figcaption></figure>
-</div>
-</div>
-</div>
-<p>Il boxplot è compatto e robusto, ma fornisce meno dettagli sulla forma. Per questo motivo, è utile come complemento dell’istogramma e non come suo sostituto.</p>
-</section></section><section id="variabili-ordinali-numeri-che-non-sono-sempre-quantità-continue" class="level2" data-number="15.7"><h2 data-number="15.7" class="anchored" data-anchor-id="variabili-ordinali-numeri-che-non-sono-sempre-quantità-continue">
-<span class="header-section-number">15.7</span> Variabili ordinali: numeri che non sono sempre quantità continue</h2>
-<p>Molte variabili psicologiche vengono raccolte tramite scale di risposta ordinate, ad esempio da 1 a 5 o da “per niente” a “moltissimo”. Questi valori sono numeri, ma non sempre è possibile trattarli come misure continue senza riflettere.</p>
-<p>Nel nostro esempio, “qualità del sonno” va da 1 a 5. Possiamo contare le sue frequenze come se si trattasse di una variabile categoriale ordinata.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress_sonno</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span><span class="op">(</span><span class="va">qualita_sonno</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div data-pagedtable="false">
-  <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["qualita_sonno"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"1","2":"9"},{"1":"2","2":"18"},{"1":"3","2":"47"},{"1":"4","2":"35"},{"1":"5","2":"9"},{"1":"NA","2":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-</div>
-</div>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">stress_sonno</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">qualita_sonno</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
-<span>    x <span class="op">=</span> <span class="st">"Qualità soggettiva del sonno"</span>,</span>
-<span>    y <span class="op">=</span> <span class="st">"Numero di studenti"</span>,</span>
-<span>    title <span class="op">=</span> <span class="st">"Come si distribuiscono le risposte ordinali?"</span></span>
-<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><a href="03_exploring_univariate_data_files/figure-html/barplot-sleep-quality-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6" title="Distribuzione della qualità soggettiva del sonno."><img src="03_exploring_univariate_data_files/figure-html/barplot-sleep-quality-1.png" class="img-fluid figure-img" width="672" alt="Distribuzione della qualità soggettiva del sonno."></a></p>
-<figcaption>Distribuzione della qualità soggettiva del sonno.</figcaption></figure>
-</div>
-</div>
-</div>
-<p>Per scale ordinali con pochi livelli, un grafico a barre è spesso più leggibile di un istogramma. La scelta del grafico deve seguire il significato della variabile, non soltanto il modo in cui R la codifica.</p>
-</section><section id="confrontare-una-variabile-numerica-tra-gruppi" class="level2" data-number="15.8"><h2 data-number="15.8" class="anchored" data-anchor-id="confrontare-una-variabile-numerica-tra-gruppi">
-<span class="header-section-number">15.8</span> Confrontare una variabile numerica tra gruppi</h2>
-<p>L’esplorazione univariata può includere un primo confronto descrittivo tra i gruppi. Per esempio, si può osservare la distribuzione delle ore di sonno nei diversi anni di corso.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">stress_sonno</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">anno</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
-<span>    n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">sonno_ore</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    mediana <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">sonno_ore</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>    media <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">sonno_ore</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>    q25 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">sonno_ore</span>, <span class="fl">.25</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>    q75 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">sonno_ore</span>, <span class="fl">.75</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>    .groups <span class="op">=</span> <span class="st">"drop"</span></span>
-<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div data-pagedtable="false">
-  <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["anno"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]},{"label":["mediana"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["media"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["q25"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["q75"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"Primo","2":"53","3":"6.90","4":"6.903774","5":"6.300","6":"7.70"},{"1":"Secondo","2":"42","3":"7.10","4":"6.969048","5":"6.325","6":"7.65"},{"1":"Terzo","2":"22","3":"7.85","4":"7.690909","5":"6.900","6":"8.30"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-</div>
-</div>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">stress_sonno</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">anno</span>, y <span class="op">=</span> <span class="va">sonno_ore</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">geom_boxplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
-<span>    x <span class="op">=</span> <span class="st">"Anno di corso"</span>,</span>
-<span>    y <span class="op">=</span> <span class="st">"Ore medie di sonno per notte"</span>,</span>
-<span>    title <span class="op">=</span> <span class="st">"La distribuzione del sonno cambia tra anni di corso?"</span></span>
-<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><a href="03_exploring_univariate_data_files/figure-html/boxplot-sleep-by-year-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7" title="Ore medie di sonno per anno di corso."><img src="03_exploring_univariate_data_files/figure-html/boxplot-sleep-by-year-1.png" class="img-fluid figure-img" width="672" alt="Ore medie di sonno per anno di corso."></a></p>
-<figcaption>Ore medie di sonno per anno di corso.</figcaption></figure>
-</div>
-</div>
-</div>
-<p>Questo grafico può suggerire delle differenze tra i vari gruppi, ma non dimostra che l’anno di corso sia la causa delle differenze nel sonno. Ci potrebbero essere molte altre variabili in gioco: il carico di lavoro, l’età, il lavoro part-time, la salute, il periodo dell’anno o la selezione del campione.</p>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Avviso</span>Non saltare alla causalità
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Un boxplot tra gruppi può mostrare differenze descrittive. Tuttavia, ciò non è sufficiente per concludere che il gruppo abbia prodotto tali differenze.</p>
-<p>La distinzione tra associazione e causalità verrà ripresa nel capitolo dedicato.</p>
-</div>
-</div>
-</section><section id="quale-grafico-scegliere" class="level2" data-number="15.9"><h2 data-number="15.9" class="anchored" data-anchor-id="quale-grafico-scegliere">
-<span class="header-section-number">15.9</span> Quale grafico scegliere?</h2>
-<p>Non esiste un grafico migliore in assoluto. Esiste un grafico più adatto alla domanda che stai ponendo.</p>
+</section><section id="la-distribuzione-empirica" class="level2" data-number="15.1"><h2 data-number="15.1" class="anchored" data-anchor-id="la-distribuzione-empirica">
+<span class="header-section-number">15.1</span> La distribuzione empirica</h2>
+<p>Una variabile è una regola che associa un valore a ciascuna unità osservata. La <strong>distribuzione empirica</strong> descrive come questi valori si presentano nel campione.</p>
+<p>Per la variabile <code>anno</code>, la distribuzione indica quanti studenti appartengono al primo, al secondo e al terzo anno. Per <code>stress</code>, indica quali punteggi compaiono, dove si concentra la maggior parte degli studenti e quanto i punteggi differiscono tra loro.</p>
+<p>La distribuzione è quindi l’oggetto principale dell’analisi univariata. Una media, una proporzione o un boxplot ne mostrano soltanto alcuni aspetti.</p>
+<p>Dire che lo stress medio è 6 non significa che la maggior parte degli studenti abbia ottenuto 6. Potremmo avere una distribuzione concentrata intorno a quel valore oppure due gruppi distinti, uno con punteggi bassi e uno con punteggi alti. Lo stesso numero riassuntivo può provenire da configurazioni molto diverse.</p>
+<p>L’obiettivo iniziale non è scegliere la statistica “migliore”, ma costruire una descrizione abbastanza ricca da non confondere un riassunto con l’intera variabile.</p>
+</section><section id="prima-dei-numeri-viene-il-significato" class="level2" data-number="15.2"><h2 data-number="15.2" class="anchored" data-anchor-id="prima-dei-numeri-viene-il-significato">
+<span class="header-section-number">15.2</span> Prima dei numeri viene il significato</h2>
+<p>Una colonna memorizzata come numero non è necessariamente una quantità continua. <code>qualita_sonno</code>, codificata da 1 a 5, rappresenta livelli ordinati. Le categorie possiedono un ordine, ma non sappiamo automaticamente se la distanza psicologica tra 1 e 2 sia uguale a quella tra 4 e 5.</p>
+<p>Analogamente, un codice <code>1</code>, <code>2</code> o <code>3</code> può rappresentare l’anno di corso. Calcolarne la media non descrive in modo trasparente la composizione del campione.</p>
+<p>Prima dell’esplorazione dobbiamo quindi recuperare dalla documentazione almeno tre informazioni: che cosa rappresenta la variabile, quali valori può assumere e come è stata costruita. Queste informazioni determinano quali operazioni abbiano senso.</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 33%">
@@ -1051,195 +702,490 @@ $ qualita_sonno &lt;dbl&gt; 3, 4, 3, 4, 4, 3, 3, 2, 4, 3, 5, 1, NA, 4, 4, 3, 2, 
 <col style="width: 33%">
 </colgroup>
 <thead><tr class="header">
-<th>Situazione</th>
-<th>Prima scelta ragionevole</th>
-<th>Domanda a cui risponde</th>
+<th>Tipo concettuale</th>
+<th>Domanda iniziale</th>
+<th>Descrizione essenziale</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td>Una variabile categoriale</td>
-<td>Grafico a barre</td>
-<td>Quante osservazioni ci sono in ogni categoria?</td>
+<td>Categoriale</td>
+<td>Quali categorie compaiono e con quale frequenza?</td>
+<td>Conteggi e proporzioni</td>
 </tr>
 <tr class="even">
-<td>Due variabili categoriali</td>
-<td>Barre proporzionali o tabella</td>
-<td>Le proporzioni cambiano tra gruppi?</td>
+<td>Ordinale</td>
+<td>Come si distribuiscono le risposte lungo l’ordine previsto?</td>
+<td>Frequenze ordinate e proporzioni</td>
 </tr>
 <tr class="odd">
-<td>Una variabile numerica</td>
-<td>Istogramma</td>
-<td>Qual è la forma della distribuzione?</td>
-</tr>
-<tr class="even">
-<td>Variabile numerica con valori estremi</td>
-<td>Boxplot</td>
-<td>Ci sono valori lontani dal centro?</td>
-</tr>
-<tr class="odd">
-<td>Variabile ordinale con pochi livelli</td>
-<td>Grafico a barre</td>
-<td>Come si distribuiscono le risposte?</td>
-</tr>
-<tr class="even">
-<td>Numerica per gruppi</td>
-<td>Boxplot o punti + boxplot</td>
-<td>Le distribuzioni differiscono tra gruppi?</td>
+<td>Numerica</td>
+<td>Dove si concentrano i valori e quanto variano?</td>
+<td>Distribuzione grafica, posizione e dispersione</td>
 </tr>
 </tbody>
 </table>
-<p>I grafici più complessi, come i density plot, i violin plot o i beeswarm plot, possono essere utili, ma non devono diventare obbligatori. Prima è necessario saper leggere bene i grafici semplici.</p>
-</section><section id="usare-lai-con-criterio" class="level2" data-number="15.10"><h2 data-number="15.10" class="anchored" data-anchor-id="usare-lai-con-criterio">
-<span class="header-section-number">15.10</span> Usare l’AI con criterio</h2>
-<p>Gli strumenti di IA possono generare rapidamente codice per tabelle e grafici. Questo è utile, ma non esime gli studenti dalle loro responsabilità.</p>
-<div class="callout callout-style-default callout-tip callout-titled">
+<p>La tabella non pretende di risolvere ogni caso. Un punteggio ottenuto sommando molti item ordinali può essere trattato in modo diverso da un singolo item. La decisione deve essere coerente con la costruzione della misura e con lo scopo descrittivo.</p>
+</section><section id="variabili-categoriali-descrivere-la-composizione" class="level2" data-number="15.3"><h2 data-number="15.3" class="anchored" data-anchor-id="variabili-categoriali-descrivere-la-composizione">
+<span class="header-section-number">15.3</span> Variabili categoriali: descrivere la composizione</h2>
+<p>Per una variabile categoriale, la distribuzione è costituita dalle frequenze delle categorie.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span><span class="op">(</span><span class="va">anno</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>    proporzione <span class="op">=</span> <span class="va">n</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["anno"],"name":[1],"type":["ord"],"align":["right"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]},{"label":["proporzione"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"primo","2":"60","3":"0.5000000"},{"1":"secondo","2":"38","3":"0.3166667"},{"1":"terzo","2":"22","3":"0.1833333"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Il conteggio risponde alla domanda “quante osservazioni?”. La proporzione risponde alla domanda “quale parte del campione?”.</p>
+<p>Le due informazioni devono essere lette insieme. Una categoria che rappresenta il 10% del campione può contenere dieci persone in uno studio e mille in un altro. La proporzione descrive la composizione; il conteggio segnala quanta informazione sostiene quella descrizione.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span></span>
+<span>  <span class="va">studenti</span>,</span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">anno</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="st">"Anno di corso"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Numero di studenti"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-univariate-year" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-univariate-year-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="03_exploring_univariate_data_files/figure-html/fig-univariate-year-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figura&nbsp;15.1: Composizione del campione per anno di corso."><img src="03_exploring_univariate_data_files/figure-html/fig-univariate-year-1.png" class="img-fluid figure-img" width="672"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-univariate-year-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;15.1: Composizione del campione per anno di corso.
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>Il grafico rende immediatamente visibile lo sbilanciamento tra categorie. Non ci dice però se tale composizione riproduca quella della popolazione universitaria. Per affermarlo servirebbero informazioni sul piano di campionamento e sulla popolazione di riferimento.</p>
+<p>Una formulazione appropriata è:</p>
+<blockquote class="blockquote">
+<p>Nel campione osservato, gli studenti del primo anno sono più numerosi di quelli del terzo anno.</p>
+</blockquote>
+<p>Una formulazione non giustificata sarebbe:</p>
+<blockquote class="blockquote">
+<p>Gli studenti universitari appartengono soprattutto al primo anno.</p>
+</blockquote>
+<p>La prima frase descrive i dati. La seconda generalizza oltre ciò che il campionamento permette di sostenere.</p>
+</section><section id="variabili-ordinali-conservare-lordine" class="level2" data-number="15.4"><h2 data-number="15.4" class="anchored" data-anchor-id="variabili-ordinali-conservare-lordine">
+<span class="header-section-number">15.4</span> Variabili ordinali: conservare l’ordine</h2>
+<p>Una variabile ordinale contiene categorie che possono essere ordinate. La qualità soggettiva del sonno, misurata da 1 a 5, ne è un esempio.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span><span class="op">(</span></span>
+<span>    <span class="va">qualita_sonno</span>,</span>
+<span>    .drop <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>    proporzione <span class="op">=</span> <span class="va">n</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["qualita_sonno"],"name":[1],"type":["ord"],"align":["right"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]},{"label":["proporzione"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"5","3":"0.04166667"},{"1":"2","2":"28","3":"0.23333333"},{"1":"3","2":"37","3":"0.30833333"},{"1":"4","2":"38","3":"0.31666667"},{"1":"5","2":"10","3":"0.08333333"},{"1":"NA","2":"2","3":"0.01666667"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Il grafico deve conservare l’ordine dei livelli:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span></span>
+<span>  <span class="va">studenti</span>,</span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">qualita_sonno</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="st">"Qualità soggettiva del sonno"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Numero di studenti"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-univariate-sleep-quality" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-univariate-sleep-quality-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="03_exploring_univariate_data_files/figure-html/fig-univariate-sleep-quality-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figura&nbsp;15.2: Distribuzione della qualità soggettiva del sonno."><img src="03_exploring_univariate_data_files/figure-html/fig-univariate-sleep-quality-1.png" class="img-fluid figure-img" width="672"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-univariate-sleep-quality-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;15.2: Distribuzione della qualità soggettiva del sonno.
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>La forma della distribuzione mostra quali risposte siano frequenti e se le osservazioni si concentrino verso un estremo della scala.</p>
+<p>Se quasi tutte le risposte fossero pari a 5, potremmo osservare un <strong>effetto soffitto</strong>. La variabile distinguerebbe poco gli studenti con livelli elevati perché la scala non offre valori superiori. Una concentrazione al valore minimo suggerirebbe invece un <strong>effetto pavimento</strong>.</p>
+<p>Questi pattern possono riflettere il fenomeno, ma anche la formulazione dell’item, la popolazione selezionata o una scala non adeguata all’intervallo reale delle risposte. L’EDA rende visibile il limite; la sua spiegazione richiede di tornare alla misurazione.</p>
+</section><section id="variabili-numeriche-forma-posizione-e-dispersione" class="level2" data-number="15.5"><h2 data-number="15.5" class="anchored" data-anchor-id="variabili-numeriche-forma-posizione-e-dispersione">
+<span class="header-section-number">15.5</span> Variabili numeriche: forma, posizione e dispersione</h2>
+<p>Per una variabile numerica non basta conoscere il minimo e il massimo. Dobbiamo osservare almeno tre caratteristiche.</p>
+<p>La <strong>forma</strong> descrive come i valori sono distribuiti: simmetria, asimmetria, concentrazioni, vuoti e possibili gruppi distinti.</p>
+<p>La <strong>posizione</strong> descrive dove si trova il centro della distribuzione. Media e mediana rispondono a definizioni differenti di centro.</p>
+<p>La <strong>dispersione</strong> descrive quanto i valori differiscono tra loro. Intervallo, distanza interquartile e deviazione standard ne evidenziano aspetti diversi.</p>
+<p>Queste caratteristiche devono essere lette insieme.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
+<span>    n_osservato <span class="op">=</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">stress</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    n_mancante <span class="op">=</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">stress</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    minimo <span class="op">=</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">stress</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    q25 <span class="op">=</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span></span>
+<span>        <span class="va">stress</span>,</span>
+<span>        <span class="fl">.25</span>,</span>
+<span>        na.rm <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>      <span class="op">)</span>,</span>
+<span>    mediana <span class="op">=</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">stress</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    media <span class="op">=</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">stress</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    q75 <span class="op">=</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span></span>
+<span>        <span class="va">stress</span>,</span>
+<span>        <span class="fl">.75</span>,</span>
+<span>        na.rm <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>      <span class="op">)</span>,</span>
+<span>    massimo <span class="op">=</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">stress</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    deviazione_standard <span class="op">=</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">stress</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["n_osservato"],"name":[1],"type":["int"],"align":["right"]},{"label":["n_mancante"],"name":[2],"type":["int"],"align":["right"]},{"label":["minimo"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["q25"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["mediana"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["media"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["q75"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["massimo"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["deviazione_standard"],"name":[9],"type":["dbl"],"align":["right"]}],"data":[{"1":"117","2":"3","3":"2","4":"5","5":"6","6":"5.991453","7":"8","8":"9","9":"1.863884"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>La tabella offre punti di riferimento. Il grafico mostra come quei numeri siano prodotti dalla distribuzione.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span></span>
+<span>  <span class="va">studenti</span>,</span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">stress</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span></span>
+<span>    binwidth <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>    boundary <span class="op">=</span> <span class="fl">.5</span>,</span>
+<span>    na.rm <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="st">"Punteggio di stress"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Numero di studenti"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-univariate-stress-hist" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-univariate-stress-hist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="03_exploring_univariate_data_files/figure-html/fig-univariate-stress-hist-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figura&nbsp;15.3: Distribuzione dei punteggi di stress."><img src="03_exploring_univariate_data_files/figure-html/fig-univariate-stress-hist-1.png" class="img-fluid figure-img" width="672"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-univariate-stress-hist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;15.3: Distribuzione dei punteggi di stress.
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>Poiché <code>stress</code> assume valori interi da 1 a 10, intervalli di ampiezza 1 rispettano la risoluzione della misura. Non stiamo cercando un’impostazione grafica universale: stiamo scegliendo una rappresentazione coerente con i valori possibili.</p>
+</section><section id="media-e-mediana-rispondono-a-domande-differenti" class="level2" data-number="15.6"><h2 data-number="15.6" class="anchored" data-anchor-id="media-e-mediana-rispondono-a-domande-differenti">
+<span class="header-section-number">15.6</span> Media e mediana rispondono a domande differenti</h2>
+<p>La media utilizza la distanza numerica di ogni osservazione. È il punto di equilibrio della distribuzione ed è sensibile ai valori estremi.</p>
+<p>La mediana divide le osservazioni ordinate in due metà. Dipende dalla posizione dei valori, non dall’ampiezza delle distanze più estreme.</p>
+<p>Se la distribuzione è approssimativamente simmetrica, media e mediana possono essere simili. Se è asimmetrica o contiene valori molto lontani, possono differire.</p>
+<p>Non occorre adottare la regola meccanica “usa la mediana quando la distribuzione non è normale”. La scelta dipende da ciò che vogliamo descrivere. La media è informativa sul livello complessivo della variabile; la mediana descrive il valore che divide il campione in due parti.</p>
+<p>Spesso è preferibile riportarle entrambe durante l’esplorazione e spiegare la forma della distribuzione. La decisione su quale statistica privilegiare nel report finale può essere presa dopo avere osservato i dati e considerato il significato della scala.</p>
+<div class="callout callout-style-default callout-important callout-titled" title="Il centro non descrive la distribuzione">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Consiglio</span>Cosa puoi chiedere all’AI
+<span class="screen-reader-only">Importante</span>Il centro non descrive la distribuzione
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Puoi chiedere, per esempio:</p>
-<blockquote class="blockquote">
-<p>Scrivi codice R con <code>ggplot2</code> per visualizzare la distribuzione delle ore di sonno e controllare se ci sono valori mancanti.</p>
-</blockquote>
-<p>Oppure:</p>
-<blockquote class="blockquote">
-<p>Spiega riga per riga questo codice <code>dplyr</code> e dimmi quali osservazioni vengono escluse.</p>
-</blockquote>
+<p>Due campioni possono avere la stessa media e dispersioni, asimmetrie o concentrazioni molto differenti. Una statistica di posizione deve essere accompagnata almeno da una misura di dispersione e da una rappresentazione della forma.</p>
 </div>
 </div>
-<div class="callout callout-style-default callout-caution callout-titled">
+</section><section id="la-dispersione-non-è-rumore-da-eliminare" class="level2" data-number="15.7"><h2 data-number="15.7" class="anchored" data-anchor-id="la-dispersione-non-è-rumore-da-eliminare">
+<span class="header-section-number">15.7</span> La dispersione non è rumore da eliminare</h2>
+<p>In psicologia, la variabilità tra persone o tra osservazioni è spesso parte del fenomeno studiato.</p>
+<p>Una deviazione standard elevata non significa automaticamente che la misura sia scadente. Può indicare che il campione contiene esperienze molto differenti. Al contrario, una variabilità ridotta può derivare da una popolazione omogenea, da una selezione restrittiva o da un effetto pavimento o soffitto.</p>
+<p>La dispersione deve quindi essere interpretata insieme al disegno e alla misurazione.</p>
+<p>Il boxplot offre un riepilogo compatto della posizione e della dispersione:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span></span>
+<span>  <span class="va">studenti</span>,</span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">stress</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">geom_boxplot</a></span><span class="op">(</span></span>
+<span>    na.rm <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Punteggio di stress"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-univariate-stress-box" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-univariate-stress-box-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="03_exploring_univariate_data_files/figure-html/fig-univariate-stress-box-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figura&nbsp;15.4: Boxplot dei punteggi di stress."><img src="03_exploring_univariate_data_files/figure-html/fig-univariate-stress-box-1.png" class="img-fluid figure-img" width="672"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-univariate-stress-box-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;15.4: Boxplot dei punteggi di stress.
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>Il boxplot non sostituisce l’istogramma. Riduce la distribuzione a pochi elementi: mediana, quartili e osservazioni oltre una regola convenzionale. È utile per una sintesi rapida, ma può nascondere picchi, vuoti e gruppi distinti.</p>
+</section><section id="i-valori-estremi-appartengono-prima-di-tutto-alla-distribuzione" class="level2" data-number="15.8"><h2 data-number="15.8" class="anchored" data-anchor-id="i-valori-estremi-appartengono-prima-di-tutto-alla-distribuzione">
+<span class="header-section-number">15.8</span> I valori estremi appartengono prima di tutto alla distribuzione</h2>
+<p>Un valore distante dagli altri non è automaticamente un errore.</p>
+<p>Può essere una registrazione sbagliata, ma può anche rappresentare una persona reale che si colloca in una regione rara della popolazione. Il boxplot può segnalarlo secondo una convenzione geometrica; non può stabilirne l’origine.</p>
+<p>L’analisi univariata deve quindi distinguere due domande:</p>
+<blockquote class="blockquote">
+<p>Il valore è possibile secondo lo strumento e la procedura?</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>Il valore è raro rispetto alle altre osservazioni del campione?</p>
+</blockquote>
+<p>La prima domanda riguarda validità e pulizia. La seconda riguarda la distribuzione empirica. Un valore può essere possibile e raro; in quel caso eliminarlo renderebbe il campione meno fedele alle osservazioni raccolte.</p>
+<p>Quando una statistica cambia molto includendo o escludendo un’osservazione, non abbiamo automaticamente trovato una ragione per eliminarla. Abbiamo scoperto che la descrizione è sensibile a quel caso. Questa sensibilità deve essere riportata e approfondita.</p>
+</section><section id="i-valori-mancanti-fanno-parte-della-descrizione" class="level2" data-number="15.9"><h2 data-number="15.9" class="anchored" data-anchor-id="i-valori-mancanti-fanno-parte-della-descrizione">
+<span class="header-section-number">15.9</span> I valori mancanti fanno parte della descrizione</h2>
+<p>Una distribuzione viene costruita sui valori osservati. Se alcuni valori mancano, il grafico e le statistiche rappresentano soltanto le persone per cui la misura è disponibile.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
+<span>    n_totale <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    n_osservato <span class="op">=</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">stress</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    n_mancante <span class="op">=</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">stress</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    proporzione_mancante <span class="op">=</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">stress</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["n_totale"],"name":[1],"type":["int"],"align":["right"]},{"label":["n_osservato"],"name":[2],"type":["int"],"align":["right"]},{"label":["n_mancante"],"name":[3],"type":["int"],"align":["right"]},{"label":["proporzione_mancante"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"120","2":"117","3":"3","4":"0.025"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Il numero dei mancanti dovrebbe essere riportato insieme al numero dei valori osservati. Scrivere soltanto <code>na.rm = TRUE</code> rende possibile il calcolo, ma non informa il lettore sulla parte del campione che non contribuisce al risultato.</p>
+<p>Nell’analisi univariata possiamo descrivere quanti valori mancano e verificare se l’assenza deriva da codici non ancora riconosciuti. Stabilire se i mancanti siano associati ad altre caratteristiche richiede invece di passare a una domanda multivariata.</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="La distribuzione osservata non include chi non ha risposto">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Attenzione</span>Cosa devi controllare tu
+<span class="screen-reader-only">Avviso</span>La distribuzione osservata non include chi non ha risposto
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Quando l’AI propone del codice o delle interpretazioni, è sempre necessario controllare:</p>
-<ul>
-<li>se la variabile esiste davvero nel dataset;</li>
-<li>se il grafico è adatto al tipo di variabile;</li>
-<li>se i valori mancanti vengono eliminati automaticamente;</li>
-<li>se il codice trasforma una variabile ordinale in numerica senza discuterne la possibilità;</li>
-<li>se l’interpretazione confonde descrizione, associazione e causalità;</li>
-<li>se il testo prodotto dall’AI va oltre le informazioni fornite dai dati.</li>
-</ul>
+<p>Se la mancata risposta è collegata al livello della variabile o ad altre caratteristiche dei partecipanti, la distribuzione dei soli valori osservati può essere diversa da quella che avremmo ottenuto con informazioni complete.</p>
 </div>
 </div>
-<p>Un buon esercizio consiste nel chiedere all’AI di produrre un grafico e poi scrivere una spiegazione di tre frasi.</p>
-<ol type="1">
-<li>che cosa rappresenta ogni asse;</li>
-<li>quale è il pattern principale che si osserva;</li>
-<li>quale conclusione sarebbe invece prematura.</li>
-</ol></section><section id="cosa-portare-al-capitolo-successivo" class="level2" data-number="15.11"><h2 data-number="15.11" class="anchored" data-anchor-id="cosa-portare-al-capitolo-successivo">
-<span class="header-section-number">15.11</span> Cosa portare al capitolo successivo</h2>
-<p>Dopo l’esplorazione univariata, dovresti avere un’idea più chiara di ciascuna variabile:</p>
-<ul>
-<li>quali valori assume;</li>
-<li>quali valori mancano;</li>
-<li>quale forma ha la distribuzione;</li>
-<li>quali categorie sono frequenti o rare;</li>
-<li>quali grafici sono più appropriati;</li>
-<li>quali decisioni richiedono documentazione.</li>
-</ul>
-<p>Nel capitolo sulla visualizzazione dei dati, riprenderemo questi strumenti da una prospettiva più generale: non solo quale grafico produrre, ma anche come costruire grafici che aiutino a capire senza distorcere.</p>
+</section><section id="limiti-risoluzione-e-accumuli-di-valori" class="level2" data-number="15.10"><h2 data-number="15.10" class="anchored" data-anchor-id="limiti-risoluzione-e-accumuli-di-valori">
+<span class="header-section-number">15.10</span> Limiti, risoluzione e accumuli di valori</h2>
+<p>Una distribuzione è influenzata dai limiti dello strumento.</p>
+<p>Una scala da 1 a 10 non può mostrare valori inferiori a 1 o superiori a 10. Se molte persone avrebbero livelli di stress maggiori di quanto lo strumento riesca a rappresentare, le risposte si accumuleranno vicino a 10. Il grafico mostrerà la distribuzione dei punteggi consentiti, non necessariamente quella completa del costrutto.</p>
+<p>Anche la risoluzione è importante. Un item con cinque categorie produce pochi valori possibili; un tempo di reazione misurato in millisecondi ne produce molti. Non ha senso chiedere allo stesso grafico lo stesso livello di dettaglio.</p>
+<p>Talvolta osserviamo accumuli su valori tondi, come 5, 10 o 15. Questo fenomeno, spesso chiamato <em>heaping</em>, può riflettere approssimazione nella risposta o nel processo di registrazione. Non è necessariamente un errore, ma informa sulla precisione effettiva della misura.</p>
+<p>L’esplorazione deve quindi chiedersi non soltanto dove si trovino i valori, ma anche quali valori lo strumento permetta di osservare.</p>
+</section><section id="campione-e-popolazione" class="level2" data-number="15.11"><h2 data-number="15.11" class="anchored" data-anchor-id="campione-e-popolazione">
+<span class="header-section-number">15.11</span> Campione e popolazione</h2>
+<p>Le statistiche descrittive riassumono il campione disponibile. Non dimostrano che la popolazione possieda la stessa distribuzione.</p>
+<p>Se il campione proviene da un singolo corso universitario, la distribuzione dello stress descrive quelle persone nel contesto e nel periodo della raccolta. La generalizzazione ad altri studenti dipende dal campionamento, dalla partecipazione e dalle differenze tra contesti.</p>
+<p>Anche una descrizione perfettamente calcolata può essere poco rappresentativa. Un campione di volontari può sottorappresentare chi ha meno tempo, maggiore disagio o minore familiarità con gli strumenti digitali. I valori mancanti e le esclusioni durante la pulizia possono restringere ulteriormente la popolazione effettivamente descritta.</p>
+<p>Per questo motivo, il linguaggio deve rimanere proporzionato:</p>
+<blockquote class="blockquote">
+<p>Nel campione, la maggior parte dei punteggi di stress si concentra tra…</p>
+</blockquote>
+<p>è diverso da:</p>
+<blockquote class="blockquote">
+<p>Nella popolazione degli studenti, lo stress si distribuisce…</p>
+</blockquote>
+<p>La seconda frase richiede un passaggio inferenziale e una giustificazione del campionamento che l’EDA, da sola, non fornisce.</p>
+</section><section id="una-lettura-integrata-della-variabile" class="level2" data-number="15.12"><h2 data-number="15.12" class="anchored" data-anchor-id="una-lettura-integrata-della-variabile">
+<span class="header-section-number">15.12</span> Una lettura integrata della variabile</h2>
+<p>Al termine dell’esplorazione non dovremmo avere soltanto una tabella e un grafico, ma una breve descrizione coerente.</p>
+<p>Per <code>stress</code>, una descrizione potrebbe seguire questo ordine narrativo:</p>
+<blockquote class="blockquote">
+<p>La variabile è un punteggio intero compreso tra 1 e 10. Sono disponibili 117 osservazioni su 120. I valori occupano gran parte dell’intervallo della scala e si concentrano nella regione centrale, con una lieve asimmetria. Media e mediana sono simili, mentre il boxplot non suggerisce valori impossibili. La distribuzione descrive il campione osservato e non dimostra che la stessa forma caratterizzi l’intera popolazione studentesca.</p>
+</blockquote>
+<p>La formulazione collega significato, completezza, forma, posizione, dispersione e limite della generalizzazione. Nessuna singola statistica potrebbe sostituirla.</p>
+</section><section id="leda-è-un-ciclo-non-una-checklist" class="level2" data-number="15.13"><h2 data-number="15.13" class="anchored" data-anchor-id="leda-è-un-ciclo-non-una-checklist">
+<span class="header-section-number">15.13</span> L’EDA è un ciclo, non una checklist</h2>
+<p>L’esplorazione univariata può farci tornare indietro.</p>
+<p>Una categoria inattesa richiede di consultare il codebook. Un valore impossibile richiede di verificare la fonte. Un accumulo al limite della scala richiede di riflettere sulla misurazione. Una grande quota di mancanti può costringere a ridefinire ciò che il dataset analitico rappresenta.</p>
+<p>Il ciclo è:</p>
+<p><span class="math display">\[
+\text{descrivere}
+\longrightarrow
+\text{osservare una discrepanza}
+\longrightarrow
+\text{verificare}
+\longrightarrow
+\text{eventualmente trasformare}
+\longrightarrow
+\text{descrivere di nuovo}.
+\]</span></p>
+<p>La prima visualizzazione non è quindi un risultato definitivo. È uno strumento diagnostico.</p>
+</section><section id="chiedere-allai-una-lettura-non-un-verdetto" class="level2" data-number="15.14"><h2 data-number="15.14" class="anchored" data-anchor-id="chiedere-allai-una-lettura-non-un-verdetto">
+<span class="header-section-number">15.14</span> Chiedere all’AI una lettura, non un verdetto</h2>
+<p>Una richiesta generica come «descrivi questa variabile» può produrre una lunga lista di statistiche e un’interpretazione troppo sicura.</p>
+<p>Una richiesta più utile specifica il significato della variabile e chiede di separare osservazione e inferenza.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Un prompt per l'esplorazione univariata">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Consiglio</span>Un prompt per l’esplorazione univariata
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<blockquote class="blockquote">
+<p>Ho un data frame chiamato <code>studenti</code>, con una riga per studente. <code>stress</code> è un punteggio intero da 1 a 10 e può contenere valori mancanti.</p>
+<p>Proponi una sequenza semplice per descriverne la distribuzione. Includi numerosità totale, valori osservati e mancanti, intervallo, media, mediana, quartili, deviazione standard, istogramma e boxplot.</p>
+<p>Non eliminare valori e non dichiararli outlier senza una verifica del loro significato. Spiega che cosa mostra ogni riassunto, segnala eventuali effetti pavimento o soffitto e mantieni le conclusioni riferite al campione.</p>
+</blockquote>
+</div>
+</div>
+<p>Dopo avere ricevuto il codice, dobbiamo controllare che la variabile esista, che i limiti dichiarati siano corretti, che i mancanti siano quantificati e che il grafico rispetti la risoluzione della misura.</p>
+<p>Se l’AI conclude che la distribuzione è “normale” basandosi soltanto sull’aspetto dell’istogramma, possiamo chiedere una formulazione più prudente:</p>
+<blockquote class="blockquote">
+<p>Descrivi la forma visibile senza trasformarla in una classificazione definitiva e senza anticipare assunzioni richieste da modelli successivi.</p>
+</blockquote>
+</section><section id="che-cosa-non-appartiene-ancora-a-questo-capitolo" class="level2" data-number="15.15"><h2 data-number="15.15" class="anchored" data-anchor-id="che-cosa-non-appartiene-ancora-a-questo-capitolo">
+<span class="header-section-number">15.15</span> Che cosa non appartiene ancora a questo capitolo</h2>
+<p>Confrontare la distribuzione dello stress tra anni di corso, studiare la relazione tra stress e sonno o verificare se i mancanti siano più frequenti in un gruppo significa introdurre una seconda variabile.</p>
+<p>Queste sono domande importanti, ma non sono più univariate. Verranno affrontate nei capitoli successivi.</p>
+<p>Mantenere questa distinzione aiuta a capire quale informazione venga aggiunta passando da una variabile a due o più variabili.</p>
+</section><section id="riflessioni-conclusive" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="riflessioni-conclusive">Riflessioni conclusive</h2>
+<p>Esplorare una variabile significa ricostruire la sua distribuzione nel campione, non produrre automaticamente una media e un grafico.</p>
+<p>Per una variabile categoriale osserviamo categorie, conteggi e proporzioni. Per una variabile ordinale conserviamo l’ordine e cerchiamo concentrazioni verso i limiti. Per una variabile numerica leggiamo insieme forma, posizione e dispersione.</p>
+<p>I valori mancanti, gli estremi, la risoluzione e i limiti della scala fanno parte della descrizione. Possono indicare problemi nei dati, ma anche caratteristiche reali della misura o del campione. L’EDA deve renderli visibili prima di interpretarli.</p>
+<p>Il risultato finale è una descrizione narrativa e controllabile che rimane riferita al campione osservato. Solo dopo avere compreso le singole variabili sarà sensato chiedersi come cambino insieme.</p>
 </section><section id="esercizi" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="esercizi">Esercizi</h2>
-<div class="callout callout-style-default callout-important callout-titled" title="Esercizio 1: leggere una variabile categoriale">
+<ol type="1">
+<li><p>Perché la media non è una descrizione completa della distribuzione? Costruisci due configurazioni semplici con la stessa media ma forma differente.</p></li>
+<li><p>Esplora la variabile <code>anno</code>. Riporta conteggi e proporzioni e formula una frase che descriva il campione senza generalizzare alla popolazione studentesca.</p></li>
+<li><p>Esplora <code>qualita_sonno</code>. Spiega perché il grafico a barre è più trasparente di un istogramma per un singolo item ordinale con cinque livelli.</p></li>
+<li><p>Per <code>stress</code>, confronta media e mediana e osserva l’istogramma. Spiega che cosa aggiunge il grafico rispetto ai due numeri.</p></li>
+<li><p>Il boxplot segnala un valore distante dagli altri. Quali domande devi porre prima di considerarlo un errore?</p></li>
+<li><p>Una variabile presenta il 18% di valori mancanti. Quali affermazioni puoi fare in questa fase e quali richiedono il confronto con altre variabili?</p></li>
+<li><p>Una scala da 1 a 5 presenta il 70% delle risposte pari a 5. Quali spiegazioni considereresti prima di concludere che il costrutto sia molto elevato nel campione?</p></li>
+<li><p>Formula un prompt che chieda all’AI di esplorare una variabile numerica senza eliminare osservazioni, senza classificare automaticamente gli estremi come errori e senza generalizzare oltre il campione.</p></li>
+</ol>
+<div class="callout callout-style-default callout-tip callout-titled" title="Soluzioni">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Esercizio 1: leggere una variabile categoriale
+<span class="screen-reader-only">Consiglio</span>Soluzioni
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Usa il dataset <code>stress_sonno</code> creato nel capitolo.</p>
 <ol type="1">
-<li>Conta le frequenze della variabile <code>anno</code>.</li>
-<li>Calcola le proporzioni.</li>
-<li>Costruisci un grafico a barre.</li>
-<li>Scrivi due frasi: una descrittiva e una che dica quale conclusione non puoi trarre da questo grafico.</li>
+<li><p>La media riassume il punto di equilibrio ma non mostra dispersione, asimmetria o presenza di gruppi. I valori <code>4, 5, 6</code> e <code>1, 5, 9</code> hanno entrambi media 5, ma dispersioni molto differenti.</p></li>
+<li><p>La risposta deve riportare il numero e la proporzione di studenti in ciascun anno. Una formulazione appropriata è: «Nel campione osservato, il primo anno è la categoria più rappresentata».</p></li>
+<li><p>Il grafico a barre mostra separatamente le frequenze dei cinque livelli e ne conserva l’ordine. L’istogramma suggerirebbe una continuità tra valori che il singolo item non garantisce.</p></li>
+<li><p>Media e mediana descrivono la posizione. L’istogramma mostra come i valori producano quei centri, rendendo visibili asimmetrie, accumuli, vuoti o più picchi.</p></li>
+<li><p>Occorre verificare che il valore sia possibile secondo la scala, che non derivi da un errore di registrazione, che sia coerente con la fonte originale e che la sua rarità non sia una caratteristica reale della popolazione.</p></li>
+<li><p>Possiamo descrivere la quantità di dati mancanti e il numero di osservazioni disponibili. Per stabilire se la mancanza sia associata a gruppi o ad altre caratteristiche dobbiamo introdurre almeno una seconda variabile.</p></li>
+<li><p>Potrebbe trattarsi di un livello realmente elevato, di un campione selezionato, di un item troppo facile o poco discriminante, di desiderabilità sociale oppure di un effetto soffitto dovuto alla scala.</p></li>
+<li><p>Il prompt deve specificare significato, intervallo e unità della variabile, chiedere conteggio dei mancanti, riassunti di posizione e dispersione, rappresentazioni della forma e una descrizione limitata al campione.</p></li>
 </ol>
 </div>
 </div>
 </div>
-<div class="callout callout-style-default callout-important callout-titled" title="Esercizio 2: leggere una variabile numerica">
+<div class="callout callout-style-default callout-note callout-titled" title="Punti chiave">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Esercizio 2: leggere una variabile numerica
+<span class="screen-reader-only">Nota</span>Punti chiave
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-8" class="callout-8-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Esplora la variabile <code>stress</code>.</p>
-<ol type="1">
-<li>Calcola minimo, massimo, media e mediana.</li>
-<li>Costruisci un istogramma.</li>
-<li>Costruisci un boxplot.</li>
-<li>La media sembra un riassunto adeguato? Motiva la risposta guardando la distribuzione.</li>
-</ol>
+<ul>
+<li>L’oggetto dell’analisi univariata è la distribuzione empirica.</li>
+<li>Il significato della variabile precede la scelta della statistica.</li>
+<li>Conteggi e proporzioni descrivono variabili categoriali e ordinali.</li>
+<li>Le variabili numeriche richiedono una lettura congiunta di forma, posizione e dispersione.</li>
+<li>Media, mediana, istogramma e boxplot mostrano aspetti differenti.</li>
+<li>Un valore estremo non è automaticamente un errore.</li>
+<li>I valori mancanti determinano chi contribuisce alla distribuzione osservata.</li>
+<li>Limiti e risoluzione dello strumento influenzano la forma visibile.</li>
+<li>Le descrizioni riguardano il campione; la generalizzazione richiede ulteriori giustificazioni.</li>
+<li>L’AI può produrre sintassi e riassunti, ma non deve sostituire la valutazione della misura e del campionamento.</li>
+</ul>
 </div>
 </div>
 </div>
-<div class="callout callout-style-default callout-important callout-titled" title="Esercizio 3: controllare codice prodotto con AI">
+<div class="callout callout-style-default callout-note callout-titled" title="Ambiente di sviluppo">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Esercizio 3: controllare codice prodotto con AI
+<span class="screen-reader-only">Nota</span>Ambiente di sviluppo
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-9" class="callout-9-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Chiedi a uno strumento di AI:</p>
-<blockquote class="blockquote">
-<p>Scrivi codice R per visualizzare la distribuzione di <code>qualita_sonno</code>.</p>
-</blockquote>
-<p>Poi controlla:</p>
-<ol type="1">
-<li>Il codice tratta <code>qualita_sonno</code> come variabile ordinale o come continua?</li>
-<li>Il grafico scelto è appropriato?</li>
-<li>I valori mancanti sono gestiti in modo esplicito?</li>
-<li>L’interpretazione proposta resta descrittiva o suggerisce conclusioni non giustificate?</li>
-</ol>
+<p>Il capitolo usa <code>dplyr</code> e <code>ggplot2</code>. Le informazioni sulla sessione possono essere ottenute con:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.6.1 (2026-06-24)
+Platform: aarch64-apple-darwin23
+Running under: macOS Tahoe 26.5.2
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] C.UTF-8/UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8
+
+time zone: Europe/Zagreb
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] ggplot2_4.0.3 dplyr_1.2.1  
+
+loaded via a namespace (and not attached):
+ [1] vctrs_0.7.3        cli_3.6.6          knitr_1.51         rlang_1.3.0       
+ [5] xfun_0.60          otel_0.2.0         generics_0.1.4     S7_0.2.2          
+ [9] jsonlite_2.0.0     labeling_0.4.3     glue_1.8.1         htmltools_0.5.9   
+[13] scales_1.4.0       rmarkdown_2.31     grid_4.6.1         evaluate_1.0.5    
+[17] tibble_3.3.1       fastmap_1.2.0      yaml_2.3.12        lifecycle_1.0.5   
+[21] compiler_4.6.1     RColorBrewer_1.1-3 htmlwidgets_1.6.4  pkgconfig_2.0.3   
+[25] farver_2.1.2       digest_0.6.39      R6_2.6.1           tidyselect_1.2.1  
+[29] pillar_1.11.1      magrittr_2.0.5     withr_3.0.3        tools_4.6.1       
+[33] gtable_0.3.6      </code></pre>
 </div>
 </div>
 </div>
-</section><section id="punti-chiave" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="punti-chiave">Punti chiave</h2>
-<div class="callout callout-style-default callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Consiglio</span>Da ricordare
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ul>
-<li>Prima di cercare relazioni tra variabili, esplora ogni variabile da sola.</li>
-<li>Per le variabili categoriali, inizia da conteggi e proporzioni.</li>
-<li>Per le variabili numeriche, guarda forma, centro, variabilità e valori estremi.</li>
-<li>Per variabili ordinali con pochi livelli, spesso un grafico a barre è più adatto di un istogramma.</li>
-<li>Nessun grafico parla da solo: va interpretato in relazione alla domanda di ricerca, al disegno dello studio e alla misurazione.</li>
-<li>L’AI può aiutare a scrivere codice, ma sei tu a dover controllare se il codice e l’interpretazione sono appropriati.</li>
-</ul>
 </div>
 </div>
 
@@ -1664,13 +1610,13 @@ $ qualita_sonno &lt;dbl&gt; 3, 4, 3, 4, 4, 3, 3, 2, 4, 3, 5, 1, NA, 4, 4, 3, 2, 
     }
   });
   </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="../../chapters/eda/02_data_cleaning.html" class="pagination-link" aria-label="Pulizia dei dati">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulizia dei dati</span></span>
+      <a href="../../chapters/eda/02_data_cleaning.html" class="pagination-link" aria-label="Pulire i dati senza nascondere le decisioni">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulire i dati senza nascondere le decisioni</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../chapters/eda/05_data_visualization_principles.html" class="pagination-link" aria-label="Principi della visualizzazione dei dati">
-        <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Principi della visualizzazione dei dati</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../chapters/eda/05_data_visualization_principles.html" class="pagination-link" aria-label="Visualizzare senza deformare">
+        <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Visualizzare senza deformare</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

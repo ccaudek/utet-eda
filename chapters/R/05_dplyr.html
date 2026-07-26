@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.9.38">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>9&nbsp; Trasformare i dati con dplyr – Analisi esplorativa dei dati in psicologia</title>
+<title>9&nbsp; Trasformare tabelle con dplyr – Analisi esplorativa dei dati in psicologia</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -130,8 +130,33 @@ cookieconsent.run({
 });
 </script><style>html{ scroll-behavior: smooth; }</style>
 <link href="../../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
-<script src="../../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
-<meta property="og:title" content="9&nbsp; Trasformare i dati con dplyr – Analisi esplorativa dei dati in psicologia">
+<script src="../../site_libs/pagedtable-1.1/js/pagedtable.js"></script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+<meta property="og:title" content="9&nbsp; Trasformare tabelle con dplyr – Analisi esplorativa dei dati in psicologia">
 <meta property="og:description" content="">
 <meta property="og:site_name" content="Analisi esplorativa dei dati in psicologia">
 <link rel="canonical" href="https://ccaudek.github.io/utet-eda/chapters/R/05_dplyr.html">
@@ -314,7 +339,7 @@ cookieconsent.run({
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/R/introduction_r_lang.html">R</a></li><li class="breadcrumb-item"><a href="../../chapters/R/05_dplyr.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Trasformare i dati con <code>dplyr</code></span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/R/introduction_r_lang.html">R</a></li><li class="breadcrumb-item"><a href="../../chapters/R/05_dplyr.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Trasformare tabelle con <code>dplyr</code></span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Ricerca" onclick="window.quartoOpenSearch();">
@@ -370,19 +395,19 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/03_design.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Disegno di ricerca: quali conclusioni sono giustificate dai dati?</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Disegno della ricerca: quali conclusioni sono giustificate dai dati?</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/04_measurement.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">La misurazione in psicologia</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Misurare i costrutti psicologici</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/05_cognitive_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dalla descrizione alla spiegazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dalla descrizione alla spiegazione: modelli e processi psicologici</span></span></a>
   </div>
 </li>
       </ul>
@@ -399,13 +424,13 @@ cookieconsent.run({
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/01_r_syntax.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sintassi minima per leggere codice R</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Pensare in operazioni: la sintassi essenziale di R</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/02_environment.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Ambiente di lavoro e progetti R</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Un ambiente di lavoro riproducibile</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -417,25 +442,25 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/05_dplyr.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Trasformare i dati con <code>dplyr</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Trasformare tabelle con <code>dplyr</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/06_ggplot2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Visualizzare i dati con <code>ggplot2</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Rendere visibili i dati con <code>ggplot2</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/07_quarto.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quarto</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quarto: rendere esplicito il percorso dell’analisi</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/08_r_packages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Pacchetti</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Pacchetti: scegliere e dichiarare gli strumenti</span></span></a>
   </div>
 </li>
       </ul>
@@ -443,7 +468,7 @@ cookieconsent.run({
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../chapters/eda/introduction_eda.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">EDA</span></a>
+ <span class="menu-text">Statistica descrittiva ed EDA</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -452,13 +477,13 @@ cookieconsent.run({
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/01_project_structure.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Organizzare un progetto di analisi dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Preparare l’analisi esplorativa</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/02_data_cleaning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulizia dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulire i dati senza nascondere le decisioni</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -470,37 +495,37 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/05_data_visualization_principles.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Principi della visualizzazione dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Visualizzare senza deformare</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/06_loc_scale.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Indicatori di tendenza centrale e variabilità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Distribuzione, posizione e variabilità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/07_introduction_normal_distribution.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Introduzione alla distribuzione normale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">La normale come modello di riferimento</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/08_correlation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Relazioni tra variabili</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Esplorare relazioni tra due variabili</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/09_causality_intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Dalla correlazione alla causalità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Dall’associazione alla domanda causale</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/11_outlier.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Valori inattesi e outlier</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Osservazioni inattese e outlier</span></span></a>
   </div>
 </li>
       </ul>
@@ -530,26 +555,24 @@ cookieconsent.run({
         <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="2"><h2 id="toc-title">Sommario</h2>
    
   <ul class="collapse">
-<li><a href="#dati-ordinati-una-convenzione-utile" id="toc-dati-ordinati-una-convenzione-utile" class="nav-link active" data-scroll-target="#dati-ordinati-una-convenzione-utile"><span class="header-section-number">9.1</span> Dati ordinati: una convenzione utile</a></li>
-  <li><a href="#la-pipe-leggere-il-codice-come-una-sequenza-di-operazioni" id="toc-la-pipe-leggere-il-codice-come-una-sequenza-di-operazioni" class="nav-link" data-scroll-target="#la-pipe-leggere-il-codice-come-una-sequenza-di-operazioni"><span class="header-section-number">9.2</span> La pipe: leggere il codice come una sequenza di operazioni</a></li>
-  <li><a href="#i-verbi-essenziali" id="toc-i-verbi-essenziali" class="nav-link" data-scroll-target="#i-verbi-essenziali"><span class="header-section-number">9.3</span> I verbi essenziali</a></li>
-  <li><a href="#selezionare-colonne-con-select" id="toc-selezionare-colonne-con-select" class="nav-link" data-scroll-target="#selezionare-colonne-con-select"><span class="header-section-number">9.4</span> Selezionare colonne con <code>select()</code></a></li>
-  <li><a href="#filtrare-righe-con-filter" id="toc-filtrare-righe-con-filter" class="nav-link" data-scroll-target="#filtrare-righe-con-filter"><span class="header-section-number">9.5</span> Filtrare righe con <code>filter()</code></a></li>
-  <li><a href="#creare-variabili-con-mutate" id="toc-creare-variabili-con-mutate" class="nav-link" data-scroll-target="#creare-variabili-con-mutate"><span class="header-section-number">9.6</span> Creare variabili con <code>mutate()</code></a></li>
-  <li><a href="#ordinare-righe-con-arrange" id="toc-ordinare-righe-con-arrange" class="nav-link" data-scroll-target="#ordinare-righe-con-arrange"><span class="header-section-number">9.7</span> Ordinare righe con <code>arrange()</code></a></li>
-  <li><a href="#riassumere-dati-con-summarise" id="toc-riassumere-dati-con-summarise" class="nav-link" data-scroll-target="#riassumere-dati-con-summarise"><span class="header-section-number">9.8</span> Riassumere dati con <code>summarise()</code></a></li>
-  <li><a href="#calcolare-sintesi-per-gruppi-con-group_by" id="toc-calcolare-sintesi-per-gruppi-con-group_by" class="nav-link" data-scroll-target="#calcolare-sintesi-per-gruppi-con-group_by"><span class="header-section-number">9.9</span> Calcolare sintesi per gruppi con <code>group_by()</code></a></li>
-  <li><a href="#contare-casi-con-count" id="toc-contare-casi-con-count" class="nav-link" data-scroll-target="#contare-casi-con-count"><span class="header-section-number">9.10</span> Contare casi con <code>count()</code></a></li>
-  <li><a href="#una-pipeline-completa" id="toc-una-pipeline-completa" class="nav-link" data-scroll-target="#una-pipeline-completa"><span class="header-section-number">9.11</span> Una pipeline completa</a></li>
-  <li><a href="#usare-lai-con-criterio" id="toc-usare-lai-con-criterio" class="nav-link" data-scroll-target="#usare-lai-con-criterio"><span class="header-section-number">9.12</span> Usare l’AI con criterio</a></li>
-  <li><a href="#leggere-codice-generato-dallai" id="toc-leggere-codice-generato-dallai" class="nav-link" data-scroll-target="#leggere-codice-generato-dallai"><span class="header-section-number">9.13</span> Leggere codice generato dall’AI</a></li>
-  <li><a href="#funzioni-utili-da-conoscere" id="toc-funzioni-utili-da-conoscere" class="nav-link" data-scroll-target="#funzioni-utili-da-conoscere"><span class="header-section-number">9.14</span> Funzioni utili da conoscere</a></li>
-  <li><a href="#cosa-portare-al-capitolo-successivo" id="toc-cosa-portare-al-capitolo-successivo" class="nav-link" data-scroll-target="#cosa-portare-al-capitolo-successivo"><span class="header-section-number">9.15</span> Cosa portare al capitolo successivo</a></li>
+<li><a href="#una-tabella-ordinata-rende-visibile-lunit%C3%A0-di-analisi" id="toc-una-tabella-ordinata-rende-visibile-lunità-di-analisi" class="nav-link active" data-scroll-target="#una-tabella-ordinata-rende-visibile-lunit%C3%A0-di-analisi"><span class="header-section-number">9.1</span> Una tabella ordinata rende visibile l’unità di analisi</a></li>
+  <li><a href="#la-pipe-rappresenta-una-sequenza" id="toc-la-pipe-rappresenta-una-sequenza" class="nav-link" data-scroll-target="#la-pipe-rappresenta-una-sequenza"><span class="header-section-number">9.2</span> La pipe rappresenta una sequenza</a></li>
+  <li><a href="#quattro-verbi-essenziali" id="toc-quattro-verbi-essenziali" class="nav-link" data-scroll-target="#quattro-verbi-essenziali"><span class="header-section-number">9.3</span> Quattro verbi essenziali</a></li>
+  <li><a href="#scegliere-colonne-con-select" id="toc-scegliere-colonne-con-select" class="nav-link" data-scroll-target="#scegliere-colonne-con-select"><span class="header-section-number">9.4</span> Scegliere colonne con <code>select()</code></a></li>
+  <li><a href="#scegliere-righe-con-filter" id="toc-scegliere-righe-con-filter" class="nav-link" data-scroll-target="#scegliere-righe-con-filter"><span class="header-section-number">9.5</span> Scegliere righe con <code>filter()</code></a></li>
+  <li><a href="#creare-una-variabile-con-mutate" id="toc-creare-una-variabile-con-mutate" class="nav-link" data-scroll-target="#creare-una-variabile-con-mutate"><span class="header-section-number">9.6</span> Creare una variabile con <code>mutate()</code></a></li>
+  <li><a href="#ridurre-la-tabella-con-summarise" id="toc-ridurre-la-tabella-con-summarise" class="nav-link" data-scroll-target="#ridurre-la-tabella-con-summarise"><span class="header-section-number">9.7</span> Ridurre la tabella con <code>summarise()</code></a></li>
+  <li><a href="#produrre-sintesi-per-gruppi" id="toc-produrre-sintesi-per-gruppi" class="nav-link" data-scroll-target="#produrre-sintesi-per-gruppi"><span class="header-section-number">9.8</span> Produrre sintesi per gruppi</a></li>
+  <li><a href="#una-pipeline-completa" id="toc-una-pipeline-completa" class="nav-link" data-scroll-target="#una-pipeline-completa"><span class="header-section-number">9.9</span> Una pipeline completa</a></li>
+  <li><a href="#controllare-una-trasformazione" id="toc-controllare-una-trasformazione" class="nav-link" data-scroll-target="#controllare-una-trasformazione"><span class="header-section-number">9.10</span> Controllare una trasformazione</a></li>
+  <li><a href="#descrivere-il-compito-allai" id="toc-descrivere-il-compito-allai" class="nav-link" data-scroll-target="#descrivere-il-compito-allai"><span class="header-section-number">9.11</span> Descrivere il compito all’AI</a></li>
+  <li><a href="#leggere-criticamente-il-codice-generato" id="toc-leggere-criticamente-il-codice-generato" class="nav-link" data-scroll-target="#leggere-criticamente-il-codice-generato"><span class="header-section-number">9.12</span> Leggere criticamente il codice generato</a></li>
+  <li><a href="#che-cosa-non-serve-ancora" id="toc-che-cosa-non-serve-ancora" class="nav-link" data-scroll-target="#che-cosa-non-serve-ancora"><span class="header-section-number">9.13</span> Che cosa non serve ancora</a></li>
   </ul><div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/R/05_dplyr.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/R/introduction_r_lang.html">R</a></li><li class="breadcrumb-item"><a href="../../chapters/R/05_dplyr.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Trasformare i dati con <code>dplyr</code></span></a></li></ol></nav><div class="quarto-title">
-<h1 class="title"><span id="sec-dplyr" class="quarto-section-identifier"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Trasformare i dati con <code>dplyr</code></span></span></h1>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/R/introduction_r_lang.html">R</a></li><li class="breadcrumb-item"><a href="../../chapters/R/05_dplyr.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Trasformare tabelle con <code>dplyr</code></span></a></li></ol></nav><div class="quarto-title">
+<h1 class="title"><span id="sec-dplyr" class="quarto-section-identifier"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Trasformare tabelle con <code>dplyr</code></span></span></h1>
 </div>
 
 
@@ -563,93 +586,101 @@ cookieconsent.run({
   
 
 
-</header><section id="perché-questo-capitolo" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="perché-questo-capitolo">Perché questo capitolo</h2>
-<p>Prima di descrivere, visualizzare o modellare i dati, è necessario trasformarli. Raramente un file appena importato è pronto per l’analisi: può contenere variabili inutili, nomi poco chiari, valori mancanti, codifiche diverse da quelle attese o informazioni che devono essere riorganizzate.</p>
-<p>Il pacchetto <code>dplyr</code> rende queste operazioni esplicite e leggibili. In questo capitolo non cercheremo di imparare tutto il pacchetto <code>dplyr</code>. L’obiettivo è più limitato, ma anche più importante: imparare a leggere, modificare e controllare le trasformazioni più comuni dei dati.</p>
-<p>Al termine del capitolo, dovresti essere in grado di:</p>
-<ul>
-<li>riconoscere i principali verbi di <code>dplyr</code>;</li>
-<li>leggere una pipeline riga per riga;</li>
-<li>selezionare variabili, filtrare le osservazioni e creare nuove colonne;</li>
-<li>calcolare sintesi descrittive per l’intero campione o per gruppi;</li>
-<li>verificare che una trasformazione abbia effettivamente prodotto il risultato desiderato;</li>
-<li>valutare il codice <code>dplyr</code> prodotto con l’aiuto dell’AI.</li>
-</ul>
-<div class="callout callout-style-default callout-important callout-titled" title="Idea chiave">
+</header><div class="callout callout-style-default callout-note callout-titled" title="In sintesi">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Idea chiave
+<span class="screen-reader-only">Nota</span>In sintesi
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><code>dplyr</code> non serve solo a “manipolare” dati. Consente di rendere visibile il percorso che porta dal file iniziale alla tabella utilizzata per l’analisi. Ogni riga di codice dovrebbe poter essere spiegata.</p>
+<p><strong>Da sapere</strong> Una trasformazione dei dati è una procedura che modifica righe, colonne o valori per produrre una nuova tabella. <code>dplyr</code> rende questa procedura leggibile attraverso pochi verbi. La sintassi è utile perché rende esplicite le decisioni, non perché debba essere memorizzata.</p>
+<p><strong>Da saper fare</strong> Leggere una pipeline come una sequenza di operazioni; riconoscere quali righe, colonne e valori cambiano; produrre semplici riepiloghi per gruppi; controllare numerosità e valori mancanti; descrivere all’AI una trasformazione senza delegarle decisioni metodologiche implicite.</p>
 </div>
 </div>
-</section><section id="dati-ordinati-una-convenzione-utile" class="level2" data-number="9.1"><h2 data-number="9.1" class="anchored" data-anchor-id="dati-ordinati-una-convenzione-utile">
-<span class="header-section-number">9.1</span> Dati ordinati: una convenzione utile</h2>
-<p>Molti strumenti del <code>tidyverse</code>, incluso <code>dplyr</code>, funzionano meglio quando i dati sono organizzati in forma <em>tidy</em>. In un dataset tidy:</p>
-<ol type="1">
-<li>ogni variabile è una colonna;</li>
-<li>ogni osservazione è una riga;</li>
-<li>ogni valore è una cella.</li>
-</ol>
-<p>Questa regola non è una legge naturale. Si tratta di una convenzione pratica. La sua utilità sta nel fatto che rende più semplice descrivere, trasformare e visualizzare i dati.</p>
-<p>Per esempio, se si studia la relazione tra stress accademico e qualità del sonno, si potrebbe avere una tabella in cui ogni riga rappresenta uno studente e ogni colonna rappresenta una variabile:</p>
+<section id="introduzione" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="introduzione">Introduzione</h2>
+<p>Dopo avere importato e controllato un dataset, raramente lo analizziamo esattamente nella forma in cui è stato ricevuto. Potremmo aver bisogno di conservare soltanto alcune variabili, lavorare su un sottoinsieme di osservazioni, creare un indicatore o calcolare una sintesi per gruppi.</p>
+<p>Queste operazioni vengono spesso chiamate <em>manipolazione dei dati</em>. Il termine può suggerire un’attività tecnica e quasi neutrale. In realtà, ogni trasformazione incorpora una decisione. Filtrare significa stabilire quali casi entrano nell’analisi. Creare una variabile significa definire una nuova rappresentazione delle informazioni disponibili. Raggruppare significa decidere quali osservazioni debbano essere confrontate o riassunte insieme.</p>
+<p>Il pacchetto <code>dplyr</code> è utile perché esprime tali decisioni attraverso pochi verbi. In questo capitolo non cercheremo di imparare tutto il pacchetto. Useremo soltanto le operazioni necessarie per comprendere e controllare una trasformazione semplice.</p>
+<p>La domanda guida sarà:</p>
+<blockquote class="blockquote">
+<p>Quale tabella entra, quali operazioni vengono applicate e quale tabella deve uscire?</p>
+</blockquote>
+<div class="callout callout-style-default callout-tip callout-titled" title="Prerequisiti">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Consiglio</span>Prerequisiti
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>È utile avere letto <a href="01_r_syntax.html" class="quarto-xref"><span>Capitolo 6</span></a>, <a href="02_environment.html" class="quarto-xref"><span>Capitolo 7</span></a> e <a href="03_utility_functions.html" class="quarto-xref"><span>Capitolo 8</span></a>. Dovresti riconoscere la struttura input–trasformazione–output, sapere che cosa rappresentano righe e colonne e avere già controllato il file importato.</p>
+</div>
+</div>
+</section><section id="panoramica-del-capitolo" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="panoramica-del-capitolo">Panoramica del capitolo</h2>
+<p>Partiremo dalla struttura ordinata di una tabella e leggeremo la pipe come una sequenza algoritmica. Vedremo poi quattro operazioni essenziali: scegliere colonne, scegliere righe, creare variabili e produrre riepiloghi. L’ultima parte mostrerà come controllare una pipeline e come formulare richieste all’AI che mantengano esplicite unità di analisi, esclusioni e trattamento dei valori mancanti.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Preparazione del notebook">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Preparazione del notebook
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Gli esempi richiedono <code>dplyr</code>. Il dataset didattico viene creato direttamente nel documento, in modo che ogni blocco possa essere riprodotto senza file esterni.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/">tibble</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">studenti</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span></span>
 <span>  id <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,</span>
-<span>  genere <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"F"</span>, <span class="st">"F"</span>, <span class="st">"M"</span>, <span class="st">"F"</span>, <span class="st">"M"</span>, <span class="st">"F"</span>, <span class="st">"M"</span>, <span class="st">"F"</span>, <span class="st">"M"</span>, <span class="st">"F"</span><span class="op">)</span>,</span>
-<span>  corso <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"psicologia"</span>, <span class="st">"psicologia"</span>, <span class="st">"scienze"</span>, <span class="st">"psicologia"</span>, <span class="st">"scienze"</span>,</span>
-<span>            <span class="st">"psicologia"</span>, <span class="st">"psicologia"</span>, <span class="st">"scienze"</span>, <span class="st">"psicologia"</span>, <span class="st">"scienze"</span><span class="op">)</span>,</span>
-<span>  stress <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">18</span>, <span class="fl">25</span>, <span class="fl">21</span>, <span class="fl">30</span>, <span class="fl">16</span>, <span class="fl">28</span>, <span class="fl">24</span>, <span class="cn">NA</span>, <span class="fl">19</span>, <span class="fl">27</span><span class="op">)</span>,</span>
-<span>  sonno_ore <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">7.2</span>, <span class="fl">6.1</span>, <span class="fl">6.8</span>, <span class="fl">5.4</span>, <span class="fl">7.5</span>, <span class="fl">5.9</span>, <span class="fl">6.2</span>, <span class="fl">6.7</span>, <span class="cn">NA</span>, <span class="fl">5.8</span><span class="op">)</span>,</span>
-<span>  caffeina <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">4</span>, <span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">4</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">studenti</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div data-pagedtable="false">
-  <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["genere"],"name":[2],"type":["chr"],"align":["left"]},{"label":["corso"],"name":[3],"type":["chr"],"align":["left"]},{"label":["stress"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["sonno_ore"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["caffeina"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"F","3":"psicologia","4":"18","5":"7.2","6":"1"},{"1":"2","2":"F","3":"psicologia","4":"25","5":"6.1","6":"3"},{"1":"3","2":"M","3":"scienze","4":"21","5":"6.8","6":"2"},{"1":"4","2":"F","3":"psicologia","4":"30","5":"5.4","6":"4"},{"1":"5","2":"M","3":"scienze","4":"16","5":"7.5","6":"1"},{"1":"6","2":"F","3":"psicologia","4":"28","5":"5.9","6":"3"},{"1":"7","2":"M","3":"psicologia","4":"24","5":"6.2","6":"2"},{"1":"8","2":"F","3":"scienze","4":"NA","5":"6.7","6":"2"},{"1":"9","2":"M","3":"psicologia","4":"19","5":"NA","6":"1"},{"1":"10","2":"F","3":"scienze","4":"27","5":"5.8","6":"4"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
+<span>  genere <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"F"</span>, <span class="st">"F"</span>, <span class="st">"M"</span>, <span class="st">"F"</span>, <span class="st">"M"</span>,</span>
+<span>    <span class="st">"F"</span>, <span class="st">"M"</span>, <span class="st">"F"</span>, <span class="st">"M"</span>, <span class="st">"F"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  corso <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"psicologia"</span>, <span class="st">"psicologia"</span>, <span class="st">"scienze"</span>,</span>
+<span>    <span class="st">"psicologia"</span>, <span class="st">"scienze"</span>, <span class="st">"psicologia"</span>,</span>
+<span>    <span class="st">"psicologia"</span>, <span class="st">"scienze"</span>, <span class="st">"psicologia"</span>,</span>
+<span>    <span class="st">"scienze"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  stress <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
+<span>    <span class="fl">18</span>, <span class="fl">25</span>, <span class="fl">21</span>, <span class="fl">30</span>, <span class="fl">16</span>,</span>
+<span>    <span class="fl">28</span>, <span class="fl">24</span>, <span class="cn">NA</span>, <span class="fl">19</span>, <span class="fl">27</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  sonno_ore <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
+<span>    <span class="fl">7.2</span>, <span class="fl">6.1</span>, <span class="fl">6.8</span>, <span class="fl">5.4</span>, <span class="fl">7.5</span>,</span>
+<span>    <span class="fl">5.9</span>, <span class="fl">6.2</span>, <span class="fl">6.7</span>, <span class="cn">NA</span>, <span class="fl">5.8</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
-<p>In questa tabella:</p>
-<ul>
-<li>
-<code>id</code> identifica lo studente;</li>
-<li>
-<code>genere</code> e <code>corso</code> sono variabili categoriali;</li>
-<li>
-<code>stress</code>, <code>sonno_ore</code> e <code>caffeina</code> sono variabili numeriche;</li>
-<li>
-<code>NA</code> indica un valore mancante.</li>
-</ul>
-<p>Prima di procedere, è sempre utile guardare la struttura dei dati:</p>
+</section><section id="una-tabella-ordinata-rende-visibile-lunità-di-analisi" class="level2" data-number="9.1"><h2 data-number="9.1" class="anchored" data-anchor-id="una-tabella-ordinata-rende-visibile-lunità-di-analisi">
+<span class="header-section-number">9.1</span> Una tabella ordinata rende visibile l’unità di analisi</h2>
+<p>Gli strumenti di <code>dplyr</code> funzionano in modo particolarmente chiaro quando ogni colonna rappresenta una variabile, ogni riga rappresenta un’osservazione e ogni cella contiene un valore.</p>
+<p>Nel dataset <code>studenti</code>, ogni riga rappresenta uno studente. <code>id</code> identifica l’unità osservata; <code>corso</code> e <code>genere</code> sono variabili categoriali; <code>stress</code> e <code>sonno_ore</code> sono misure numeriche.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">studenti</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 10
-Columns: 6
+Columns: 5
 $ id        &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
 $ genere    &lt;chr&gt; "F", "F", "M", "F", "M", "F", "M", "F", "M", "F"
 $ corso     &lt;chr&gt; "psicologia", "psicologia", "scienze", "psicologia", "scienz…
 $ stress    &lt;dbl&gt; 18, 25, 21, 30, 16, 28, 24, NA, 19, 27
-$ sonno_ore &lt;dbl&gt; 7.2, 6.1, 6.8, 5.4, 7.5, 5.9, 6.2, 6.7, NA, 5.8
-$ caffeina  &lt;dbl&gt; 1, 3, 2, 4, 1, 3, 2, 2, 1, 4</code></pre>
+$ sonno_ore &lt;dbl&gt; 7.2, 6.1, 6.8, 5.4, 7.5, 5.9, 6.2, 6.7, NA, 5.8</code></pre>
 </div>
 </div>
-</section><section id="la-pipe-leggere-il-codice-come-una-sequenza-di-operazioni" class="level2" data-number="9.2"><h2 data-number="9.2" class="anchored" data-anchor-id="la-pipe-leggere-il-codice-come-una-sequenza-di-operazioni">
-<span class="header-section-number">9.2</span> La pipe: leggere il codice come una sequenza di operazioni</h2>
-<p>In R moderno si usa spesso la pipe <code>|&gt;</code>. La pipe prende il risultato di una riga e lo passa alla riga successiva.</p>
-<p>Questo permette di leggere il codice dall’alto verso il basso:</p>
+<p>Questa organizzazione è una convenzione pratica, non una proprietà naturale dei dati. In uno studio longitudinale, per esempio, la stessa persona potrebbe comparire in più righe perché l’unità osservata è una combinazione di persona e momento. Prima di trasformare una tabella dobbiamo quindi sapere che cosa rappresenta una riga.</p>
+</section><section id="la-pipe-rappresenta-una-sequenza" class="level2" data-number="9.2"><h2 data-number="9.2" class="anchored" data-anchor-id="la-pipe-rappresenta-una-sequenza">
+<span class="header-section-number">9.2</span> La pipe rappresenta una sequenza</h2>
+<p>La pipe <code>|&gt;</code> passa il risultato di un’operazione a quella successiva. Il suo significato può essere letto come <em>poi</em>.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">stress</span> <span class="op">&gt;=</span> <span class="fl">20</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -662,72 +693,65 @@ $ caffeina  &lt;dbl&gt; 1, 3, 2, 4, 1, 3, 2, 2, 1, 4</code></pre>
 </div>
 </div>
 </div>
-<p>Il codice può essere letto così:</p>
-<ol type="1">
-<li>parti dalla tabella <code>studenti</code>;</li>
-<li>tieni solo gli studenti con <code>stress &gt;= 20</code>;</li>
-<li>mostra solo le colonne <code>id</code>, <code>stress</code> e <code>sonno_ore</code>.</li>
-</ol>
-<p>La pipe non è indispensabile, ma rende il flusso dell’analisi più chiaro. Questo è particolarmente importante quando il codice viene prodotto o modificato con l’aiuto dell’intelligenza artificiale: una pipeline leggibile è più facile da controllare.</p>
-<div class="callout callout-style-default callout-tip callout-titled" title="Come leggere una pipeline">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Consiglio</span>Come leggere una pipeline
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Quando leggi codice <code>dplyr</code>, chiediti sempre:</p>
-<ol type="1">
-<li>quale tabella entra nella pipeline?</li>
-<li>quali righe vengono incluse o escluse?</li>
-<li>quali colonne vengono tenute, eliminate o create?</li>
-<li>quale tabella esce alla fine?</li>
-</ol>
-</div>
-</div>
-</section><section id="i-verbi-essenziali" class="level2" data-number="9.3"><h2 data-number="9.3" class="anchored" data-anchor-id="i-verbi-essenziali">
-<span class="header-section-number">9.3</span> I verbi essenziali</h2>
-<p>I verbi principali di <code>dplyr</code> corrispondono a operazioni molto semplici.</p>
+<p>La procedura è:</p>
+<blockquote class="blockquote">
+<p>Parti da <code>studenti</code>. Poi conserva le righe con <code>stress</code> almeno pari a 20. Poi conserva le colonne <code>id</code>, <code>stress</code> e <code>sonno_ore</code>.</p>
+</blockquote>
+<p>La pipe non aggiunge capacità statistiche. Rende visibile l’ordine delle trasformazioni.</p>
+<p>Possiamo rappresentare qualsiasi pipeline attraverso:</p>
+<p><span class="math display">\[
+\text{tabella iniziale}
+\longrightarrow
+\text{operazione 1}
+\longrightarrow
+\text{operazione 2}
+\longrightarrow
+\text{tabella finale}.
+\]</span></p>
+<p>Quando il codice è prodotto dall’AI, questa lettura è il primo controllo. Se non sappiamo spiegare una riga con una frase, non sappiamo ancora quali dati stiamo analizzando.</p>
+</section><section id="quattro-verbi-essenziali" class="level2" data-number="9.3"><h2 data-number="9.3" class="anchored" data-anchor-id="quattro-verbi-essenziali">
+<span class="header-section-number">9.3</span> Quattro verbi essenziali</h2>
+<p>Per le trasformazioni introduttive sono sufficienti quattro idee.</p>
 <table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
 <thead><tr class="header">
 <th>Verbo</th>
-<th>Domanda a cui risponde</th>
+<th>Cambia</th>
+<th>Domanda</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
 <td><code><a href="https://dplyr.tidyverse.org/reference/select.html">select()</a></code></td>
-<td>Quali colonne mi servono?</td>
+<td>Colonne</td>
+<td>Quali variabili devono rimanere?</td>
 </tr>
 <tr class="even">
 <td><code><a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a></code></td>
-<td>Quali righe voglio includere?</td>
+<td>Righe</td>
+<td>Quali osservazioni devono rimanere?</td>
 </tr>
 <tr class="odd">
 <td><code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code></td>
-<td>Quali nuove variabili voglio creare?</td>
-</tr>
-<tr class="even">
-<td><code><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange()</a></code></td>
-<td>In quale ordine voglio vedere le righe?</td>
-</tr>
-<tr class="odd">
-<td><code><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by()</a></code></td>
-<td>Rispetto a quali gruppi voglio calcolare i risultati?</td>
+<td>Valori o nuove colonne</td>
+<td>Quale nuova informazione viene calcolata?</td>
 </tr>
 <tr class="even">
 <td><code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise()</a></code></td>
-<td>Quale sintesi voglio ottenere?</td>
+<td>Granularità della tabella</td>
+<td>Quale sintesi deve sostituire le osservazioni?</td>
 </tr>
 </tbody>
 </table>
-<p>Questi verbi sono sufficienti per la maggior parte delle trasformazioni necessarie in una prima analisi esplorativa.</p>
-</section><section id="selezionare-colonne-con-select" class="level2" data-number="9.4"><h2 data-number="9.4" class="anchored" data-anchor-id="selezionare-colonne-con-select">
-<span class="header-section-number">9.4</span> Selezionare colonne con <code>select()</code>
+<p><code><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by()</a></code> non produce da solo una sintesi. Indica a <code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise()</a></code> che il calcolo deve essere ripetuto separatamente per ciascun gruppo.</p>
+<p>Questi verbi descrivono la logica della procedura. I loro argomenti specificano i dettagli.</p>
+</section><section id="scegliere-colonne-con-select" class="level2" data-number="9.4"><h2 data-number="9.4" class="anchored" data-anchor-id="scegliere-colonne-con-select">
+<span class="header-section-number">9.4</span> Scegliere colonne con <code>select()</code>
 </h2>
-<p><code><a href="https://dplyr.tidyverse.org/reference/select.html">select()</a></code> serve a scegliere le variabili che vogliamo mantenere.</p>
+<p><code><a href="https://dplyr.tidyverse.org/reference/select.html">select()</a></code> conserva le variabili necessarie.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">stress</span>, <span class="va">sonno_ore</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
@@ -739,335 +763,207 @@ $ caffeina  &lt;dbl&gt; 1, 3, 2, 4, 1, 3, 2, 2, 1, 4</code></pre>
 </div>
 </div>
 </div>
-<p>Questa operazione non modifica i valori. Cambia solo le colonne visibili nella tabella risultante.</p>
-<p>Possiamo anche rimuovere una colonna utilizzando il segno meno:</p>
+<p>Il numero delle righe non cambia. Cambia soltanto l’insieme delle colonne.</p>
+<p>Questa operazione può semplificare una tabella molto ampia, ma eliminare una variabile troppo presto può rendere impossibile un controllo successivo. Per esempio, perdere <code>id</code> rende più difficile individuare duplicazioni o ritrovare un’osservazione problematica.</p>
+<p>Una richiesta all’AI dovrebbe quindi specificare non soltanto quali variabili servano per il calcolo, ma anche quali debbano essere conservate per documentare il risultato.</p>
+</section><section id="scegliere-righe-con-filter" class="level2" data-number="9.5"><h2 data-number="9.5" class="anchored" data-anchor-id="scegliere-righe-con-filter">
+<span class="header-section-number">9.5</span> Scegliere righe con <code>filter()</code>
+</h2>
+<p><code><a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a></code> valuta una condizione per ogni riga e conserva quelle per cui la condizione è vera.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">caffeina</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div data-pagedtable="false">
-  <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["genere"],"name":[2],"type":["chr"],"align":["left"]},{"label":["corso"],"name":[3],"type":["chr"],"align":["left"]},{"label":["stress"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["sonno_ore"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"F","3":"psicologia","4":"18","5":"7.2"},{"1":"2","2":"F","3":"psicologia","4":"25","5":"6.1"},{"1":"3","2":"M","3":"scienze","4":"21","5":"6.8"},{"1":"4","2":"F","3":"psicologia","4":"30","5":"5.4"},{"1":"5","2":"M","3":"scienze","4":"16","5":"7.5"},{"1":"6","2":"F","3":"psicologia","4":"28","5":"5.9"},{"1":"7","2":"M","3":"psicologia","4":"24","5":"6.2"},{"1":"8","2":"F","3":"scienze","4":"NA","5":"6.7"},{"1":"9","2":"M","3":"psicologia","4":"19","5":"NA"},{"1":"10","2":"F","3":"scienze","4":"27","5":"5.8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-warning callout-titled" title="Controllo">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Avviso</span>Controllo
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Dopo la funzione <code><a href="https://dplyr.tidyverse.org/reference/select.html">select()</a></code>, controlla sempre se hai mantenuto tutte le variabili necessarie per l’analisi. Eliminare una colonna troppo presto può rendere difficile capire che cosa è successo nelle fasi successive.</p>
-</div>
-</div>
-</section><section id="filtrare-righe-con-filter" class="level2" data-number="9.5"><h2 data-number="9.5" class="anchored" data-anchor-id="filtrare-righe-con-filter">
-<span class="header-section-number">9.5</span> Filtrare righe con <code>filter()</code>
-</h2>
-<p>La funzione <code><a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a></code> serve a includere solo le osservazioni che soddisfano una determinata condizione.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">stress</span> <span class="op">&gt;=</span> <span class="fl">20</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["genere"],"name":[2],"type":["chr"],"align":["left"]},{"label":["corso"],"name":[3],"type":["chr"],"align":["left"]},{"label":["stress"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["sonno_ore"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["caffeina"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"2","2":"F","3":"psicologia","4":"25","5":"6.1","6":"3"},{"1":"3","2":"M","3":"scienze","4":"21","5":"6.8","6":"2"},{"1":"4","2":"F","3":"psicologia","4":"30","5":"5.4","6":"4"},{"1":"6","2":"F","3":"psicologia","4":"28","5":"5.9","6":"3"},{"1":"7","2":"M","3":"psicologia","4":"24","5":"6.2","6":"2"},{"1":"10","2":"F","3":"scienze","4":"27","5":"5.8","6":"4"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["genere"],"name":[2],"type":["chr"],"align":["left"]},{"label":["corso"],"name":[3],"type":["chr"],"align":["left"]},{"label":["stress"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["sonno_ore"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"2","2":"F","3":"psicologia","4":"25","5":"6.1"},{"1":"3","2":"M","3":"scienze","4":"21","5":"6.8"},{"1":"4","2":"F","3":"psicologia","4":"30","5":"5.4"},{"1":"6","2":"F","3":"psicologia","4":"28","5":"5.9"},{"1":"7","2":"M","3":"psicologia","4":"24","5":"6.2"},{"1":"10","2":"F","3":"scienze","4":"27","5":"5.8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
 </div>
-<p>Possiamo combinare più condizioni:</p>
+<p>La soglia <code>20</code> non è una scelta tecnica di <code>dplyr</code>. Deve provenire dalla domanda, dal disegno o da una regola definita prima dell’analisi.</p>
+<p>Possiamo combinare condizioni:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span></span>
+<span>    <span class="va">stress</span> <span class="op">&gt;=</span> <span class="fl">20</span>,</span>
+<span>    <span class="va">sonno_ore</span> <span class="op">&lt;</span> <span class="fl">6.5</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["genere"],"name":[2],"type":["chr"],"align":["left"]},{"label":["corso"],"name":[3],"type":["chr"],"align":["left"]},{"label":["stress"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["sonno_ore"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"2","2":"F","3":"psicologia","4":"25","5":"6.1"},{"1":"4","2":"F","3":"psicologia","4":"30","5":"5.4"},{"1":"6","2":"F","3":"psicologia","4":"28","5":"5.9"},{"1":"7","2":"M","3":"psicologia","4":"24","5":"6.2"},{"1":"10","2":"F","3":"scienze","4":"27","5":"5.8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Le due condizioni separate da una virgola devono essere entrambe vere.</p>
+<p>Quando la variabile usata nel filtro contiene <code>NA</code>, la condizione non può essere valutata come vera o falsa. Quelle righe non vengono conservate.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">stress</span> <span class="op">&gt;=</span> <span class="fl">20</span>, <span class="va">sonno_ore</span> <span class="op">&lt;</span> <span class="fl">6.5</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">stress</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["genere"],"name":[2],"type":["chr"],"align":["left"]},{"label":["corso"],"name":[3],"type":["chr"],"align":["left"]},{"label":["stress"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["sonno_ore"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["caffeina"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"2","2":"F","3":"psicologia","4":"25","5":"6.1","6":"3"},{"1":"4","2":"F","3":"psicologia","4":"30","5":"5.4","6":"4"},{"1":"6","2":"F","3":"psicologia","4":"28","5":"5.9","6":"3"},{"1":"7","2":"M","3":"psicologia","4":"24","5":"6.2","6":"2"},{"1":"10","2":"F","3":"scienze","4":"27","5":"5.8","6":"4"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["genere"],"name":[2],"type":["chr"],"align":["left"]},{"label":["corso"],"name":[3],"type":["chr"],"align":["left"]},{"label":["stress"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["sonno_ore"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"8","2":"F","3":"scienze","4":"NA","5":"6.7"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
 </div>
-<p>Questa pipeline include solo gli studenti con punteggio di stress almeno pari a 20 e meno di 6.5 ore di sonno.</p>
-<p>Si possono usare anche operatori logici:</p>
-<table class="caption-top table">
-<thead><tr class="header">
-<th>Operatore</th>
-<th>Significato</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td><code>==</code></td>
-<td>uguale a</td>
-</tr>
-<tr class="even">
-<td><code>!=</code></td>
-<td>diverso da</td>
-</tr>
-<tr class="odd">
-<td><code>&gt;</code></td>
-<td>maggiore di</td>
-</tr>
-<tr class="even">
-<td><code>&lt;</code></td>
-<td>minore di</td>
-</tr>
-<tr class="odd">
-<td><code>&gt;=</code></td>
-<td>maggiore o uguale a</td>
-</tr>
-<tr class="even">
-<td><code>&lt;=</code></td>
-<td>minore o uguale a</td>
-</tr>
-<tr class="odd">
-<td><code>&amp;</code></td>
-<td>entrambe le condizioni sono vere</td>
-</tr>
-<tr class="even">
-<td><code>|</code></td>
-<td>almeno una delle condizioni è vera</td>
-</tr>
-<tr class="odd">
-<td><code>%in%</code></td>
-<td>appartiene a un insieme di valori</td>
-</tr>
-</tbody>
-</table>
-<p>Esempio:</p>
+<p>Prima e dopo un filtro è utile contare le righe:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">corso</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"psicologia"</span>, <span class="st">"scienze"</span><span class="op">)</span>, <span class="va">caffeina</span> <span class="op">&gt;=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div data-pagedtable="false">
-  <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["genere"],"name":[2],"type":["chr"],"align":["left"]},{"label":["corso"],"name":[3],"type":["chr"],"align":["left"]},{"label":["stress"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["sonno_ore"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["caffeina"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"2","2":"F","3":"psicologia","4":"25","5":"6.1","6":"3"},{"1":"4","2":"F","3":"psicologia","4":"30","5":"5.4","6":"4"},{"1":"6","2":"F","3":"psicologia","4":"28","5":"5.9","6":"3"},{"1":"10","2":"F","3":"scienze","4":"27","5":"5.8","6":"4"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti_stress_alto</span> <span class="op">&lt;-</span> <span class="va">studenti</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">stress</span> <span class="op">&gt;=</span> <span class="fl">20</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">studenti</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 10</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">studenti_stress_alto</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 6</code></pre>
 </div>
 </div>
-</div>
-<div class="callout callout-style-default callout-important callout-titled" title="Attenzione ai valori mancanti">
+<p>Il confronto rende visibile l’effetto della decisione. Dire soltanto che «sono stati esclusi i casi non pertinenti» nasconde quante osservazioni siano state rimosse e per quale ragione.</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="Filtrare modifica il campione analizzato">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Attenzione ai valori mancanti
+<span class="screen-reader-only">Avviso</span>Filtrare modifica il campione analizzato
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Quando una variabile contiene <code>NA</code>, una condizione logica può produrre risultati inattesi. Le righe con valori mancanti nella variabile utilizzata per il filtraggio vengono solitamente escluse dal risultato.</p>
+<p>Una condizione sintatticamente corretta può produrre un campione diverso da quello definito nel disegno. Prima di usare un filtro, occorre sapere perché quei casi devono essere esclusi e documentare quanti ne vengono rimossi.</p>
 </div>
 </div>
-<p>Per controllare esplicitamente i valori mancanti possiamo usare <code><a href="https://rdrr.io/r/base/NA.html">is.na()</a></code>:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">stress</span><span class="op">)</span> <span class="op">|</span> <span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">sonno_ore</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div data-pagedtable="false">
-  <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["genere"],"name":[2],"type":["chr"],"align":["left"]},{"label":["corso"],"name":[3],"type":["chr"],"align":["left"]},{"label":["stress"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["sonno_ore"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["caffeina"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"8","2":"F","3":"scienze","4":"NA","5":"6.7","6":"2"},{"1":"9","2":"M","3":"psicologia","4":"19","5":"NA","6":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-</div>
-</div>
-<p>Questa pipeline mostra gli studenti per cui manca il punteggio di stress oppure il numero di ore di sonno.</p>
-</section><section id="creare-variabili-con-mutate" class="level2" data-number="9.6"><h2 data-number="9.6" class="anchored" data-anchor-id="creare-variabili-con-mutate">
-<span class="header-section-number">9.6</span> Creare variabili con <code>mutate()</code>
+</section><section id="creare-una-variabile-con-mutate" class="level2" data-number="9.6"><h2 data-number="9.6" class="anchored" data-anchor-id="creare-una-variabile-con-mutate">
+<span class="header-section-number">9.6</span> Creare una variabile con <code>mutate()</code>
 </h2>
-<p>La funzione <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code> serve a creare nuove colonne o modificare colonne esistenti.</p>
-<p>Per esempio, possiamo creare una variabile che indica se lo studente dorme meno di 6 ore:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>sonno_basso <span class="op">=</span> <span class="va">sonno_ore</span> <span class="op">&lt;</span> <span class="fl">6</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div data-pagedtable="false">
-  <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["genere"],"name":[2],"type":["chr"],"align":["left"]},{"label":["corso"],"name":[3],"type":["chr"],"align":["left"]},{"label":["stress"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["sonno_ore"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["caffeina"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["sonno_basso"],"name":[7],"type":["lgl"],"align":["right"]}],"data":[{"1":"1","2":"F","3":"psicologia","4":"18","5":"7.2","6":"1","7":"FALSE"},{"1":"2","2":"F","3":"psicologia","4":"25","5":"6.1","6":"3","7":"FALSE"},{"1":"3","2":"M","3":"scienze","4":"21","5":"6.8","6":"2","7":"FALSE"},{"1":"4","2":"F","3":"psicologia","4":"30","5":"5.4","6":"4","7":"TRUE"},{"1":"5","2":"M","3":"scienze","4":"16","5":"7.5","6":"1","7":"FALSE"},{"1":"6","2":"F","3":"psicologia","4":"28","5":"5.9","6":"3","7":"TRUE"},{"1":"7","2":"M","3":"psicologia","4":"24","5":"6.2","6":"2","7":"FALSE"},{"1":"8","2":"F","3":"scienze","4":"NA","5":"6.7","6":"2","7":"FALSE"},{"1":"9","2":"M","3":"psicologia","4":"19","5":"NA","6":"1","7":"NA"},{"1":"10","2":"F","3":"scienze","4":"27","5":"5.8","6":"4","7":"TRUE"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-</div>
-</div>
-<p>Possiamo anche creare una variabile categoriale a partire da una variabile numerica:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
-<span>    livello_stress <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html">case_when</a></span><span class="op">(</span></span>
-<span>      <span class="va">stress</span> <span class="op">&lt;</span> <span class="fl">20</span> <span class="op">~</span> <span class="st">"basso"</span>,</span>
-<span>      <span class="va">stress</span> <span class="op">&gt;=</span> <span class="fl">20</span> <span class="op">&amp;</span> <span class="va">stress</span> <span class="op">&lt;</span> <span class="fl">27</span> <span class="op">~</span> <span class="st">"medio"</span>,</span>
-<span>      <span class="va">stress</span> <span class="op">&gt;=</span> <span class="fl">27</span> <span class="op">~</span> <span class="st">"alto"</span>,</span>
-<span>      <span class="cn">TRUE</span> <span class="op">~</span> <span class="cn">NA_character_</span></span>
-<span>    <span class="op">)</span></span>
-<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">stress</span>, <span class="va">livello_stress</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div data-pagedtable="false">
-  <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["stress"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["livello_stress"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"1","2":"18","3":"basso"},{"1":"2","2":"25","3":"medio"},{"1":"3","2":"21","3":"medio"},{"1":"4","2":"30","3":"alto"},{"1":"5","2":"16","3":"basso"},{"1":"6","2":"28","3":"alto"},{"1":"7","2":"24","3":"medio"},{"1":"8","2":"NA","3":"NA"},{"1":"9","2":"19","3":"basso"},{"1":"10","2":"27","3":"alto"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-</div>
-</div>
-<p>In questo esempio, <code><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html">case_when()</a></code> assegna un’etichetta a seconda del valore di <code>stress</code>. L’ultima riga, <code>TRUE ~ NA_character_</code>, specifica che i casi non classificabili ricevono un valore mancante.</p>
-<div class="callout callout-style-default callout-warning callout-titled" title="Controllo">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Avviso</span>Controllo
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Dopo <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code>, controlla sempre la nuova variabile. Un errore nella definizione di una categoria può alterare l’interpretazione dell’intera analisi.</p>
-</div>
-</div>
+<p><code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code> calcola una nuova colonna oppure sostituisce i valori di una colonna esistente.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
-<span>    livello_stress <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html">case_when</a></span><span class="op">(</span></span>
-<span>      <span class="va">stress</span> <span class="op">&lt;</span> <span class="fl">20</span> <span class="op">~</span> <span class="st">"basso"</span>,</span>
-<span>      <span class="va">stress</span> <span class="op">&gt;=</span> <span class="fl">20</span> <span class="op">&amp;</span> <span class="va">stress</span> <span class="op">&lt;</span> <span class="fl">27</span> <span class="op">~</span> <span class="st">"medio"</span>,</span>
-<span>      <span class="va">stress</span> <span class="op">&gt;=</span> <span class="fl">27</span> <span class="op">~</span> <span class="st">"alto"</span>,</span>
-<span>      <span class="cn">TRUE</span> <span class="op">~</span> <span class="cn">NA_character_</span></span>
-<span>    <span class="op">)</span></span>
+<span>    sonno_insufficiente <span class="op">=</span> <span class="va">sonno_ore</span> <span class="op">&lt;</span> <span class="fl">6</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span><span class="op">(</span><span class="va">livello_stress</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div data-pagedtable="false">
-  <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["livello_stress"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"alto","2":"3"},{"1":"basso","2":"3"},{"1":"medio","2":"3"},{"1":"NA","2":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-</div>
-</div>
-</section><section id="ordinare-righe-con-arrange" class="level2" data-number="9.7"><h2 data-number="9.7" class="anchored" data-anchor-id="ordinare-righe-con-arrange">
-<span class="header-section-number">9.7</span> Ordinare righe con <code>arrange()</code>
-</h2>
-<p>La funzione <code><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange()</a></code> cambia l’ordine delle righe.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">stress</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div data-pagedtable="false">
-  <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["genere"],"name":[2],"type":["chr"],"align":["left"]},{"label":["corso"],"name":[3],"type":["chr"],"align":["left"]},{"label":["stress"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["sonno_ore"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["caffeina"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"5","2":"M","3":"scienze","4":"16","5":"7.5","6":"1"},{"1":"1","2":"F","3":"psicologia","4":"18","5":"7.2","6":"1"},{"1":"9","2":"M","3":"psicologia","4":"19","5":"NA","6":"1"},{"1":"3","2":"M","3":"scienze","4":"21","5":"6.8","6":"2"},{"1":"7","2":"M","3":"psicologia","4":"24","5":"6.2","6":"2"},{"1":"2","2":"F","3":"psicologia","4":"25","5":"6.1","6":"3"},{"1":"10","2":"F","3":"scienze","4":"27","5":"5.8","6":"4"},{"1":"6","2":"F","3":"psicologia","4":"28","5":"5.9","6":"3"},{"1":"4","2":"F","3":"psicologia","4":"30","5":"5.4","6":"4"},{"1":"8","2":"F","3":"scienze","4":"NA","5":"6.7","6":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-</div>
-</div>
-<p>Per ordinare in modo decrescente si usa <code><a href="https://dplyr.tidyverse.org/reference/desc.html">desc()</a></code>:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html">desc</a></span><span class="op">(</span><span class="va">stress</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div data-pagedtable="false">
-  <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["genere"],"name":[2],"type":["chr"],"align":["left"]},{"label":["corso"],"name":[3],"type":["chr"],"align":["left"]},{"label":["stress"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["sonno_ore"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["caffeina"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"4","2":"F","3":"psicologia","4":"30","5":"5.4","6":"4"},{"1":"6","2":"F","3":"psicologia","4":"28","5":"5.9","6":"3"},{"1":"10","2":"F","3":"scienze","4":"27","5":"5.8","6":"4"},{"1":"2","2":"F","3":"psicologia","4":"25","5":"6.1","6":"3"},{"1":"7","2":"M","3":"psicologia","4":"24","5":"6.2","6":"2"},{"1":"3","2":"M","3":"scienze","4":"21","5":"6.8","6":"2"},{"1":"9","2":"M","3":"psicologia","4":"19","5":"NA","6":"1"},{"1":"1","2":"F","3":"psicologia","4":"18","5":"7.2","6":"1"},{"1":"5","2":"M","3":"scienze","4":"16","5":"7.5","6":"1"},{"1":"8","2":"F","3":"scienze","4":"NA","5":"6.7","6":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-</div>
-</div>
-<p>Questa operazione è utile per ispezionare i valori estremi, gli errori di inserimento e i casi che meritano attenzione.</p>
-</section><section id="riassumere-dati-con-summarise" class="level2" data-number="9.8"><h2 data-number="9.8" class="anchored" data-anchor-id="riassumere-dati-con-summarise">
-<span class="header-section-number">9.8</span> Riassumere dati con <code>summarise()</code>
-</h2>
-<p>La funzione <code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise()</a></code> riduce una tabella a una o più statistiche descrittive.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
-<span>    n <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>    stress_medio <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">stress</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>    sonno_medio <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">sonno_ore</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span></span>
+<span>    <span class="va">id</span>,</span>
+<span>    <span class="va">sonno_ore</span>,</span>
+<span>    <span class="va">sonno_insufficiente</span></span>
 <span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["n"],"name":[1],"type":["int"],"align":["right"]},{"label":["stress_medio"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sonno_medio"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"10","2":"23.11111","3":"6.4"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["sonno_ore"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sonno_insufficiente"],"name":[3],"type":["lgl"],"align":["right"]}],"data":[{"1":"1","2":"7.2","3":"FALSE"},{"1":"2","2":"6.1","3":"FALSE"},{"1":"3","2":"6.8","3":"FALSE"},{"1":"4","2":"5.4","3":"TRUE"},{"1":"5","2":"7.5","3":"FALSE"},{"1":"6","2":"5.9","3":"TRUE"},{"1":"7","2":"6.2","3":"FALSE"},{"1":"8","2":"6.7","3":"FALSE"},{"1":"9","2":"NA","3":"NA"},{"1":"10","2":"5.8","3":"TRUE"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
 </div>
-<p>L’argomento <code>na.rm = TRUE</code> dice a R di ignorare i valori mancanti nel calcolo della media. Ciò non significa che i valori mancanti siano irrilevanti, ma solo che non bloccano il calcolo.</p>
-<div class="callout callout-style-default callout-important callout-titled" title="Non nascondere i mancanti">
+<p>La nuova variabile vale <code>TRUE</code> quando le ore di sonno sono inferiori a 6, <code>FALSE</code> negli altri casi osservati e <code>NA</code> quando <code>sonno_ore</code> è mancante.</p>
+<p>Il codice traduce una regola:</p>
+<blockquote class="blockquote">
+<p>Confronta ogni valore con la soglia 6 e registra il risultato.</p>
+</blockquote>
+<p>La regola è trasparente, ma la soglia deve essere giustificata. Creare categorie a partire da una misura continua riduce informazione e può introdurre confini arbitrari. Non dovrebbe essere fatto soltanto perché rende più semplice una tabella o un grafico.</p>
+<p>Dopo <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code> dobbiamo controllare i valori prodotti:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>    sonno_insufficiente <span class="op">=</span> <span class="va">sonno_ore</span> <span class="op">&lt;</span> <span class="fl">6</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span><span class="op">(</span></span>
+<span>    <span class="va">sonno_insufficiente</span>,</span>
+<span>    .drop <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["sonno_insufficiente"],"name":[1],"type":["lgl"],"align":["right"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"FALSE","2":"6"},{"1":"TRUE","2":"3"},{"1":"NA","2":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p><code><a href="https://dplyr.tidyverse.org/reference/count.html">count()</a></code> mostra quante righe appartengono a ciascun valore, compresi i mancanti.</p>
+<div class="callout callout-style-default callout-important callout-titled" title="Una nuova colonna è una nuova definizione">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Non nascondere i mancanti
+<span class="screen-reader-only">Importante</span>Una nuova colonna è una nuova definizione
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Quando si utilizza <code>na.rm = TRUE</code> è necessario anche verificare quanti valori mancanti sono presenti. Una media calcolata su pochi casi può non essere molto significativa.</p>
+<p><code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code> esegue la regola indicata, ma non ne dimostra la validità. Il ricercatore deve poter spiegare che cosa rappresenta la nuova variabile, perché viene costruita e quali informazioni vengono perse.</p>
 </div>
 </div>
+</section><section id="ridurre-la-tabella-con-summarise" class="level2" data-number="9.7"><h2 data-number="9.7" class="anchored" data-anchor-id="ridurre-la-tabella-con-summarise">
+<span class="header-section-number">9.7</span> Ridurre la tabella con <code>summarise()</code>
+</h2>
+<p><code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise()</a></code> sostituisce molte osservazioni con una o più statistiche.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
+<span>    n_righe <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    n_sonno_osservato <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">sonno_ore</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    sonno_medio <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span></span>
+<span>      <span class="va">sonno_ore</span>,</span>
+<span>      na.rm <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["n_righe"],"name":[1],"type":["int"],"align":["right"]},{"label":["n_sonno_osservato"],"name":[2],"type":["int"],"align":["right"]},{"label":["sonno_medio"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"10","2":"9","3":"6.4"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>La tabella iniziale contiene dieci righe. Il risultato ne contiene una, perché le osservazioni vengono riassunte.</p>
+<p>La distinzione tra <code>n_righe</code> e <code>n_sonno_osservato</code> rende esplicito che la media non usa tutti i partecipanti. <code>na.rm = TRUE</code> consente il calcolo sui valori disponibili, ma non sostituisce il controllo dei mancanti.</p>
+<p>Una sintesi dovrebbe dichiarare almeno quante osservazioni contribuiscono al risultato. Una media senza numerosità può sembrare più informativa di quanto sia.</p>
+</section><section id="produrre-sintesi-per-gruppi" class="level2" data-number="9.8"><h2 data-number="9.8" class="anchored" data-anchor-id="produrre-sintesi-per-gruppi">
+<span class="header-section-number">9.8</span> Produrre sintesi per gruppi</h2>
+<p>Per calcolare la stessa sintesi separatamente per ciascun corso, possiamo raggruppare la tabella prima di usare <code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise()</a></code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">corso</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
+<span>    n_righe <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    n_stress_osservato <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">stress</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    stress_medio <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span></span>
+<span>      <span class="va">stress</span>,</span>
+<span>      na.rm <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["corso"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n_righe"],"name":[2],"type":["int"],"align":["right"]},{"label":["n_stress_osservato"],"name":[3],"type":["int"],"align":["right"]},{"label":["stress_medio"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"psicologia","2":"6","3":"6","4":"24.00000"},{"1":"scienze","2":"4","3":"3","4":"21.33333"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>La procedura è:</p>
+<blockquote class="blockquote">
+<p>Dividi le righe in base a <code>corso</code>. All’interno di ogni gruppo conta le righe, conta i valori osservati e calcola la media.</p>
+</blockquote>
+<p>Il risultato contiene una riga per gruppo. La granularità della tabella è cambiata: non rappresenta più singoli studenti, ma corsi.</p>
+<p>Questa trasformazione è semplice e concettualmente importante. Dopo una sintesi, le colonne non devono essere interpretate come se rappresentassero ancora dati individuali.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Contare è spesso il primo riepilogo">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Contare è spesso il primo riepilogo
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Per una variabile categoriale, <code><a href="https://dplyr.tidyverse.org/reference/count.html">count()</a></code> offre una forma abbreviata e leggibile:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
-<span>    n_totale <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>    n_stress_mancante <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">stress</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    n_sonno_mancante <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">sonno_ore</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div data-pagedtable="false">
-  <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["n_totale"],"name":[1],"type":["int"],"align":["right"]},{"label":["n_stress_mancante"],"name":[2],"type":["int"],"align":["right"]},{"label":["n_sonno_mancante"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"10","2":"1","3":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-</div>
-</div>
-</section><section id="calcolare-sintesi-per-gruppi-con-group_by" class="level2" data-number="9.9"><h2 data-number="9.9" class="anchored" data-anchor-id="calcolare-sintesi-per-gruppi-con-group_by">
-<span class="header-section-number">9.9</span> Calcolare sintesi per gruppi con <code>group_by()</code>
-</h2>
-<p>La funzione <code><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by()</a></code> da sola non produce una tabella finale interessante. Serve a indicare a R che le operazioni successive devono essere eseguite separatamente per ciascun gruppo.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">genere</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
-<span>    n <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>    stress_medio <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">stress</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>    sonno_medio <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">sonno_ore</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>    .groups <span class="op">=</span> <span class="st">"drop"</span></span>
-<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div data-pagedtable="false">
-  <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["genere"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]},{"label":["stress_medio"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["sonno_medio"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"F","2":"6","3":"25.6","4":"6.183333"},{"1":"M","2":"4","3":"20.0","4":"6.833333"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-</div>
-</div>
-<p>Questa pipeline può essere letta nel modo seguente:</p>
-<ol type="1">
-<li>parti dalla tabella <code>studenti</code>;</li>
-<li>separa le righe in base al genere;</li>
-<li>per ciascun gruppo, calcola il numero di casi, lo stress medio e il sonno medio;</li>
-<li>restituisci una tabella non più raggruppata.</li>
-</ol>
-<p>La riga <code>.groups = "drop"</code> evita che il risultato mantenga informazioni di raggruppamento non necessarie. Per analisi semplici non è sempre indispensabile, ma rende il risultato più esplicito.</p>
-</section><section id="contare-casi-con-count" class="level2" data-number="9.10"><h2 data-number="9.10" class="anchored" data-anchor-id="contare-casi-con-count">
-<span class="header-section-number">9.10</span> Contare casi con <code>count()</code>
-</h2>
-<p>Una delle operazioni più utili in EDA è contare quanti casi appartengono a ciascuna categoria.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span><span class="op">(</span><span class="va">corso</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div data-pagedtable="false">
-  <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["corso"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"psicologia","2":"6"},{"1":"scienze","2":"4"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-</div>
-</div>
-<p>Possiamo contare anche combinazioni di variabili:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span><span class="op">(</span><span class="va">corso</span>, <span class="va">genere</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
@@ -1077,344 +973,273 @@ $ caffeina  &lt;dbl&gt; 1, 3, 2, 4, 1, 3, 2, 2, 1, 4</code></pre>
 </div>
 </div>
 </div>
-<p>Questi controlli sono semplici, ma spesso rivelano problemi importanti: categorie scritte in modo incoerente, gruppi troppo piccoli o valori inattesi.</p>
-</section><section id="una-pipeline-completa" class="level2" data-number="9.11"><h2 data-number="9.11" class="anchored" data-anchor-id="una-pipeline-completa">
-<span class="header-section-number">9.11</span> Una pipeline completa</h2>
-<p>Consideriamo una domanda semplice:</p>
+<p>Prima di confrontare medie tra gruppi è utile sapere quanti casi appartengano a ciascuna combinazione.</p>
+</div>
+</div>
+</section><section id="una-pipeline-completa" class="level2" data-number="9.9"><h2 data-number="9.9" class="anchored" data-anchor-id="una-pipeline-completa">
+<span class="header-section-number">9.9</span> Una pipeline completa</h2>
+<p>Supponiamo di voler rispondere alla domanda:</p>
 <blockquote class="blockquote">
-<p>Tra gli studenti con dati completi su stress e sonno, qual è la media delle ore di sonno in base al livello di stress?</p>
+<p>Qual è la qualità media del sonno nei diversi corsi, tra gli studenti che possiedono sia il punteggio di stress sia la misura del sonno?</p>
 </blockquote>
-<p>Possiamo costruire una pipeline in più passaggi:</p>
+<p>Possiamo costruire una nuova tabella senza modificare l’originale:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sonno_per_stress</span> <span class="op">&lt;-</span> <span class="va">studenti</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">stress</span><span class="op">)</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">sonno_ore</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
-<span>    livello_stress <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html">case_when</a></span><span class="op">(</span></span>
-<span>      <span class="va">stress</span> <span class="op">&lt;</span> <span class="fl">20</span> <span class="op">~</span> <span class="st">"basso"</span>,</span>
-<span>      <span class="va">stress</span> <span class="op">&gt;=</span> <span class="fl">20</span> <span class="op">&amp;</span> <span class="va">stress</span> <span class="op">&lt;</span> <span class="fl">27</span> <span class="op">~</span> <span class="st">"medio"</span>,</span>
-<span>      <span class="va">stress</span> <span class="op">&gt;=</span> <span class="fl">27</span> <span class="op">~</span> <span class="st">"alto"</span></span>
-<span>    <span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sonno_per_corso</span> <span class="op">&lt;-</span> <span class="va">studenti</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span></span>
+<span>    <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">stress</span><span class="op">)</span>,</span>
+<span>    <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">sonno_ore</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">livello_stress</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">corso</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
 <span>    n <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>    sonno_medio <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">sonno_ore</span><span class="op">)</span>,</span>
-<span>    sonno_sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">sonno_ore</span><span class="op">)</span>,</span>
-<span>    .groups <span class="op">=</span> <span class="st">"drop"</span></span>
-<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html">desc</a></span><span class="op">(</span><span class="va">sonno_medio</span><span class="op">)</span><span class="op">)</span></span>
+<span>    sonno_sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">sonno_ore</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
-<span><span class="va">sonno_per_stress</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<span><span class="va">sonno_per_corso</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["livello_stress"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]},{"label":["sonno_medio"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["sonno_sd"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"basso","2":"2","3":"7.350000","4":"0.2121320"},{"1":"medio","2":"3","3":"6.366667","4":"0.3785939"},{"1":"alto","2":"3","3":"5.700000","4":"0.2645751"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["corso"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]},{"label":["sonno_medio"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["sonno_sd"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"psicologia","2":"5","3":"6.16","4":"0.6580274"},{"1":"scienze","2":"3","3":"6.70","4":"0.8544004"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
 </div>
-<p>Questa pipeline non è solo codice. Si tratta di una sequenza di decisioni:</p>
-<ul>
-<li>escludiamo i casi con dati mancanti relativi a stress o sonno;</li>
-<li>trasformiamo lo stress in tre categorie;</li>
-<li>calcolare la media e la deviazione standard del sonno per ciascuna categoria;</li>
-<li>ordiniamo i risultati.</li>
-</ul>
-<p>Ogni decisione dovrebbe poter essere giustificata.</p>
-<div class="callout callout-style-default callout-tip callout-titled" title="Checklist dopo una pipeline">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Consiglio</span>Checklist dopo una pipeline
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Dopo una trasformazione importante, controlla sempre:</p>
-<ol type="1">
-<li>quante righe sono rimaste;</li>
-<li>quali colonne sono presenti;</li>
-<li>se sono comparsi nuovi valori mancanti;</li>
-<li>se le categorie hanno una numerosità plausibile;</li>
-<li>se il risultato risponde davvero alla domanda iniziale.</li>
-</ol>
-</div>
-</div>
+<p>La pipeline elimina le righe incomplete rispetto alle due variabili, forma gruppi definiti dal corso e produce tre statistiche per ciascun gruppo.</p>
+<p>Il codice non spiega perché siano necessari dati completi su <code>stress</code>, dato che la sintesi finale usa soltanto <code>sonno_ore</code>. Questa incongruenza deve attirare l’attenzione. Se la domanda riguarda soltanto il sonno per corso, escludere chi non possiede il punteggio di stress modifica inutilmente il campione.</p>
+<p>Una versione coerente con la domanda è:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">stress</span><span class="op">)</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">sonno_ore</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>n_righe <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div data-pagedtable="false">
-  <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["n_righe"],"name":[1],"type":["int"],"align":["right"]}],"data":[{"1":"8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-</div>
-</div>
-</section><section id="usare-lai-con-criterio" class="level2" data-number="9.12"><h2 data-number="9.12" class="anchored" data-anchor-id="usare-lai-con-criterio">
-<span class="header-section-number">9.12</span> Usare l’AI con criterio</h2>
-<p>L’AI può essere molto utile per scrivere codice <code>dplyr</code>. Per esempio, puoi chiedere:</p>
-<blockquote class="blockquote">
-<p>Scrivi una pipeline <code>dplyr</code> che elimini i casi con valori mancanti per stress e sonno, crei tre livelli di stress e calcoli la media del sonno per ciascun livello.</p>
-</blockquote>
-<p>Questo è un uso legittimo dell’AI. Ma il controllo resta tuo.</p>
-<section id="cosa-puoi-chiedere-allai" class="level3" data-number="9.12.1"><h3 data-number="9.12.1" class="anchored" data-anchor-id="cosa-puoi-chiedere-allai">
-<span class="header-section-number">9.12.1</span> Cosa puoi chiedere all’AI</h3>
-<ul>
-<li>Generare una prima bozza della pipeline;</li>
-<li>spiegare una riga di codice;</li>
-<li>correggere un errore sintattico;</li>
-<li>suggerire una funzione adatta;</li>
-<li>trasformare un codice lungo in uno più leggibile.</li>
-</ul></section><section id="cosa-devi-controllare-tu" class="level3" data-number="9.12.2"><h3 data-number="9.12.2" class="anchored" data-anchor-id="cosa-devi-controllare-tu">
-<span class="header-section-number">9.12.2</span> Cosa devi controllare tu</h3>
-<ul>
-<li>Che le variabili esistano davvero nel dataset;</li>
-<li>che i nomi delle colonne siano corretti;</li>
-<li>che i filtri non eliminino casi in modo non intenzionale;</li>
-<li>che i valori mancanti siano trattati esplicitamente;</li>
-<li>che le nuove variabili abbiano il significato psicologico desiderato;</li>
-<li>che le statistiche calcolate siano appropriate per la domanda.</li>
-</ul>
-<div class="callout callout-style-default callout-warning callout-titled" title="Errore frequente">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Avviso</span>Errore frequente
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Un codice può essere sintatticamente corretto, ma concettualmente errato. Per esempio, una pipeline può calcolare la media di una variabile ordinale trattandola come se fosse a intervalli o può escludere tutti i casi con dati mancanti senza dichiararlo.</p>
-</div>
-</div>
-</section></section><section id="leggere-codice-generato-dallai" class="level2" data-number="9.13"><h2 data-number="9.13" class="anchored" data-anchor-id="leggere-codice-generato-dallai">
-<span class="header-section-number">9.13</span> Leggere codice generato dall’AI</h2>
-<p>Supponiamo che l’AI produca questo codice:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">stress</span> <span class="op">&gt;</span> <span class="fl">20</span> <span class="op">&amp;</span> <span class="va">sonno_ore</span> <span class="op">&gt;</span> <span class="fl">6</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">corso</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>media_stress <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">stress</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div data-pagedtable="false">
-  <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["corso"],"name":[1],"type":["chr"],"align":["left"]},{"label":["media_stress"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"psicologia","2":"24.5"},{"1":"scienze","2":"21.0"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-</div>
-</div>
-<p>Il codice funziona, ma prima di usarlo dobbiamo capirlo.</p>
-<p>Domande da porsi:</p>
-<ul>
-<li>Perché vengono mantenuti solo studenti con <code>stress &gt; 20</code> e <code>sonno_ore &gt; 6</code>?</li>
-<li>Questa selezione risponde alla domanda di ricerca?</li>
-<li>Che cosa succede ai valori mancanti?</li>
-<li>La media dello stress per corso è la sintesi che volevamo?</li>
-<li>È necessario aggiungere <code>na.rm = TRUE</code>?</li>
-</ul>
-<p>Una versione più esplicita potrebbe essere:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">stress</span><span class="op">)</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">sonno_ore</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sonno_per_corso</span> <span class="op">&lt;-</span> <span class="va">studenti</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">sonno_ore</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">corso</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
 <span>    n <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>    media_stress <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">stress</span><span class="op">)</span>,</span>
-<span>    media_sonno <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">sonno_ore</span><span class="op">)</span>,</span>
-<span>    .groups <span class="op">=</span> <span class="st">"drop"</span></span>
+<span>    sonno_medio <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">sonno_ore</span><span class="op">)</span>,</span>
+<span>    sonno_sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">sonno_ore</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="va">sonno_per_corso</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["corso"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]},{"label":["sonno_medio"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["sonno_sd"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"psicologia","2":"5","3":"6.16","4":"0.6580274"},{"1":"scienze","2":"4","3":"6.70","4":"0.6976150"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>L’esempio mostra perché leggere una pipeline come procedura sia più importante che riconoscerne la sintassi. Un’operazione può essere eseguita correttamente e non essere necessaria per la domanda.</p>
+</section><section id="controllare-una-trasformazione" class="level2" data-number="9.10"><h2 data-number="9.10" class="anchored" data-anchor-id="controllare-una-trasformazione">
+<span class="header-section-number">9.10</span> Controllare una trasformazione</h2>
+<p>Una pipeline importante dovrebbe lasciare evidenza dei propri effetti. I controlli dipendono dall’operazione.</p>
+<p>Dopo un filtro, confrontiamo la numerosità iniziale e finale. Dopo <code><a href="https://dplyr.tidyverse.org/reference/select.html">select()</a></code>, controlliamo i nomi delle colonne. Dopo <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code>, esaminiamo i valori della nuova variabile. Dopo <code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise()</a></code>, verifichiamo quale unità rappresenti ciascuna riga del risultato.</p>
+<p>Un controllo semplice della pipeline precedente può essere:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
+<span>    n_totale <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    n_sonno_osservato <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">sonno_ore</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    n_sonno_mancante <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">sonno_ore</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["corso"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]},{"label":["media_stress"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["media_sonno"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"psicologia","2":"5","3":"25.00000","4":"6.16"},{"1":"scienze","2":"3","3":"21.33333","4":"6.70"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["n_totale"],"name":[1],"type":["int"],"align":["right"]},{"label":["n_sonno_osservato"],"name":[2],"type":["int"],"align":["right"]},{"label":["n_sonno_mancante"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"10","2":"9","3":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sonno_per_corso</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["corso"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]},{"label":["sonno_medio"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["sonno_sd"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"psicologia","2":"5","3":"6.16","4":"0.6580274"},{"1":"scienze","2":"4","3":"6.70","4":"0.6976150"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
 </div>
-<p>Questa seconda versione chiarisce quali casi sono inclusi e quali statistiche vengono calcolate.</p>
-</section><section id="funzioni-utili-da-conoscere" class="level2" data-number="9.14"><h2 data-number="9.14" class="anchored" data-anchor-id="funzioni-utili-da-conoscere">
-<span class="header-section-number">9.14</span> Funzioni utili da conoscere</h2>
-<p>Oltre ai verbi principali, alcune funzioni tornano spesso:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
-<thead><tr class="header">
-<th>Funzione</th>
-<th>Uso tipico</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td><code><a href="https://dplyr.tidyverse.org/reference/context.html">n()</a></code></td>
-<td>conta le righe in un gruppo</td>
-</tr>
-<tr class="even">
-<td><code><a href="https://rdrr.io/r/base/NA.html">is.na()</a></code></td>
-<td>identifica valori mancanti</td>
-</tr>
-<tr class="odd">
-<td><code>sum(is.na(x))</code></td>
-<td>conta i valori mancanti di <code>x</code>
-</td>
-</tr>
-<tr class="even">
-<td><code>mean(x, na.rm = TRUE)</code></td>
-<td>calcola la media ignorando i mancanti</td>
-</tr>
-<tr class="odd">
-<td><code>sd(x, na.rm = TRUE)</code></td>
-<td>calcola la deviazione standard ignorando i mancanti</td>
-</tr>
-<tr class="even">
-<td><code><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html">case_when()</a></code></td>
-<td>crea categorie a partire da condizioni</td>
-</tr>
-<tr class="odd">
-<td><code><a href="https://dplyr.tidyverse.org/reference/if_else.html">if_else()</a></code></td>
-<td>crea una variabile con due condizioni</td>
-</tr>
-<tr class="even">
-<td><code><a href="https://dplyr.tidyverse.org/reference/desc.html">desc()</a></code></td>
-<td>ordina in senso decrescente</td>
-</tr>
-<tr class="odd">
-<td><code><a href="https://dplyr.tidyverse.org/reference/count.html">count()</a></code></td>
-<td>conta casi per categoria</td>
-</tr>
-</tbody>
-</table>
-<p>Non è necessario memorizzarle tutte subito. È però importante riconoscerle quando compaiono nel codice.</p>
-</section><section id="cosa-portare-al-capitolo-successivo" class="level2" data-number="9.15"><h2 data-number="9.15" class="anchored" data-anchor-id="cosa-portare-al-capitolo-successivo">
-<span class="header-section-number">9.15</span> Cosa portare al capitolo successivo</h2>
-<p>Da questo capitolo dovresti ricavare soprattutto tre idee:</p>
-<ol type="1">
-<li>trasformare i dati significa prendere decisioni;</li>
-<li>
-<code>dplyr</code> rende queste decisioni visibili in forma di pipeline;</li>
-<li>l’AI può aiutare a scrivere codice, ma non può sostituire il controllo sostanziale sull’analisi.</li>
-</ol>
-<p>Nel capitolo su <code>ggplot2</code> useremo la stessa logica: non impareremo tutti i modi possibili per creare grafici, ma la grammatica minima per costruire e valutare visualizzazioni coerenti con le domande dell’EDA.</p>
+<p>Non esiste un unico comando che convalidi ogni trasformazione. Il controllo deve mostrare ciò che l’operazione avrebbe potuto alterare.</p>
+<p>Il principio generale è:</p>
+<p><span class="math display">\[
+\text{trasformazione}
+\longrightarrow
+\text{conseguenza attesa}
+\longrightarrow
+\text{controllo osservabile}.
+\]</span></p>
+</section><section id="descrivere-il-compito-allai" class="level2" data-number="9.11"><h2 data-number="9.11" class="anchored" data-anchor-id="descrivere-il-compito-allai">
+<span class="header-section-number">9.11</span> Descrivere il compito all’AI</h2>
+<p>Una richiesta come «fammi una tabella con <code>dplyr</code>» lascia implicite troppe decisioni. L’assistente non sa quale sia l’unità di analisi, quali casi debbano essere inclusi o perché una variabile debba essere ricodificata.</p>
+<p>Una richiesta controllabile può essere formulata così:</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Un prompt per una pipeline semplice">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Consiglio</span>Un prompt per una pipeline semplice
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<blockquote class="blockquote">
+<p>Ho una tabella R chiamata <code>studenti</code>, con una riga per studente. Le variabili rilevanti sono <code>id</code>, <code>corso</code>, <code>stress</code> e <code>sonno_ore</code>.</p>
+<p>Voglio una tabella con una riga per corso che riporti il numero totale di studenti, il numero di valori osservati di <code>sonno_ore</code>, la media e la deviazione standard di <code>sonno_ore</code>. Non escludere una riga a causa di valori mancanti in variabili che non entrano nel calcolo.</p>
+<p>Usa <code>dplyr</code>, non modificare <code>studenti</code> e salva il risultato in <code>sonno_per_corso</code>. Spiega come cambia l’unità rappresentata dalle righe e aggiungi un controllo dei valori mancanti.</p>
+</blockquote>
+</div>
+</div>
+<p>Il prompt specifica input, unità di analisi, variabili, output, trattamento dei mancanti, vincoli e controlli. L’AI deve tradurre la procedura in sintassi, non inventarne la logica.</p>
+<p>Se il codice ricevuto è troppo complesso, possiamo chiedere:</p>
+<blockquote class="blockquote">
+<p>Riscrivi la soluzione usando soltanto <code><a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/select.html">select()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise()</a></code> e <code><a href="https://dplyr.tidyverse.org/reference/count.html">count()</a></code>. Elimina ogni passaggio non necessario e spiega che cosa cambia dopo ciascun verbo.</p>
+</blockquote>
+</section><section id="leggere-criticamente-il-codice-generato" class="level2" data-number="9.12"><h2 data-number="9.12" class="anchored" data-anchor-id="leggere-criticamente-il-codice-generato">
+<span class="header-section-number">9.12</span> Leggere criticamente il codice generato</h2>
+<p>Consideriamo:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span></span>
+<span>    <span class="va">stress</span> <span class="op">&gt;</span> <span class="fl">20</span>,</span>
+<span>    <span class="va">sonno_ore</span> <span class="op">&gt;</span> <span class="fl">6</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">corso</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
+<span>    stress_medio <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">stress</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<p>La sintassi è valida. La procedura conserva soltanto persone con stress superiore a 20 e più di sei ore di sonno, poi calcola lo stress medio per corso.</p>
+<p>Prima di usarla dobbiamo chiedere perché siano state introdotte quelle soglie, che cosa accada ai mancanti, quanti casi rimangano e se il campione risultante corrisponda alla domanda.</p>
+<p>Una richiesta di revisione può essere:</p>
+<blockquote class="blockquote">
+<p>Elenca tutte le decisioni analitiche contenute nella pipeline. Distingui quelle necessarie dalla sintassi tecnica. Mostra la numerosità prima e dopo ogni filtro e non modificare le condizioni senza spiegare perché.</p>
+</blockquote>
+<p>Questo tipo di richiesta trasforma l’AI in uno strumento di audit del codice, non soltanto in un generatore.</p>
+</section><section id="che-cosa-non-serve-ancora" class="level2" data-number="9.13"><h2 data-number="9.13" class="anchored" data-anchor-id="che-cosa-non-serve-ancora">
+<span class="header-section-number">9.13</span> Che cosa non serve ancora</h2>
+<p>Non è necessario imparare tutte le funzioni di selezione, ricodifica, unione e riorganizzazione disponibili in <code>dplyr</code> e nel <code>tidyverse</code>. Non è necessario neppure produrre pipeline molto compatte.</p>
+<p>Per i capitoli successivi bastano poche operazioni leggibili. Quando servirà combinare tabelle o modificarne la forma, introdurremo il concetto nel contesto del problema specifico.</p>
+<p>La semplicità non consiste nel ridurre il numero di righe a ogni costo. Consiste nel rendere evidente la relazione tra domanda, trasformazione e controllo.</p>
+</section><section id="riflessioni-conclusive" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="riflessioni-conclusive">Riflessioni conclusive</h2>
+<p><code>dplyr</code> permette di descrivere una trasformazione come una sequenza di verbi. <code><a href="https://dplyr.tidyverse.org/reference/select.html">select()</a></code> decide quali colonne rimangono, <code><a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a></code> quali righe rimangono, <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code> quali valori vengono creati e <code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise()</a></code> quale nuova unità viene rappresentata dalla tabella finale.</p>
+<p>La pipe rende visibile l’ordine delle operazioni. Questa trasparenza è particolarmente importante quando la sintassi viene generata dall’AI. Il ricercatore deve comunque stabilire soglie, esclusioni, variabili da conservare, significato delle nuove colonne e trattamento dei mancanti.</p>
+<p>Una pipeline è adeguata quando ogni passaggio è necessario per la domanda e quando le sue conseguenze sono controllate. Il fatto che il codice funzioni indica soltanto che R ha eseguito le istruzioni.</p>
+<p>Nel capitolo successivo applicheremo lo stesso modo di pensare alla visualizzazione. Un grafico verrà costruito come una sequenza di scelte su dati, variabili e rappresentazioni, non come un oggetto decorativo.</p>
 </section><section id="esercizi" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="esercizi">Esercizi</h2>
-<div class="callout callout-style-default callout-tip callout-titled" title="Esercizio 1: leggere una pipeline">
+<ol type="1">
+<li>
+<p>Descrivi in linguaggio naturale questa pipeline, indicando input, effetto di ogni verbo e unità rappresentata dal risultato:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">stress</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">corso</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
+<span>    n <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    stress_medio <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">stress</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+</li>
+<li><p>Il dataset contiene 200 righe. Dopo un filtro ne rimangono 73. Quali informazioni devi ottenere prima di considerare appropriata la trasformazione?</p></li>
+<li>
+<p>Spiega perché questa operazione può essere metodologicamente problematica anche se la sintassi è corretta:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>    stress_alto <span class="op">=</span> <span class="va">stress</span> <span class="op">&gt;=</span> <span class="fl">20</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+</li>
+<li>
+<p>Modifica la seguente sintesi in modo che riporti anche il numero di valori osservati e mancanti:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
+<span>    sonno_medio <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span></span>
+<span>      <span class="va">sonno_ore</span>,</span>
+<span>      na.rm <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+</li>
+<li><p>L’AI propone di filtrare contemporaneamente i mancanti di <code>stress</code>, <code>sonno_ore</code> e <code>genere</code>, ma la tabella finale usa soltanto <code>sonno_ore</code> e <code>corso</code>. Quale problema introduce la proposta?</p></li>
+<li><p>Formula un prompt che chieda una tabella con una riga per corso, media del sonno, deviazione standard, numerosità utilizzata e controllo dei mancanti. Specifica che il dataset originale non deve essere modificato.</p></li>
+<li><p>Dopo <code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise()</a></code> ottieni una riga per corso. Perché non puoi più interpretare ogni riga come uno studente?</p></li>
+<li><p>Quale controllo assoceresti a ciascuna operazione: <code><a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/select.html">select()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code> e <code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise()</a></code>?</p></li>
+</ol>
+<div class="callout callout-style-default callout-tip callout-titled" title="Soluzioni">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Consiglio</span>Soluzioni
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><p>L’input è <code>studenti</code>. <code><a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a></code> conserva le righe in cui <code>stress</code> è osservato. <code><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by()</a></code> forma gruppi in base al corso. <code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise()</a></code> sostituisce le righe individuali con numerosità e media per gruppo. Il risultato contiene una riga per corso.</p></li>
+<li><p>Occorre sapere quale condizione è stata applicata, perché è giustificata, quanti casi sono stati esclusi per ciascuna ragione, se i gruppi sono stati alterati e se i casi rimasti rappresentano ancora la popolazione analitica prevista.</p></li>
+<li><p>La soglia 20 può essere arbitraria. La trasformazione riduce una misura numerica a due categorie e perde informazione. Deve essere sostenuta da una definizione teorica, clinica o progettuale.</p></li>
+<li>
+<p>Una possibile soluzione è:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
+<span>    n_totale <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    n_sonno_osservato <span class="op">=</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">sonno_ore</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    n_sonno_mancante <span class="op">=</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">sonno_ore</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    sonno_medio <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span></span>
+<span>      <span class="va">sonno_ore</span>,</span>
+<span>      na.rm <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+</li>
+<li><p>Esclude osservazioni per informazioni che non sono necessarie alla domanda finale. Il campione viene ridotto senza motivo e può cambiare composizione.</p></li>
+<li><p>Il prompt deve specificare <code>studenti</code> come input, una riga per studente, <code>corso</code> come variabile di raggruppamento, <code>sonno_ore</code> come variabile da riassumere, gestione esplicita dei mancanti, nome del nuovo oggetto e divieto di sovrascrivere l’originale.</p></li>
+<li><p><code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise()</a></code> aggrega tutte le osservazioni dello stesso corso. I valori della riga descrivono il gruppo e non una singola persona.</p></li>
+<li><p>Dopo <code><a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a></code> si confrontano le numerosità; dopo <code><a href="https://dplyr.tidyverse.org/reference/select.html">select()</a></code> si controllano i nomi delle colonne; dopo <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code> si esaminano valori e frequenze della nuova variabile; dopo <code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise()</a></code> si verifica l’unità rappresentata da ogni riga e il numero di osservazioni usate.</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="Punti chiave">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Consiglio</span>Esercizio 1: leggere una pipeline
+<span class="screen-reader-only">Nota</span>Punti chiave
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-9" class="callout-9-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Considera il codice seguente:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">stress</span><span class="op">)</span>, <span class="va">stress</span> <span class="op">&gt;=</span> <span class="fl">20</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>sonno_basso <span class="op">=</span> <span class="va">sonno_ore</span> <span class="op">&lt;</span> <span class="fl">6</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">sonno_basso</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
-<span>    n <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>    stress_medio <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">stress</span><span class="op">)</span>,</span>
-<span>    .groups <span class="op">=</span> <span class="st">"drop"</span></span>
-<span>  <span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Rispondi:</p>
-<ol type="1">
-<li>Quali righe vengono escluse?</li>
-<li>Quale nuova variabile viene creata?</li>
-<li>Che cosa rappresenta <code>n</code>?</li>
-<li>Quale domanda empirica potrebbe essere esplorata con questa pipeline?</li>
-</ol>
+<ul>
+<li>Una trasformazione modifica righe, colonne, valori o granularità della tabella.</li>
+<li>La pipe rende visibile l’ordine delle operazioni.</li>
+<li>
+<code><a href="https://dplyr.tidyverse.org/reference/select.html">select()</a></code> agisce sulle colonne e <code><a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a></code> sulle righe.</li>
+<li>
+<code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code> crea una nuova definizione operativa.</li>
+<li>
+<code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise()</a></code> cambia l’unità rappresentata dalla tabella.</li>
+<li>I filtri e le soglie sono decisioni metodologiche, non dettagli sintattici.</li>
+<li>
+<code>na.rm = TRUE</code> deve essere accompagnato dal conteggio dei valori utilizzati.</li>
+<li>Ogni trasformazione importante richiede un controllo osservabile.</li>
+<li>L’AI deve tradurre una procedura dichiarata, non inventare esclusioni o ricodifiche.</li>
+<li>Una pipeline corretta è composta soltanto dai passaggi necessari alla domanda.</li>
+</ul>
 </div>
 </div>
 </div>
-<div class="callout callout-style-default callout-tip callout-titled" title="Esercizio 2: trovare il problema">
+<div class="callout callout-style-default callout-note callout-titled" title="Ambiente di sviluppo">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Consiglio</span>Esercizio 2: trovare il problema
+<span class="screen-reader-only">Nota</span>Ambiente di sviluppo
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-10" class="callout-10-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>L’AI ha prodotto questo codice:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">stress</span> <span class="op">&gt;</span> <span class="fl">25</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>media_sonno <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">sonno_ore</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Il codice è sintatticamente corretto. Quali controlli dovresti fare prima di fidarti del risultato? Prova a riscrivere la pipeline rendendo esplicito il trattamento dei valori mancanti e il numero di casi usati nel calcolo.</p>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-tip callout-titled" title="Esercizio 3: modificare una pipeline">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Consiglio</span>Esercizio 3: modificare una pipeline
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-11" class="callout-11-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Parti da questa pipeline:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">studenti</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">corso</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>media_stress <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">stress</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Modificala in modo che restituisca, per ciascun corso:</p>
-<ul>
-<li>il numero totale di studenti;</li>
-<li>il numero di valori mancanti in <code>stress</code>;</li>
-<li>la media di <code>stress</code>;</li>
-<li>la media di <code>sonno_ore</code>.</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-tip callout-titled" title="Esercizio 4: prompt e controllo">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Consiglio</span>Esercizio 4: prompt e controllo
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-12" class="callout-12-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Scrivi un prompt per chiedere all’AI una pipeline <code>dplyr</code> che:</p>
-<ol type="1">
-<li>usi la tabella <code>studenti</code>;</li>
-<li>escluda i casi con valori mancanti su <code>stress</code> o <code>sonno_ore</code>;</li>
-<li>crei una variabile <code>stress_alto</code>, uguale a <code>TRUE</code> se <code>stress &gt;= 27</code>;</li>
-<li>calcoli media e deviazione standard di <code>sonno_ore</code> separatamente per <code>stress_alto</code>.</li>
-</ol>
-<p>Poi indica almeno tre controlli che dovresti eseguire sul codice prodotto.</p>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled" title="Informazioni sull'ambiente di sviluppo">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Nota</span>Informazioni sull’ambiente di sviluppo
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-13" class="callout-13-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
+<p>Il capitolo usa <code>dplyr</code>. Le informazioni sull’ambiente possono essere ottenute con:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>R version 4.6.1 (2026-06-24)
 Platform: aarch64-apple-darwin23
@@ -1434,22 +1259,21 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] tibble_3.3.1 dplyr_1.2.1 
+[1] dplyr_1.2.1
 
 loaded via a namespace (and not attached):
  [1] digest_0.6.39     R6_2.6.1          fastmap_1.2.0     tidyselect_1.2.1 
- [5] xfun_0.60         magrittr_2.0.5    glue_1.8.1        knitr_1.51       
- [9] pkgconfig_2.0.3   htmltools_0.5.9   generics_0.1.4    rmarkdown_2.31   
-[13] lifecycle_1.0.5   cli_3.6.6         vctrs_0.7.3       withr_3.0.3      
-[17] compiler_4.6.1    tools_4.6.1       pillar_1.11.1     evaluate_1.0.5   
-[21] yaml_2.3.12       otel_0.2.0        rlang_1.3.0       jsonlite_2.0.0   
-[25] htmlwidgets_1.6.4</code></pre>
+ [5] xfun_0.60         magrittr_2.0.5    glue_1.8.1        tibble_3.3.1     
+ [9] knitr_1.51        pkgconfig_2.0.3   htmltools_0.5.9   generics_0.1.4   
+[13] rmarkdown_2.31    lifecycle_1.0.5   cli_3.6.6         vctrs_0.7.3      
+[17] withr_3.0.3       compiler_4.6.1    tools_4.6.1       pillar_1.11.1    
+[21] evaluate_1.0.5    yaml_2.3.12       otel_0.2.0        rlang_1.3.0      
+[25] jsonlite_2.0.0    htmlwidgets_1.6.4</code></pre>
 </div>
 </div>
 </div>
 </div>
 </div>
-</section><section id="bibliografia" class="level2 unnumbered unlisted"><h2 class="unnumbered unlisted anchored" data-anchor-id="bibliografia">Bibliografia</h2>
 
 
 </section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
@@ -1877,8 +1701,8 @@ loaded via a namespace (and not attached):
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../chapters/R/06_ggplot2.html" class="pagination-link" aria-label="Visualizzare i dati con `ggplot2`">
-        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Visualizzare i dati con <code>ggplot2</code></span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../chapters/R/06_ggplot2.html" class="pagination-link" aria-label="Rendere visibili i dati con `ggplot2`">
+        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Rendere visibili i dati con <code>ggplot2</code></span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>EDA – Analisi esplorativa dei dati in psicologia</title>
+<title>Statistica descrittiva ed EDA – Analisi esplorativa dei dati in psicologia</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -107,8 +107,37 @@ cookieconsent.run({
   
 <style>html{ scroll-behavior: smooth; }</style>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<meta property="og:title" content="EDA – Analisi esplorativa dei dati in psicologia">
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<meta property="og:title" content="Statistica descrittiva ed EDA – Analisi esplorativa dei dati in psicologia">
 <meta property="og:description" content="">
 <meta property="og:site_name" content="Analisi esplorativa dei dati in psicologia">
 <link rel="canonical" href="https://ccaudek.github.io/utet-eda/chapters/eda/introduction_eda.html">
@@ -294,7 +323,7 @@ cookieconsent.run({
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">Statistica descrittiva ed EDA</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Ricerca" onclick="window.quartoOpenSearch();">
@@ -354,19 +383,19 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/03_design.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Disegno di ricerca: quali conclusioni sono giustificate dai dati?</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Disegno della ricerca: quali conclusioni sono giustificate dai dati?</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/04_measurement.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">La misurazione in psicologia</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Misurare i costrutti psicologici</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/05_cognitive_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dalla descrizione alla spiegazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dalla descrizione alla spiegazione: modelli e processi psicologici</span></span></a>
   </div>
 </li>
       </ul>
@@ -383,13 +412,13 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/01_r_syntax.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sintassi minima per leggere codice R</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Pensare in operazioni: la sintassi essenziale di R</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/02_environment.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Ambiente di lavoro e progetti R</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Un ambiente di lavoro riproducibile</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -401,25 +430,25 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/05_dplyr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Trasformare i dati con <code>dplyr</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Trasformare tabelle con <code>dplyr</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/06_ggplot2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Visualizzare i dati con <code>ggplot2</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Rendere visibili i dati con <code>ggplot2</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/07_quarto.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quarto</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quarto: rendere esplicito il percorso dell’analisi</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/08_r_packages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Pacchetti</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Pacchetti: scegliere e dichiarare gli strumenti</span></span></a>
   </div>
 </li>
       </ul>
@@ -427,7 +456,7 @@ cookieconsent.run({
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../chapters/eda/introduction_eda.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">EDA</span></a>
+ <span class="menu-text">Statistica descrittiva ed EDA</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -436,13 +465,13 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/01_project_structure.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Organizzare un progetto di analisi dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Preparare l’analisi esplorativa</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/02_data_cleaning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulizia dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulire i dati senza nascondere le decisioni</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -454,37 +483,37 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/05_data_visualization_principles.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Principi della visualizzazione dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Visualizzare senza deformare</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/06_loc_scale.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Indicatori di tendenza centrale e variabilità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Distribuzione, posizione e variabilità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/07_introduction_normal_distribution.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Introduzione alla distribuzione normale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">La normale come modello di riferimento</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/08_correlation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Relazioni tra variabili</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Esplorare relazioni tra due variabili</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/09_causality_intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Dalla correlazione alla causalità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Dall’associazione alla domanda causale</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/11_outlier.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Valori inattesi e outlier</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Osservazioni inattese e outlier</span></span></a>
   </div>
 </li>
       </ul>
@@ -516,12 +545,18 @@ cookieconsent.run({
     <h2 id="toc-title">Sommario</h2>
    
   <ul class="collapse">
-  <li><a href="#lanalisi-esplorativa-dei-dati-eda" id="toc-lanalisi-esplorativa-dei-dati-eda" class="nav-link active" data-scroll-target="#lanalisi-esplorativa-dei-dati-eda">L’analisi esplorativa dei dati (EDA)</a>
-  <ul class="collapse">
-  <li><a href="#leda-come-controllo-preliminare" id="toc-leda-come-controllo-preliminare" class="nav-link" data-scroll-target="#leda-come-controllo-preliminare">L’EDA come controllo preliminare</a></li>
-  <li><a href="#cosa-troverai-in-questa-sezione" id="toc-cosa-troverai-in-questa-sezione" class="nav-link" data-scroll-target="#cosa-troverai-in-questa-sezione">Cosa troverai in questa sezione</a></li>
-  <li><a href="#collegamenti" id="toc-collegamenti" class="nav-link" data-scroll-target="#collegamenti">Collegamenti</a></li>
-  </ul></li>
+  <li><a href="#dai-dati-raccolti-ai-dati-comprensibili" id="toc-dai-dati-raccolti-ai-dati-comprensibili" class="nav-link active" data-scroll-target="#dai-dati-raccolti-ai-dati-comprensibili">Dai dati raccolti ai dati comprensibili</a></li>
+  <li><a href="#esplorare-non-significa-lasciare-che-i-dati-decidano" id="toc-esplorare-non-significa-lasciare-che-i-dati-decidano" class="nav-link" data-scroll-target="#esplorare-non-significa-lasciare-che-i-dati-decidano">Esplorare non significa lasciare che i dati decidano</a></li>
+  <li><a href="#la-distribuzione-come-idea-centrale" id="toc-la-distribuzione-come-idea-centrale" class="nav-link" data-scroll-target="#la-distribuzione-come-idea-centrale">La distribuzione come idea centrale</a></li>
+  <li><a href="#descrivere-è-già-una-scelta" id="toc-descrivere-è-già-una-scelta" class="nav-link" data-scroll-target="#descrivere-è-già-una-scelta">Descrivere è già una scelta</a></li>
+  <li><a href="#dalla-singola-variabile-alla-distribuzione-congiunta" id="toc-dalla-singola-variabile-alla-distribuzione-congiunta" class="nav-link" data-scroll-target="#dalla-singola-variabile-alla-distribuzione-congiunta">Dalla singola variabile alla distribuzione congiunta</a></li>
+  <li><a href="#il-confine-con-la-causalità" id="toc-il-confine-con-la-causalità" class="nav-link" data-scroll-target="#il-confine-con-la-causalità">Il confine con la causalità</a></li>
+  <li><a href="#pulire-senza-rendere-invisibili-le-decisioni" id="toc-pulire-senza-rendere-invisibili-le-decisioni" class="nav-link" data-scroll-target="#pulire-senza-rendere-invisibili-le-decisioni">Pulire senza rendere invisibili le decisioni</a></li>
+  <li><a href="#un-richiamo-limitato-ai-dati-mancanti" id="toc-un-richiamo-limitato-ai-dati-mancanti" class="nav-link" data-scroll-target="#un-richiamo-limitato-ai-dati-mancanti">Un richiamo limitato ai dati mancanti</a></li>
+  <li><a href="#eda-modelli-e-inferenza" id="toc-eda-modelli-e-inferenza" class="nav-link" data-scroll-target="#eda-modelli-e-inferenza">EDA, modelli e inferenza</a></li>
+  <li><a href="#il-ruolo-di-r-e-dellai" id="toc-il-ruolo-di-r-e-dellai" class="nav-link" data-scroll-target="#il-ruolo-di-r-e-dellai">Il ruolo di R e dell’AI</a></li>
+  <li><a href="#mappa-della-parte" id="toc-mappa-della-parte" class="nav-link" data-scroll-target="#mappa-della-parte">Mappa della Parte</a></li>
+  <li><a href="#che-cosa-dovrebbe-rimanere" id="toc-che-cosa-dovrebbe-rimanere" class="nav-link" data-scroll-target="#che-cosa-dovrebbe-rimanere">Che cosa dovrebbe rimanere</a></li>
   </ul>
 <div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/eda/introduction_eda.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
     </div>
@@ -531,7 +566,7 @@ cookieconsent.run({
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">EDA</h1>
+<h1 class="title">Statistica descrittiva ed EDA</h1>
 </div>
 
 
@@ -548,37 +583,206 @@ cookieconsent.run({
 </header>
 
 
-<p><em>Guardare i dati prima di modellarli.</em></p>
-<section id="lanalisi-esplorativa-dei-dati-eda" class="level1">
-<h1>L’analisi esplorativa dei dati (EDA)</h1>
-<p>L’analisi esplorativa dei dati (EDA, dall’inglese <em>Exploratory Data Analysis</em>) è il processo di esplorazione e familiarizzazione con un dataset prima di intraprendere qualsiasi inferenza formale. Non si riduce alla semplice creazione di grafici, ma costituisce un <strong>dialogo critico con l’evidenza empirica</strong>: che cosa prevede la teoria? Che cosa mostrano effettivamente i dati? Le discrepanze osservate sono errori di misura, anomalie fortuite, o indicano piuttosto che il nostro modello teorico preliminare è incompleto o errato?</p>
-<p>John Tukey, che formalizzò questo approccio negli anni ’70, sottolineava l’importanza di <strong>lasciare che siano i dati a parlare</strong> prima di forzarli in strutture teoriche precostituite. È proprio durante l’esplorazione che possono emergere pattern inaspettati, relazioni non lineari ed errori sistematici: tutti quegli elementi che un’analisi puramente confermativa rischierebbe di trascurare o di non cogliere affatto.</p>
-<section id="leda-come-controllo-preliminare" class="level2">
-<h2 class="anchored" data-anchor-id="leda-come-controllo-preliminare">L’EDA come controllo preliminare</h2>
-<p>L’esplorazione dei dati non sostituisce l’inferenza, ma la prepara. Prima di stimare un modello, è fondamentale interrogare i dati: la relazione tra le variabili ha una forma lineare o presenta curvature? Ci sono osservazioni anomale che potrebbero alterare le stime? Le distribuzioni sono compatibili con le assunzioni di base del modello? Nell’approccio bayesiano, in cui è necessario specificare le distribuzioni a priori, l’EDA fornisce un’evidenza empirica fondamentale per valutare se le scelte iniziali siano plausibili.</p>
-<p>In questo senso, l’EDA rappresenta una forma intuitiva di <em>model checking</em>, un’anticipazione della diagnostica formale che, come avviene nel <em>posterior predictive checking</em> bayesiano, confronta sistematicamente i dati osservati con quelli simulati dal modello, per verificarne l’adeguatezza.</p>
+<p><em>Comprendere che cosa mostrano i dati prima di chiedere loro di sostenere una conclusione.</em></p>
+<div class="callout callout-style-default callout-note callout-titled" title="In sintesi">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>In sintesi
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Questa Parte introduce la statistica descrittiva e l’analisi esplorativa dei dati come un unico percorso. L’obiettivo non è produrre automaticamente tabelle e grafici, ma comprendere che cosa rappresenti il dataset analitico, come siano distribuiti i valori, quali relazioni siano visibili e quanto le conclusioni dipendano dalle decisioni prese durante la preparazione.</p>
+<p>L’EDA non sostituisce la teoria, il disegno o l’inferenza. Li mette alla prova sul terreno concreto dei dati.</p>
+</div>
+</div>
+<section id="dai-dati-raccolti-ai-dati-comprensibili" class="level2">
+<h2 class="anchored" data-anchor-id="dai-dati-raccolti-ai-dati-comprensibili">Dai dati raccolti ai dati comprensibili</h2>
+<p>Una raccolta di dati non diventa automaticamente evidenza scientifica quando viene importata in R.</p>
+<p>Il file può contenere codici speciali, risposte duplicate, valori mancanti, errori di registrazione e variabili costruite secondo regole non ancora documentate. Può inoltre mescolare persone, prove o momenti di misura che non appartengono alla stessa unità di analisi.</p>
+<p>Prima di calcolare una media o costruire un grafico dobbiamo quindi stabilire che cosa rappresenti una riga, quali osservazioni appartengano al campione analitico e come siano state ottenute le variabili centrali.</p>
+<p>Questo passaggio non è una preparazione puramente tecnica. Determina quale popolazione venga descritta e quale significato possano avere le statistiche successive.</p>
+<p>Il percorso della Parte può essere rappresentato così:</p>
+<p><span class="math display">\[
+\text{domanda}
+\longrightarrow
+\text{dataset analitico}
+\longrightarrow
+\text{distribuzioni}
+\longrightarrow
+\text{relazioni}
+\longrightarrow
+\text{interpretazione}.
+\]</span></p>
+<p>Ogni freccia contiene decisioni che devono rimanere visibili.</p>
 </section>
-<section id="cosa-troverai-in-questa-sezione" class="level2">
-<h2 class="anchored" data-anchor-id="cosa-troverai-in-questa-sezione">Cosa troverai in questa sezione</h2>
-<p>I capitoli che seguono sviluppano un percorso che parte dalla logica organizzativa di un progetto di analisi dati per arrivare ai concetti fondamentali che preparano l’inferenza statistica. Nello specifico, saranno trattati i seguenti argomenti:</p>
-<ul>
-<li><strong>struttura di un progetto di analisi:</strong> organizzazione dei file, documentazione e flusso di lavoro riproducibile;</li>
-<li><strong>pulizia e preparazione dei dati:</strong> gestione di valori mancanti, conversione di formati e correzione di errori sistematici;</li>
-<li><strong>variabili qualitative e quantitative:</strong> analisi delle frequenze, esplorazione delle distribuzioni e scelta di visualizzazioni appropriate;</li>
-<li><strong>indicatori di sintesi statistica:</strong> misurazioni di tendenza centrale (media, mediana) e di dispersione (varianza, deviazione standard), quantili e loro rappresentazione grafica;</li>
-<li><strong>la distribuzione normale:</strong> proprietà fondamentali, processo di standardizzazione e ambiti di applicabilità;</li>
-<li><strong>relazioni tra variabili:</strong> misura della correlazione, interpretazione degli scatterplot e limiti inferenziali;</li>
-<li><strong>causalità e associazione:</strong> il divario tra correlazione e causalità, e i requisiti metodologici per un’inferenza causale valida;</li>
-<li><strong>gestione di outlier e trasformazioni:</strong> identificazione di osservazioni influenti, criteri per la trasformazione delle variabili e relative implicazioni interpretative.</li>
-</ul>
+<section id="esplorare-non-significa-lasciare-che-i-dati-decidano" class="level2">
+<h2 class="anchored" data-anchor-id="esplorare-non-significa-lasciare-che-i-dati-decidano">Esplorare non significa lasciare che i dati decidano</h2>
+<p>L’espressione “lasciare parlare i dati” può essere utile per ricordare che i risultati inattesi non devono essere ignorati. Può però suggerire erroneamente che i dati possiedano un significato indipendente dalle domande, dalle misure e dal disegno.</p>
+<p>Un istogramma non spiega da solo perché una distribuzione sia asimmetrica. Un punto isolato non stabilisce se sia un errore. Una correlazione non sceglie la direzione causale. Ogni osservazione viene interpretata attraverso ciò che sappiamo del processo di raccolta.</p>
+<p>L’EDA è quindi un dialogo tra aspettative ed evidenza. La teoria e il disegno indicano che cosa dovremmo osservare; i dati mostrano se queste aspettative siano compatibili con ciò che è stato effettivamente raccolto.</p>
+<p>Quando emerge una discrepanza, le possibili risposte sono diverse. Potremmo avere trovato un errore, un limite della misura, una caratteristica rara della popolazione o un segnale che la domanda iniziale era troppo semplice. L’EDA non sceglie automaticamente tra queste spiegazioni. Le rende discutibili e controllabili.</p>
 </section>
-<section id="collegamenti" class="level2">
-<h2 class="anchored" data-anchor-id="collegamenti">Collegamenti</h2>
-<p>L’EDA mette in pratica ciò che le altre sezioni preparano. I principi discussi nei <em>Fondamenti</em> – dalla scelta delle scale di misura alla validità degli strumenti, fino al disegno dello studio – orientano e danno significato a ciò che è opportuno calcolare e visualizzare. Parallelamente, gli strumenti introdotti nella sezione <em>R</em> – dalle funzioni base ai pacchetti specializzati, dalla sintassi alla logica della programmazione – costituiscono il mezzo operativo attraverso cui l’esplorazione prende forma.</p>
-<p>Trascurare questa fase per procedere direttamente alla modellazione è un errore metodologico frequente. Come ammoniva John Tukey: “È meglio rispondere in modo approssimativo a una domanda giusta, piuttosto che rispondere in modo esatto a una domanda sbagliata”. L’EDA è precisamente il processo che ci aiuta a formulare, riformulare e comprendere <strong>qual è la domanda giusta da porre ai nostri dati</strong>.</p>
+<section id="la-distribuzione-come-idea-centrale" class="level2">
+<h2 class="anchored" data-anchor-id="la-distribuzione-come-idea-centrale">La distribuzione come idea centrale</h2>
+<p>Il concetto più importante della Parte è quello di <strong>distribuzione</strong>.</p>
+<p>Una distribuzione descrive quali valori compaiono e come le osservazioni si ripartiscono tra essi. Include la forma, la regione in cui i valori si concentrano, la loro dispersione, gli eventuali limiti della scala e le osservazioni lontane dalle altre.</p>
+<p>Media, mediana, deviazione standard e intervallo interquartile sono riassunti della distribuzione. Non la sostituiscono.</p>
+<p>Questa distinzione è essenziale perché la stessa media può descrivere dati molto differenti. Un gruppo può essere concentrato intorno al centro; un altro può contenere valori molto bassi e molto alti. Soltanto osservando anche la dispersione e la forma comprendiamo che cosa il centro rappresenti.</p>
+<p>La deviazione standard riceverà particolare attenzione. Non verrà trattata come un numero prodotto da una formula, ma come una misura della distanza dei valori dalla media. Comprendere questa idea prepara la standardizzazione, il confronto con il modello normale e gran parte della modellizzazione statistica successiva.</p>
+</section>
+<section id="descrivere-è-già-una-scelta" class="level2">
+<h2 class="anchored" data-anchor-id="descrivere-è-già-una-scelta">Descrivere è già una scelta</h2>
+<p>Una statistica descrittiva può sembrare neutrale. In realtà, la sua utilità dipende dalla variabile e dalla domanda.</p>
+<p>Per una categoria vogliamo sapere quali modalità compaiano e quanto siano frequenti. Per una variabile ordinale dobbiamo conservare l’ordine senza assumere automaticamente distanze uguali. Per una misura numerica osserviamo insieme forma, posizione e dispersione.</p>
+<p>Anche la scelta di un grafico seleziona un aspetto dei dati. Una barra rende visibile una frequenza; un istogramma mostra una distribuzione; uno scatterplot conserva l’accoppiamento tra due misure. Una figura delle sole medie può facilitare un confronto, ma nascondere la sovrapposizione e la variabilità individuale.</p>
+<p>La domanda da porre non è quindi:</p>
+<blockquote class="blockquote">
+<p>Qual è il grafico corretto per questa variabile?</p>
+</blockquote>
+<p>È piuttosto:</p>
+<blockquote class="blockquote">
+<p>Quale caratteristica voglio rendere visibile, e quale informazione rischio di nascondere?</p>
+</blockquote>
+</section>
+<section id="dalla-singola-variabile-alla-distribuzione-congiunta" class="level2">
+<h2 class="anchored" data-anchor-id="dalla-singola-variabile-alla-distribuzione-congiunta">Dalla singola variabile alla distribuzione congiunta</h2>
+<p>Il percorso comincia con una variabile alla volta. Questo permette di comprendere valori possibili, mancanti, concentrazioni, dispersione ed eventuali anomalie prima di introdurre relazioni più complesse.</p>
+<p>Quando passiamo a due variabili, l’oggetto cambia. La relazione dipende dalle coppie osservate nelle stesse unità di analisi. Uno scatterplot mostra questa distribuzione congiunta; la correlazione di Pearson ne riassume soltanto la componente lineare.</p>
+<p>Il coefficiente deve quindi venire dopo il grafico. Una relazione può essere curva, dipendere da un sottogruppo o essere dominata da pochi casi. Un valore di correlazione, da solo, non permette di ricostruire queste caratteristiche.</p>
+<p>La trattazione teorica di covarianza, correlazione e distribuzioni di probabilità appartiene al modulo <code>utet-prob</code>. In questa Parte quei concetti vengono usati per leggere dati reali e valutarne i limiti.</p>
+</section>
+<section id="il-confine-con-la-causalità" class="level2">
+<h2 class="anchored" data-anchor-id="il-confine-con-la-causalità">Il confine con la causalità</h2>
+<p>L’EDA può mostrare che due variabili cambiano insieme. Non può stabilire automaticamente che una produca il cambiamento dell’altra.</p>
+<p>Una domanda causale richiede di definire un intervento, un’alternativa, un esito, un intervallo temporale e una popolazione. Richiede inoltre un disegno o assunzioni che rendano identificabile il confronto.</p>
+<p>Per questo la causalità verrà richiamata soltanto come limite interpretativo. L’EDA può controllare la sequenza temporale, la composizione dei gruppi, le perdite e le incoerenze tra dati e disegno. Non può eliminare da sola il confondimento o scegliere automaticamente le variabili per un aggiustamento.</p>
+<p>Il percorso completo di analisi causale appartiene al Companion. Qui impariamo soprattutto a riconoscere quando una frase descrive un’associazione e quando sta formulando una conclusione più forte di quanto i dati permettano.</p>
+</section>
+<section id="pulire-senza-rendere-invisibili-le-decisioni" class="level2">
+<h2 class="anchored" data-anchor-id="pulire-senza-rendere-invisibili-le-decisioni">Pulire senza rendere invisibili le decisioni</h2>
+<p>I dati grezzi non sono immediatamente utilizzabili. Ignorare codici speciali, duplicazioni e valori impossibili può produrre risultati fortemente distorti.</p>
+<p>Non esiste però un algoritmo universale di pulizia. Un valore raro può essere un errore oppure una caratteristica autentica della popolazione. Una riga duplicata può derivare da un invio accidentale oppure rappresentare una misura ripetuta prevista dal disegno. Un’esclusione può migliorare la coerenza tecnica e contemporaneamente ridurre la rappresentatività del campione.</p>
+<p>La preparazione deve quindi seguire una sequenza argomentata:</p>
+<p><span class="math display">\[
+\text{discrepanza}
+\longrightarrow
+\text{verifica}
+\longrightarrow
+\text{decisione}
+\longrightarrow
+\text{controllo dell'effetto}.
+\]</span></p>
+<p>Lo stesso principio verrà applicato agli outlier. I criteri statistici possono segnalare osservazioni inattese, ma non stabiliscono quali casi eliminare. Quando più decisioni sono ragionevoli, confronteremo i risultati mediante analisi di sensibilità.</p>
+</section>
+<section id="un-richiamo-limitato-ai-dati-mancanti" class="level2">
+<h2 class="anchored" data-anchor-id="un-richiamo-limitato-ai-dati-mancanti">Un richiamo limitato ai dati mancanti</h2>
+<p>I dati mancanti costituiscono un tema ampio, collegato al processo di raccolta, alla selezione e ai metodi di stima. Una trattazione adeguata supererebbe gli obiettivi introduttivi di questo modulo.</p>
+<p>La Parte manterrà quindi soltanto alcuni principi essenziali. I codici speciali devono essere riconosciuti e trasformati in valori mancanti quando il codebook lo richiede. Ogni tabella e grafico deve rendere visibile quante osservazioni contribuiscano al risultato. L’esclusione dei casi incompleti non deve essere trattata come un’operazione neutrale.</p>
+<p>Quando la mancata osservazione è consistente o differisce tra gruppi, sarà necessario ricorrere a una trattazione più avanzata.</p>
+</section>
+<section id="eda-modelli-e-inferenza" class="level2">
+<h2 class="anchored" data-anchor-id="eda-modelli-e-inferenza">EDA, modelli e inferenza</h2>
+<p>L’esplorazione precede la modellizzazione, ma non serve soltanto a controllare una lista di assunzioni.</p>
+<p>Permette di comprendere quali caratteristiche un modello dovrà rappresentare: simmetria o asimmetria, limiti della scala, code, sottogruppi, relazioni lineari o curve, variabilità costante o differente tra regioni dei dati.</p>
+<p>La distribuzione normale verrà richiamata con questa funzione. Non verrà ripetuta come capitolo di probabilità. Sarà usata come modello di riferimento per comprendere meglio la deviazione standard e confrontare una forma teorica con quella osservata.</p>
+<p>Nel workflow bayesiano, questa logica verrà sviluppata attraverso i controlli predittivi: il modello genera dati simulati e il ricercatore li confronta con quelli osservati. L’EDA costituisce una preparazione a questo modo di ragionare, ma non deve essere confusa con il controllo formale di un modello già specificato.</p>
+</section>
+<section id="il-ruolo-di-r-e-dellai" class="level2">
+<h2 class="anchored" data-anchor-id="il-ruolo-di-r-e-dellai">Il ruolo di R e dell’AI</h2>
+<p>R rende visibile la sequenza che conduce dal dataset analitico ai risultati. In questa Parte verrà usato per calcolare riassunti, costruire grafici, identificare discrepanze e confrontare decisioni alternative.</p>
+<p>La sintassi rimarrà in secondo piano. Ogni operazione dovrà poter essere descritta come:</p>
+<p><span class="math display">\[
+\text{domanda}
+\longrightarrow
+\text{input}
+\longrightarrow
+\text{rappresentazione o riassunto}
+\longrightarrow
+\text{controllo}
+\longrightarrow
+\text{interpretazione}.
+\]</span></p>
+<p>L’AI può generare il codice e suggerire controlli. Non conosce però automaticamente il significato delle variabili, la popolazione di interesse, le regole di scoring o la ragione per cui un’osservazione dovrebbe essere esclusa.</p>
+<p>Le richieste rivolte all’assistente dovranno quindi specificare unità di analisi, valori possibili, trattamento dei mancanti, risultato desiderato e controlli da effettuare. Quando una risposta introduce una soglia, un filtro o una ricodifica, dovremo chiederne la giustificazione e misurarne l’effetto.</p>
+</section>
+<section id="mappa-della-parte" class="level2">
+<h2 class="anchored" data-anchor-id="mappa-della-parte">Mappa della Parte</h2>
+<p>Il percorso segue la progressiva costruzione di una descrizione controllabile dei dati.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Capitolo</th>
+<th>Funzione nel percorso</th>
+<th>Domanda guida</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="01_project_structure.html" class="quarto-xref"><span>13&nbsp; Preparare l’analisi esplorativa</span></a></td>
+<td>Definire il dataset analitico</td>
+<td>Quale tabella risponde alla domanda?</td>
+</tr>
+<tr class="even">
+<td><a href="02_data_cleaning.html" class="quarto-xref"><span>14&nbsp; Pulire i dati senza nascondere le decisioni</span></a></td>
+<td>Rendere visibili e giustificare le trasformazioni</td>
+<td>Quali discrepanze richiedono un intervento?</td>
+</tr>
+<tr class="odd">
+<td><a href="03_exploring_univariate_data.html" class="quarto-xref"><span>15&nbsp; Esplorare una variabile alla volta</span></a></td>
+<td>Esplorare una variabile alla volta</td>
+<td>Come sono ripartiti i valori?</td>
+</tr>
+<tr class="even">
+<td><a href="05_data_visualization_principles.html" class="quarto-xref"><span>16&nbsp; Visualizzare senza deformare</span></a></td>
+<td>Valutare la fedeltà delle rappresentazioni</td>
+<td>Che cosa rende visibile il grafico e che cosa nasconde?</td>
+</tr>
+<tr class="odd">
+<td><a href="06_loc_scale.html" class="quarto-xref"><span>17&nbsp; Distribuzione, posizione e variabilità</span></a></td>
+<td>Comprendere distribuzione, centro e dispersione</td>
+<td>Dove stanno i valori e quanto sono distanti?</td>
+</tr>
+<tr class="even">
+<td><a href="07_introduction_normal_distribution.html" class="quarto-xref"><span>18&nbsp; La normale come modello di riferimento</span></a></td>
+<td>Confrontare i dati con un modello di forma</td>
+<td>In quale modo la distribuzione differisce dalla normale?</td>
+</tr>
+<tr class="odd">
+<td><a href="08_correlation.html" class="quarto-xref"><span>19&nbsp; Esplorare relazioni tra due variabili</span></a></td>
+<td>Esplorare la distribuzione congiunta</td>
+<td>Come variano insieme due misure?</td>
+</tr>
+<tr class="even">
+<td><a href="09_causality_intro.html" class="quarto-xref"><span>20&nbsp; Dall’associazione alla domanda causale</span></a></td>
+<td>Stabilire il limite interpretativo dell’EDA</td>
+<td>Quando un’associazione non basta per parlare di effetto?</td>
+</tr>
+<tr class="odd">
+<td><a href="11_outlier.html" class="quarto-xref"><span>21&nbsp; Osservazioni inattese e outlier</span></a></td>
+<td>Diagnosticare osservazioni inattese</td>
+<td>Perché un caso appare anomalo e quanto influenza il risultato?</td>
+</tr>
+</tbody>
+</table>
+<p>La tabella non rappresenta una checklist rigida. L’EDA è iterativa. Un grafico può farci tornare alla pulizia; una correlazione può rivelare un sottogruppo; un outlier può richiedere di consultare nuovamente il protocollo o la misura.</p>
+</section>
+<section id="che-cosa-dovrebbe-rimanere" class="level2">
+<h2 class="anchored" data-anchor-id="che-cosa-dovrebbe-rimanere">Che cosa dovrebbe rimanere</h2>
+<p>Al termine della Parte, lo studente non dovrebbe ricordare soltanto formule e nomi di grafici.</p>
+<p>Dovrebbe essere in grado di guardare una variabile e chiedersi quali valori siano possibili, quali siano osservati e quali manchino. Dovrebbe sapere che una media senza dispersione descrive poco, che una deviazione standard acquista significato soltanto nell’unità e nella forma della variabile, e che una correlazione senza scatterplot può nascondere la relazione che pretende di riassumere.</p>
+<p>Dovrebbe inoltre riconoscere che pulizia, esclusioni e gestione degli outlier non sono procedure automatiche. Sono decisioni che modificano il dataset e devono essere motivate, documentate e sottoposte a controlli di sensibilità.</p>
+<p>Soprattutto, dovrebbe riuscire a distinguere ciò che i dati mostrano direttamente da ciò che richiede un modello, un disegno o un’ipotesi causale ulteriore.</p>
+<p>Questa distinzione prepara il passaggio alla modellizzazione statistica senza trasformare l’EDA in un rituale preliminare. Guardare i dati significa comprendere quale evidenza possediamo, quale abbiamo perso e quali domande possiamo ragionevolmente porre.</p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -1004,13 +1208,13 @@ cookieconsent.run({
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../chapters/R/08_r_packages.html" class="pagination-link" aria-label="Pacchetti">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Pacchetti</span></span>
+      <a href="../../chapters/R/08_r_packages.html" class="pagination-link" aria-label="Pacchetti: scegliere e dichiarare gli strumenti">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Pacchetti: scegliere e dichiarare gli strumenti</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../chapters/eda/01_project_structure.html" class="pagination-link" aria-label="Organizzare un progetto di analisi dei dati">
-        <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Organizzare un progetto di analisi dei dati</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../chapters/eda/01_project_structure.html" class="pagination-link" aria-label="Preparare l'analisi esplorativa">
+        <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Preparare l’analisi esplorativa</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -107,6 +107,35 @@ cookieconsent.run({
   
 <style>html{ scroll-behavior: smooth; }</style>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <meta property="og:title" content="Fondamenti – Analisi esplorativa dei dati in psicologia">
 <meta property="og:description" content="">
@@ -354,19 +383,19 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/03_design.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Disegno di ricerca: quali conclusioni sono giustificate dai dati?</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Disegno della ricerca: quali conclusioni sono giustificate dai dati?</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/04_measurement.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">La misurazione in psicologia</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Misurare i costrutti psicologici</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/key_notions/05_cognitive_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dalla descrizione alla spiegazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dalla descrizione alla spiegazione: modelli e processi psicologici</span></span></a>
   </div>
 </li>
       </ul>
@@ -383,13 +412,13 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/01_r_syntax.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sintassi minima per leggere codice R</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Pensare in operazioni: la sintassi essenziale di R</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/02_environment.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Ambiente di lavoro e progetti R</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Un ambiente di lavoro riproducibile</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -401,25 +430,25 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/05_dplyr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Trasformare i dati con <code>dplyr</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Trasformare tabelle con <code>dplyr</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/06_ggplot2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Visualizzare i dati con <code>ggplot2</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Rendere visibili i dati con <code>ggplot2</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/07_quarto.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quarto</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quarto: rendere esplicito il percorso dell’analisi</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/R/08_r_packages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Pacchetti</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Pacchetti: scegliere e dichiarare gli strumenti</span></span></a>
   </div>
 </li>
       </ul>
@@ -427,7 +456,7 @@ cookieconsent.run({
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../chapters/eda/introduction_eda.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">EDA</span></a>
+ <span class="menu-text">Statistica descrittiva ed EDA</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -436,13 +465,13 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/01_project_structure.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Organizzare un progetto di analisi dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Preparare l’analisi esplorativa</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/02_data_cleaning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulizia dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pulire i dati senza nascondere le decisioni</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -454,37 +483,37 @@ cookieconsent.run({
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/05_data_visualization_principles.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Principi della visualizzazione dei dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Visualizzare senza deformare</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/06_loc_scale.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Indicatori di tendenza centrale e variabilità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Distribuzione, posizione e variabilità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/07_introduction_normal_distribution.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Introduzione alla distribuzione normale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">La normale come modello di riferimento</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/08_correlation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Relazioni tra variabili</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Esplorare relazioni tra due variabili</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/09_causality_intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Dalla correlazione alla causalità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Dall’associazione alla domanda causale</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/11_outlier.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Valori inattesi e outlier</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Osservazioni inattese e outlier</span></span></a>
   </div>
 </li>
       </ul>
@@ -516,12 +545,13 @@ cookieconsent.run({
     <h2 id="toc-title">Sommario</h2>
    
   <ul class="collapse">
-  <li><a href="#perché-questi-fondamenti-vengono-prima-di-r-e-delleda" id="toc-perché-questi-fondamenti-vengono-prima-di-r-e-delleda" class="nav-link active" data-scroll-target="#perché-questi-fondamenti-vengono-prima-di-r-e-delleda">Perché questi fondamenti vengono prima di R e dell’EDA</a></li>
-  <li><a href="#tre-domande-guida" id="toc-tre-domande-guida" class="nav-link" data-scroll-target="#tre-domande-guida">Tre domande guida</a></li>
-  <li><a href="#mappa-della-sezione" id="toc-mappa-della-sezione" class="nav-link" data-scroll-target="#mappa-della-sezione">Mappa della sezione</a></li>
-  <li><a href="#un-esempio-ricorrente" id="toc-un-esempio-ricorrente" class="nav-link" data-scroll-target="#un-esempio-ricorrente">Un esempio ricorrente</a></li>
-  <li><a href="#collegamenti-con-il-resto-del-modulo" id="toc-collegamenti-con-il-resto-del-modulo" class="nav-link" data-scroll-target="#collegamenti-con-il-resto-del-modulo">Collegamenti con il resto del modulo</a></li>
-  <li><a href="#cosa-portare-con-sé" id="toc-cosa-portare-con-sé" class="nav-link" data-scroll-target="#cosa-portare-con-sé">Cosa portare con sé</a></li>
+  <li><a href="#pensare-prima-di-calcolare" id="toc-pensare-prima-di-calcolare" class="nav-link active" data-scroll-target="#pensare-prima-di-calcolare">Pensare prima di calcolare</a></li>
+  <li><a href="#dai-fenomeni-psicologici-ai-dati" id="toc-dai-fenomeni-psicologici-ai-dati" class="nav-link" data-scroll-target="#dai-fenomeni-psicologici-ai-dati">Dai fenomeni psicologici ai dati</a></li>
+  <li><a href="#quattro-passaggi-concettuali" id="toc-quattro-passaggi-concettuali" class="nav-link" data-scroll-target="#quattro-passaggi-concettuali">Quattro passaggi concettuali</a></li>
+  <li><a href="#un-esempio-che-accompagna-la-parte" id="toc-un-esempio-che-accompagna-la-parte" class="nav-link" data-scroll-target="#un-esempio-che-accompagna-la-parte">Un esempio che accompagna la Parte</a></li>
+  <li><a href="#il-rapporto-con-r-e-con-leda" id="toc-il-rapporto-con-r-e-con-leda" class="nav-link" data-scroll-target="#il-rapporto-con-r-e-con-leda">Il rapporto con R e con l’EDA</a></li>
+  <li><a href="#il-rapporto-con-il-manuale-e-il-companion" id="toc-il-rapporto-con-il-manuale-e-il-companion" class="nav-link" data-scroll-target="#il-rapporto-con-il-manuale-e-il-companion">Il rapporto con il manuale e il Companion</a></li>
+  <li><a href="#come-leggere-questa-parte" id="toc-come-leggere-questa-parte" class="nav-link" data-scroll-target="#come-leggere-questa-parte">Come leggere questa Parte</a></li>
   </ul>
 <div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/ccaudek/utet-eda/blob/main/chapters/key_notions/introduction_key_notions.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/ccaudek/utet-eda/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
     </div>
@@ -549,51 +579,50 @@ cookieconsent.run({
 
 
 <p><em>Pensare prima di calcolare.</em></p>
-<p>Questa sezione introduce le domande che precedono qualsiasi analisi dei dati. Prima di aprire R, costruire un grafico o stimare un modello, dobbiamo chiederci cosa stiamo osservando, da dove provengono i dati e quali conclusioni possiamo trarre.</p>
-<p>Nel linguaggio comune, i dati sono spesso considerati semplicemente come numeri disponibili in una tabella. Nella ricerca psicologica, però, i dati non sono numeri neutri. Sono il risultato di una serie di scelte: una domanda di ricerca, un disegno di studio, uno strumento di misurazione, una procedura di raccolta, criteri di inclusione ed esclusione, decisioni di codifica e, infine, procedure di analisi. Ogni passaggio apre possibilità, ma introduce anche dei limiti.</p>
-<p>Per esempio, se vogliamo studiare la relazione tra lo stress accademico e la qualità del sonno negli studenti universitari, non basta raccogliere due punteggi e calcolare una correlazione. Dobbiamo prima chiarire cosa intendiamo per “stress”, come lo misuriamo, a quale popolazione vogliamo generalizzare, come sono stati scelti gli studenti, se il disegno permette solo di descrivere un’associazione o anche di sostenere un’interpretazione causale e quali fonti di incertezza restano presenti nei dati.</p>
-<div class="callout callout-style-simple callout-note no-icon">
-<div class="callout-body d-flex">
+<div class="callout callout-style-default callout-note callout-titled" title="In sintesi">
+<div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
+<i class="callout-icon"></i>
 </div>
-<div class="callout-body-container">
-<p>Questa parte del modulo ha quindi una funzione preparatoria: insegna a leggere i dati prima di analizzarli. L’obiettivo non è anticipare le tecniche statistiche, ma costruire il vocabolario concettuale necessario per poterle utilizzare in modo sensato.</p>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>In sintesi
 </div>
 </div>
+<div class="callout-body-container callout-body">
+<p>Questa parte introduce le domande che precedono qualsiasi analisi dei dati. Prima di usare R, costruire un grafico o stimare un modello, occorre capire quale fenomeno si vuole studiare, come sono state prodotte le osservazioni, che cosa rappresentano le variabili e quali conclusioni il disegno consente di sostenere.</p>
+<p>L’obiettivo non è anticipare le tecniche statistiche, ma costruire il quadro concettuale necessario per usarle in modo scientificamente sensato.</p>
 </div>
-<section id="perché-questi-fondamenti-vengono-prima-di-r-e-delleda" class="level2">
-<h2 class="anchored" data-anchor-id="perché-questi-fondamenti-vengono-prima-di-r-e-delleda">Perché questi fondamenti vengono prima di R e dell’EDA</h2>
-<p>La sezione successiva del modulo introdurrà il linguaggio R, mentre la parte dedicata all’EDA mostrerà come esplorare distribuzioni, relazioni, anomalie e modelli nei dati. Tuttavia, nessuna procedura operativa può sostituire una comprensione preliminare del significato dei dati.</p>
-<p>Un grafico può essere ben costruito, ma rappresentare una misura poco valida. Una media può essere calcolata correttamente, ma riferirsi a una variabile per cui la media è poco informativa. Una correlazione può essere numericamente precisa, ma interpretata in modo improprio come prova causale. Un modello statistico può essere stimato senza errori di calcolo, ma rispondere a una domanda formulata in modo errato.</p>
-<p>Per questo motivo, la prima parte del percorso è dedicata al passaggio dai fenomeni psicologici ai dati analizzabili. Il filo conduttore è il seguente:</p>
-<blockquote class="blockquote">
-<p><strong>Fenomeno psicologico → domanda di ricerca → disegno → misurazione → dati → esplorazione → modello → inferenza.</strong></p>
-</blockquote>
-<p>L’inferenza bayesiana, trattata nel manuale principale, fornisce un metodo coerente per ragionare sull’incertezza, aggiornare le credenze alla luce dei dati e valutare i modelli alternativi. Tuttavia, anche l’inferenza più raffinata dipende dalla qualità delle domande, delle misure e dei disegni che hanno generato i dati. Questa sezione serve a rendere esplicite tali condizioni.</p>
+</div>
+<section id="pensare-prima-di-calcolare" class="level2">
+<h2 class="anchored" data-anchor-id="pensare-prima-di-calcolare">Pensare prima di calcolare</h2>
+<p>Nel linguaggio quotidiano, i dati vengono spesso immaginati come numeri già disponibili in una tabella. Nella ricerca psicologica, invece, un dataset è il punto di arrivo di molte decisioni. Prima che compaia una singola riga, qualcuno ha formulato una domanda, definito una popolazione, scelto un disegno, selezionato partecipanti o unità di osservazione, stabilito come misurare i fenomeni e deciso come codificare le risposte.</p>
+<p>Queste decisioni non costituiscono una premessa esterna all’analisi. Determinano il significato dei dati e delimitano ciò che possiamo apprendere da essi.</p>
+<p>Supponiamo di voler studiare la relazione tra stress accademico e qualità del sonno negli studenti universitari. Non basta raccogliere due punteggi e calcolare una correlazione. Dobbiamo chiarire che cosa intendiamo per stress, come viene misurato il sonno, quali studenti entrano nello studio, in quale periodo vengono osservati e quale popolazione dovrebbe essere rappresentata. Dobbiamo inoltre distinguere una semplice associazione dalla conclusione più forte secondo cui lo stress produrrebbe un cambiamento nel sonno.</p>
+<p>Un calcolo può essere eseguito correttamente e rispondere comunque a una domanda mal definita. Un grafico può essere elegante e rappresentare una misura poco valida. Una stima può essere molto precisa e riferirsi a un campione selezionato. Un modello può convergere senza rappresentare adeguatamente il processo psicologico che gli viene attribuito.</p>
+<p>Per questo motivo, il percorso comincia dai fondamenti e non dalla sintassi di R.</p>
 </section>
-<section id="tre-domande-guida" class="level2">
-<h2 class="anchored" data-anchor-id="tre-domande-guida">Tre domande guida</h2>
-<p>I capitoli di questa parte ruotano attorno a tre domande fondamentali.</p>
-<section id="che-cosa-stiamo-cercando-di-capire" class="level3">
-<h3 class="anchored" data-anchor-id="che-cosa-stiamo-cercando-di-capire">Che cosa stiamo cercando di capire?</h3>
-<p>Ogni analisi nasce da una domanda. In psicologia, queste domande riguardano spesso processi non direttamente osservabili, come l’attenzione, la memoria, l’ansia, la motivazione, l’impulsività, la regolazione emotiva, l’apprendimento e il benessere. Questi fenomeni devono essere tradotti in ipotesi, variabili e procedure osservabili.</p>
-<p>La prima difficoltà è dunque di natura teorica: dobbiamo distinguere il fenomeno psicologico che vogliamo comprendere dagli indicatori empirici che possiamo effettivamente raccogliere. Questa distinzione sarà essenziale per tutto il percorso, perché i dati non parlano da sé, ma acquistano significato all’interno di un quadro teorico.</p>
+<section id="dai-fenomeni-psicologici-ai-dati" class="level2">
+<h2 class="anchored" data-anchor-id="dai-fenomeni-psicologici-ai-dati">Dai fenomeni psicologici ai dati</h2>
+<p>Molti oggetti della psicologia non sono direttamente osservabili. Attenzione, ansia, motivazione, memoria, impulsività e benessere sono costrutti teorici. Entrano nel dataset attraverso risposte a questionari, comportamenti, tempi di reazione, giudizi di osservatori, prestazioni e segnali fisiologici.</p>
+<p>Il passaggio dal fenomeno al dato può essere rappresentato come una sequenza:</p>
+<p><span class="math display">\[
+\text{fenomeno}
+\longrightarrow
+\text{domanda}
+\longrightarrow
+\text{disegno}
+\longrightarrow
+\text{misurazione}
+\longrightarrow
+\text{dati}.
+\]</span></p>
+<p>Ogni passaggio restringe il significato di ciò che osserviamo. La domanda seleziona un aspetto del fenomeno. Il disegno stabilisce quali confronti siano possibili. La misurazione traduce il costrutto in indicatori. Il dataset conserva il risultato di queste operazioni, ma non sempre ne conserva automaticamente la storia.</p>
+<p>Quando riceviamo un file già pronto, è facile dimenticare questo percorso e trattare le colonne come entità naturali. Una variabile chiamata <code>stress</code> sembra rappresentare direttamente lo stress; una colonna numerica sembra autorizzare il calcolo della media; più righe sembrano indicare più informazioni indipendenti. Queste conclusioni possono essere sbagliate.</p>
+<p>La prima competenza nell’analisi dei dati consiste quindi nel ricostruire che cosa rappresentano righe, colonne e valori.</p>
 </section>
-<section id="che-cosa-osserviamo-davvero" class="level3">
-<h3 class="anchored" data-anchor-id="che-cosa-osserviamo-davvero">Che cosa osserviamo davvero?</h3>
-<p>Molti costrutti psicologici non sono osservabili direttamente. Non misuriamo l’ansia in sé, ma le risposte a un questionario, i comportamenti, i tempi di reazione, le valutazioni cliniche, gli indicatori fisiologici o altre manifestazioni parziali del costrutto. Ogni indicatore contiene informazioni, ma anche errori.</p>
-<p>Per interpretare un dato, quindi, dobbiamo sapere che cosa rappresenta, come è stato prodotto e quali sono i suoi limiti. La misurazione non è un dettaglio tecnico, ma il punto in cui una teoria psicologica entra in contatto con l’osservazione empirica.</p>
-</section>
-<section id="che-cosa-possiamo-concludere" class="level3">
-<h3 class="anchored" data-anchor-id="che-cosa-possiamo-concludere">Che cosa possiamo concludere?</h3>
-<p>Non tutti i dati permettono di trarre le stesse conclusioni. Alcuni dati sono utili per descrivere un gruppo specifico, altri permettono una generalizzazione più ampia e altri ancora, se raccolti con un disegno adeguato, possono sostenere ipotesi causali.</p>
-<p>Il tipo di studio, la strategia di campionamento, la qualità delle misure e la presenza di possibili fattori confondenti determinano i limiti dell’inferenza. Una parte importante della competenza statistica consiste nel riconoscere tali limiti prima di trarre conclusioni troppo affrettate.</p>
-</section>
-</section>
-<section id="mappa-della-sezione" class="level2">
-<h2 class="anchored" data-anchor-id="mappa-della-sezione">Mappa della sezione</h2>
-<p>I capitoli che seguono costruiscono progressivamente questa competenza.</p>
+<section id="quattro-passaggi-concettuali" class="level2">
+<h2 class="anchored" data-anchor-id="quattro-passaggi-concettuali">Quattro passaggi concettuali</h2>
+<p>I capitoli di questa Parte seguono una progressione. Non costituiscono un elenco di definizioni da memorizzare, ma quattro prospettive da applicare ogni volta che si incontra un nuovo dataset.</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 33%">
@@ -603,67 +632,75 @@ cookieconsent.run({
 <thead>
 <tr class="header">
 <th>Capitolo</th>
-<th>Domanda guida</th>
+<th>Domanda centrale</th>
 <th>Funzione nel percorso</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><strong>Concetti chiave</strong></td>
+<td><a href="02_key_notions.html" class="quarto-xref"><span>2&nbsp; Concetti chiave</span></a></td>
 <td>Che cos’è un dato?</td>
-<td>Introdurre il lessico minimo: popolazione, campione, unità statistica, variabile, parametro, statistica, variabilità e incertezza.</td>
+<td>Introduce popolazione, campione, unità di analisi, variabile, parametro, statistica e incertezza.</td>
 </tr>
 <tr class="even">
-<td><strong>Disegno della ricerca</strong></td>
-<td>Come sono stati generati i dati?</td>
-<td>Comprendere campionamento, studi osservazionali, esperimenti, generalizzabilità, bias e limiti dell’interpretazione causale.</td>
+<td><a href="03_design.html" class="quarto-xref"><span>3&nbsp; Disegno della ricerca: quali conclusioni sono giustificate dai dati?</span></a></td>
+<td>Come sono state generate le osservazioni?</td>
+<td>Collega campionamento, assegnazione, struttura dei dati, generalizzazione e causalità.</td>
 </tr>
 <tr class="odd">
-<td><strong>Misurazione</strong></td>
+<td><a href="04_measurement.html" class="quarto-xref"><span>4&nbsp; Misurare i costrutti psicologici</span></a></td>
 <td>Che cosa significa il valore osservato?</td>
-<td>Collegare costrutti teorici, indicatori empirici, errore di misura, validità, affidabilità e livelli di scala.</td>
+<td>Distingue costrutto, operazionalizzazione, indicatore, punteggio, affidabilità e validità.</td>
 </tr>
 <tr class="even">
-<td><strong>Modelli psicologici</strong></td>
-<td>Descrivere basta?</td>
-<td>Preparare il passaggio dalla descrizione dei pattern alla spiegazione dei processi che potrebbero averli generati.</td>
+<td><a href="05_cognitive_models.html" class="quarto-xref"><span>5&nbsp; Dalla descrizione alla spiegazione: modelli e processi psicologici</span></a></td>
+<td>Quale processo può generare il pattern?</td>
+<td>Introduce il passaggio dalla descrizione dei dati alla modellizzazione dei processi psicologici.</td>
 </tr>
 </tbody>
 </table>
-<p>Questa mappa non va letta come una sequenza di definizioni da memorizzare, ma come un insieme di strumenti per orientarsi. Quando ci troveremo di fronte a un dataset, torneremo implicitamente a queste domande: chi o cosa è stato osservato? Con quale misura? In quale contesto? Con quale disegno? Quale forma di incertezza rimane?</p>
+<p>Il primo capitolo costruisce il lessico minimo. Il secondo mostra che il modo in cui i dati vengono raccolti determina le conclusioni giustificate. Il terzo affronta il problema centrale della psicologia quantitativa: il rapporto tra costrutti e punteggi. Il quarto sposta infine l’attenzione dalla descrizione di un pattern alla formulazione di un processo capace di generarlo.</p>
+<p>La progressione può essere letta anche come un aumento graduale delle pretese scientifiche. Prima descriviamo che cosa è stato osservato. Poi chiediamo a chi e a quali condizioni la descrizione possa essere estesa. Successivamente valutiamo se i valori rappresentino davvero i costrutti dichiarati. Solo allora possiamo proporre modelli esplicativi.</p>
 </section>
-<section id="un-esempio-ricorrente" class="level2">
-<h2 class="anchored" data-anchor-id="un-esempio-ricorrente">Un esempio ricorrente</h2>
-<p>Per rendere i concetti più concreti, useremo spesso esempi tratti dalla ricerca psicologica. Un caso semplice può accompagnare l’intera sezione: lo studio della relazione tra lo stress accademico e la qualità del sonno.</p>
-<p>Questo esempio ci permette di vedere come una stessa domanda possa assumere significati diversi a seconda del livello di analisi:</p>
-<ul>
-<li>come <strong>domanda descrittiva</strong>, potremmo chiederci quanto siano frequenti i livelli elevati di stress in un determinato gruppo di studenti;</li>
-<li>come <strong>domanda associativa</strong>, potremmo chiederci se gli studenti più stressati riportano una qualità del sonno peggiore;</li>
-<li>come <strong>domanda causale</strong>, potremmo chiederci se una riduzione dello stress produce un miglioramento della qualità del sonno;</li>
-<li>come <strong>domanda esplicativa</strong>, potremmo chiederci attraverso quali meccanismi psicologici lo stress interferisce con il sonno.</li>
-</ul>
-<p>Le analisi statistiche richieste da queste domande possono essere diverse, ma soprattutto cambiano le condizioni necessarie per interpretare correttamente i risultati. Una correlazione può essere sufficiente per descrivere un’associazione, ma non per dimostrare da sola un effetto causale. Un questionario può essere utile, ma solo se misura in modo valido e affidabile il costrutto di interesse. Un campione di convenienza può essere informativo, ma non autorizza generalizzazioni automatiche a tutti gli studenti universitari.</p>
+<section id="un-esempio-che-accompagna-la-parte" class="level2">
+<h2 class="anchored" data-anchor-id="un-esempio-che-accompagna-la-parte">Un esempio che accompagna la Parte</h2>
+<p>La relazione tra stress accademico e qualità del sonno accompagnerà diversi capitoli perché permette di vedere come una stessa domanda cambi significato quando cambiano disegno, misura e obiettivo.</p>
+<p>Possiamo limitarci a descrivere quanto siano diffusi livelli elevati di stress in uno specifico gruppo di studenti. Possiamo studiare se stress e sonno varino insieme. Possiamo osservare le stesse persone nel tempo per capire se una variabile preceda l’altra. Possiamo infine valutare un intervento progettato per ridurre lo stress e verificare se il sonno cambi di conseguenza.</p>
+<p>Queste domande non richiedono soltanto analisi statistiche differenti. Richiedono soprattutto dati generati in modi differenti.</p>
+<p>Anche la misurazione modifica il problema. Lo stress può essere rappresentato da un singolo item, da una scala composta, da un diario giornaliero o da indicatori fisiologici. La qualità del sonno può essere descritta mediante ore dichiarate, valutazioni soggettive, risvegli o dati strumentali. Due studi che usano la stessa parola possono quindi osservare aspetti differenti del fenomeno.</p>
+<p>Un modello esplicativo aggiunge un ulteriore livello. Potremmo ipotizzare che lo stress aumenti la ruminazione serale e che la ruminazione interferisca con il sonno. Questa proposta non deriva automaticamente da una correlazione. Richiede una teoria, misure adatte e un disegno capace di distinguere il processo da spiegazioni alternative.</p>
+<p>L’esempio mostra perché l’analisi non inizia dal comando da eseguire. Inizia dalla relazione tra la domanda e i dati necessari per affrontarla.</p>
 </section>
-<section id="collegamenti-con-il-resto-del-modulo" class="level2">
-<h2 class="anchored" data-anchor-id="collegamenti-con-il-resto-del-modulo">Collegamenti con il resto del modulo</h2>
-<p>La sezione <strong>R</strong> tradurrà molte di queste idee in procedure operative. Impareremo a organizzare i dati, manipolare le tabelle, scrivere le funzioni, produrre i grafici e documentare le analisi riproducibili. Tuttavia, il codice sarà sempre al servizio di una domanda: non lo scriveremo per accumulare comandi, ma per rendere esplicito e controllabile il percorso che va dai dati grezzi all’interpretazione.</p>
-<p>La sezione <strong>EDA</strong> mostrerà come osservare i dati prima di formalizzare un modello. Esploreremo distribuzioni, valori anomali, relazioni tra variabili, indici di posizione e dispersione, nonché visualizzazioni e primi ragionamenti su correlazione e causalità. L’esplorazione sarà utile solo se sapremo cosa stiamo esplorando e quali limiti derivano dalla misurazione e dal disegno.</p>
-<p>Il manuale principale sull’inferenza bayesiana riprenderà molti di questi temi a un livello più generale. In quel contesto, l’attenzione sarà rivolta al significato epistemologico delle procedure: cosa significa aggiornare una credenza, stimare un parametro, confrontare modelli e quantificare l’incertezza. Questa sezione prepara il terreno per questo percorso, mostrando che l’incertezza non deriva solo dal calcolo statistico, ma anche dalla teoria, dal campionamento, dalla misurazione e dal disegno della ricerca.</p>
+<section id="il-rapporto-con-r-e-con-leda" class="level2">
+<h2 class="anchored" data-anchor-id="il-rapporto-con-r-e-con-leda">Il rapporto con R e con l’EDA</h2>
+<p>La Parte dedicata a R introdurrà gli strumenti necessari per lavorare con i dati in modo riproducibile. Impareremo a creare e ispezionare oggetti, selezionare variabili, trasformare tabelle, trattare valori mancanti e produrre rappresentazioni grafiche.</p>
+<p>Queste operazioni non saranno presentate come esercizi di programmazione autonomi. Ogni comando dovrà essere collegato al significato dei dati. Se una persona compare più volte, per esempio, dovremo preservare l’identificatore che lega le osservazioni. Se una colonna numerica contiene categorie ordinate, dovremo evitare di interpretarla automaticamente come una misura continua. Se alcuni valori mancano, dovremo capire come e perché siano diventati mancanti prima di eliminarli da un calcolo.</p>
+<p>L’uso di un assistente AI non modifica questa responsabilità. L’AI può generare rapidamente una sintassi corretta, ma non conosce automaticamente l’unità di analisi, la validità della misura o la logica del disegno. Chi analizza i dati deve saper verificare se il codice rispetti queste caratteristiche.</p>
+<p>La Parte dedicata all’EDA mostrerà poi come osservare distribuzioni, differenze, relazioni e anomalie. L’esplorazione sarà più informativa proprio perché sapremo che cosa rappresentano le variabili e quali strutture del disegno devono rimanere visibili.</p>
+<p>Il percorso complessivo diventa quindi:</p>
+<p><span class="math display">\[
+\text{domanda}
+\longrightarrow
+\text{dati comprensibili}
+\longrightarrow
+\text{esplorazione}
+\longrightarrow
+\text{modello}
+\longrightarrow
+\text{controllo}.
+\]</span></p>
 </section>
-<section id="cosa-portare-con-sé" class="level2">
-<h2 class="anchored" data-anchor-id="cosa-portare-con-sé">Cosa portare con sé</h2>
-<p>Al termine di questa prima parte, lo studente dovrebbe essere in grado di affrontare un dataset ponendosi alcune domande essenziali:</p>
-<ol type="1">
-<li>Qual è il fenomeno psicologico di interesse?</li>
-<li>Quale domanda di ricerca ha motivato la raccolta dei dati?</li>
-<li>Qual è la popolazione di riferimento e quale campione è stato osservato?</li>
-<li>Quali variabili sono state misurate e che cosa rappresentano?</li>
-<li>Le misure sono plausibilmente valide e affidabili?</li>
-<li>Il disegno consente descrizione, previsione, generalizzazione o inferenza causale?</li>
-<li>Quali fonti di incertezza, errore o bias devono essere considerate?</li>
-<li>Quali conclusioni sarebbero giustificate e quali sarebbero eccessive?</li>
-</ol>
-<p>Queste domande accompagneranno tutto il percorso. Imparare a formularle è il primo passo per evitare il rischio più comune nell’analisi dei dati: produrre risultati tecnicamente corretti ma scientificamente poco rilevanti.</p>
+<section id="il-rapporto-con-il-manuale-e-il-companion" class="level2">
+<h2 class="anchored" data-anchor-id="il-rapporto-con-il-manuale-e-il-companion">Il rapporto con il manuale e il Companion</h2>
+<p>Il manuale <em>Inferenza bayesiana in psicologia: Ragionare con l’incertezza</em> sviluppa il quadro concettuale della modellizzazione bayesiana. Il Companion mostra come costruire, stimare e controllare modelli con R, <code>brms</code> e Stan. Questo sito prepara quel lavoro concentrandosi su ciò che viene prima del modello.</p>
+<p>L’inferenza bayesiana rappresenta l’incertezza sui parametri e sulle predizioni in modo esplicito. Non può però correggere automaticamente una misura che non rappresenta il costrutto, un campione che non rappresenta la popolazione o un disegno che non identifica il confronto causale.</p>
+<p>Una distribuzione a posteriori può essere calcolata con grande precisione rispetto a un problema scientifico mal posto. Per questo il progetto editoriale non separa la statistica dalla metodologia. Imparare a ragionare con l’incertezza significa anche riconoscere l’incertezza introdotta dalla selezione, dalla misurazione, dal contesto e dalle assunzioni teoriche.</p>
+</section>
+<section id="come-leggere-questa-parte" class="level2">
+<h2 class="anchored" data-anchor-id="come-leggere-questa-parte">Come leggere questa Parte</h2>
+<p>La Parte può essere letta interamente prima di iniziare R oppure consultata durante il lavoro pratico. La seconda modalità è spesso utile: quando una variabile non è chiara, si può tornare al capitolo sulla misurazione; quando le righe non sembrano indipendenti, al capitolo sul disegno; quando un grafico mostra un pattern interessante, al capitolo sui modelli.</p>
+<p>Alla fine del percorso, l’obiettivo non è ricordare una lunga lista di termini. È acquisire un’abitudine di lettura. Di fronte a un dataset dovremmo riuscire a ricostruire quale fenomeno viene studiato, chi o che cosa è stato osservato, come sono stati prodotti i valori e quale tipo di conclusione sia proporzionato alle informazioni disponibili.</p>
+<p>Questa abitudine protegge dal rischio più comune nell’analisi dei dati: ottenere una risposta tecnicamente corretta a una domanda che i dati non potevano realmente affrontare.</p>
 
 
 </section>
