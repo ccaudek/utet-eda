@@ -245,6 +245,44 @@ pre code {
   border-radius: 0;
 }
 
+// Codice inline nel testo.
+// Quarto/Bootstrap possono applicare un background chiaro a `code` inline
+// con selettori piu specifici: qui lo separiamo esplicitamente dai code block.
+:not(pre) > code,
+p code,
+li code,
+dd code,
+dt code,
+td code,
+th code,
+figcaption code,
+.figure-caption code,
+.callout-body code,
+.quarto-title-meta code,
+a code {
+  background-color: #242b36 !important;
+  color: #f0f6fc !important;
+  border: 1px solid #3a4350;
+  border-radius: 0.25rem;
+  padding: 0.1em 0.35em;
+  font-size: 0.85em;
+  font-weight: 500;
+  white-space: nowrap;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+// Mantiene i blocchi di codice senza sfondo/padding aggiuntivi sul tag `code`.
+pre > code,
+pre code.sourceCode,
+div.sourceCode pre code {
+  background-color: transparent !important;
+  color: inherit !important;
+  border: 0;
+  padding: 0;
+  white-space: pre;
+}
+
 // Output testuale di R / knitr
 .cell-output,
 .cell-output pre,
@@ -555,4 +593,52 @@ hr {
 .sidebar .sidebar-link:hover .section-number {
   color: #ffffff;
   opacity: 1;
+}
+
+// ============================================
+// FIX LAYOUT: OUTPUT R E SIDEBAR DESTRA
+// ============================================
+
+// Allinea la larghezza del contenuto al tema light.
+main.content {
+  width: 100%;
+  max-width: 880px;
+  min-width: 0;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+// Nei layout CSS Grid/Flex, min-width:auto puo impedire ai chunk
+// di restringersi e farli invadere la margin sidebar.
+#quarto-document-content,
+.quarto-content,
+.page-columns,
+.column-body,
+.cell,
+.cell-output,
+.cell-output-stdout,
+.cell-output-stderr,
+div.sourceCode {
+  min-width: 0;
+  max-width: 100%;
+}
+
+// Il bordo e il padding del pre restano inclusi nella larghezza disponibile.
+pre,
+div.sourceCode,
+.cell-output pre,
+.cell-output-stdout pre,
+.cell-output-stderr pre {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+// Mantiene una separazione visiva dal sommario laterale, come nel tema light.
+@media (min-width: 992px) {
+  #quarto-margin-sidebar {
+    padding-left: 0.9rem;
+  }
 }
