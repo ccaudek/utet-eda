@@ -1,386 +1,271 @@
-# Disegno di ricerca: quali conclusioni sono giustificate dai dati? {#sec-key-notions-design}
+# Disegno della ricerca: quali conclusioni sono giustificate dai dati? {#sec-key-notions-design}
 
-::: {.callout-note appearance="minimal"}
-Nel capitolo precedente abbiamo introdotto il passaggio dai fenomeni psicologici ai dati. Abbiamo visto che un dato non è un numero isolato, ma il risultato di una domanda di ricerca, di una procedura di osservazione e di una scelta di misurazione.
+::: {.callout-note title="In sintesi"}
+**Da sapere**  I dati non parlano da soli: il loro significato dipende dal modo in cui persone, condizioni e misure sono state selezionate. Il campionamento riguarda soprattutto la possibilità di generalizzare; l'assegnazione alle condizioni riguarda soprattutto la credibilità delle conclusioni causali.
 
-In questo capitolo facciamo un passo indietro: prima di descrivere o analizzare i dati, dobbiamo chiederci come sono stati generati. La stessa variabile, misurata con lo stesso strumento, può assumere significati diversi a seconda del disegno dello studio. Un questionario sullo stress somministrato a studenti volontari durante la sessione d'esame non fornisce le stesse conclusioni di un'indagine probabilistica su tutti gli studenti di un ateneo o di un esperimento in cui lo stress viene manipolato in condizioni controllate.
-
-La domanda guida del capitolo è quindi semplice:
-
-> **Quali conclusioni sono giustificate dal modo in cui questi dati sono stati raccolti?**
-
-Questa domanda accompagnerà tutto il percorso successivo. L'EDA aiuta a individuare i pattern nei dati, R permette di organizzarli, descriverli e visualizzarli, mentre l'inferenza bayesiana consente di ragionare in modo esplicito sull'incertezza. Tuttavia, nessuna procedura statistica può eliminare automaticamente i limiti introdotti da un campione distorto, da un disegno inadeguato o da una domanda formulata in modo ambiguo.
+**Da saper fare**  Ricostruire come un dataset è stato generato; distinguere popolazione target, popolazione accessibile e campione; riconoscere studi descrittivi, osservazionali e sperimentali; formulare conclusioni proporzionate al disegno.
 :::
 
-::: {.callout-tip collapse="true"}
-## Prerequisiti
+## Introduzione {.unnumbered .unlisted}
 
-Per seguire questo capitolo è sufficiente aver compreso i concetti introdotti nel capitolo precedente: popolazione, campione, unità statistica, variabile, osservazione, statistica campionaria, parametro e incertezza.
+Nel capitolo precedente abbiamo seguito il percorso che conduce da un fenomeno psicologico a una matrice di dati. Abbiamo visto che una riga non è semplicemente una sequenza di numeri: rappresenta un'unità osservata in circostanze precise, mediante procedure e strumenti determinati.
 
-La letteratura sulla replicabilità in psicologia e sui campioni WEIRD fornisce un importante contesto per approfondire l'argomento [@youyou2023discipline; @henrich2010weirdest], ma non è necessaria per una prima lettura.
+Ora facciamo un passo indietro. Prima di descrivere una distribuzione o costruire un grafico, dobbiamo capire come quelle righe siano entrate nel dataset. La stessa correlazione tra stress accademico e qualità del sonno può avere significati molto diversi se proviene da volontari reclutati durante la sessione d'esame, da un'indagine probabilistica nazionale, da misure ripetute durante un semestre o da un esperimento controllato.
+
+La domanda guida del capitolo è quindi:
+
+> Quali conclusioni sono giustificate dal processo che ha generato questi dati?
+
+L'analisi esplorativa aiuta a riconoscere regolarità e anomalie. R permette di organizzare, trasformare e visualizzare le osservazioni. L'inferenza statistica rappresenta l'incertezza. Nessuna di queste attività, tuttavia, può trasformare automaticamente un campione selezionato in una popolazione rappresentativa o un'associazione osservata in una relazione causale.
+
+::: {.callout-tip title="Prerequisiti"}
+È sufficiente conoscere i concetti introdotti in @sec-key-notions: popolazione, campione, unità di analisi, variabile, osservazione, parametro e statistica campionaria.
+
+La discussione sui campioni WEIRD e sulla replicabilità in psicologia fornisce un contesto più ampio [@henrich2010weirdest; @youyou2023discipline], ma non è necessaria per seguire l'argomentazione.
 :::
 
-## Perché il disegno di ricerca conta
+## Panoramica del capitolo {.unnumbered .unlisted}
 
-Quando osserviamo un risultato, per esempio una correlazione tra stress accademico e qualità del sonno, siamo tentati di interpretarlo immediatamente come una proprietà del fenomeno psicologico: "Gli studenti più stressati dormono peggio". Prima di arrivare a questa conclusione, però, dobbiamo porci alcune domande.
+Il capitolo parte dalla relazione tra domanda e disegno, distingue il campionamento dall'assegnazione alle condizioni e mostra come studi descrittivi, osservazionali e sperimentali sostengano conclusioni differenti. Successivamente esamina bias, validità, replicazione e struttura dei dati. L'ultima parte collega queste idee all'EDA e al workflow bayesiano: prima di scegliere un modello, occorre sapere quale processo dovrebbe rappresentare.
 
-- Chi sono gli studenti osservati?
-- Come sono stati reclutati?
-- In quale periodo dell'anno sono stati raccolti i dati?
-- Lo stress e il sonno sono stati misurati con strumenti validi?
-- La raccolta dei dati è avvenuta una sola volta o più volte nel tempo?
-- Ci sono variabili alternative che potrebbero spiegare l'associazione osservata?
-- Qual è l'obiettivo della nostra analisi: descrivere questi dati, generalizzare a una popolazione più ampia, fare una previsione o sostenere una conclusione causale?
-
-Queste domande non riguardano dettagli tecnici. Definiscono il significato stesso dell'analisi. Il disegno di ricerca stabilisce il rapporto tra tre elementi:
-
-1. **la domanda di ricerca**, cioè ciò che vogliamo capire;
-2. **il processo di raccolta dei dati**, cioè come otteniamo le osservazioni;
-3. **le conclusioni giustificate**, cioè che cosa possiamo affermare con prudenza.
-
-::: {.callout-important title="Idea chiave"}
-Il disegno di ricerca non serve soltanto a "raccogliere dati". Serve a stabilire quali interpretazioni dei dati sono plausibili e quali, invece, sarebbero troppo forti rispetto all'evidenza disponibile.
+::: {.callout-note title="Preparazione del notebook"}
+Questo capitolo è concettuale e non richiede l'esecuzione di codice. Nei capitoli successivi useremo R per ispezionare la struttura dei dataset, descrivere i campioni e rendere visibili differenze, dipendenze e possibili problemi di qualità.
 :::
 
-## Un esempio ricorrente: stress accademico e sonno
+## Il disegno viene prima dell'analisi
 
-Useremo un esempio semplice per collegare le varie parti del capitolo.
+Supponiamo di osservare che gli studenti con più stress accademico riportano una qualità del sonno peggiore. La frase sembra semplice, ma contiene molte decisioni implicite. Dobbiamo sapere quali studenti sono stati osservati, come sono stati reclutati, in quale periodo sono state raccolte le risposte, come sono stati misurati stress e sonno e se le osservazioni provengono da un unico momento o da misure ripetute.
 
-Immaginiamo di voler studiare la relazione tra **stress accademico** e **qualità del sonno** negli studenti universitari. Una possibile domanda di ricerca potrebbe essere:
+Queste informazioni non sono dettagli amministrativi. Determinano che cosa significhi il risultato. Se i partecipanti sono volontari di un solo corso universitario, possiamo descrivere quel campione, ma la generalizzazione a tutti gli studenti richiede ulteriori argomenti. Se stress e sonno sono misurati nello stesso momento, possiamo studiarne l'associazione, ma non stabilire quale variabile venga prima. Se una condizione viene manipolata e assegnata casualmente, una conclusione causale diventa più credibile, almeno nel contesto definito dall'esperimento.
+
+Il disegno collega quindi la domanda scientifica, il processo di raccolta e il tipo di conclusione che possiamo sostenere.
+
+::: {.callout-important title="Principio guida"}
+L'analisi statistica quantifica ciò che è stato reso osservabile dal disegno. Non amplia retroattivamente ciò che il disegno consente di apprendere.
+:::
+
+## Una domanda, disegni differenti
+
+Consideriamo la domanda:
 
 > Gli studenti con livelli più elevati di stress accademico riportano una qualità del sonno peggiore?
 
-Questa domanda può essere affrontata in modi diversi.
+Può essere affrontata in modi differenti.
 
-| Scelta di disegno | Esempio | Conclusione più prudente |
+| Disegno | Che cosa viene osservato | Conclusione prudente |
 |---|---|---|
-| Studio descrittivo | Descriviamo il livello medio di stress e sonno in un gruppo di studenti | "In questo campione, lo stress medio è..." |
-| Studio osservazionale trasversale | Misuriamo stress e sonno una sola volta | "Stress e sonno sono associati in questo campione" |
-| Studio longitudinale | Misuriamo stress e sonno più volte durante il semestre | "I cambiamenti nello stress precedono o accompagnano cambiamenti nel sonno" |
-| Studio sperimentale | Manipoliamo una fonte di stress in condizioni controllate | "In queste condizioni, la manipolazione dello stress produce un cambiamento nel sonno o in un indicatore collegato" |
+| Descrittivo | Stress e sonno in un campione definito | «Nel campione, stress e sonno hanno queste distribuzioni.» |
+| Trasversale | Stress e sonno misurati nello stesso momento | «Nel campione, le due variabili sono associate.» |
+| Longitudinale | Le stesse variabili misurate in più momenti | «I cambiamenti o i livelli precedenti di una variabile sono associati a quelli successivi dell'altra.» |
+| Sperimentale | Una condizione viene manipolata e assegnata | «Nelle condizioni dello studio, la manipolazione ha prodotto una differenza nell'esito.» |
 
-La variabile può essere simile, ma il tipo di conclusione cambia. Questa è la ragione per cui il disegno viene prima dell'analisi.
+La tabella non stabilisce una gerarchia assoluta. Un'indagine descrittiva ben campionata può essere molto più informativa di un piccolo esperimento artificiale per stimare la prevalenza di un fenomeno. Un esperimento controllato può offrire una forte identificazione causale, ma dire poco su persone e contesti molto diversi da quelli studiati.
 
-## Popolazione, popolazione target e campione
+La qualità di un disegno dipende dalla domanda a cui deve rispondere.
 
-Nel capitolo precedente abbiamo distinto **popolazione** e **campione**. Qui rendiamo la distinzione più operativa.
+## Popolazione target, popolazione accessibile e campione
 
-La **popolazione target** è l'insieme di persone, casi o unità a cui vorremmo riferire le nostre conclusioni. Nel nostro esempio potrebbe essere:
+La **popolazione target** è l'insieme di unità a cui vorremmo riferire la conclusione. Potrebbero essere tutti gli studenti universitari italiani, gli iscritti a uno specifico ateneo oppure gli studenti che affrontano una determinata fase del percorso accademico.
 
-- tutti gli studenti universitari italiani;
-- gli studenti iscritti a un particolare ateneo;
-- gli studenti di psicologia del primo anno;
-- gli studenti che stanno preparando esami in un certo periodo dell'anno.
+La **popolazione accessibile** comprende invece le unità che possiamo realisticamente raggiungere. Se diffondiamo un questionario attraverso la piattaforma di un singolo insegnamento, la popolazione accessibile è molto più ristretta di tutti gli studenti universitari.
 
-La **popolazione accessibile** è l'insieme delle unità che possiamo raggiungere in modo realistico. Spesso è più ristretta della popolazione target. Per esempio, potremmo avere accesso solo agli studenti che frequentano un determinato corso, agli iscritti a una mailing list o ai volontari che rispondono a un annuncio online.
+Il **campione** è formato dalle unità effettivamente osservate. È generalmente ancora più selezionato, perché non tutte le persone raggiungibili vengono invitate, accettano di partecipare o completano lo studio.
 
-Il **campione** è il sottoinsieme effettivamente osservato.
-
-La distanza tra la popolazione target, la popolazione accessibile e il campione è una delle principali fonti di cautela nell'interpretazione dei risultati.
+Queste tre popolazioni non coincidono automaticamente. La distanza tra loro deve essere descritta, non nascosta dietro un numero elevato di partecipanti.
 
 ::: {.callout-note title="Esempio"}
-Se vogliamo parlare degli studenti universitari italiani, ma raccogliamo i dati solo dagli studenti di psicologia di un singolo ateneo, durante la settimana precedente agli esami, il campione può essere utile per esplorare il fenomeno. Tuttavia, ciò non autorizza automaticamente una generalizzazione a tutti gli studenti universitari.
+Uno studio svolto su studenti di psicologia di un solo ateneo durante la settimana precedente agli esami può offrire informazioni utili su quel contesto. Non autorizza però, senza ulteriori argomenti o repliche, affermazioni su tutti gli studenti universitari o sullo stress in ogni periodo dell'anno.
 :::
 
-## Campionamento e rappresentatività
+## Campionamento e generalizzazione
 
-Il **campionamento** è il processo con cui si selezionano le unità da osservare. Il problema centrale è la rappresentatività: il campione riflette in modo adeguato le caratteristiche della popolazione di riferimento?
+Il **campionamento** è il processo con cui alcune unità vengono incluse e altre escluse dall'osservazione. La domanda centrale non è soltanto quanti partecipanti siano presenti, ma attraverso quale meccanismo siano entrati nel campione.
 
-Un campione è rappresentativo non perché è "grande" in senso generico, ma perché è stato costruito in modo da ridurre le distorsioni sistematiche rispetto alla popolazione di interesse. Un campione enorme, ma molto selezionato, può essere meno utile di un campione più piccolo, ma costruito con maggiore attenzione.
+Nel campionamento probabilistico, ogni unità della popolazione possiede una probabilità nota e positiva di essere selezionata. Un campione casuale semplice richiede una lista adeguata della popolazione. Un campione stratificato garantisce una rappresentazione pianificata di sottogruppi rilevanti. Un campionamento a grappoli seleziona unità collettive, come scuole o classi, e introduce una dipendenza che dovrà essere considerata anche nell'analisi.
 
-### Campionamento probabilistico
+Questi metodi non producono campioni perfettamente identici alla popolazione. Rendono però esplicito il meccanismo di selezione e permettono di valutare l'errore di campionamento in modo controllato.
 
-Nel **campionamento probabilistico**, ogni unità della popolazione ha una probabilità nota e diversa da zero di essere inclusa nel campione. Ciò non garantisce che ogni campione sia perfetto, ma consente di ragionare in modo più controllato sull'errore di campionamento e sulla generalizzazione.
+Nella ricerca psicologica è frequente il campionamento di convenienza: partecipano persone facilmente raggiungibili, come studenti, utenti di una piattaforma o volontari reclutati online [@peterson2014convenience]. Questa scelta può essere ragionevole per studi preliminari, sviluppo di procedure o analisi di meccanismi. Diventa problematica quando le conclusioni vengono estese a popolazioni che il campione non rappresenta.
 
-I principali tipi sono:
+La discussione sui campioni WEIRD mostra quanto cultura, istruzione, età, condizioni economiche e contesto istituzionale possano limitare l'universalità apparente di risultati ottenuti in gruppi molto selezionati [@henrich2010weirdest].
 
-- **Campionamento casuale semplice**: ogni unità ha la stessa probabilità di essere selezionata; Richiede una lista completa della popolazione, chiamata "frame di campionamento".
-- **Campionamento stratificato**: la popolazione viene suddivisa in sottogruppi rilevanti, per esempio in base al genere, all'età o all'area geografica, e si effettua il campionamento da ciascuno strato.
-- **Campionamento a grappolo**: si selezionano gruppi naturali, per esempio scuole, classi, reparti o quartieri, e poi si osservano le unità all'interno dei gruppi selezionati.
-- **Campionamento multistadio**: si combinano più fasi, per esempio prima si selezionano le scuole, poi le classi e infine gli studenti.
-
-Questi metodi sono particolarmente importanti quando l'obiettivo è stimare quantità riferite a una popolazione ampia, come le prevalenze, le medie, le distribuzioni e le differenze tra sottogruppi.
-
-### Campionamento non probabilistico
-
-Nel **campionamento non probabilistico**, la probabilità di inclusione delle unità non è nota. In psicologia ciò si verifica spesso, perché non disponiamo di un elenco completo della popolazione o perché vincoli pratici, economici ed etici rendono difficile un campionamento probabilistico.
-
-Il caso più comune è il **campionamento di convenienza**: i partecipanti vengono reclutati tra persone facilmente accessibili, come gli studenti universitari, i volontari online o le persone disponibili attraverso reti personali e istituzionali.
-
-Il campionamento di convenienza è rapido, economico e spesso necessario. Tuttavia, questo tipo di campionamento limita la possibilità di generalizzare i risultati. Il punto non è vietarlo, ma interpretarlo correttamente.
-
-::: {.callout-warning title="Errore comune"}
-Affermare che un campione è "di convenienza" non significa che lo studio sia inutile. Significa che dobbiamo essere precisi su ciò che lo studio permette e non permette di concludere.
+::: {.callout-warning title="Grande non significa rappresentativo"}
+Aumentare il numero di persone reclutate con lo stesso meccanismo riduce spesso la variabilità campionaria, ma non elimina una distorsione sistematica. Un campione enorme può stimare con grande precisione una quantità riferita a una popolazione diversa da quella che interessa.
 :::
 
-## Campioni di convenienza nella ricerca psicologica
+Quando il campionamento di convenienza è inevitabile, la soluzione non consiste nel dichiararlo e dimenticarlo. Occorre descrivere accuratamente chi ha partecipato, limitare il linguaggio delle conclusioni, confrontare il campione con la popolazione target e cercare repliche in contesti differenti.
 
-Molti studi psicologici utilizzano campioni di convenienza, spesso composti da studenti universitari o partecipanti reclutati online. Questa pratica è comprensibile: reclutare un campione probabilistico ampio richiede tempo, risorse, infrastrutture e accesso a popolazioni che spesso non sono disponibili  [@peterson2014convenience].
+## Campionamento e assegnazione rispondono a domande diverse
 
-Tuttavia, i campioni di convenienza possono produrre distorsioni sistematiche. Un campione composto esclusivamente da studenti universitari occidentali, istruiti e giovani potrebbe non rappresentare l'intera variabilità della popolazione umana. Il problema è particolarmente rilevante quando i processi studiati sono influenzati da fattori quali cultura, età, istruzione, status socioeconomico o contesto istituzionale. Questo problema è stato discusso in letteratura attraverso la nozione di campioni WEIRD: *Western, Educated, Industrialized, Rich, Democratic* (WEIRD) [@henrich2010weirdest].
+Due processi vengono spesso confusi.
 
-### Quando può essere utile
+Il **campionamento** determina chi entra nello studio e riguarda soprattutto la generalizzazione dalla parte osservata alla popolazione di interesse.
 
-Un campione di convenienza può essere utile quando:
+L'**assegnazione alle condizioni** determina quale esperienza riceve ciascun partecipante e riguarda soprattutto la comparabilità dei gruppi e la credibilità dell'inferenza causale.
 
-- lo studio è esplorativo;
-- si vuole testare una procedura o uno strumento;
-- si studia un meccanismo psicologico di base e si è cauti sulla generalizzazione;
-- lo scopo è confrontare pattern, non stimare una prevalenza nella popolazione;
-- lo studio verrà replicato in campioni diversi.
+Uno studio può avere assegnazione casuale ma campionamento di convenienza. In questo caso, il confronto tra condizioni può sostenere una conclusione causale per le persone e le circostanze studiate, mentre la generalizzazione a popolazioni più ampie rimane incerta.
 
-### Quando è problematico
+Al contrario, un'indagine può usare un buon campionamento probabilistico ma essere puramente osservazionale. Può quindi descrivere bene una popolazione senza dimostrare che una variabile causi l'altra.
 
-Diventa invece particolarmente problematico quando:
+::: {.callout-important title="Due domande da tenere separate"}
+**Chi è rappresentato dal campione?** riguarda il campionamento.
 
-- si vuole stimare una caratteristica della popolazione generale;
-- si vogliono confrontare gruppi sociali o culturali non adeguatamente rappresentati;
-- il fenomeno è plausibilmente influenzato da età, cultura, istruzione o contesto;
-- le conclusioni vengono presentate come universali senza giustificazione;
-- non vengono descritte le caratteristiche del campione.
-
-### Come mitigare i limiti
-
-Quando si utilizza un campione di convenienza, alcune pratiche possono aiutare a rendere le conclusioni più trasparenti.
-
-1. **Descrivere il campione in modo accurato**: età, genere, percorso di studi, provenienza, criteri di inclusione ed esclusione.
-2. **Limitare le conclusioni**: evitare formule come "le persone" o "gli studenti" se il campione riguarda solo un gruppo specifico.
-3. **Diversificare il reclutamento**: includere partecipanti provenienti da diversi corsi, atenei, canali o contesti.
-4. **Replicare**: verificare se il pattern si osserva anche in campioni diversi.
-5. **Distinguere esplorazione e conferma**: essere chiari se lo studio genera ipotesi o ne testa una già formulata.
-
-::: {.callout-note title="Messaggio da ricordare"}
-Il campionamento di convenienza può essere una scelta realistica e informativa, ma richiede una scrittura delle conclusioni prudente. Non dobbiamo chiederci solo "quanti partecipanti abbiamo?", ma anche "chi manca dal nostro campione?".
+**Che cosa rende confrontabili le condizioni?** riguarda l'assegnazione e il controllo del disegno.
 :::
 
-## Bias: quando il processo di raccolta distorce il risultato
+## Bias: una distorsione del processo
 
-Un **bias** è una distorsione sistematica. A differenza della variabilità casuale, che può produrre fluttuazioni in entrambe le direzioni, il bias spinge il risultato verso una direzione particolare.
+La variabilità casuale produce risultati differenti da campione a campione. Il **bias** introduce invece una distorsione sistematica collegata al modo in cui i dati vengono selezionati, prodotti, registrati o interpretati.
 
-Alcuni bias comuni nella ricerca psicologica sono:
+| Forma di bias | Come può comparire |
+|---|---|
+| Selezione | Alcune persone hanno probabilità maggiori di entrare nello studio. |
+| Autoselezione | La decisione di partecipare è collegata al fenomeno studiato. |
+| Non risposta | Chi non completa lo studio differisce sistematicamente da chi risponde. |
+| Contesto | Momento, luogo o modalità di raccolta influenzano le osservazioni. |
+| Osservatore | Aspettative o conoscenze influenzano somministrazione, valutazione o codifica. |
 
-| Tipo di bias | Descrizione | Esempio |
-|---|---|---|
-| Bias di selezione | Alcune persone hanno più probabilità di entrare nel campione | Rispondono al questionario soprattutto studenti molto motivati |
-| Bias di autoselezione | La partecipazione dipende da caratteristiche dei partecipanti | Partecipa chi ha un interesse speciale per il tema dello stress |
-| Bias di non risposta | Chi non risponde differisce da chi risponde | Gli studenti più stressati ignorano l'invito per mancanza di tempo |
-| Bias di contesto | Il momento o il luogo della raccolta influenza le risposte | Dati raccolti solo durante la sessione d'esame |
-| Bias dell'osservatore | Aspettative del ricercatore influenzano la raccolta o codifica dei dati | Il valutatore interpreta risposte ambigue in linea con l'ipotesi |
+Nel nostro esempio, gli studenti più stressati potrebbero non trovare il tempo per rispondere. In tal caso il campione potrebbe sottorappresentare proprio i livelli di stress più elevati. Raccogliere più risposte attraverso lo stesso canale renderebbe la stima più stabile, ma non necessariamente meno distorta.
 
-Il bias non si elimina semplicemente aumentando la dimensione del campione. Se la procedura di selezione dei partecipanti è sistematica e tende a includere sempre lo stesso tipo di partecipanti, aggiungere altri partecipanti dello stesso tipo può rendere la stima più precisa, ma non più corretta.
+Il bias non è sempre eliminabile. Deve però essere anticipato nel disegno, documentato durante la raccolta e considerato nell'interpretazione.
 
-## Disegni di ricerca: descrivere, associare, spiegare
+## Descrivere, associare e spiegare
 
-Una distinzione fondamentale riguarda il tipo di domanda che lo studio permette di affrontare.
+Uno studio **descrittivo** rappresenta come si distribuisce un fenomeno. Può stimare, per esempio, il livello medio di stress, la sua variabilità o la frequenza di punteggi molto elevati. La descrizione non è un'attività inferiore all'inferenza: senza una buona descrizione rischiamo di costruire modelli su dati che non abbiamo compreso.
 
-| Tipo di studio | Domanda tipica | Cosa sostiene bene | Cosa non sostiene da solo |
-|---|---|---|---|
-| Descrittivo | Com'è distribuita una variabile? | Descrizione di un campione o di una popolazione ben definita | Causalità e meccanismi |
-| Osservazionale trasversale | Due variabili sono associate? | Relazioni tra variabili misurate nello stesso momento | Direzione causale |
-| Osservazionale longitudinale | Come cambiano le variabili nel tempo? | Sequenze temporali e traiettorie | Causalità senza controllo dei confondenti |
-| Sperimentale | Una manipolazione produce un effetto? | Inferenza causale in condizioni controllate | Generalizzazione automatica a ogni contesto |
+Uno studio **osservazionale** esamina relazioni tra variabili senza assegnare direttamente le condizioni. Se stress e sonno vengono misurati nello stesso momento, una correlazione mostra che le variabili cambiano insieme nel campione. Non stabilisce se lo stress peggiori il sonno, se il sonno insufficiente aumenti lo stress o se entrambe le variabili dipendano da altre condizioni.
 
-Questa tabella introduce un principio semplice: non tutti i dati rispondono allo stesso tipo di domanda. Un disegno può essere eccellente per descrivere, ma insufficiente per spiegare causalmente; oppure può essere molto controllato, ma poco rappresentativo del mondo reale.
+Uno studio **longitudinale** aggiunge l'ordine temporale. Se lo stress misurato a ottobre è associato al sonno di novembre, sappiamo che la misura dello stress precede l'esito. La precedenza temporale è necessaria per molte affermazioni causali, ma non è sufficiente: carico di lavoro, salute, condizioni economiche o tratti individuali potrebbero influenzare entrambe le variabili.
 
-## Studi descrittivi
+Disegni di coorte e caso-controllo organizzano l'osservazione in modi più specifici. Una coorte segue persone nel tempo per osservare l'insorgenza o il cambiamento di un esito. Uno studio caso-controllo parte invece dalla presenza dell'esito e ricostruisce esposizioni o caratteristiche precedenti. Entrambi possono essere molto informativi, ma richiedono attenzione a selezione, misurazione e ricordo.
 
-Uno studio descrittivo mira a rappresentare come si presenta un fenomeno in un campione o in una popolazione. Nel nostro esempio, potremmo voler sapere:
+## Esperimenti e inferenza causale
 
-- qual è il livello medio di stress accademico nel campione;
-- quanto varia la qualità del sonno tra gli studenti;
-- quanti studenti riportano livelli di stress molto elevati;
-- se la distribuzione delle risposte è simmetrica o asimmetrica.
+In un esperimento il ricercatore manipola una condizione e osserva le conseguenze su un esito. La forza del disegno non deriva dalla parola *esperimento*, ma dalla combinazione di manipolazione, confronto e assegnazione.
 
-Gli studi descrittivi sono spesso il primo passo di un'indagine. Non vanno considerati inferiori agli studi inferenziali: senza una descrizione accurata, rischiamo di modellare dati che non abbiamo ancora compreso.
+La manipolazione definisce la differenza che dovrebbe produrre l'effetto. Il gruppo o la condizione di controllo mostra che cosa accade senza quella differenza, o con un'alternativa appropriata. L'assegnazione casuale rende i gruppi comparabili prima del trattamento in senso probabilistico, distribuendo tra le condizioni caratteristiche note e non note.
 
-Il collegamento con l'EDA è diretto. Tabelle, grafici, indici di posizione, dispersione e forma della distribuzione servono proprio a costruire una descrizione informativa dei dati.
+La randomizzazione non garantisce che ogni piccolo campione sia perfettamente bilanciato. Rende però plausibile attribuire differenze sistematiche successive alla manipolazione, purché procedure, abbandoni, aderenza e misure non introducano nuove distorsioni.
 
-## Studi osservazionali
+Le aspettative possono influenzare partecipanti, ricercatori e valutatori. Le procedure di cecità cercano di ridurre questa possibilità, quando sono praticabili. In alcuni studi il partecipante può ignorare la condizione assegnata; in altri anche chi somministra o valuta può non conoscere l'assegnazione. Quando la cecità non è possibile, le aspettative devono essere considerate esplicitamente come parte del disegno.
 
-Negli **studi osservazionali**, il ricercatore misura variabili senza manipolarle direttamente. Per esempio, si può misurare lo stress accademico e la qualità del sonno in un gruppo di studenti e verificare se sono correlati.
-
-Il vantaggio degli studi osservazionali è che permettono di studiare fenomeni in contesti naturali e situazioni in cui la manipolazione sarebbe impossibile o non etica. Il limite principale è che le associazioni osservate possono essere spiegate da variabili alternative.
-
-### Studi trasversali
-
-In uno **studio trasversale**, i dati vengono raccolti in un unico momento. Questo disegno è utile per descrivere una situazione o esaminare le associazioni tra le variabili. Tuttavia, se stress e sonno vengono misurati nello stesso momento, è difficile stabilire se lo stress preceda il sonno scarso, se il sonno scarso aumenti lo stress o se entrambi dipendano da una terza variabile.
-
-### Studi longitudinali
-
-In uno **studio longitudinale**, le stesse unità vengono osservate più volte nel tempo. Questo tipo di studio è più informativo quando si vogliono studiare il cambiamento, la stabilità e la sequenza temporale. Se lo stress misurato a ottobre predice la qualità del sonno a novembre, abbiamo un'informazione temporale in più rispetto a uno studio trasversale.
-
-Tuttavia, la sequenza temporale da sola non basta a dimostrare la causalità. Potrebbero infatti esistere variabili confondenti, come il carico di lavoro, le condizioni economiche, la salute fisica o i tratti della personalità.
-
-### Studi caso-controllo e studi di coorte
-
-In alcuni contesti si utilizzano disegni osservazionali più specifici.
-
-- Negli **studi di coorte**, un gruppo di individui viene seguito nel tempo per osservare l'insorgenza di un determinato esito. Per esempio, si potrebbero seguire studenti con diversi livelli iniziali di stress e osservare chi sviluppa problemi di sonno persistenti.
-- Negli **studi caso-controllo**, si confrontano persone che presentano un certo esito con persone che non lo presentano, cercando differenze pregresse o concomitanti. Per esempio, si potrebbero confrontare gli studenti con insonnia clinicamente rilevante e quelli senza insonnia in relazione alla loro recente storia di stress accademico.
-
-Questi disegni sono utili in molte aree della psicologia applicata e della ricerca clinica, ma richiedono un'attenzione particolare ai bias di selezione e di ricordo.
-
-## Studi sperimentali
-
-Negli **studi sperimentali**, il ricercatore manipola una variabile indipendente e ne osserva l'effetto su una variabile dipendente. L'obiettivo è rendere più credibile una conclusione causale.
-
-Nel nostro esempio, potremmo manipolare il livello di stress indotto da un compito: un gruppo di soggetti svolgerà un compito valutativo sotto pressione, mentre un altro gruppo svolgerà un compito simile senza pressione. Successivamente, si confronta un indicatore di sonno o un indicatore più immediato collegato allo stress, come l'attivazione fisiologica, le prestazioni o i tempi di reazione.
-
-Un esperimento ben progettato si basa su tre ingredienti principali.
-
-### Manipolazione
-
-La **manipolazione** è l'intervento del ricercatore sulla variabile indipendente. In assenza di manipolazione, è possibile osservare differenze tra le persone, ma è più difficile attribuirle a una causa specifica.
-
-### Controllo
-
-Il **controllo** consiste nel mantenere costanti o comunque gestire i fattori che potrebbero influenzare l'esito. Un gruppo di controllo fornisce un punto di riferimento: cosa accade quando la manipolazione non viene applicata o viene applicata in modo neutro?
-
-### Randomizzazione
-
-La **randomizzazione** assegna i partecipanti alle condizioni sperimentali in modo casuale. Questo metodo aiuta a distribuire variabili note e non note tra i gruppi, riducendo la probabilità che una differenza osservata dipenda da caratteristiche preesistenti dei partecipanti.
-
-::: {.callout-important title="Causalità"}
-La randomizzazione non rende automaticamente perfetto uno studio, ma è uno degli strumenti più potenti per sostenere un'inferenza causale. In assenza di randomizzazione, le differenze tra i gruppi possono riflettere differenze già presenti prima dell'intervento.
+::: {.callout-warning title="Il test statistico non crea causalità"}
+Una differenza statisticamente significativa non trasforma gruppi osservazionali in condizioni sperimentali. L'interpretazione causale dipende dal processo che ha prodotto il confronto, non dal valore-*p* o dal tipo di modello utilizzato.
 :::
 
-### Cecità e aspettative
+## Disegni tra partecipanti ed entro partecipanti
 
-In psicologia, le aspettative dei partecipanti e dei ricercatori possono influenzare il comportamento, le risposte e persino la codifica dei dati. Per questo motivo si utilizzano le procedure di  **cecità** (*blinding*):
+In un disegno **between-subjects**, persone differenti partecipano a condizioni differenti. Ogni partecipante vive una sola condizione. Questo riduce contaminazione, apprendimento e memoria tra condizioni, ma lascia che le differenze individuali contribuiscano alla variabilità del confronto.
 
-- nella **cecità singola**, il partecipante non conosce la condizione assegnata;
-- nella **cecità doppia**, né il partecipante né chi interagisce con lui conoscono l'assegnazione;
-- in alcune situazioni, anche l'analisi può essere condotta senza conoscere le etichette delle condizioni.
+In un disegno **within-subjects**, le stesse persone partecipano a più condizioni. Ogni partecipante funge così da proprio riferimento e il confronto può risultare più preciso. Lo svantaggio è che l'esperienza di una condizione può modificare la risposta alla successiva attraverso pratica, affaticamento, memoria o effetti residui.
 
-Tuttavia, non sempre è possibile ricorrere alla cecità. L'importante è chiedersi se le aspettative e le conoscenze del ricercatore o del partecipante possano influenzare i dati.
+Il controbilanciamento distribuisce ordini differenti tra i partecipanti e riduce la confusione tra effetto della condizione ed effetto dell'ordine. Non elimina però ogni possibile effetto di trascinamento; la scelta del disegno deve dipendere dal fenomeno e dalla durata delle conseguenze della manipolazione.
 
-### Disegni between-subjects e within-subjects
+Questa distinzione ha anche conseguenze sulla struttura del dataset. In un disegno tra partecipanti, ogni persona può comparire in una sola condizione. In un disegno entro partecipanti, la stessa persona produce più osservazioni, che non sono indipendenti e devono mantenere un identificatore comune.
 
-Nei disegni **between-subjects**, i partecipanti sono assegnati a condizioni diverse. Ogni persona vive una sola condizione. Questo metodo evita gli effetti di apprendimento o di contaminazione tra le condizioni, ma richiede un numero maggiore di partecipanti per distinguere l'effetto della manipolazione dalla variabilità individuale.
+## Tre dimensioni della validità
 
-Nei disegni **within-subjects**, invece, gli stessi partecipanti vivono più condizioni. Questo riduce la variabilità tra le persone, perché ogni partecipante funge in parte da proprio controllo. Tuttavia, introduce possibili effetti di ordine, pratica, affaticamento o memoria. Per questo motivo, spesso si bilancia l'ordine delle condizioni.
+La **validità interna** riguarda la credibilità della spiegazione causale. Chiede se la differenza osservata possa essere attribuita al trattamento oppure a confondenti, aspettative, abbandoni, cambiamenti procedurali o altre spiegazioni.
 
-## Validità interna, esterna e di costrutto
+La **validità esterna** riguarda la possibilità di trasferire il risultato ad altre persone, situazioni, periodi o culture. Un esperimento molto controllato può identificare bene un effetto nelle condizioni studiate e avere, allo stesso tempo, una portata limitata fuori dal laboratorio.
 
-Quando valutiamo un disegno, possiamo porci tre domande.
+La **validità di costrutto** riguarda il rapporto tra le operazioni osservate e i concetti teorici. Un questionario chiamato «stress» non misura automaticamente ogni aspetto dello stress accademico; una manipolazione potrebbe modificare ansia da valutazione, attivazione fisiologica o pressione sociale senza rappresentare il costrutto più ampio.
 
-### Validità interna
+Le tre dimensioni non si compensano automaticamente. Un disegno può essere forte su una dimensione e debole su un'altra. Il capitolo successivo approfondirà la validità di costrutto attraverso il problema della misurazione.
 
-La **validità interna** riguarda la credibilità della conclusione causale. Se osserviamo una differenza tra due condizioni, possiamo attribuirla alla manipolazione oppure esistono spiegazioni alternative?
+## Replicazione e portata delle conclusioni
 
-La validità interna aumenta quando il disegno sperimentale controlla i fattori di confusione, utilizza la randomizzazione, standardizza le procedure e riduce il bias di aspettativa.
+Un singolo studio osserva una particolare combinazione di persone, misure, contesto e decisioni analitiche. La replicazione serve a capire quali aspetti del risultato rimangano stabili quando alcune di queste condizioni vengono ripetute o modificate [@youyou2023discipline].
 
-### Validità esterna
+Una replicazione diretta cerca di mantenere il più possibile le procedure originarie. È utile per verificare se il risultato ricompare nelle stesse condizioni operative. Una replicazione concettuale cambia misura, campione o procedura mantenendo l'idea teorica centrale. È più informativa sulla portata della spiegazione, ma rende più difficile identificare la ragione di eventuali differenze.
 
-La **validità esterna** riguarda la generalizzabilità. I risultati sono validi solo per il campione osservato o possono essere trasferiti ad altre persone, contesti, tempi e culture?
+La replicazione non è quindi una semplice votazione tra «successo» e «fallimento». È parte dell'accumulo dell'evidenza e aiuta a distinguere risultati legati a una configurazione molto specifica da regolarità che si mantengono attraverso contesti differenti.
 
-Un esperimento molto controllato può avere una buona validità interna, ma una validità esterna limitata. Al contrario, uno studio condotto in un contesto naturale può essere più realistico, ma meno controllato.
+## Dal disegno al dataset
 
-### Validità di costrutto
+Prima di eseguire un'analisi esplorativa dobbiamo ricostruire il percorso che ha prodotto il file. Dobbiamo sapere che cosa rappresenta ogni riga, se la stessa persona compare più volte, come sono state codificate le condizioni, quali unità sono state escluse e in quali momenti sono state raccolte le misure.
 
-La **validità di costrutto** riguarda il rapporto tra la variabile osservata e il costrutto teorico. Il questionario utilizzato misura davvero lo stress accademico? L'indicatore del sonno rappresenta davvero la qualità del sonno?
+Queste informazioni determinano anche le operazioni in R. Raggruppare per `gruppo` presuppone che l'etichetta identifichi correttamente la condizione. Calcolare una media per riga o per partecipante richiede di conoscere l'unità di analisi. Trattare tutte le righe come indipendenti può essere scorretto quando provengono dalla stessa persona, classe, famiglia o struttura organizzativa.
 
-A questa domanda si tornerà nel capitolo successivo, dedicato alla misurazione. Qui è sufficiente notare che un disegno ben costruito può comunque produrre conclusioni fragili se le variabili non rappresentano adeguatamente i costrutti teorici.
+L'EDA non comincia quindi con `summary()` o `ggplot()`. Comincia dalla documentazione del disegno.
 
-## Replicazione e accumulo dell'evidenza
-
-Uno studio singolo difficilmente chiude una questione scientifica. Ciò è particolarmente vero in psicologia, dove gli effetti possono dipendere dal contesto, dalla popolazione, dalla procedura, dagli strumenti e dalle modalità di analisi. La replicazione è quindi una pratica essenziale per valutare la robustezza dei risultati [@youyou2023discipline].
-
-Possiamo distinguere due tipi di replicazione:
-
-- **replicazione diretta**, quando si ripete uno studio cercando di mantenere il più possibile le stesse condizioni;
-- **replicazione concettuale**, quando si testa la stessa idea con procedure, campioni o misure parzialmente diverse.
-
-La replicazione non è un atto meccanico. Permette di capire se un risultato dipende da una specifica combinazione di scelte operative o se riflette un modello più stabile.
-
-## Collegamento con EDA e R
-
-Quando arriveremo all'analisi esplorativa dei dati, useremo R per organizzare i dataset, calcolare le statistiche descrittive, costruire i grafici e individuare i pattern. Tuttavia, ogni operazione avrà senso solo se collegata al disegno.
-
-Prima di analizzare un dataset, dovremmo sempre chiederci:
-
-1. Qual è la popolazione target?
-2. Qual è la popolazione accessibile?
-3. Come è stato selezionato il campione?
-4. Quali variabili sono state misurate e in quale momento?
-5. Il disegno è descrittivo, osservazionale o sperimentale?
-6. Quali bias sono plausibili?
-7. Quali conclusioni sono giustificate?
-
-Queste domande saranno parte integrante del lavoro pratico: prima di calcolare una media o di disegnare un grafico, dobbiamo comprendere il significato delle righe e delle colonne del dataset.
-
-## Collegamento con l'inferenza bayesiana
-
-Il legame con l'inferenza bayesiana è profondo, anche se in questo capitolo non introdurremo ancora modelli formali. Un'analisi bayesiana consente di rendere esplicita l'incertezza e di aggiornare le credenze alla luce dei dati. Tuttavia, l'incertezza rappresentata dal modello non esaurisce tutte le fonti di incertezza.
-
-Alcune incertezze derivano dal processo di generazione dei dati:
-
-- il campione rappresenta davvero la popolazione di riferimento?
-- la procedura ha introdotto dei bias?
-- le variabili misurate catturano i costrutti rilevanti?
-- il disegno consente di trarre conclusioni causali o solo associative?
-- Il risultato è robusto a campioni e contesti diversi?
-
-Queste domande rimarranno valide anche quando useremo modelli più sofisticati. Un modello bayesiano ben stimato non compensa automaticamente un disegno debole. Piuttosto, ci aiuta a discutere in modo più trasparente ciò che i dati, dati i loro limiti, suggeriscono.
-
-## Cosa portare al capitolo successivo
-
-Il messaggio centrale del capitolo è che i dati hanno una storia. Prima di analizzarli dobbiamo sapere come sono stati prodotti.
-
-Da questo capitolo dovremmo portare con noi cinque idee:
-
-1. La popolazione target non coincide necessariamente con il campione osservato.
-2. Il campionamento influenza la possibilità di generalizzare.
-3. Il campionamento di convenienza può essere utile, ma richiede cautela nell'interpretazione dei risultati.
-4. Disegni descrittivi, osservazionali e sperimentali sostengono conclusioni diverse.
-5. La causalità richiede condizioni più stringenti rispetto alla semplice associazione.
-
-Nel prossimo capitolo ci concentreremo su un altro passaggio essenziale: **che cosa significa misurare una variabile psicologica**. Anche quando il disegno è appropriato, infatti, resta da chiarire se i numeri osservati rappresentano davvero i costrutti che vogliamo studiare.
-
-## Esercizi {.unnumbered}
-
-::: {.callout-important title="Problemi" collapse="true"}
-1. Uno studio vuole stimare il livello medio di stress degli studenti universitari italiani, ma recluta partecipanti solo tramite un annuncio pubblicato nel corso di psicometria di un singolo ateneo. Qual è la popolazione target? Qual è la popolazione accessibile? Quali limiti di generalizzazione emergono?
-
-2. Nel dataset di uno studio su stress e sonno, osserviamo che gli studenti più stressati riportano una peggiore qualità del sonno. Quali conclusioni sono giustificate se lo studio è trasversale? Quali conclusioni non sono giustificate?
-
-3. Perché aumentare la dimensione di un campione di convenienza non elimina necessariamente il bias di selezione?
-
-4. Confronta un disegno between-subjects e un disegno within-subjects per uno studio sperimentale sull'effetto di una procedura di rilassamento sull'ansia pre-esame. Quali vantaggi e limiti avrebbe ciascun disegno?
-
-5. Scegli uno studio psicologico che conosci, anche ipotetico, e valuta separatamente validità interna, validità esterna e validità di costrutto.
+::: {.callout-note title="Scheda minima prima dell'analisi"}
+Prima di lavorare su un dataset dovrebbe essere possibile formulare, in poche frasi, chi è stato osservato, come è avvenuta la selezione, quale unità rappresenta una riga, quando sono state raccolte le misure e quale confronto il disegno rende interpretabile.
 :::
+
+## Collegamento con il workflow bayesiano
+
+Un modello bayesiano rende esplicita l'incertezza sui parametri e sulle predizioni, condizionatamente alla prior, alla verosimiglianza e ai dati. Questa rappresentazione non comprende automaticamente ogni incertezza introdotta dal disegno.
+
+Una distribuzione a posteriori molto concentrata può descrivere con precisione il parametro del modello per un campione selezionato. Non dimostra che il campione rappresenti la popolazione target. Un modello gerarchico può rappresentare dipendenze tra scuole o partecipanti, ma soltanto se tali strutture sono state registrate e incluse. Una probabilità a posteriori elevata per una differenza non trasforma un confronto osservazionale in un effetto causale.
+
+Il disegno definisce dunque il problema che il modello può affrontare. Il workflow bayesiano aggiunge una rappresentazione coerente dell'incertezza, controlli predittivi e possibilità di confrontare modelli; non sostituisce la qualità della raccolta e della misurazione.
+
+## Riflessioni conclusive {.unnumbered .unlisted}
+
+I dati hanno una storia. Prima di descriverli o modellizzarli, dobbiamo sapere chi è stato osservato, come sono state assegnate le condizioni, quando sono state raccolte le misure e quali unità sono tra loro dipendenti.
+
+Il campionamento determina soprattutto la portata della generalizzazione. L'assegnazione e il controllo determinano soprattutto la credibilità di una conclusione causale. Studi descrittivi, osservazionali, longitudinali e sperimentali non rappresentano versioni più o meno sofisticate della stessa domanda: rispondono a domande differenti.
+
+L'analisi più avanzata non può recuperare informazioni che il disegno non ha prodotto. Può però rendere più trasparenti le assunzioni, quantificare l'incertezza appropriata e mostrare quali conclusioni rimangano compatibili con i dati.
+
+Nel prossimo capitolo passeremo dal processo che seleziona le osservazioni al processo che assegna loro un significato numerico: la misurazione dei costrutti psicologici.
+
+## Esercizi {.unnumbered .unlisted}
+
+1. Uno studio vuole stimare lo stress medio degli studenti universitari italiani, ma recluta volontari attraverso un corso di psicometria di un singolo ateneo. Identifica popolazione target, popolazione accessibile e campione. Quale conclusione sarebbe proporzionata al disegno?
+
+2. In uno studio trasversale, stress e qualità del sonno risultano correlati. Formula una conclusione giustificata e due spiegazioni causali che i dati non permettono di distinguere.
+
+3. Perché aumentare la numerosità di un campione di convenienza non elimina necessariamente il bias di selezione?
+
+4. Uno studio usa un campione di convenienza, ma assegna casualmente i partecipanti a intervento e controllo. Che cosa sostiene la randomizzazione? Che cosa non risolve il campionamento?
+
+5. Confronta un disegno between-subjects e uno within-subjects per valutare una tecnica di rilassamento. Quale struttura avrà il dataset nei due casi?
+
+6. Perché la precedenza temporale osservata in uno studio longitudinale non è sufficiente a dimostrare causalità?
+
+7. Un esperimento di laboratorio usa una manipolazione ben controllata, ma soltanto studenti giovani di un unico corso. Quale dimensione della validità appare più forte e quale richiede maggiore cautela?
+
+8. Prima di analizzare un dataset trovi più righe per ogni identificatore di partecipante. Quale informazione sul disegno devi recuperare prima di calcolare statistiche o costruire grafici?
 
 ::: {.callout-tip title="Soluzioni" collapse="true"}
-**1. Popolazione target, popolazione accessibile e limiti di generalizzazione**
+1. La popolazione target è costituita dagli studenti universitari italiani. La popolazione accessibile comprende gli studenti raggiunti attraverso quel corso e quell'ateneo. Il campione include soltanto chi accetta e completa lo studio. È giustificato descrivere il campione; una generalizzazione all'intera popolazione richiede molta cautela.
 
-La popolazione target dichiarata è l'insieme degli studenti universitari italiani. La popolazione accessibile, però, è molto più ristretta: gli studenti raggiunti attraverso il corso di psicometria di un singolo ateneo. Il campione effettivo sarà ancora più ristretto, perché includerà solo chi decide di rispondere.
+2. Possiamo affermare che, nel campione e nel momento osservato, livelli maggiori di stress sono associati a una peggiore qualità del sonno. Non possiamo distinguere se lo stress peggiori il sonno, se il sonno insufficiente aumenti lo stress o se una terza variabile influenzi entrambi.
 
-Il limite principale è che il campione potrebbe differire dalla popolazione target per percorso di studi, età, genere, motivazione, periodo dell'anno, familiarità con la psicologia e molti altri fattori. Lo studio può essere utile come esplorazione, ma non autorizza una stima forte del livello medio di stress di tutti gli studenti universitari italiani.
+3. La numerosità riduce la variabilità casuale, ma non modifica il meccanismo che rende alcune persone più probabili di altre nel campione. Molte osservazioni selezionate nello stesso modo possono produrre una stima molto precisa ma sistematicamente distorta.
 
-**2. Associazione tra stress e sonno in uno studio trasversale**
+4. La randomizzazione rende più credibile il confronto causale tra intervento e controllo per le persone studiate. Non garantisce che queste persone rappresentino tutti gli studenti, altre fasce d'età o altri contesti.
 
-Se lo studio è trasversale, possiamo dire che nel campione osservato stress e qualità del sonno risultano associati. Possiamo anche descrivere la direzione dell'associazione, per esempio che livelli più alti di stress tendono ad accompagnarsi a qualità del sonno più bassa.
+5. Nel disegno between-subjects ogni partecipante appartiene a una sola condizione. Nel disegno within-subjects ogni partecipante produce più osservazioni e deve mantenere lo stesso identificatore; le righe riferite alla stessa persona sono dipendenti.
 
-Non possiamo però concludere che lo stress causa il peggioramento del sonno. Potrebbe essere il sonno scarso ad aumentare lo stress, oppure entrambe le variabili potrebbero dipendere da altri fattori, come carico di studio, lavoro, salute fisica o difficoltà economiche.
+6. Una variabile può precederne un'altra ed essere comunque associata a confondenti che producono entrambe. L'ordine temporale elimina alcune spiegazioni, ma non tutte.
 
-**3. Dimensione del campione e bias di selezione**
+7. La validità interna può essere forte grazie al controllo e alla randomizzazione. La validità esterna richiede cautela perché campione e contesto sono molto circoscritti.
 
-Un campione più grande riduce la variabilità casuale delle stime, ma non elimina una distorsione sistematica. Se il reclutamento raggiunge soprattutto un certo tipo di partecipanti, aggiungere altri partecipanti reclutati nello stesso modo può rendere il risultato più stabile ma ancora distorto.
-
-Per esempio, diecimila risposte raccolte solo da studenti di psicologia non rappresentano automaticamente tutti gli studenti universitari. La quantità di dati non sostituisce la qualità del processo di campionamento.
-
-**4. Disegno between-subjects e within-subjects**
-
-In un disegno between-subjects, un gruppo riceve la procedura di rilassamento e un altro gruppo no, o riceve una procedura di controllo. Il vantaggio è che ogni partecipante sperimenta una sola condizione, riducendo effetti di contaminazione. Il limite è che differenze individuali preesistenti possono aumentare la variabilità, anche se la randomizzazione aiuta a bilanciarle.
-
-In un disegno within-subjects, gli stessi partecipanti vengono osservati in entrambe le condizioni, per esempio con e senza rilassamento. Il vantaggio è che ogni partecipante funge da proprio controllo, aumentando la precisione. Il limite è che possono comparire effetti di ordine, pratica, aspettativa o affaticamento. Servirebbe quindi bilanciare l'ordine delle condizioni.
-
-**5. Validità interna, esterna e di costrutto**
-
-La validità interna riguarda quanto è credibile l'interpretazione causale: il disegno controlla spiegazioni alternative? La validità esterna riguarda la possibilità di generalizzare: il campione e il contesto rappresentano la popolazione o le situazioni a cui vogliamo riferirci? La validità di costrutto riguarda la qualità della misurazione: le variabili osservate rappresentano davvero i costrutti teorici?
-
-Uno studio può essere forte su una dimensione e debole su un'altra. Per esempio, un esperimento di laboratorio può avere buona validità interna ma validità esterna limitata; uno studio sul campo può avere maggiore realismo ma minore controllo.
+8. Occorre sapere se le righe rappresentano momenti, condizioni, prove o misure differenti della stessa persona. Questa informazione determina l'unità di analisi e impedisce di trattare osservazioni dipendenti come indipendenti.
 :::
 
-## Bibliografia {.unnumbered}
+::: {.callout-note title="Punti chiave" collapse="true"}
+- Il disegno stabilisce quali conclusioni sono sostenute dai dati.
+- Popolazione target, popolazione accessibile e campione non coincidono automaticamente.
+- Il campionamento riguarda soprattutto la generalizzazione; l'assegnazione riguarda soprattutto la causalità.
+- Una grande numerosità non elimina un bias sistematico.
+- Studi descrittivi, osservazionali, longitudinali e sperimentali rispondono a domande differenti.
+- La randomizzazione aumenta la credibilità causale, ma non garantisce la generalizzabilità.
+- Validità interna, esterna e di costrutto devono essere valutate separatamente.
+- La struttura del dataset riflette il disegno e determina quali operazioni in R siano appropriate.
+:::
+
+::: {.callout-note title="Ambiente di sviluppo" collapse="true"}
+Il capitolo non richiede pacchetti aggiuntivi. Le informazioni sull'ambiente R possono essere ottenute con:
+
+```{r}
+#| echo: true
+#| eval: false
+sessionInfo()
+```
+:::
+
+## Bibliografia {.unnumbered .unlisted}

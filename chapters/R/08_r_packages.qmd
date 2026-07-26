@@ -1,312 +1,449 @@
-# Pacchetti {#sec-r-packages}
+# Pacchetti: scegliere e dichiarare gli strumenti {#sec-r-packages}
+
+::: {.callout-note title="In sintesi"}
+**Da sapere**  Un pacchetto estende R con funzioni, dati e documentazione. Usarlo significa aggiungere una dipendenza all'analisi. La domanda importante non è quanti pacchetti conoscere, ma perché ne serve uno, quali funzioni vengono usate e se il documento può essere eseguito in una sessione pulita.
+
+**Da saper fare**  Distinguere installazione e uso; riconoscere da quale pacchetto proviene una funzione; limitare le dipendenze agli strumenti necessari; diagnosticare gli errori più comuni; chiedere all'AI soluzioni coerenti con i pacchetti già adottati nel progetto.
+:::
 
 ## Introduzione {.unnumbered .unlisted}
 
-In R, molte analisi non si effettuano utilizzando esclusivamente le funzioni già disponibili al momento dell'installazione. Si utilizzano anche i pacchetti, ovvero raccolte di funzioni, dati e documentazione preparate da altri utenti o gruppi di ricerca.
+R contiene già molte funzioni. Altre vengono distribuite attraverso i **pacchetti**, cioè raccolte organizzate di codice, documentazione e, talvolta, dati di esempio.
 
-Per uno studente che inizia a lavorare con R, i pacchetti non sono un argomento secondario dal punto di vista tecnico. I pacchetti fanno parte del modo in cui un'analisi diventa comprensibile e riproducibile. Quando leggiamo un codice, dobbiamo sapere non solo cosa fa, ma anche da quale pacchetto provengono le funzioni che usa.
+Nei capitoli precedenti abbiamo usato `readr` per importare file, `dplyr` per trasformare tabelle e `ggplot2` per costruire grafici. Questi pacchetti non sono semplici accessori. Fanno parte della procedura da cui dipendono i risultati.
 
-Questo è ancora più importante quando il codice viene suggerito da un sistema di IA. L'AI può suggerire funzioni corrette, ma può anche:
+Quando leggiamo:
 
-- usare pacchetti non installati;
-- mescolare funzioni provenienti da pacchetti diversi.
-- usare funzioni che hanno lo stesso nome, ma significati diversi;
-- suggerire soluzioni più complicate del necessario;
-- dimenticare di caricare il pacchetto richiesto.
+```r
+dplyr::filter(dati, stress > 20)
+```
 
-In questo capitolo non faremo un catalogo dei pacchetti R, ma impareremo solo ciò che serve per lavorare in modo ordinato: **installare**, **caricare**, **riconoscere** e **documentare** i pacchetti usati in un'analisi.
+la parte più importante non è ricordare i due punti doppi. È riconoscere che l'operazione `filter()` viene fornita da `dplyr` e che il documento dipende dalla disponibilità di quel pacchetto.
 
-## Cosa imparerai
+La domanda guida del capitolo è:
 
-Alla fine del capitolo dovresti essere in grado di:
+> Quali strumenti esterni usa l'analisi, perché sono necessari e come possiamo rendere esplicita questa dipendenza?
 
-- distinguere tra installare e caricare un pacchetto;
-- capire da quale pacchetto proviene una funzione;
-- interpretare errori comuni legati ai pacchetti;
-- usare la forma `pacchetto::funzione()` quando rende il codice più chiaro;
-- controllare il codice prodotto con AI prima di usarlo in un report Quarto.
+Un assistente AI può suggerire rapidamente nuovi pacchetti. Può però introdurne molti senza necessità, mescolare approcci differenti o proporre funzioni inesistenti. Il ricercatore deve saper chiedere una soluzione semplice e verificare che ogni dipendenza sia reale, appropriata e dichiarata.
 
-## Che cos'è un pacchetto R
-
-Un pacchetto R è un'estensione di R. In genere contiene:
-
-- **funzioni**, cioè comandi già pronti per svolgere operazioni specifiche;
-- **dataset**, spesso usati come esempi;
-- **documentazione**, che spiega come usare le funzioni;
-- talvolta **vignette**, cioè guide pratiche più estese.
-
-Per esempio, nel percorso di questo modulo useremo spesso pacchetti come:
-
-- `dplyr`, per trasformare e riassumere dati;
-- `ggplot2`, per costruire grafici;
-- `readr` o `rio`, per importare dati;
-- `tibble`, per lavorare con tabelle ordinate;
-- `quarto`, non come pacchetto principale di analisi, ma come ambiente per collegare testo, codice e risultati.
-
-Non è necessario conoscere molti pacchetti. È più importante conoscere bene pochi strumenti e saperli usare in modo appropriato.
-
-::: {.callout-note}
-## Idea chiave
-
-Un pacchetto non è una magia esterna a R, ma codice scritto da qualcuno e distribuito in modo che altri possano utilizzarlo. Usare un pacchetto significa quindi affidarsi a uno strumento e per questo motivo è importante sapere quale strumento si sta utilizzando.
+::: {.callout-tip title="Prerequisiti"}
+È utile avere letto @sec-r-environment e @sec-quarto. Un pacchetto è una delle dipendenze che devono essere disponibili quando il documento viene eseguito dall'inizio in una sessione pulita.
 :::
 
-## Installare e caricare: due operazioni diverse
+## Panoramica del capitolo {.unnumbered .unlisted}
 
-Un errore molto comune è confondere **installare** e **caricare** un pacchetto.
+Il capitolo presenta i pacchetti come strumenti modulari. Distingueremo installazione e uso, vedremo due modi per richiamare una funzione, discuteremo gli errori più frequenti e costruiremo un criterio per decidere se introdurre una nuova dipendenza. La parte finale mostra come formulare richieste all'AI e come verificare un documento Quarto che utilizza pacchetti esterni.
 
-| Operazione | Quando si fa | Cosa significa |
-|---|---|---|
-| `install.packages()` | Di solito una sola volta | Scarica e installa il pacchetto sul computer |
-| `library()` | Ogni volta che inizi una nuova sessione di lavoro | Rende disponibili le funzioni del pacchetto |
+::: {.callout-note title="Preparazione del notebook"}
+Gli esempi vengono mostrati come codice non eseguibile. Non è necessario installare nuovi pacchetti per leggere il capitolo. Nel progetto reale, installa soltanto gli strumenti che servono ai capitoli e alle analisi che stai effettivamente eseguendo.
+:::
 
-Per installare un pacchetto si usa:
+## Un pacchetto risponde a una necessità
+
+Prima di introdurre un pacchetto dovremmo poter descrivere la capacità che ci manca.
+
+Per esempio:
+
+> Devo leggere un file CSV in una tabella R.
+
+> Devo trasformare una tabella mediante operazioni leggibili.
+
+> Devo rappresentare graficamente una distribuzione.
+
+A queste necessità possono corrispondere `readr`, `dplyr` e `ggplot2`. La scelta nasce dal compito, non dalla popolarità del pacchetto.
+
+Un pacchetto contiene generalmente funzioni, documentazione ed esempi. Può offrire una soluzione più chiara o affidabile di quella che scriveremmo da zero. Introduce però anche una dipendenza: il pacchetto deve essere disponibile, la funzione deve essere usata correttamente e il suo comportamento deve essere compreso abbastanza da controllarne il risultato.
+
+::: {.callout-important title="Un pacchetto è una scelta metodologica e tecnica"}
+Adottare un pacchetto significa scegliere un insieme di strumenti e convenzioni. La scelta dovrebbe semplificare il lavoro o rendere più chiaro il codice, non aggiungere complessità senza beneficio.
+:::
+
+In questo modulo useremo pochi pacchetti e li introdurremo soltanto quando rispondono a un bisogno concreto. Non è necessario conoscere l'ecosistema completo di R.
+
+## Installare e usare sono passaggi differenti
+
+L'**installazione** rende il pacchetto disponibile sul computer:
 
 ```r
 install.packages("dplyr")
 ```
 
-Le virgolette sono necessarie perché `"dplyr"` è il nome del pacchetto da scaricare.
+Di norma viene eseguita una volta, fuori dal documento analitico. Inserire `install.packages()` in un file Quarto significa chiedere al render di modificare l'ambiente del computer, scaricando software durante l'esecuzione. Questa operazione non è necessaria per produrre l'analisi e può fallire per assenza di connessione o permessi.
 
-Dopo averlo installato, per usarlo in una sessione di lavoro si scrive:
-
-```r
-library(dplyr)
-```
-
-In questo caso le virgolette non sono necessarie.
-
-::: {.callout-important}
-## Da ricordare
-
-Installare un pacchetto non basta. Dopo l'installazione, il pacchetto deve essere caricato con `library()` ogni volta che apri una nuova sessione di R o renderizzi un documento Quarto.
-:::
-
-## Dove mettere `library()` in un documento Quarto
-
-In un report Quarto è buona pratica caricare i pacchetti all'inizio del documento, in un chunk dedicato. In questo modo il lettore capisce subito da quali strumenti dipende l'analisi.
-
-Per esempio:
-
-```{r}
-#| label: packages-load
-#| message: false
-#| warning: false
-
-library(dplyr)
-library(ggplot2)
-library(readr)
-```
-
-Le opzioni `message: false` e `warning: false` evitano che il documento mostri messaggi tecnici non necessari. Tuttavia, durante il lavoro è utile leggere quei messaggi almeno una volta: a volte contengono indicazioni importanti.
-
-## Usare una funzione senza caricare tutto il pacchetto
-
-A volte, però, vogliamo usare una sola funzione di un pacchetto. In questi casi, è possibile scrivere il nome del pacchetto, due punti doppi e poi il nome della funzione.
-
-```r
-readr::read_csv("data/questionario.csv")
-```
-
-La forma generale è:
-
-```r
-pacchetto::funzione(argomenti)
-```
-
-Questa forma è utile perché rende esplicita l'origine della funzione. Per esempio, se scriviamo:
-
-```r
-dplyr::filter(dati, gruppo == "sperimentale")
-```
-
-chi legge il codice capisce subito che `filter()` viene dal pacchetto `dplyr`.
-
-Questo può essere importante perché pacchetti diversi possono contenere funzioni con lo stesso nome. Se R trova due funzioni con lo stesso nome, userà quella caricata più di recente. La forma `pacchetto::funzione()` elimina l'ambiguità.
-
-::: {.callout-tip}
-## Una buona abitudine
-
-Quando il codice è breve e ha uno scopo didattico, è sufficiente scrivere  `library(dplyr)` e poi `filter()`. Quando si vuole evitare ambiguità o si usa una funzione rara, `dplyr::filter()` rende il codice più trasparente.
-:::
-
-## Errori comuni
-
-Gli errori legati ai pacchetti sono frequenti, soprattutto all'inizio. Alcuni messaggi possono rivelarsi più utili di quanto sembrino.
-
-### Il pacchetto non è installato
-
-Se scrivi:
+L'**uso** del pacchetto avviene durante ogni sessione in cui servono le sue funzioni. Possiamo caricarlo:
 
 ```r
 library(dplyr)
 ```
 
-e R risponde con un errore simile a:
+oppure richiamare direttamente una funzione:
+
+```r
+dplyr::filter(
+  dati,
+  stress > 20
+)
+```
+
+La distinzione algoritmica è semplice:
+
+$$
+\text{installare}
+=
+\text{rendere lo strumento disponibile sul computer}
+$$
+
+$$
+\text{usare}
+=
+\text{richiamare lo strumento durante l'analisi}
+$$
+
+Se il pacchetto non è installato, nessuna delle due forme può funzionare. Se è installato ma non caricato, la forma `pacchetto::funzione()` rimane disponibile.
+
+## Due modi per rendere disponibile una funzione
+
+Caricare un pacchetto con `library()` rende le sue funzioni richiamabili direttamente:
+
+```r
+library(dplyr)
+
+filter(
+  dati,
+  stress > 20
+)
+```
+
+Questa forma è comoda quando molte funzioni dello stesso pacchetto vengono usate ripetutamente. In un documento Quarto, i pacchetti principali possono essere caricati in un chunk iniziale.
+
+La forma esplicita:
+
+```r
+dplyr::filter(
+  dati,
+  stress > 20
+)
+```
+
+mostra invece l'origine della funzione nel punto in cui viene usata. È utile quando la funzione compare poche volte, quando il nome può essere ambiguo oppure quando vogliamo rendere immediatamente visibile la dipendenza.
+
+Non esiste una regola assoluta secondo cui una forma sia sempre migliore. La scelta deve favorire la leggibilità.
+
+| Situazione | Scelta generalmente chiara |
+|---|---|
+| Molte funzioni dello stesso pacchetto | Caricare il pacchetto all'inizio |
+| Una funzione usata una sola volta | `pacchetto::funzione()` |
+| Nomi potenzialmente ambigui | `pacchetto::funzione()` |
+| Capitolo didattico breve | Forma che rende più facile riconoscere l'origine |
+
+L'importante è evitare che il codice dipenda da un pacchetto caricato accidentalmente nella sessione e mai dichiarato nel documento.
+
+## La provenienza della funzione fa parte del significato
+
+Pacchetti differenti possono contenere funzioni con lo stesso nome. Il caso non rappresenta necessariamente un errore, ma richiede di sapere quale funzione venga eseguita.
+
+Se R segnala che una funzione è stata *masked*, sta comunicando che il nome esiste in più pacchetti caricati e che una versione prevale sull'altra.
+
+La soluzione non consiste nel nascondere automaticamente il messaggio. Dobbiamo stabilire quale funzione sia necessaria e, se serve, renderne esplicita la provenienza:
+
+```r
+dplyr::filter(
+  dati,
+  stress > 20
+)
+```
+
+Questa forma evita che il significato del codice cambi in funzione dell'ordine con cui i pacchetti sono stati caricati.
+
+Una domanda utile da rivolgere all'AI è:
+
+> Indica da quale pacchetto proviene ogni funzione non appartenente a R base e segnala eventuali nomi che possono entrare in conflitto.
+
+## Un errore indica quale dipendenza manca
+
+Gli errori relativi ai pacchetti possono essere letti come una procedura diagnostica.
+
+Se:
+
+```r
+library(dplyr)
+```
+
+produce un messaggio simile a:
 
 ```text
 there is no package called 'dplyr'
 ```
 
-significa che il pacchetto non è installato sul computer. La soluzione è:
+il pacchetto non è disponibile nell'installazione corrente di R. Occorre installarlo prima di eseguire nuovamente il documento.
 
-```r
-install.packages("dplyr")
+Se invece R segnala:
+
+```text
+could not find function "filter"
 ```
 
-Poi puoi caricarlo:
+le possibili spiegazioni includono un pacchetto non caricato, un nome errato oppure una funzione appartenente a un altro pacchetto.
 
-```r
-library(dplyr)
-```
+Il metodo generale è:
 
-### Il pacchetto è installato ma non caricato
+$$
+\text{identificare la funzione}
+\longrightarrow
+\text{identificare il pacchetto}
+\longrightarrow
+\text{verificare l'installazione}
+\longrightarrow
+\text{verificare il richiamo}.
+$$
 
-Se scrivi:
+Non è necessario modificare molte righe a caso. È sufficiente localizzare la dipendenza.
 
-```r
-filter(dati, stress > 3)
-```
+::: {.callout-tip title="Chiedere una diagnosi all'AI"}
+Una richiesta utile è:
 
-e R dice che non trova la funzione, può essere che il pacchetto non sia stato caricato. In questo caso devi aggiungere:
-
-```r
-library(dplyr)
-```
-
-oppure usare la forma esplicita:
-
-```r
-dplyr::filter(dati, stress > 3)
-```
-
-### Una funzione ha lo stesso nome in pacchetti diversi
-
-A volte R segnala che una funzione è stata "mascherata" da un altro pacchetto. Ciò accade quando due pacchetti contengono funzioni con lo stesso nome.
-
-Non è necessariamente un problema. Tuttavia, è un segnale: devi sapere quale funzione stai utilizzando. In caso di dubbio, usa `pacchetto::funzione()`.
-
-## Pacchetti e AI
-
-L'AI può essere molto utile quando si lavora con i pacchetti. Può suggerire il pacchetto da utilizzare, spiegare un errore, riscrivere una pipeline o proporre un'alternativa più semplice.
-
-Tuttavia, non devi accettare il codice senza prima controllarlo.
-
-::: {.callout-warning}
-## Usare l'AI con criterio
-
-Quando l'AI propone il codice R, controlla sempre:
-
-1. i pacchetti richiesti sono indicati chiaramente?
-2. sono già installati e caricati?
-3. le funzioni esistono davvero?
-4. il codice usa pacchetti coerenti con il resto del progetto?
-5. esiste una soluzione più semplice che utilizzi gli strumenti che già conosci?
+> R segnala `could not find function "..."`. Non riscrivere l'analisi. Indicami prima a quale pacchetto dovrebbe appartenere la funzione, come verificare se il pacchetto è installato e come richiamare esplicitamente la funzione.
 :::
 
-Un buon prompt non si limita a chiedere: "scrivi il codice". Chiede un codice leggibile, coerente con gli strumenti che conosci e facile da controllare.
+## Scegliere il minor numero di strumenti necessari
 
-Per esempio:
+L'AI può proporre una soluzione che usa un nuovo pacchetto per ogni piccola operazione. Il codice può funzionare, ma il progetto diventa più difficile da comprendere e riprodurre.
 
-> Scrivi codice R usando dplyr e ggplot2, senza introdurre pacchetti aggiuntivi se non sono necessari. Commenta brevemente ogni passaggio.
+Prima di accettare una nuova dipendenza possiamo porci tre domande:
 
-Oppure:
+1. il pacchetto risolve un problema che esiste davvero;
+2. la stessa operazione è già disponibile con gli strumenti adottati;
+3. il vantaggio ottenuto giustifica la nuova dipendenza.
 
-> Questo codice usa pacchetti che non conosco. Puoi riscriverlo usando solo dplyr, ggplot2 e readr?
+Per esempio, se il progetto usa già `dplyr`, non è necessariamente utile introdurre un altro pacchetto soltanto per rinominare una colonna. Se una funzione specialistica esegue invece un'operazione difficile da implementare e ampiamente controllata, il nuovo pacchetto può essere appropriato.
 
-Questi prompt aiutano a evitare codice inutilmente complesso.
+Il criterio non è usare sempre R base. È evitare dipendenze che non migliorano chiarezza, affidabilità o capacità analitica.
 
-## Pacchetti e riproducibilità
+::: {.callout-warning title="Più pacchetti non significa analisi più avanzata"}
+Una lunga lista di `library()` può indicare un progetto sofisticato, ma può anche indicare che il codice è stato assemblato senza un disegno coerente. Ogni pacchetto dovrebbe avere una funzione riconoscibile nel workflow.
+:::
 
-Un'analisi è riproducibile se un'altra persona può eseguirla e ottenere gli stessi risultati. I pacchetti fanno parte di questa riproducibilità.
+## Pacchetti in un documento Quarto
 
-Per chiarire quali fattori influenzano un'analisi, è utile:
+Un documento Quarto deve dichiarare gli strumenti da cui dipende. Se molti chunk usano `dplyr` e `ggplot2`, possiamo caricarli in un chunk iniziale:
 
-- caricare i pacchetti all'inizio del documento;
-- evitare pacchetti non necessari;
-- usare `pacchetto::funzione()` quando c'è ambiguità;
-- indicare nel testo quali strumenti principali sono stati utilizzati;
-- non consegnare un documento che funziona solo perché alcuni pacchetti sono caricati "per caso" nella propria sessione.
+```r
+#| label: packages-load
+#| message: false
 
-Alla fine di un'analisi più complessa può essere utile registrare le informazioni sulla sessione di lavoro:
+library(dplyr)
+library(ggplot2)
+```
+
+L'opzione `message: false` può evitare che i messaggi di caricamento compaiano nel report finale. Prima di nasconderli è però opportuno leggerli almeno una volta, perché possono segnalare conflitti o altre informazioni utili.
+
+Quando una funzione viene usata soltanto in un punto, possiamo evitare il caricamento globale:
+
+```r
+readr::read_csv(
+  "data/raw/questionario.csv"
+)
+```
+
+Il documento dovrebbe essere renderizzato dopo avere riavviato R. Questo controllo verifica che nessun pacchetto necessario sia disponibile soltanto perché caricato manualmente in precedenza.
+
+Un chunk iniziale non deve contenere `install.packages()`. L'installazione appartiene alla preparazione del computer; il documento deve invece dichiarare che cosa usa durante l'analisi.
+
+## Versioni e riproducibilità
+
+Il comportamento di un pacchetto può cambiare tra versioni. Nella maggior parte degli esercizi introduttivi non è necessario gestire ambienti complessi, ma è utile registrare le informazioni sulla sessione quando un risultato deve essere conservato o condiviso.
 
 ```r
 sessionInfo()
 ```
 
-Questa funzione mostra la versione di R e dei pacchetti caricati. Non è sempre necessario includerla in un report didattico breve, ma è utile sapere che esiste.
+Il risultato include la versione di R, il sistema operativo e i pacchetti caricati.
 
-## Una struttura minima per i tuoi report
-
-Nei lavori di questo modulo, puoi usare una struttura semplice:
-
-```{r}
-#| label: packages-template
-#| message: false
-#| warning: false
-
-library(dplyr)
-library(ggplot2)
-library(readr)
-```
-
-Poi, quando usi una funzione meno comune, puoi rendere esplicito il pacchetto:
+Per controllare un singolo pacchetto possiamo usare:
 
 ```r
-readr::read_csv("data/questionario.csv")
+packageVersion("dplyr")
 ```
 
-Questa combinazione è spesso sufficiente: pochi pacchetti caricati all'inizio e uso esplicito di `pacchetto::funzione()` quando serve chiarezza.
+Queste informazioni aiutano a diagnosticare differenze tra computer. Non dimostrano che il codice sia corretto, ma rendono più chiaro l'ambiente in cui è stato eseguito.
 
-## Checklist
+Strumenti come `renv` possono congelare le dipendenze di progetti più complessi. Non sono necessari per questo modulo. Il principio da trattenere è che la versione del software fa parte del contesto computazionale dell'analisi.
 
-Prima di consegnare un file Quarto, chiediti:
+## Formulare richieste controllabili all'AI
 
-- il documento parte da una sessione pulita?
-- tutti i pacchetti necessari sono caricati nel chunk iniziale?
-- ci sono pacchetti installati ma mai usati?
-- il codice introduce pacchetti non spiegati?
-- il documento si renderizza senza errori?
-- sono in grado di spiegare perché sto usando quei pacchetti?
+Un prompt come:
 
-Se la risposta a una di queste domande è negativa, il problema non è soltanto tecnico. Si tratta di un problema di trasparenza dell'analisi.
+> Scrivi il codice R per questa analisi.
 
-## Esercizi
+lascia all'assistente la scelta degli strumenti. Il risultato può introdurre pacchetti sconosciuti e incompatibili con il resto del progetto.
 
-1. In un documento Quarto trovi questo codice:
+Una richiesta più precisa può essere:
+
+::: {.callout-tip title="Un prompt per limitare le dipendenze"}
+> Scrivi una soluzione in R usando soltanto R base, `dplyr`, `ggplot2` e `readr`. Non introdurre altri pacchetti senza spiegare quale problema aggiuntivo risolvano.  
+>
+> Usa la forma `pacchetto::funzione()` per le funzioni che compaiono una sola volta o che possono avere nomi ambigui. Alla fine elenca i pacchetti effettivamente necessari e indica quali righe del codice dipendono da ciascuno.
+:::
+
+Se l'AI propone un nuovo pacchetto, possiamo chiedere:
+
+> Confronta questa soluzione con una versione basata sui pacchetti già usati nel progetto. Spiega quale vantaggio concreto offre la nuova dipendenza.
+
+Se riceviamo codice da una fonte esterna:
+
+> Identifica tutte le funzioni non appartenenti a R base, associa ciascuna al pacchetto corretto e segnala eventuali funzioni che non riesci a verificare.
+
+L'obiettivo non è vietare nuovi strumenti, ma impedire che vengano introdotti senza una ragione visibile.
+
+## Controllare il codice ricevuto
+
+Dopo avere ricevuto una soluzione, dobbiamo poter rispondere a domande semplici.
+
+Quali pacchetti sono necessari? Dove vengono dichiarati? Sono usati davvero? Esistono funzioni con nomi ambigui? Il documento funziona dopo il riavvio? Una soluzione più semplice produrrebbe lo stesso risultato?
+
+Possiamo cercare nel documento le istruzioni `library()` e le forme `pacchetto::funzione()`. Dobbiamo però anche controllare funzioni richiamate senza prefisso, perché potrebbero dipendere da un pacchetto caricato in precedenza.
+
+Una procedura utile è:
+
+$$
+\text{inventario delle funzioni}
+\longrightarrow
+\text{associazione ai pacchetti}
+\longrightarrow
+\text{rimozione delle dipendenze inutili}
+\longrightarrow
+\text{render in sessione pulita}.
+$$
+
+Questo controllo è particolarmente importante quando il codice è stato composto a partire da più risposte dell'AI. Risposte differenti possono adottare ecosistemi e convenzioni differenti senza segnalarlo.
+
+## Un esempio di revisione
+
+Supponiamo che l'AI proponga:
+
+```r
+library(tidyverse)
+library(janitor)
+library(skimr)
+
+dati <- read_csv(
+  "data/raw/questionario.csv"
+)
+
+dati <- clean_names(dati)
+
+skim(dati)
+```
+
+Il codice può essere utile, ma introduce un insieme ampio di dipendenze. Prima di accettarlo dobbiamo chiarire l'obiettivo.
+
+Se vogliamo soltanto importare il file e controllarne la struttura, può essere sufficiente:
+
+```r
+dati <- readr::read_csv(
+  "data/raw/questionario.csv",
+  show_col_types = FALSE
+)
+
+names(dati)
+str(dati)
+summary(dati)
+```
+
+La seconda versione non è universalmente migliore. È più coerente con un obiettivo limitato e usa strumenti già introdotti. `janitor` e `skimr` potrebbero diventare utili in un progetto più ampio, ma dovrebbero essere aggiunti per una necessità esplicita.
+
+Il confronto mostra il criterio generale:
+
+> Prima definisci ciò che vuoi ottenere; poi scegli il minor insieme di strumenti che lo rende chiaro e controllabile.
+
+## Che cosa non serve imparare qui
+
+Non è necessario conoscere la struttura interna dei pacchetti, svilupparne uno, pubblicarlo su CRAN o studiare tutti i sistemi di gestione delle versioni.
+
+Non è necessario neppure memorizzare quali pacchetti contengano ogni possibile funzione. La documentazione e l'AI possono aiutare a localizzare lo strumento. La competenza richiesta è verificare la provenienza della funzione e giudicare se la nuova dipendenza sia necessaria.
+
+Per i capitoli successivi bastano pochi strumenti stabili: R base, `readr`, `dplyr`, `ggplot2` e i pacchetti specificamente richiesti dalle analisi.
+
+## Riflessioni conclusive {.unnumbered .unlisted}
+
+I pacchetti rendono R un ambiente estendibile. Permettono di riutilizzare strumenti sviluppati e documentati da altre persone, ma introducono dipendenze che devono essere dichiarate e controllate.
+
+Installare significa rendere un pacchetto disponibile sul computer. Caricarlo o usare `pacchetto::funzione()` significa richiamarlo durante l'analisi. La forma esplicita è particolarmente utile quando vogliamo mostrare la provenienza di una funzione o evitare conflitti.
+
+La scelta più importante non riguarda la sintassi. Riguarda il rapporto tra compito e strumento. Un nuovo pacchetto è giustificato quando rende possibile o più chiara un'operazione necessaria. Non è giustificato soltanto perché l'AI lo ha suggerito.
+
+La verifica finale rimane il render da una sessione pulita. Se il documento dichiara tutte le dipendenze e usa soltanto strumenti necessari, il percorso computazionale diventa più semplice da comprendere, condividere e correggere.
+
+## Esercizi {.unnumbered .unlisted}
+
+1. Spiega la differenza tra installare un pacchetto e usarlo durante una sessione R. Perché `install.packages()` non dovrebbe comparire normalmente nel documento Quarto?
+
+2. Confronta:
 
    ```r
-   library(dplyr)
-   dati |> filter(stress > 3)
+   library(readr)
+   read_csv("data/raw/dati.csv")
    ```
 
-   Spiega che cosa fa `library(dplyr)` e perché è necessario.
-
-2. L'AI ti propone questo codice:
+   con:
 
    ```r
-   janitor::clean_names(dati)
+   readr::read_csv(
+     "data/raw/dati.csv"
+   )
    ```
 
-   Che cosa devi controllare prima di usarlo?
+   Quale dipendenza viene resa più visibile nella seconda forma?
 
-3. Riscrivi il codice seguente usando la forma `pacchetto::funzione()`:
+3. R segnala `could not find function "filter"`. Descrivi una procedura diagnostica prima di modificare l'intera analisi.
 
-   ```r
-   read_csv("data/questionario.csv")
-   ```
+4. Un messaggio informa che `filter()` è stato mascherato da un altro pacchetto. Quale forma del comando rende non ambiguo il comportamento?
 
-4. Un compagno ti consegna un file Quarto che funziona sul suo computer ma non sul tuo. Il messaggio di errore dice che manca un pacchetto. Quali passaggi faresti per diagnosticare il problema?
+5. L'AI propone cinque pacchetti per importare un file, rinominare due colonne e produrre un riepilogo. Quali domande useresti per decidere se siano tutti necessari?
 
-5. Chiedi a un sistema di AI di scrivere una breve analisi con R. Poi controlla se ha introdotto pacchetti non necessari. Riscrivi il prompt chiedendo di usare solo i pacchetti già usati nel corso.
+6. Formula un prompt che chieda una soluzione usando soltanto R base, `readr`, `dplyr` e `ggplot2`, richiedendo una giustificazione per ogni eventuale pacchetto aggiuntivo.
 
-## Per approfondire {.unnumbered}
+7. Un documento funziona nella sessione corrente, ma dopo il riavvio segnala che una funzione non esiste. Quale dipendenza nascosta è probabile?
 
-Per approfondire l'uso dei pacchetti e del tidyverse, puoi consultare:
+8. Perché conoscere la versione dei pacchetti può essere utile senza garantire che l'analisi sia scientificamente corretta?
 
-- [R for Data Science (2e)](https://r4ds.hadley.nz/)
-- [Introduction to Data Science: Data Wrangling and Visualization with R](https://rafalab.dfci.harvard.edu/dsbook-part-1/) [@irizarry2024introduction]
+::: {.callout-tip title="Soluzioni" collapse="true"}
+1. L'installazione scarica il pacchetto e lo rende disponibile sul computer. L'uso avviene durante l'esecuzione mediante `library()` o `pacchetto::funzione()`. `install.packages()` modifica l'ambiente e può richiedere rete e permessi; non è un passaggio analitico da ripetere a ogni render.
 
-Queste risorse sono utili, ma non sono prerequisiti per seguire il capitolo.
+2. La seconda forma mostra direttamente che `read_csv()` proviene da `readr`. Non dipende dal fatto che il pacchetto sia stato precedentemente caricato con `library()`.
 
-## Bibliografia {.unnumbered}
+3. Verificare il nome della funzione, identificare il pacchetto a cui appartiene, controllare se il pacchetto è installato e poi usare `library(dplyr)` oppure `dplyr::filter()`.
+
+4. `dplyr::filter(...)` indica esplicitamente quale funzione deve essere eseguita.
+
+5. Chiederei quale problema risolva ciascun pacchetto, se la stessa operazione sia disponibile negli strumenti già adottati, se il vantaggio giustifichi la dipendenza e se tutti i pacchetti vengano realmente usati.
+
+6. Il prompt dovrebbe elencare i pacchetti ammessi, vietare dipendenze aggiuntive non motivate e chiedere alla fine un inventario dei pacchetti e delle funzioni utilizzate.
+
+7. Una funzione proveniva probabilmente da un pacchetto caricato manualmente nella sessione ma non dichiarato nel documento.
+
+8. Le versioni aiutano a ricostruire l'ambiente computazionale e a spiegare differenze tra esecuzioni. Non stabiliscono se il disegno, la misura, le trasformazioni o l'interpretazione siano appropriati.
+:::
+
+::: {.callout-note title="Punti chiave" collapse="true"}
+- Un pacchetto aggiunge capacità a R e introduce una dipendenza.
+- La scelta del pacchetto deve partire dal compito.
+- Installare e usare un pacchetto sono operazioni differenti.
+- `pacchetto::funzione()` rende esplicita la provenienza della funzione.
+- I conflitti tra nomi richiedono una scelta consapevole, non soltanto la soppressione del messaggio.
+- Una nuova dipendenza deve offrire un vantaggio concreto.
+- `install.packages()` non appartiene normalmente al documento analitico.
+- Il render in sessione pulita verifica che i pacchetti necessari siano dichiarati.
+- L'AI deve rispettare l'insieme di strumenti scelto per il progetto.
+- Versioni e sessione documentano l'ambiente, ma non convalidano il ragionamento scientifico.
+:::
+
+::: {.callout-note title="Ambiente di sviluppo" collapse="true"}
+Le informazioni sulla sessione e sui pacchetti caricati possono essere ottenute con:
+
+```{r}
+#| echo: true
+
+sessionInfo()
+```
+:::

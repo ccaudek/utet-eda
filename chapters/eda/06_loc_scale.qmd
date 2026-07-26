@@ -1,204 +1,332 @@
-# Indicatori di tendenza centrale e variabilità {#sec-central-tendency-variability}
+# Distribuzione, posizione e variabilità {#sec-central-tendency-variability}
 
-::: {.callout-note appearance="minimal"}
-Nel capitolo precedente abbiamo visto come scegliere e leggere un grafico. In questo capitolo faremo un passo avanti: impareremo a sintetizzare una distribuzione con pochi numeri, senza perdere di vista la sua forma.
+::: {.callout-note title="In sintesi"}
+**Da sapere**  Una distribuzione descrive l'insieme dei valori osservati e il modo in cui le osservazioni si ripartiscono tra quei valori. Media e mediana descrivono dove si colloca il centro; deviazione standard, intervallo interquartile e MAD descrivono quanto i valori siano dispersi. Nessun singolo numero sostituisce la distribuzione.
 
-Le statistiche descrittive non sostituiscono i grafici. Sono utili per riassumere ciò che abbiamo osservato nei dati quando il riassunto è appropriato.
+**Da saper fare**  Leggere una distribuzione come forma, posizione e dispersione; distinguere media e mediana; ricostruire il calcolo della deviazione standard a partire dagli scarti dalla media; interpretare la deviazione standard nell'unità originale della variabile; riconoscere quando media e deviazione standard sono riassunti poco informativi.
 :::
 
-## Perché questo capitolo è centrale {.unnumbered .unlisted}
+## Introduzione {.unnumbered .unlisted}
 
-Quando descriviamo una variabile psicologica, spesso vogliamo rispondere a due domande:
+Questo è il capitolo centrale della Parte dedicata alla statistica descrittiva. Le idee introdotte qui ritorneranno nei grafici, nella distribuzione normale, nella standardizzazione, nei modelli statistici e nell'inferenza.
 
-1. **Dove si concentrano i valori?**  
-   Questa è la domanda sulla *tendenza centrale*.
+La difficoltà principale non consiste nel calcolare una media o una deviazione standard. R esegue questi calcoli immediatamente. La difficoltà consiste nel comprendere **che cosa viene riassunto** e **che cosa il riassunto lascia fuori**.
 
-2. **Quanto sono diversi tra loro i valori?**  
-   Questa è la domanda sulla *variabilità*.
+Quando diciamo che una variabile ha media 6, non stiamo ancora descrivendo come siano distribuiti i valori. Potrebbero essere tutti vicini a 6, oppure potrebbero dividersi tra valori molto bassi e molto alti. La stessa media può quindi corrispondere a situazioni psicologicamente molto differenti.
 
-Per esempio, se misuriamo la qualità del sonno in un gruppo di studenti, non basta dire che il punteggio medio è 6.8. Dobbiamo anche chiederci:
+Per descrivere una variabile dobbiamo rispondere a tre domande collegate:
 
-- tutti gli studenti dormono più o meno allo stesso modo, oppure ci sono grandi differenze?
-- la distribuzione è simmetrica o asimmetrica?
-- ci sono valori estremi?
-- la media rappresenta bene i dati, oppure sarebbe più prudente usare la mediana?
-- la deviazione standard descrive bene la variabilità, oppure è meglio usare l'intervallo interquartile o il MAD?
+> Quali valori compaiono e con quale frequenza?
 
-Questo capitolo segue quindi l'esplorazione univariata e precede la distribuzione normale. Prima analizziamo i dati, poi scegliamo un riassunto e solo dopo possiamo chiederci se un modello, come la distribuzione normale, sia una rappresentazione utile.
+> Dove si colloca il centro dei valori?
 
-## Obiettivi del capitolo {.unnumbered .unlisted}
+> Quanto i valori sono distanti tra loro e dal centro?
 
-Al termine del capitolo dovresti essere in grado di:
+La prima domanda riguarda la **distribuzione**. La seconda riguarda la **posizione** o tendenza centrale. La terza riguarda la **dispersione** o variabilità.
 
-- distinguere moda, mediana e media;
-- capire quando la media è informativa e quando può essere fuorviante;
-- distinguere range, IQR, deviazione standard e MAD;
-- scegliere riassunti coerenti con la forma della distribuzione;
-- leggere e controllare il codice R usato per calcolare le statistiche descrittive;
-- evitare interpretazioni automatiche prodotte da AI senza prima controllare i dati.
-
-::: {.callout-tip title="Idea guida"}
-Non esiste una statistica descrittiva sempre migliore delle altre. Esiste una statistica più o meno adatta alla domanda, al tipo di variabile e alla forma della distribuzione.
+::: {.callout-tip title="Prerequisiti"}
+Il capitolo sviluppa le idee introdotte in @sec-univariate. Presuppone inoltre che valori impossibili, codici speciali e duplicazioni siano già stati controllati come discusso in @sec-data-cleaning.
 :::
 
-## Preparazione
+## Panoramica del capitolo {.unnumbered .unlisted}
 
-Useremo un piccolo dataset didattico. I dati sono simulati, ma rappresentano un caso realistico: studenti universitari, stress accademico, qualità del sonno e ore di sonno.
+Cominceremo dal significato di distribuzione, perché media e deviazione standard hanno senso soltanto come descrizioni di una distribuzione. Vedremo poi moda, mediana e media. La deviazione standard verrà costruita passo per passo a partire dagli scarti dalla media. Infine confronteremo range, IQR, deviazione standard e MAD e chiariremo quando ciascun riassunto sia informativo.
+
+::: {.callout-note title="Preparazione del notebook"}
+Gli esempi usano `dplyr` e `ggplot2`. Il dataset è simulato e contiene una riga per studente.
 
 ```{r}
 #| label: loc-scale-setup
-#| include: false
+#| message: false
+#| warning: false
+
 library(dplyr)
 library(ggplot2)
 
 set.seed(1234)
-```
 
-```{r}
-#| label: loc-scale-data
 studenti <- data.frame(
-  id = 1:60,
-  stress = round(pmin(pmax(rnorm(60, mean = 6.2, sd = 1.5), 1), 10), 1),
-  sonno_qualita = round(pmin(pmax(rnorm(60, mean = 6.5, sd = 1.3), 1), 10), 1),
-  ore_sonno = round(pmin(pmax(rnorm(60, mean = 7.1, sd = 0.9), 4), 10), 1)
+  id = 1:80,
+  stress = round(
+    pmin(
+      pmax(
+        rnorm(
+          80,
+          mean = 6.2,
+          sd = 1.5
+        ),
+        1
+      ),
+      10
+    ),
+    1
+  ),
+  sonno_qualita = round(
+    pmin(
+      pmax(
+        rnorm(
+          80,
+          mean = 6.5,
+          sd = 1.3
+        ),
+        1
+      ),
+      10
+    ),
+    1
+  ),
+  ore_sonno = round(
+    pmin(
+      pmax(
+        rnorm(
+          80,
+          mean = 7.1,
+          sd = .9
+        ),
+        4
+      ),
+      10
+    ),
+    1
+  )
 )
 
-# Aggiungiamo alcuni valori plausibili ma estremi.
-studenti$ore_sonno[c(4, 17)] <- c(4.1, 9.8)
-studenti$stress[c(22, 49)] <- c(9.7, 9.9)
+studenti$ore_sonno[c(4, 17)] <-
+  c(4.1, 9.8)
 
-head(studenti)
+studenti$stress[c(22, 49)] <-
+  c(9.7, 9.9)
 ```
+:::
 
-## Prima regola: guardare prima di riassumere
+## Che cosa significa distribuzione?
 
-Prima di calcolare media, mediana o deviazione standard, guardiamo la distribuzione.
+Nel linguaggio quotidiano, *distribuire* significa ripartire qualcosa. In statistica, una distribuzione descrive come le osservazioni sono ripartite tra i valori possibili di una variabile.
+
+Consideriamo sette valori relativi alle ore di sonno:
 
 ```{r}
-#| label: loc-scale-hist-sleep
+#| label: distribution-small-example
+
+sonno_a <- c(
+  6.2, 6.5, 6.8,
+  7.0,
+  7.2, 7.5, 7.8
+)
+
+sonno_a
+```
+
+La distribuzione non è soltanto l'elenco dei numeri. Comprende il loro ordine, la frequenza con cui compaiono, la zona in cui si concentrano e le distanze che li separano.
+
+Per una variabile con pochi valori possibili, una tabella di frequenza può descrivere direttamente la distribuzione. Per una variabile numerica con molti valori, un istogramma o un grafico a punti ne rende visibile la struttura.
+
+```{r}
+#| label: fig-sleep-distribution
 #| fig-cap: "Distribuzione delle ore di sonno nel campione didattico."
-ggplot(studenti, aes(x = ore_sonno)) +
-  geom_histogram(bins = 12, boundary = 0) +
+
+ggplot(
+  studenti,
+  aes(x = ore_sonno)
+) +
+  geom_histogram(
+    binwidth = .5,
+    boundary = 0,
+    na.rm = TRUE
+  ) +
   labs(
     x = "Ore di sonno",
-    y = "Frequenza"
+    y = "Numero di studenti"
   )
 ```
 
-Il grafico ci aiuta a capire se i dati sono concentrati, dispersi, simmetrici, asimmetrici o se presentano valori insoliti. Senza questa informazione, una statistica descrittiva rischia di diventare un numero isolato.
+Nel grafico possiamo osservare dove si concentra la maggior parte dei valori, quanto ampia sia la regione occupata e se esistano code, vuoti o osservazioni lontane dalle altre.
 
-::: {.callout-caution title="Errore comune"}
-Un errore frequente è calcolare automaticamente `mean()` e `sd()` per ogni variabile numerica. Questo può essere utile per una prima esplorazione, ma non basta: è sempre necessario verificare che la distribuzione giustifichi quel tipo di riassunto.
+La distribuzione empirica riguarda il campione osservato. Non deve essere confusa con una distribuzione teorica, come la distribuzione normale, che è un modello matematico. Nel capitolo successivo useremo un modello per rappresentare alcune distribuzioni; qui impariamo prima a leggere ciò che i dati mostrano.
+
+::: {.callout-important title="La distribuzione è l'oggetto, le statistiche sono riassunti"}
+Media, mediana e deviazione standard non sono caratteristiche isolate. Sono numeri calcolati su una distribuzione. Per interpretarli dobbiamo sapere quale forma di dati stanno riassumendo.
 :::
 
-## Tendenza centrale: qual è il valore tipico?
+## Stessa posizione, dispersione differente
 
-Gli indicatori di tendenza centrale cercano di individuare un valore rappresentativo della distribuzione.
+Consideriamo due gruppi di cinque studenti:
 
-I tre indicatori principali sono:
+```{r}
+#| label: same-mean-data
 
-- **moda**: il valore più frequente;
-- **mediana**: il valore che divide i dati ordinati in due metà;
-- **media**: la somma dei valori divisa per il numero di osservazioni.
+gruppo_compatto <- c(
+  6.5, 6.8, 7.0, 7.2, 7.5
+)
 
-### Moda
+gruppo_disperso <- c(
+  4.0, 5.5, 7.0, 8.5, 10.0
+)
 
-La **moda** è il valore che compare più spesso. È particolarmente utile per le variabili categoriali.
+data.frame(
+  gruppo = rep(
+    c("compatto", "disperso"),
+    each = 5
+  ),
+  ore_sonno = c(
+    gruppo_compatto,
+    gruppo_disperso
+  )
+)
+```
 
-Per esempio, se si chiede agli studenti quale strategia usano più spesso per gestire lo stress, la moda indica la risposta più frequente.
+Entrambi hanno media pari a 7 ore:
+
+```{r}
+#| label: same-mean-summary
+
+data.frame(
+  gruppo = c(
+    "compatto",
+    "disperso"
+  ),
+  media = c(
+    mean(gruppo_compatto),
+    mean(gruppo_disperso)
+  ),
+  deviazione_standard = c(
+    sd(gruppo_compatto),
+    sd(gruppo_disperso)
+  )
+)
+```
+
+Nel primo gruppo, quasi tutti dormono intorno a sette ore. Nel secondo, sette ore rappresenta il punto centrale di valori molto distanti tra loro. La media è identica, ma le distribuzioni non raccontano la stessa situazione.
+
+Questa è la ragione per cui una misura di posizione deve essere accompagnata da una misura di dispersione.
+
+## Posizione: dove si colloca il centro?
+
+Un centro è un modo di rappresentare molti valori con un solo numero. Moda, mediana e media definiscono il centro in modi differenti.
+
+### La moda
+
+La **moda** è il valore o la categoria che compare più frequentemente.
+
+Se chiediamo quale strategia venga usata più spesso per gestire lo stress, la moda identifica la risposta più comune:
 
 ```{r}
 #| label: loc-scale-mode-example
+
 strategie <- c(
-  "studio", "sonno", "sport", "studio", "amici", "studio",
-  "sport", "sonno", "studio", "amici", "studio"
+  "studio", "sonno", "sport",
+  "studio", "amici", "studio",
+  "sport", "sonno", "studio",
+  "amici", "studio"
 )
 
 table(strategie)
 ```
 
-In questo caso la moda è la categoria con frequenza più alta.
+La moda ha senso anche per variabili puramente categoriali, per le quali non esistono distanze numeriche interpretabili. Può tuttavia essere poco stabile: piccoli cambiamenti nei dati possono modificare la categoria più frequente.
 
-::: {.callout-note title="Quando usare la moda"}
-La moda è utile quando si vuole descrivere la categoria più comune. È meno utile quando i valori sono molti e ciascuno compare poche volte, come spesso accade con le variabili continue.
-:::
+### La mediana
 
-### Mediana
+Per trovare la **mediana**, ordiniamo i valori e individuiamo la posizione centrale.
 
-La **mediana** è il valore centrale dei dati ordinati. Il 50% delle osservazioni è minore o uguale alla mediana e il restante 50% è maggiore o uguale.
+Nel vettore:
+
+```r
+6.2, 6.5, 6.8, 7.0, 7.2, 7.5, 7.8
+```
+
+il valore centrale è 7.0. Tre osservazioni sono inferiori e tre sono superiori.
 
 ```{r}
 #| label: loc-scale-median-example
-median(studenti$ore_sonno)
+
+median(sonno_a)
 ```
 
-La mediana è robusta, ovvero non cambia molto se sono presenti pochi valori estremi. Per questo motivo, è spesso adatta a distribuzioni asimmetriche o con outlier.
+Se il numero delle osservazioni è pari, non esiste una singola posizione centrale. R calcola la media dei due valori centrali.
 
-### Media
+La mediana dipende soprattutto dall'ordine. Se il valore massimo passa da 7.8 a 15, la posizione centrale non cambia. Per questa ragione la mediana è detta **robusta** rispetto a pochi valori estremi.
 
-La **media aritmetica** si  calcola sommando tutti i valori e dividendo il risultato per il numero di osservazioni.
+Dire che la mediana è 7 significa che almeno metà dei valori è minore o uguale a 7 e almeno metà è maggiore o uguale a 7. Non significa che la maggior parte delle persone abbia esattamente valore 7.
+
+### La media
+
+La **media aritmetica** si ottiene sommando tutti i valori e dividendo per il numero delle osservazioni:
 
 $$
 \bar{x} = \frac{1}{n}\sum_{i=1}^{n} x_i.
 $$
 
-In R:
+Nel simbolo $\bar{x}$, la barra indica la media campionaria. Il simbolo $n$ rappresenta il numero di osservazioni; $x_i$ indica il valore della generica osservazione $i$.
+
+Per `sonno_a`:
 
 ```{r}
 #| label: loc-scale-mean-example
-mean(studenti$ore_sonno)
+
+mean(sonno_a)
 ```
 
-La media utilizza tutti i valori, pertanto è molto informativa quando la distribuzione è abbastanza simmetrica e priva di valori estremi. Proprio perché utilizza tutti i valori, però, è sensibile agli outlier.
+La formula può essere letta in linguaggio naturale:
 
-## Media e mediana a confronto
+> Somma tutte le ore osservate e distribuisci il totale in parti uguali tra le persone.
 
-Confrontiamo la media e la mediana di alcune variabili del dataset.
+Questa interpretazione suggerisce un'immagine utile. La media è il valore che avremmo se il totale venisse redistribuito in modo uniforme. È anche il **punto di equilibrio** della distribuzione.
 
-```{r}
-#| label: loc-scale-center-table
-studenti |>
-  summarise(
-    media_stress = mean(stress),
-    mediana_stress = median(stress),
-    media_sonno = mean(ore_sonno),
-    mediana_sonno = median(ore_sonno)
-  )
-```
+A differenza della mediana, la media usa l'ampiezza di ogni valore. Se una singola osservazione diventa molto grande, aumenta anche il totale da distribuire e la media si sposta.
 
-Quando la media e la mediana sono simili, la distribuzione è spesso abbastanza bilanciata. Quando sono molto diverse, è meglio tornare al grafico e chiedersi il perché.
+## Media e mediana reagiscono diversamente agli estremi
 
-### L'effetto dei valori estremi
-
-Consideriamo due piccoli insiemi di dati. Il secondo contiene un valore molto alto.
+Confrontiamo due insiemi quasi identici:
 
 ```{r}
 #| label: loc-scale-outlier-center
-sonno_a <- c(6.2, 6.5, 6.8, 7.0, 7.1, 7.3, 7.5)
-sonno_b <- c(6.2, 6.5, 6.8, 7.0, 7.1, 7.3, 12.0)
+
+sonno_senza_estremo <- c(
+  6.2, 6.5, 6.8,
+  7.0,
+  7.1, 7.3, 7.5
+)
+
+sonno_con_estremo <- c(
+  6.2, 6.5, 6.8,
+  7.0,
+  7.1, 7.3, 12.0
+)
 
 data.frame(
-  scenario = c("senza valore estremo", "con valore estremo"),
-  media = c(mean(sonno_a), mean(sonno_b)),
-  mediana = c(median(sonno_a), median(sonno_b))
+  scenario = c(
+    "senza valore estremo",
+    "con valore estremo"
+  ),
+  media = c(
+    mean(sonno_senza_estremo),
+    mean(sonno_con_estremo)
+  ),
+  mediana = c(
+    median(sonno_senza_estremo),
+    median(sonno_con_estremo)
+  )
 )
 ```
 
-La media cambia più della mediana. Ciò non significa che la media sia sbagliata. Significa che la media risponde a una domanda diversa: tiene conto anche dell'intensità del valore estremo.
+La media cambia perché il valore 12 aggiunge una quantità elevata al totale. La mediana cambia poco o non cambia perché il valore estremo rimane comunque all'ultima posizione.
 
-::: {.callout-tip title="Regola pratica"}
-Se la distribuzione è simmetrica e non presenta valori estremi, la media e la deviazione standard possono essere un buon riassunto. Se la distribuzione è asimmetrica o presenta valori estremi, la mediana e l'intervallo interquartile (IQR) sono spesso più affidabili.
-:::
+Non dobbiamo concludere che la media sia “sbagliata”. La media rende visibile l'effetto quantitativo del valore estremo; la mediana rende visibile la posizione centrale senza lasciarsi trascinare dalla sua ampiezza.
 
-## Variabilità: quanto differiscono i valori?
+La scelta dipende quindi da ciò che vogliamo descrivere e dalla forma della distribuzione.
 
-Un valore centrale non basta. Due distribuzioni possono avere la stessa media, ma una variabilità molto diversa.
+## Dispersione: quanto differiscono i valori?
 
-Immaginiamo due gruppi di studenti con una media simile di ore di sonno. Nel primo gruppo tutti dormono circa sette ore, mentre nel secondo alcuni dormono pochissimo e altri molto. La media può essere la stessa, ma il significato psicologico è diverso.
+La dispersione descrive quanto spazio occupa la distribuzione e quanto i valori siano differenti tra loro.
 
-### Range
+Nel gruppo compatto, la media 7 rappresenta abbastanza bene quasi tutti gli studenti. Nel gruppo disperso, la stessa media nasconde esperienze molto differenti. La dispersione esprime questa differenza.
 
-Il **range** è la differenza tra valore massimo e valore minimo:
+Esistono più misure perché “quanto sono sparsi i dati?” può essere definito in modi diversi.
+
+## Il range: la larghezza totale
+
+Il **range** è la differenza tra il valore massimo e il valore minimo:
 
 $$
 \text{range} = \max(x) - \min(x).
@@ -206,280 +334,579 @@ $$
 
 ```{r}
 #| label: loc-scale-range-example
+
 range(studenti$ore_sonno)
-diff(range(studenti$ore_sonno))
+
+diff(
+  range(studenti$ore_sonno)
+)
 ```
 
-Il range è semplice, ma dipende solo da due valori. Per questo è molto sensibile agli estremi.
+Se il minimo è 4.1 e il massimo è 9.8, il range è 5.7 ore. La distribuzione osservata occupa quindi un intervallo totale di 5.7 ore.
 
-### Quartili e intervallo interquartile
+Il range è immediato, ma dipende soltanto da due osservazioni. Se cambia il valore più alto o quello più basso, il range può cambiare molto anche quando tutte le altre osservazioni rimangono identiche.
 
-I **quartili** dividono la distribuzione in quattro parti. L'intervallo interquartile, o **IQR**, è la differenza tra il terzo quartile e il primo quartile:
+## Quartili e intervallo interquartile
+
+Dopo avere ordinato i valori, i quartili individuano alcune posizioni della distribuzione. Il primo quartile $Q_1$ lascia circa il 25% delle osservazioni al di sotto; la mediana lascia il 50%; il terzo quartile $Q_3$ lascia circa il 75%.
+
+L'**intervallo interquartile**, o IQR, è:
 
 $$
 IQR = Q_3 - Q_1.
 $$
 
-L'IQR descrive l'ampiezza della metà centrale dei dati.
-
 ```{r}
 #| label: loc-scale-iqr-example
-quantile(studenti$ore_sonno, probs = c(.25, .50, .75))
+
+quantile(
+  studenti$ore_sonno,
+  probs = c(.25, .50, .75)
+)
+
 IQR(studenti$ore_sonno)
 ```
 
-L'intervallo interquartile (IQR) è utile quando si desidera ottenere una misura robusta della variabilità, meno influenzata dai valori estremi rispetto al range.
+L'IQR descrive l'ampiezza della metà centrale delle osservazioni. Ignora l'ampiezza esatta del 25% più basso e del 25% più alto; per questo è meno sensibile ai valori estremi rispetto al range.
 
-### Deviazione standard
+Se $Q_1 = 6.5$ e $Q_3 = 7.7$, l'IQR è 1.2 ore. Possiamo dire che la metà centrale degli studenti si distribuisce in un intervallo ampio 1.2 ore.
 
-La **deviazione standard** descrive quanto i valori tendono a distanziarsi dalla media.
+## Dalla distanza alla deviazione standard
+
+La deviazione standard viene spesso presentata come una formula da applicare. È più utile costruirne il significato passo per passo.
+
+Consideriamo tre valori:
 
 ```{r}
-#| label: loc-scale-sd-example
-sd(studenti$ore_sonno)
+#| label: sd-three-values
+
+x <- c(4, 6, 8)
+
+mean(x)
 ```
 
-La deviazione standard è espressa nella stessa unità di misura della variabile. Se la variabile è misurata in ore, anche la deviazione standard sarà espressa in ore.
+La media è 6. Ora calcoliamo la distanza con segno di ogni valore dalla media:
 
-In R, la funzione `sd()` calcola la deviazione standard campionaria, utilizzando al denominatore $n - 1$. Questo è coerente con l'idea che stiamo utilizzando un campione per descrivere una popolazione più ampia.
+$$
+d_i = x_i - \bar{x}.
+$$
 
-::: {.callout-note title="Interpretazione intuitiva"}
-La deviazione standard può essere interpretata come la distanza tipica dei valori dalla media. Questa lettura è più affidabile quando la distribuzione è abbastanza simmetrica e non presenta valori estremi marcati.
-:::
+Gli scarti sono:
 
-### Varianza
+| Valore $x_i$ | Media $\bar{x}$ | Scarto $x_i-\bar{x}$ |
+|---:|---:|---:|
+| 4 | 6 | -2 |
+| 6 | 6 | 0 |
+| 8 | 6 | 2 |
 
-La **varianza** è il quadrato della deviazione standard:
+Uno scarto negativo indica un valore sotto la media; uno scarto positivo indica un valore sopra la media.
+
+Se sommiamo gli scarti, otteniamo sempre zero:
+
+$$
+\sum_{i=1}^{n}(x_i-\bar{x}) = 0.
+$$
+
+Nel nostro esempio, $-2 + 0 + 2 = 0$. Questo accade perché la media è il punto di equilibrio. Gli scarti negativi e positivi si compensano.
+
+La semplice media degli scarti non può quindi misurare la dispersione: sarebbe zero anche per dati molto dispersi.
+
+## Perché eleviamo gli scarti al quadrato?
+
+Per impedire la compensazione tra segni, eleviamo ogni scarto al quadrato:
+
+| Valore $x_i$ | Scarto | Scarto al quadrato |
+|---:|---:|---:|
+| 4 | -2 | 4 |
+| 6 | 0 | 0 |
+| 8 | 2 | 4 |
+
+I quadrati sono sempre non negativi. Inoltre, gli scarti grandi ricevono un peso maggiore: uno scarto di 4 contribuisce quattro volte più di uno scarto di 2 elevato al quadrato, perché $4^2=16$ e $2^2=4$.
+
+Questo comportamento è utile in molti modelli statistici, ma rende la deviazione standard sensibile ai valori estremi.
+
+## La varianza: scarto quadratico medio
+
+La **varianza campionaria** è:
 
 $$
 s^2 = \frac{1}{n-1}\sum_{i=1}^{n}(x_i - \bar{x})^2.
+$$
+
+La formula contiene quattro operazioni:
+
+1. calcolare la media;
+2. calcolare lo scarto di ogni valore dalla media;
+3. elevare gli scarti al quadrato e sommarli;
+4. dividere la somma per $n-1$.
+
+Nel nostro esempio, la somma degli scarti quadratici è:
+
+$$
+4 + 0 + 4 = 8.
+$$
+
+Poiché $n=3$, dividiamo per $n-1=2$:
+
+$$
+s^2 = \frac{8}{2} = 4.
 $$
 
 In R:
 
 ```{r}
 #| label: loc-scale-var-example
-var(studenti$ore_sonno)
-sd(studenti$ore_sonno)^2
+
+var(x)
 ```
 
-La varianza è importante in molti modelli statistici, ma è meno intuitiva della deviazione standard, in quanto è espressa in unità al quadrato. Per la descrizione iniziale dei dati, di solito è più interpretabile la deviazione standard.
+La varianza è espressa in unità al quadrato. Se i dati sono ore, la varianza è in ore quadrate. Questa unità non ha un'interpretazione quotidiana immediata.
 
-### MAD: una misura robusta di variabilità
+### Perché $n-1$?
 
-La **deviazione mediana assoluta**, o **MAD**, misura la distanza tipica dei valori dalla mediana:
+La funzione `var()` e la funzione `sd()` di R usano $n-1$. La media $\bar{x}$ è stata calcolata sugli stessi dati e impone che gli scarti sommino a zero. Dopo avere conosciuto $n-1$ scarti, l'ultimo è già determinato. Si dice quindi che rimangono $n-1$ **gradi di libertà**.
+
+Dividere per $n-1$ corregge inoltre la tendenza della varianza calcolata su un campione a sottostimare la variabilità della popolazione da cui il campione proviene.
+
+Per comprendere la deviazione standard non è necessario padroneggiare subito tutta la teoria dei gradi di libertà. È però importante sapere quale convenzione usa R.
+
+## La deviazione standard restituisce l'unità originale
+
+La **deviazione standard campionaria** è la radice quadrata della varianza:
 
 $$
-MAD = \text{mediana}(|x_i - \text{mediana}(x)|).
+s =
+\sqrt{
+\frac{1}{n-1}
+\sum_{i=1}^{n}
+(x_i - \bar{x})^2
+}.
 $$
 
-In R:
+Nel nostro esempio:
+
+$$
+s = \sqrt{4} = 2.
+$$
 
 ```{r}
-#| label: loc-scale-mad-example
+#| label: loc-scale-sd-example
+
+sd(x)
+```
+
+La radice quadrata annulla l'effetto dell'elevamento al quadrato sulle unità. Se la variabile è misurata in ore, la deviazione standard torna a essere espressa in ore.
+
+Possiamo quindi interpretare $s=2$ dicendo che i valori hanno una distanza tipica di circa 2 unità dalla media.
+
+La parola *tipica* è intuitiva, ma va usata con attenzione. La deviazione standard non è la media delle distanze assolute. È la radice della media corretta degli scarti quadratici. È quindi una distanza di tipo quadratico, particolarmente sensibile agli scarti grandi.
+
+::: {.callout-important title="Che cosa significa davvero una deviazione standard"}
+La deviazione standard quantifica la dispersione intorno alla media nella stessa unità della variabile. Un valore piccolo indica che le osservazioni sono relativamente concentrate intorno alla media; un valore grande indica che occupano una regione più ampia. Il significato di “piccolo” o “grande” dipende dalla scala e dal fenomeno.
+:::
+
+## Leggere una media insieme alla deviazione standard
+
+Supponiamo che le ore di sonno abbiano:
+
+$$
+\bar{x}=7.0,
+\qquad
+s=0.4.
+$$
+
+La distribuzione è relativamente concentrata: molti valori saranno vicini a 7, anche se non possiamo sapere esattamente quanti senza osservare la forma.
+
+Se invece:
+
+$$
+\bar{x}=7.0,
+\qquad
+s=2.0,
+$$
+
+la stessa media riassume valori molto più eterogenei.
+
+La deviazione standard non indica il minimo e il massimo. Non significa che tutti i valori siano compresi tra $\bar{x}-s$ e $\bar{x}+s$. Non autorizza neppure a eliminare automaticamente le osservazioni oltre due deviazioni standard.
+
+Soltanto quando la distribuzione è approssimativamente normale possiamo collegare la deviazione standard a percentuali note di osservazioni entro uno, due o tre scarti dalla media. Questo collegamento verrà sviluppato nel capitolo successivo.
+
+## La stessa deviazione standard può avere significati diversi
+
+Una deviazione standard di 2 punti è piccola su una scala da 0 a 100 e molto grande su una scala da 1 a 5. L'interpretazione richiede quindi l'unità e l'intervallo della variabile.
+
+Anche la forma conta. Una deviazione standard elevata può derivare da una distribuzione ampia e unimodale, da pochi valori estremi oppure dalla presenza di due sottogruppi distinti.
+
+Per questo motivo, media e deviazione standard devono essere accompagnate da un grafico. I due numeri descrivono posizione e dispersione, ma non spiegano **come** la dispersione sia organizzata.
+
+## Il MAD: distanza dalla mediana
+
+Una misura robusta di dispersione è la **deviazione mediana assoluta**, indicata con MAD:
+
+$$
+MAD =
+\text{mediana}
+\left(
+|x_i - \text{mediana}(x)|
+\right).
+$$
+
+La procedura è simile a quella della deviazione standard, ma usa la mediana come centro e le distanze assolute invece dei quadrati.
+
+In R, per ottenere esattamente il valore definito dalla formula scriviamo:
+
+```{r}
+#| label: loc-scale-raw-mad-example
+
+mad(
+  studenti$ore_sonno,
+  constant = 1
+)
+```
+
+Per impostazione predefinita, `mad()` moltiplica il risultato per una costante pari a circa 1.4826:
+
+```{r}
+#| label: loc-scale-scaled-mad-example
+
 mad(studenti$ore_sonno)
 ```
 
-Il MAD è robusto rispetto agli outlier. È utile quando la deviazione standard risulterebbe troppo influenzata da pochi valori estremi.
+Questa versione scalata è costruita per essere confrontabile con la deviazione standard quando i dati seguono approssimativamente una distribuzione normale. La distinzione deve essere resa esplicita quando riportiamo il valore.
 
-## Un confronto visivo
+Il MAD è poco influenzato da pochi valori estremi perché né il centro né la misura delle distanze dipendono fortemente dalla loro ampiezza.
 
-Mettiamo insieme il grafico e le statistiche descrittive.
+## Riassunti sensibili e riassunti robusti
+
+Media e deviazione standard utilizzano intensamente tutti i valori. Sono quindi **sensibili** agli estremi. Questa sensibilità non è necessariamente un difetto: se un valore elevato è reale, contribuisce alla quantità totale e alla dispersione.
+
+Mediana, IQR e MAD sono **robusti**: cambiano meno quando poche osservazioni sono molto lontane dalle altre. Sono particolarmente utili per distribuzioni asimmetriche o con code lunghe.
+
+Le due famiglie non sono in competizione assoluta. Rispondono a domande differenti.
+
+| Centro | Dispersione associata | Che cosa privilegia |
+|---|---|---|
+| Media | Deviazione standard | Distanze quantitative da un punto di equilibrio |
+| Mediana | IQR o MAD | Posizioni centrali e distanze robuste |
+
+La coppia media--deviazione standard è coerente perché entrambe dipendono dalla media e dagli scarti quantitativi. La coppia mediana--IQR o mediana--MAD è coerente perché entrambe riducono l'influenza delle code e degli estremi.
+
+## Un confronto completo
+
+Calcoliamo i principali riassunti per le ore di sonno:
 
 ```{r}
 #| label: loc-scale-summary-table
+
 studenti |>
   summarise(
-    n = n(),
-    media = mean(ore_sonno),
-    mediana = median(ore_sonno),
-    sd = sd(ore_sonno),
-    iqr = IQR(ore_sonno),
-    mad = mad(ore_sonno),
-    minimo = min(ore_sonno),
-    massimo = max(ore_sonno)
+    n = sum(!is.na(ore_sonno)),
+    media =
+      mean(
+        ore_sonno,
+        na.rm = TRUE
+      ),
+    mediana =
+      median(
+        ore_sonno,
+        na.rm = TRUE
+      ),
+    deviazione_standard =
+      sd(
+        ore_sonno,
+        na.rm = TRUE
+      ),
+    varianza =
+      var(
+        ore_sonno,
+        na.rm = TRUE
+      ),
+    range =
+      diff(
+        range(
+          ore_sonno,
+          na.rm = TRUE
+        )
+      ),
+    iqr =
+      IQR(
+        ore_sonno,
+        na.rm = TRUE
+      ),
+    mad_non_scalato =
+      mad(
+        ore_sonno,
+        constant = 1,
+        na.rm = TRUE
+      )
   )
 ```
+
+Il grafico rimane necessario:
 
 ```{r}
-#| label: loc-scale-boxplot-sleep
-#| fig-cap: "Distribuzione delle ore di sonno con boxplot."
-ggplot(studenti, aes(y = ore_sonno)) +
-  geom_boxplot() +
+#| label: fig-loc-scale-sleep
+#| fig-cap: "Istogramma e posizione della media e della mediana per le ore di sonno."
+
+ggplot(
+  studenti,
+  aes(x = ore_sonno)
+) +
+  geom_histogram(
+    binwidth = .5,
+    boundary = 0,
+    na.rm = TRUE
+  ) +
+  geom_vline(
+    xintercept =
+      mean(
+        studenti$ore_sonno,
+        na.rm = TRUE
+      ),
+    linetype = "solid"
+  ) +
+  geom_vline(
+    xintercept =
+      median(
+        studenti$ore_sonno,
+        na.rm = TRUE
+      ),
+    linetype = "dashed"
+  ) +
   labs(
-    x = NULL,
-    y = "Ore di sonno"
+    x = "Ore di sonno",
+    y = "Numero di studenti",
+    subtitle =
+      "Linea continua: media; linea tratteggiata: mediana"
   )
 ```
 
-Il boxplot mostra la mediana, i quartili e i possibili valori estremi. Per questo motivo è particolarmente utile quando si vuole mettere in relazione la tendenza centrale e la variabilità.
+Se media e mediana sono vicine e la distribuzione appare unimodale e non fortemente asimmetrica, media e deviazione standard possono offrire un riassunto utile. Se differiscono molto o il grafico mostra code lunghe, gruppi distinti o valori estremi, la coppia mediana--IQR può descrivere meglio la regione centrale.
 
-## Quale riassunto scegliere?
+Non si tratta di applicare una regola automatica. Si tratta di scegliere il riassunto dopo avere compreso la distribuzione.
 
-La scelta non dipende solo dalla praticità del calcolo. Dipende dalla variabile, dalla distribuzione e dalla domanda.
+## Distribuzioni che un singolo centro descrive male
 
-| Situazione | Riassunto consigliato | Motivo |
-|---|---|---|
-| Variabile categoriale | Frequenze e moda | La media non ha significato |
-| Distribuzione numerica simmetrica | Media e deviazione standard | Riassumono bene centro e dispersione |
-| Distribuzione asimmetrica | Mediana e IQR | Sono più robusti |
-| Presenza di valori estremi | Mediana, IQR, MAD | Riduce l'influenza degli outlier |
-| Confronto tra gruppi | Centro + variabilità per gruppo | La sola media può nascondere differenze importanti |
-| Scala ordinale breve, come molti item Likert | Frequenze, mediana, IQR | Le distanze tra categorie non sono sempre interpretabili come uguali |
+Una distribuzione può contenere due concentrazioni distinte. In quel caso, una media collocata tra i due gruppi può corrispondere a una zona in cui esistono poche osservazioni.
 
-::: {.callout-important title="Non riportare mai solo un numero"}
-Un riassunto numerico dovrebbe essere accompagnato da almeno una descrizione della distribuzione. Dire "la media è 6,8" è molto meno informativo rispetto a "la distribuzione è abbastanza simmetrica, senza outlier evidenti; per questo motivo riportiamo la media e la deviazione standard".
+Immaginiamo che metà degli studenti dorma circa cinque ore e metà circa nove. La media sarebbe vicina a sette, ma sette ore non rappresenterebbe bene nessuno dei due gruppi.
+
+La deviazione standard sarebbe elevata, ma non ci direbbe che la variabilità deriva da due concentrazioni. Soltanto il grafico renderebbe visibile questa struttura.
+
+Questo esempio mostra il limite generale dei riassunti: posizione e dispersione non determinano l'intera forma della distribuzione.
+
+## Valori mancanti e denominatore
+
+Le statistiche descrittive devono dichiarare quante osservazioni utilizzano.
+
+```{r}
+#| label: loc-scale-missing-summary
+
+studenti |>
+  summarise(
+    n_totale = n(),
+    n_osservato =
+      sum(!is.na(ore_sonno)),
+    n_mancante =
+      sum(is.na(ore_sonno)),
+    media =
+      mean(
+        ore_sonno,
+        na.rm = TRUE
+      ),
+    deviazione_standard =
+      sd(
+        ore_sonno,
+        na.rm = TRUE
+      )
+  )
+```
+
+`na.rm = TRUE` permette il calcolo sui valori disponibili. Non dimostra che le osservazioni mancanti siano irrilevanti. Media e deviazione standard descrivono la distribuzione dei valori osservati, non necessariamente quella di tutte le persone reclutate.
+
+## Come descrivere una distribuzione
+
+Una descrizione completa non deve elencare ogni statistica disponibile. Deve collegare misura, forma e riassunti.
+
+Per esempio:
+
+> Le ore di sonno sono disponibili per 80 studenti. La distribuzione è unimodale e approssimativamente simmetrica, con alcuni valori distanti alle due estremità. La media è 7.1 ore e la deviazione standard è 1.0 ora; pertanto, i valori mostrano una distanza quadratica tipica di circa un'ora dalla media. Media e mediana sono simili, mentre l'IQR descrive l'ampiezza della metà centrale. I risultati riguardano il campione osservato.
+
+Questa formulazione evita due errori. Non presenta la deviazione standard come una percentuale o come un intervallo che contiene necessariamente i dati. Non trasforma la media nel valore posseduto da ogni individuo.
+
+## Errori frequenti nell'interpretazione
+
+La deviazione standard non è un errore di misura. Una parte della dispersione può dipendere dall'errore, ma una parte può rappresentare differenze reali tra persone.
+
+La deviazione standard non è l'errore standard della media. La prima descrive la dispersione delle osservazioni; il secondo descrive l'incertezza di una stima della media.
+
+La deviazione standard non è la distanza massima dalla media. Alcune osservazioni possono trovarsi molto oltre una deviazione standard.
+
+Una deviazione standard elevata non è automaticamente un problema. Può essere la caratteristica sostantiva più interessante del campione.
+
+Infine, una deviazione standard piccola non dimostra che una misura sia precisa o valida. Può derivare da un campione omogeneo o da una scala con effetto pavimento o soffitto.
+
+## Usare l'AI per comprendere, non soltanto calcolare
+
+Un assistente AI può produrre rapidamente una tabella con media, mediana, deviazione standard, IQR e MAD. La parte importante è chiedergli di rendere esplicita la relazione tra numeri e distribuzione.
+
+::: {.callout-tip title="Un prompt per comprendere la deviazione standard"}
+> Ho una variabile numerica chiamata `ore_sonno`, misurata in ore. Prima conta valori osservati e mancanti e mostra un istogramma.
+>
+> Calcola poi media, mediana, deviazione standard, IQR e MAD non scalato. Spiega la deviazione standard ricostruendo scarti dalla media, quadrati, divisione per `n - 1` e radice quadrata.
+>
+> Non interpretare la deviazione standard come intervallo che contiene necessariamente i dati. Segnala se la forma della distribuzione rende media e deviazione standard poco rappresentative.
 :::
 
-## Descrivere gruppi senza dimenticare gli individui
+Se l'AI risponde soltanto “la deviazione standard indica quanto i dati si discostano dalla media”, possiamo chiedere:
 
-In psicologia, lavoriamo spesso con le medie di gruppo. Questo è utile, ma può diventare fuorviante se dimentichiamo la variabilità individuale.
+> Mostra con cinque numeri due distribuzioni con la stessa media e deviazioni standard diverse. Spiega quale passaggio del calcolo produce la differenza.
+
+L'obiettivo non è accumulare definizioni, ma costruire un'immagine mentale verificabile.
+
+## Esprimere una distanza in deviazioni standard
+
+Una volta compreso il significato della deviazione standard, possiamo usarla come unità di misura. Lo **z-score** di un valore $x$ è:
+
+$$
+z = \frac{x-\bar{x}}{s}.
+$$
+
+La formula confronta la distanza dalla media, $x-\bar{x}$, con la dispersione tipica della variabile, $s$.
+
+Se $z=0$, il valore coincide con la media. Se $z=1$, si trova una deviazione standard sopra la media. Se $z=-2$, si trova due deviazioni standard sotto la media.
+
+Supponiamo che le ore di sonno abbiano media pari a 7.1 e deviazione standard pari a 0.9. Per una persona che dorme 5.3 ore:
+
+$$
+z =
+\frac{5.3-7.1}{0.9}
+=
+-2.
+$$
+
+Il valore si trova quindi due deviazioni standard sotto la media del campione.
+
+Lo z-score non richiede che la distribuzione sia normale. Esprime soltanto una posizione relativa usando la deviazione standard come unità. Per trasformarlo in una probabilità o in un percentile dobbiamo introdurre un modello della forma distributiva, per esempio la distribuzione normale.
 
 ```{r}
-#| label: loc-scale-group-data
-studenti <- studenti |>
+#| label: loc-scale-z-score
+
+media_sonno <-
+  mean(
+    studenti$ore_sonno,
+    na.rm = TRUE
+  )
+
+sd_sonno <-
+  sd(
+    studenti$ore_sonno,
+    na.rm = TRUE
+  )
+
+studenti |>
   mutate(
-    gruppo_stress = if_else(stress >= median(stress), "stress alto", "stress basso")
-  )
-
-studenti |>
-  group_by(gruppo_stress) |>
-  summarise(
-    n = n(),
-    media_sonno = mean(ore_sonno),
-    mediana_sonno = median(ore_sonno),
-    sd_sonno = sd(ore_sonno),
-    iqr_sonno = IQR(ore_sonno),
-    .groups = "drop"
-  )
+    z_ore_sonno =
+      (ore_sonno - media_sonno) /
+      sd_sonno
+  ) |>
+  select(
+    id,
+    ore_sonno,
+    z_ore_sonno
+  ) |>
+  head()
 ```
 
-```{r}
-#| label: loc-scale-group-plot
-#| fig-cap: "Ore di sonno nei gruppi a stress basso e alto."
-ggplot(studenti, aes(x = gruppo_stress, y = ore_sonno)) +
-  geom_boxplot() +
-  geom_jitter(width = 0.12, alpha = 0.6) +
-  labs(
-    x = NULL,
-    y = "Ore di sonno"
-  )
-```
-
-Il confronto tra i gruppi è più informativo quando affianchiamo alla media o alla mediana la dispersione dei valori. Due gruppi possono differire nella media, ma sovrapporsi molto. Oppure possono avere una media simile, ma una variabilità diversa.
-
-::: {.callout-note title="Nota epistemologica"}
-La media di un gruppo non descrive necessariamente ogni singolo individuo. Questo punto è particolarmente importante in psicologia, dove i processi individuali possono differire notevolmente anche quando la media aggregata sembra chiara.
-:::
-
-## Usare l'AI con criterio
-
-L'AI può aiutare a scrivere il codice necessario per calcolare le statistiche descrittive. Per esempio, può generare una tabella con la media, la mediana, la deviazione standard e l'intervallo interquartile per più variabili.
-
-Questo è utile, ma non sufficiente. Lo studente deve controllare che le variabili siano del tipo corretto.
-
-- se le variabili sono del tipo corretto;
-- se i valori mancanti sono gestiti esplicitamente;
-- se la media è appropriata per la distribuzione osservata;
-- se l'AI sta usando la funzione `sd()` senza spiegare che cosa misura;
-- se vengono esclusi i casi con `NA` senza documentarlo;
-- se il riassunto numerico è accompagnato da un grafico.
-
-::: {.callout-tip title="Prompt utile"}
-Chiedi all'AI: "Scrivi il codice R per calcolare la media, la mediana, la deviazione standard, l'intervallo interquartile e il numero di valori mancanti per queste variabili. Spiegami poi quali controlli devo fare prima di interpretare la media".
-:::
-
-::: {.callout-caution title="Controllo obbligatorio"}
-Non accettare una tabella descrittiva prodotta dall'AI senza prima aver guardato almeno un grafico della distribuzione. L'AI può calcolare numeri corretti, ma suggerire comunque un riassunto poco adatto.
+::: {.callout-warning title="Standardizzare non rende normale una distribuzione"}
+La trasformazione in z-score modifica il centro e l'unità di misura, ma non modifica la forma. Una distribuzione asimmetrica rimane asimmetrica; una distribuzione con due picchi conserva i due picchi.
 :::
 
 ## Collegamento con la distribuzione normale
 
-Il capitolo successivo introduce la distribuzione normale. Questo collegamento è naturale, in quanto la distribuzione normale è descritta da due parametri: la media e la deviazione standard.
+La distribuzione normale è descritta da due parametri: posizione e dispersione. Nella sua forma più comune, questi parametri sono la media e la deviazione standard.
 
-Tuttavia, l'obiettivo non è verificare meccanicamente se i dati sono "normali". L'obiettivo è capire quando la media e la deviazione standard sono un riassunto adeguato e quando, invece, la distribuzione richiede strumenti più robusti o modelli diversi.
+Questo collegamento non significa che ogni variabile debba essere normale per possedere una media e una deviazione standard. Entrambe possono essere calcolate per molte distribuzioni differenti.
 
-La distribuzione normale è un modello utile in molti contesti, ma non è una legge che i dati devono rispettare.
+La normalità aggiunge un'informazione ulteriore: specifica la forma. Quando la forma è normale, la media e la deviazione standard permettono di ricostruire l'intera distribuzione teorica e di collegare le distanze dalla media a percentuali precise.
 
-## Checklist finale {.unnumbered .unlisted}
+Nel prossimo capitolo vedremo questo passaggio. Qui deve rimanere chiara la distinzione:
 
-Prima di riportare le statistiche descrittive, chiediti:
+> media e deviazione standard descrivono posizione e dispersione;
 
-- Ho verificato la distribuzione?
-- La variabile è categoriale, ordinale o numerica?
-- Ci sono valori mancanti?
-- Ci sono valori estremi o inattesi?
-- La media e la mediana sono simili o molto diverse?
-- La deviazione standard è interpretabile per questa distribuzione?
-- Sarebbe meglio riportare la mediana e l'intervallo interquartile?
-- Ho documentato eventuali esclusioni o ricodifiche?
-- Il riassunto risponde davvero alla domanda di ricerca?
+> la distribuzione normale aggiunge una particolare forma.
+
+## Riflessioni conclusive {.unnumbered .unlisted}
+
+Una distribuzione descrive come le osservazioni sono ripartite tra i valori. È l'oggetto che vogliamo comprendere. Media, mediana, deviazione standard, IQR e MAD sono modi differenti di riassumerne alcuni aspetti.
+
+La media è il punto di equilibrio e utilizza l'ampiezza di tutti i valori. La mediana è il centro delle posizioni ordinate ed è meno influenzata dagli estremi.
+
+La deviazione standard nasce dalle distanze dalla media. Gli scarti vengono elevati al quadrato per evitare che segni opposti si annullino; vengono mediati usando $n-1$ e infine riportati nell'unità originale attraverso la radice quadrata. Il risultato può essere letto come una distanza quadratica tipica dalla media.
+
+La coppia media--deviazione standard è informativa quando la distribuzione possiede un centro interpretabile e non è dominata da asimmetrie, gruppi distinti o estremi. Negli altri casi, mediana, IQR e MAD possono offrire una descrizione più robusta.
+
+Nessuna coppia di numeri sostituisce il grafico. Comprendere una distribuzione significa tenere insieme forma, posizione, dispersione, valori mancanti e significato della misura.
 
 ## Esercizi {.unnumbered .unlisted}
 
-::: {.callout-important title="Problemi" collapse="true"}
+1. Spiega con parole tue che cosa significa *distribuzione*. Perché una media non è una distribuzione?
 
-1. **Lettura concettuale**  
-   Spiega la differenza tra media e mediana. Perché la mediana è più robusta in presenza di valori estremi?
+2. I valori `5, 6, 7, 8, 9` e `1, 4, 7, 10, 13` hanno la stessa media. Calcola o prevedi quale insieme abbia deviazione standard maggiore e spiega perché senza usare soltanto la formula.
 
-2. **Scelta del riassunto**  
-   Una variabile misura il numero di ore settimanali dedicate allo studio. La distribuzione è molto asimmetrica: molti studenti studiano poche ore, pochi studenti studiano moltissime ore. Quale riassunto useresti? Perché?
+3. Per i valori `4, 6, 8`, ricostruisci media, scarti, scarti quadratici, varianza campionaria e deviazione standard.
 
-3. **Interpretazione della variabilità**  
-   Due gruppi hanno la stessa media di qualità del sonno, ma il primo ha deviazione standard molto più alta. Come interpreteresti questa differenza?
+4. Perché la somma degli scarti dalla media è zero? Perché questa proprietà impedisce di usare la media degli scarti come misura di dispersione?
 
-4. **Controllo del codice AI**  
-   L'AI propone questo codice:
+5. Una variabile ha media 50 e deviazione standard 8. Quali delle seguenti affermazioni sono giustificate?
+   a. Tutti i valori sono compresi tra 42 e 58.  
+   b. La dispersione è espressa nella stessa unità della variabile.  
+   c. La distanza quadratica tipica dalla media è circa 8.  
+   d. I valori oltre 66 sono necessariamente errori.
 
-   ```r
-   studenti |>
-     summarise(across(c(stress, sonno_qualita, ore_sonno),
-                      list(media = mean, sd = sd)))
-   ```
+6. Una distribuzione è fortemente asimmetrica e contiene alcuni valori molto elevati. Confronta ciò che descrivono media--deviazione standard e mediana--IQR.
 
-   Quali controlli mancano prima di interpretare i risultati?
+7. Spiega la differenza tra deviazione standard e MAD. Perché il valore restituito da `mad()` in R non coincide, per impostazione predefinita, con la formula non scalata?
 
-5. **Modifica del codice**  
-   Modifica il codice precedente in modo da includere anche mediana, IQR e numero di valori mancanti.
+8. L'AI produce una tabella con media e deviazione standard ma non mostra il grafico né il numero dei mancanti. Scrivi una richiesta di revisione che renda il risultato interpretabile.
 
-6. **Interpretazione prudente**  
-   In un report leggi: "La media dello stress è 6.2, quindi gli studenti sono moderatamente stressati". Perché questa frase è incompleta?
+::: {.callout-tip title="Soluzioni" collapse="true"}
+1. Una distribuzione descrive quali valori compaiono e come le osservazioni si ripartiscono tra essi. La media rappresenta soltanto un punto di equilibrio e non mostra forma o dispersione.
+
+2. Il secondo insieme ha deviazione standard maggiore. I valori sono più lontani dalla media 7, anche se il loro punto di equilibrio è lo stesso.
+
+3. La media è 6. Gli scarti sono `-2, 0, 2`; i quadrati sono `4, 0, 4`; la loro somma è 8. La varianza campionaria è `8 / (3 - 1) = 4`; la deviazione standard è `sqrt(4) = 2`.
+
+4. La media è il punto di equilibrio, quindi gli scarti negativi compensano quelli positivi. La loro media sarebbe sempre zero e non distinguerebbe una distribuzione compatta da una dispersa.
+
+5. Sono giustificate b e c. La deviazione standard non definisce un intervallo obbligatorio e non trasforma automaticamente i valori distanti in errori.
+
+6. Media e deviazione standard incorporano fortemente l'ampiezza dei valori elevati. Mediana e IQR descrivono posizione e metà centrale con minore influenza degli estremi. È utile riportare il grafico e, durante l'EDA, confrontare entrambe le coppie.
+
+7. La deviazione standard usa scarti quadratici dalla media; il MAD usa distanze assolute dalla mediana. `mad()` moltiplica per impostazione predefinita il MAD grezzo per circa 1.4826, così da renderlo confrontabile con la deviazione standard sotto normalità. Per la formula non scalata si usa `constant = 1`.
+
+8. La richiesta deve chiedere numerosità totale, valori osservati e mancanti, istogramma o altro grafico della distribuzione, confronto tra media e mediana e spiegazione dell'adeguatezza della deviazione standard alla forma osservata.
 :::
 
-::: {.callout-tip title="Soluzioni orientative" collapse="true"}
-
-1. La media usa tutti i valori ed è sensibile agli estremi. La mediana dipende dalla posizione dei valori ordinati ed è quindi più stabile quando pochi valori sono molto grandi o molto piccoli.
-
-2. In una distribuzione molto asimmetrica è spesso preferibile riportare mediana e IQR, accompagnati da un grafico. La media potrebbe essere trascinata dai valori molto alti.
-
-3. La stessa media non implica la stessa esperienza individuale. Nel gruppo con deviazione standard più alta gli studenti sono più eterogenei: alcuni dormono molto meglio o molto peggio di altri.
-
-4. Mancano il controllo dei valori mancanti, il confronto con la mediana, una misura robusta come IQR o MAD, e soprattutto un grafico della distribuzione.
-
-5. Una possibile soluzione:
-
-   ```r
-   studenti |>
-     summarise(across(
-       c(stress, sonno_qualita, ore_sonno),
-       list(
-         n_missing = ~sum(is.na(.x)),
-         media = ~mean(.x, na.rm = TRUE),
-         mediana = ~median(.x, na.rm = TRUE),
-         sd = ~sd(.x, na.rm = TRUE),
-         iqr = ~IQR(.x, na.rm = TRUE)
-       )
-     ))
-   ```
-
-6. La frase non dice come sono distribuiti i valori, quanta variabilità c'è, se esistono gruppi molto diversi o valori estremi. Inoltre interpreta la media come se rappresentasse automaticamente tutti gli studenti.
+::: {.callout-note title="Punti chiave" collapse="true"}
+- La distribuzione descrive valori, frequenze, forma, posizione e dispersione.
+- Media e mediana definiscono il centro in modi differenti.
+- La media è il punto di equilibrio ed è sensibile all'ampiezza degli estremi.
+- La mediana dipende dall'ordine ed è più robusta.
+- Il range usa soltanto minimo e massimo.
+- L'IQR descrive l'ampiezza della metà centrale.
+- La deviazione standard è la radice della varianza ed è espressa nell'unità originale.
+- La deviazione standard può essere letta come distanza quadratica tipica dalla media.
+- Il MAD è una misura robusta basata sulla mediana.
+- Nessun riassunto numerico sostituisce la forma della distribuzione.
 :::
 
-::: {.callout-note collapse="true" title="Informazioni sull'ambiente di sviluppo"}
+::: {.callout-note title="Ambiente di sviluppo" collapse="true"}
+Il capitolo usa `dplyr` e `ggplot2`. Le informazioni sulla sessione possono essere ottenute con:
+
 ```{r}
-#| label: loc-scale-session-info
+#| echo: true
+
 sessionInfo()
 ```
 :::
-
-## Bibliografia {.unnumbered .unlisted}

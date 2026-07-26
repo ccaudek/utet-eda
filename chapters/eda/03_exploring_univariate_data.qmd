@@ -1,486 +1,505 @@
----
-title: "Esplorare una variabile alla volta"
-subtitle: "Capire i dati prima di cercare relazioni"
----
+# Esplorare una variabile alla volta {#sec-univariate}
 
-## Perché questo capitolo
+::: {.callout-note title="In sintesi"}
+**Da sapere**  Esplorare una variabile significa ricostruirne la distribuzione empirica: quali valori compaiono, con quale frequenza, quali mancano e come le osservazioni si concentrano o si disperdono. La distribuzione non è una proprietà puramente numerica: riflette il costrutto, lo strumento di misura, il campionamento e le decisioni prese durante la preparazione dei dati.
 
-L'analisi esplorativa dei dati inizia con una domanda semplice: **Che cosa contiene ciascuna variabile?**
-
-Prima di studiare le correlazioni, confrontare i gruppi o stimare i modelli, è necessario conoscere le variabili una alla volta. Una variabile può presentare valori mancanti, categorie riportate in modo incoerente, distribuzioni asimmetriche, gruppi molto sbilanciati o valori inattesi. Se non li osserviamo all'inizio, rischiamo di costruire analisi apparentemente corrette su dati che non abbiamo davvero compreso.
-
-In psicologia, questa fase è particolarmente importante. Le variabili possono rappresentare caratteristiche sociodemografiche, risposte a item, punteggi di scala, tempi di reazione, valutazioni soggettive o indicatori fisiologici. Ogni variabile ha un significato teorico e un'origine empirica. Esplorare una variabile non significa soltanto produrre un grafico, ma anche chiedersi cosa quel grafico ci dice del fenomeno osservato.
-
-Al termine del capitolo dovresti essere in grado di:
-
-- distinguere le variabili categoriali da quelle numeriche;
-- controllare i valori mancanti e quelli inattesi;
-- scegliere rappresentazioni grafiche semplici e appropriate;
-- leggere frequenze, proporzioni, istogrammi e boxplot;
-- evitare interpretazioni premature;
-- controllare criticamente il codice e i commenti prodotti con l'aiuto dell'AI.
-
-::: {.callout-important}
-## Idea guida
-
-L'analisi univariata non permette di trarre conclusioni. Serve per **orientarsi**.
-
-Prima di domandarci se due variabili sono associate, dobbiamo capire come si comporta ciascuna variabile da sola.
+**Da saper fare**  Collegare il tipo di variabile alle descrizioni appropriate; distinguere frequenze, proporzioni e riassunti numerici; leggere forma, posizione e dispersione; riconoscere limiti della scala e osservazioni insolite; formulare descrizioni che riguardino il campione senza trasformarle prematuramente in affermazioni sulla popolazione.
 :::
 
-## Una sequenza minima
+## Introduzione {.unnumbered .unlisted}
 
-Quando esploriamo una variabile, possiamo seguire una sequenza molto semplice.
+Dopo avere definito il dataset analitico e documentato le decisioni di pulizia, possiamo iniziare a descrivere i dati. Il primo passo consiste nell'osservare una variabile alla volta.
 
-| Passo | Domanda guida | Esempio di controllo |
-|---|---|---|
-| 1. Identificare | Che tipo di variabile è? | Categoriale, ordinale, numerica, punteggio di scala |
-| 2. Controllare | Ci sono valori mancanti o impossibili? | `NA`, valori fuori scala, categorie inattese |
-| 3. Contare o riassumere | Dove si concentrano i valori? | Frequenze, proporzioni, minimo, massimo, mediana |
-| 4. Visualizzare | Quale grafico mostra meglio la distribuzione? | Barre, istogramma, boxplot |
-| 5. Interpretare con cautela | Che cosa posso dire e che cosa no? | Descrizione, non ancora spiegazione causale |
+Questa scelta può sembrare elementare. In realtà, molte analisi diventano difficili da interpretare perché si cercano subito relazioni, differenze tra gruppi o modelli complessi senza avere prima compreso le variabili che vi entrano.
 
-Questa sequenza verrà ripresa più volte nei capitoli successivi. L'EDA è un processo iterativo: spesso un grafico rivela un problema che ci costringe a tornare alle fasi di controllo o di pulizia.
+Una correlazione può essere dominata da pochi valori estremi. Una media può nascondere una distribuzione fortemente asimmetrica. Una categoria può contenere pochissime osservazioni. Una scala può concentrare quasi tutte le risposte al valore massimo, lasciando poco spazio per osservare differenze individuali.
 
-## Un esempio ricorrente: stress e sonno
+L'analisi univariata risponde quindi a una domanda preliminare:
 
-Useremo un piccolo dataset didattico su studenti universitari. Ogni riga rappresenta uno studente. Le variabili principali sono:
+> Che cosa rappresentano concretamente i valori osservati in questa variabile?
 
-| Variabile | Tipo | Significato |
-|---|---|---|
-| `genere` | categoriale | genere dichiarato |
-| `anno` | categoriale/ordinale | anno di corso |
-| `stress` | numerica discreta | stress accademico, da 1 a 10 |
-| `sonno_ore` | numerica continua | ore medie di sonno per notte |
-| `qualita_sonno` | ordinale | qualità soggettiva del sonno, da 1 a 5 |
+La risposta richiede più di un comando. Dobbiamo conoscere la definizione della variabile, i valori che potrebbe assumere, il modo in cui è stata misurata e la popolazione da cui proviene il campione.
 
-Nel capitolo precedente abbiamo visto che un dataset deve essere controllato e documentato. Qui si assume di avere già una versione pulita, ma si continuerà comunque a controllare ciò che si fa.
+::: {.callout-tip title="Prerequisiti"}
+Il capitolo presuppone che il percorso dai dati grezzi al dataset analitico sia stato documentato, come discusso in @sec-eda-proj-structure e @sec-data-cleaning. Se l'esplorazione rivela valori impossibili, categorie inattese o duplicazioni, è necessario tornare a quei passaggi prima di proseguire.
+:::
+
+## Panoramica del capitolo {.unnumbered .unlisted}
+
+Il concetto centrale sarà la distribuzione empirica. Vedremo come cambia la sua descrizione quando la variabile è categoriale, ordinale o numerica. Per le variabili numeriche distingueremo forma, posizione e dispersione, evitando di ridurre tutto a una media. Discuteremo poi valori mancanti, limiti della scala, osservazioni estreme e rapporto tra campione e popolazione. La sintassi rimarrà essenziale: il codice servirà a rendere visibili queste caratteristiche, non a introdurre un nuovo catalogo di funzioni.
+
+::: {.callout-note title="Preparazione del notebook"}
+Gli esempi usano `dplyr` e `ggplot2`, già introdotti nella Parte su R. Il dataset è simulato e contiene una riga per studente. I valori mancanti sono inseriti intenzionalmente.
 
 ```{r}
-#| label: setup-univariate
+#| label: univariate-setup
 #| message: false
 #| warning: false
 
 library(dplyr)
 library(ggplot2)
-library(tibble)
 
-set.seed(123)
+set.seed(2026)
 
-stress_sonno <- tibble(
-  id = 1:120,
-  genere = sample(c("F", "M", "Altro/non dichiarato"),
-                  size = 120,
-                  replace = TRUE,
-                  prob = c(.58, .38, .04)),
-  anno = sample(c("Primo", "Secondo", "Terzo"),
-                size = 120,
-                replace = TRUE,
-                prob = c(.42, .34, .24)),
-  stress = pmin(pmax(round(rnorm(120, mean = 6.2, sd = 1.8)), 1), 10),
-  sonno_ore = round(rnorm(120, mean = 7.0, sd = 1.1), 1),
-  qualita_sonno = pmin(pmax(round(rnorm(120, mean = 3.1, sd = 1.0)), 1), 5)
+n <- 120
+
+studenti <- data.frame(
+  id = seq_len(n),
+  anno = factor(
+    sample(
+      c("primo", "secondo", "terzo"),
+      size = n,
+      replace = TRUE,
+      prob = c(.44, .34, .22)
+    ),
+    levels = c("primo", "secondo", "terzo"),
+    ordered = TRUE
+  ),
+  stress = round(
+    1 + 9 * rbeta(n, 2.8, 2.2)
+  ),
+  qualita_sonno = factor(
+    sample(
+      1:5,
+      size = n,
+      replace = TRUE,
+      prob = c(.08, .17, .33, .29, .13)
+    ),
+    levels = 1:5,
+    ordered = TRUE
+  )
 )
 
-# Introduciamo alcuni valori mancanti per rendere l'esempio realistico.
-stress_sonno$sonno_ore[c(7, 48, 91)] <- NA
-stress_sonno$qualita_sonno[c(13, 62)] <- NA
+studenti$stress[c(9, 54, 103)] <- NA
+studenti$qualita_sonno[c(17, 61)] <- NA
 ```
-
-```{r}
-#| label: glimpse-univariate
-
-glimpse(stress_sonno)
-```
-
-## Primo controllo: valori mancanti e valori inattesi
-
-Prima di creare i grafici, è consigliabile verificare che le variabili non presentino valori mancanti o valori fuori scala.
-
-```{r}
-#| label: missing-counts-univariate
-
-stress_sonno |>
-  summarise(
-    across(
-      everything(),
-      ~ sum(is.na(.x))
-    )
-  )
-```
-
-Questo controllo risponde a una domanda pratica: **quante osservazioni potrei perdere se una funzione elimina automaticamente i valori mancanti?**
-
-Per le variabili con scale definite, controlliamo anche i valori minimo e massimo.
-
-```{r}
-#| label: range-check-univariate
-
-stress_sonno |>
-  summarise(
-    stress_min = min(stress, na.rm = TRUE),
-    stress_max = max(stress, na.rm = TRUE),
-    sonno_min = min(sonno_ore, na.rm = TRUE),
-    sonno_max = max(sonno_ore, na.rm = TRUE),
-    qualita_min = min(qualita_sonno, na.rm = TRUE),
-    qualita_max = max(qualita_sonno, na.rm = TRUE)
-  )
-```
-
-::: {.callout-warning}
-## Errore comune
-
-Non partire dalla media. Inizia chiedendoti se i valori sono plausibili.
-
-Una media può essere calcolata anche quando una variabile contiene codici errati, valori fuori scala o valori mancanti trattati in modo scorretto.
 :::
 
-## Variabili categoriali: contare prima di interpretare
+## La distribuzione empirica
 
-Una variabile categoriale assegna ogni osservazione a una categoria. Esempi tipici sono il genere, il gruppo sperimentale, la diagnosi, la condizione o l'anno di corso.
+Una variabile è una regola che associa un valore a ciascuna unità osservata. La **distribuzione empirica** descrive come questi valori si presentano nel campione.
 
-La prima analisi da effettuare è il conteggio delle categorie.
+Per la variabile `anno`, la distribuzione indica quanti studenti appartengono al primo, al secondo e al terzo anno. Per `stress`, indica quali punteggi compaiono, dove si concentra la maggior parte degli studenti e quanto i punteggi differiscono tra loro.
+
+La distribuzione è quindi l'oggetto principale dell'analisi univariata. Una media, una proporzione o un boxplot ne mostrano soltanto alcuni aspetti.
+
+Dire che lo stress medio è 6 non significa che la maggior parte degli studenti abbia ottenuto 6. Potremmo avere una distribuzione concentrata intorno a quel valore oppure due gruppi distinti, uno con punteggi bassi e uno con punteggi alti. Lo stesso numero riassuntivo può provenire da configurazioni molto diverse.
+
+L'obiettivo iniziale non è scegliere la statistica “migliore”, ma costruire una descrizione abbastanza ricca da non confondere un riassunto con l'intera variabile.
+
+## Prima dei numeri viene il significato
+
+Una colonna memorizzata come numero non è necessariamente una quantità continua. `qualita_sonno`, codificata da 1 a 5, rappresenta livelli ordinati. Le categorie possiedono un ordine, ma non sappiamo automaticamente se la distanza psicologica tra 1 e 2 sia uguale a quella tra 4 e 5.
+
+Analogamente, un codice `1`, `2` o `3` può rappresentare l'anno di corso. Calcolarne la media non descrive in modo trasparente la composizione del campione.
+
+Prima dell'esplorazione dobbiamo quindi recuperare dalla documentazione almeno tre informazioni: che cosa rappresenta la variabile, quali valori può assumere e come è stata costruita. Queste informazioni determinano quali operazioni abbiano senso.
+
+| Tipo concettuale | Domanda iniziale | Descrizione essenziale |
+|---|---|---|
+| Categoriale | Quali categorie compaiono e con quale frequenza? | Conteggi e proporzioni |
+| Ordinale | Come si distribuiscono le risposte lungo l'ordine previsto? | Frequenze ordinate e proporzioni |
+| Numerica | Dove si concentrano i valori e quanto variano? | Distribuzione grafica, posizione e dispersione |
+
+La tabella non pretende di risolvere ogni caso. Un punteggio ottenuto sommando molti item ordinali può essere trattato in modo diverso da un singolo item. La decisione deve essere coerente con la costruzione della misura e con lo scopo descrittivo.
+
+## Variabili categoriali: descrivere la composizione
+
+Per una variabile categoriale, la distribuzione è costituita dalle frequenze delle categorie.
 
 ```{r}
-#| label: count-gender
+#| label: univariate-year-counts
 
-stress_sonno |>
-  count(genere)
+studenti |>
+  count(anno) |>
+  mutate(
+    proporzione = n / sum(n)
+  )
 ```
 
-I conteggi assoluti sono utili, ma spesso vogliamo anche le proporzioni.
+Il conteggio risponde alla domanda “quante osservazioni?”. La proporzione risponde alla domanda “quale parte del campione?”.
+
+Le due informazioni devono essere lette insieme. Una categoria che rappresenta il 10% del campione può contenere dieci persone in uno studio e mille in un altro. La proporzione descrive la composizione; il conteggio segnala quanta informazione sostiene quella descrizione.
 
 ```{r}
-#| label: proportions-gender
+#| label: fig-univariate-year
+#| fig-cap: "Composizione del campione per anno di corso."
 
-stress_sonno |>
-  count(genere) |>
-  mutate(proporzione = n / sum(n))
-```
-
-Le proporzioni aiutano a comprendere la composizione del campione. Tuttavia, non risolvono da sole il problema della rappresentatività. Se il campione è di convenienza, una proporzione descrive **questi dati**, non necessariamente la popolazione degli studenti universitari.
-
-### Grafico a barre
-
-Per una singola variabile categoriale, il grafico più semplice è il grafico a barre.
-
-```{r}
-#| label: barplot-gender
-#| fig-cap: "Distribuzione del genere dichiarato nel campione didattico."
-
-ggplot(stress_sonno, aes(x = genere)) +
+ggplot(
+  studenti,
+  aes(x = anno)
+) +
   geom_bar() +
   labs(
-    x = "Genere dichiarato",
-    y = "Numero di studenti",
-    title = "Quante osservazioni ci sono in ciascuna categoria?"
+    x = "Anno di corso",
+    y = "Numero di studenti"
   )
 ```
 
-Questo grafico risponde a una domanda descrittiva: qual è la composizione del campione rispetto a questa variabile?
+Il grafico rende immediatamente visibile lo sbilanciamento tra categorie. Non ci dice però se tale composizione riproduca quella della popolazione universitaria. Per affermarlo servirebbero informazioni sul piano di campionamento e sulla popolazione di riferimento.
 
-Non risponde a domande causali e non è sufficiente per stabilire se il campione sia rappresentativo.
+Una formulazione appropriata è:
 
-### Due variabili categoriali
+> Nel campione osservato, gli studenti del primo anno sono più numerosi di quelli del terzo anno.
 
-A volte, vogliamo vedere come due variabili categoriali interagiscono tra loro. Per esempio, potremmo chiederci come si distribuiscono gli anni di corso nei diversi gruppi di genere.
+Una formulazione non giustificata sarebbe:
+
+> Gli studenti universitari appartengono soprattutto al primo anno.
+
+La prima frase descrive i dati. La seconda generalizza oltre ciò che il campionamento permette di sostenere.
+
+## Variabili ordinali: conservare l'ordine
+
+Una variabile ordinale contiene categorie che possono essere ordinate. La qualità soggettiva del sonno, misurata da 1 a 5, ne è un esempio.
 
 ```{r}
-#| label: count-gender-year
+#| label: univariate-sleep-quality-counts
 
-stress_sonno |>
-  count(genere, anno)
-```
-
-```{r}
-#| label: barplot-gender-year
-#| fig-cap: "Distribuzione dell'anno di corso per genere dichiarato."
-
-ggplot(stress_sonno, aes(x = genere, fill = anno)) +
-  geom_bar(position = "fill") +
-  labs(
-    x = "Genere dichiarato",
-    y = "Proporzione",
-    fill = "Anno di corso",
-    title = "La composizione per anno è simile nei gruppi?"
+studenti |>
+  count(
+    qualita_sonno,
+    .drop = FALSE
+  ) |>
+  mutate(
+    proporzione = n / sum(n)
   )
 ```
 
-Usando l'opzione `position = "fill"`, tutte le barre hanno la stessa altezza. Questo rende più facile il confronto delle proporzioni interne, ma nasconde il numero assoluto di osservazioni in ciascun gruppo. Per questo motivo, quando le numerosità sono molto diverse, è opportuno considerare sia i conteggi sia le proporzioni.
-
-## Variabili numeriche: guardare forma, centro e variabilità
-
-Una variabile numerica assegna a ogni osservazione un valore su una scala quantitativa. Esempi di variabili numeriche sono i punteggi di scala, i tempi di reazione, le ore di sonno, l'età o il numero di errori.
-
-Le prime domande da porsi riguardo a una variabile numerica sono:
-
-- quali sono i valori minimo e massimo?
-- dove si concentrano i valori?
-- la distribuzione è simmetrica o asimmetrica?
-- Ci sono valori molto lontani dagli altri?
-- la media è un riassunto sensato o sarebbe meglio usare la mediana e i quartili?
-
-### Riassunti numerici iniziali
+Il grafico deve conservare l'ordine dei livelli:
 
 ```{r}
-#| label: summary-sleep
-
-stress_sonno |>
-  summarise(
-    n = sum(!is.na(sonno_ore)),
-    missing = sum(is.na(sonno_ore)),
-    minimo = min(sonno_ore, na.rm = TRUE),
-    q25 = quantile(sonno_ore, .25, na.rm = TRUE),
-    mediana = median(sonno_ore, na.rm = TRUE),
-    media = mean(sonno_ore, na.rm = TRUE),
-    q75 = quantile(sonno_ore, .75, na.rm = TRUE),
-    massimo = max(sonno_ore, na.rm = TRUE)
-  )
-```
-
-Questa tabella non sostituisce il grafico. È utile per farsi un'idea iniziale: quante osservazioni sono disponibili, qual è l'intervallo dei valori e quanto la media differisce dalla mediana.
-
-### Istogramma
-
-L'istogramma mostra la forma della distribuzione raggruppando i valori in intervalli.
-
-```{r}
-#| label: histogram-sleep
-#| fig-cap: "Distribuzione delle ore medie di sonno."
-
-ggplot(stress_sonno, aes(x = sonno_ore)) +
-  geom_histogram(binwidth = 0.5, boundary = 0) +
-  labs(
-    x = "Ore medie di sonno per notte",
-    y = "Numero di studenti",
-    title = "Dove si concentrano le ore di sonno?"
-  )
-```
-
-L'istogramma è sensibile alla scelta dell'ampiezza dei bin. Modificare il parametro "binwidth" può rendere la distribuzione più frastagliata o più liscia. Per questo motivo, l'istogramma deve essere considerato uno strumento esplorativo e non un'immagine definitiva della realtà.
-
-```{r}
-#| label: histogram-sleep-binwidths
-#| fig-cap: "La scelta del binwidth può modificare l'aspetto dell'istogramma."
-
-ggplot(stress_sonno, aes(x = sonno_ore)) +
-  geom_histogram(binwidth = 1, boundary = 0) +
-  labs(
-    x = "Ore medie di sonno per notte",
-    y = "Numero di studenti",
-    title = "Stessi dati, bin più larghi"
-  )
-```
-
-::: {.callout-note}
-## Cosa osservare in un istogramma
-
-Quando guardi un istogramma, chiediti:
-
-- la distribuzione presenta un solo picco o più picchi?
-- è circa simmetrica o asimmetrica?
-- ci sono valori isolati?
-- ci sono limiti artificiali dovuti alla scala di misura?
-- la forma suggerisce che una media possa essere fuorviante?
-:::
-
-### Boxplot
-
-Il boxplot riassume la distribuzione dei dati utilizzando la mediana, i quartili e i valori potenzialmente estremi.
-
-```{r}
-#| label: boxplot-sleep
-#| fig-cap: "Boxplot delle ore medie di sonno."
-
-ggplot(stress_sonno, aes(y = sonno_ore)) +
-  geom_boxplot() +
-  labs(
-    x = NULL,
-    y = "Ore medie di sonno per notte",
-    title = "Mediana, quartili e valori estremi"
-  )
-```
-
-Il boxplot è compatto e robusto, ma fornisce meno dettagli sulla forma. Per questo motivo, è utile come complemento dell'istogramma e non come suo sostituto.
-
-## Variabili ordinali: numeri che non sono sempre quantità continue
-
-Molte variabili psicologiche vengono raccolte tramite scale di risposta ordinate, ad esempio da 1 a 5 o da "per niente" a "moltissimo". Questi valori sono numeri, ma non sempre è possibile trattarli come misure continue senza riflettere.
-
-Nel nostro esempio, "qualità del sonno" va da 1 a 5. Possiamo contare le sue frequenze come se si trattasse di una variabile categoriale ordinata.
-
-```{r}
-#| label: count-sleep-quality
-
-stress_sonno |>
-  count(qualita_sonno)
-```
-
-```{r}
-#| label: barplot-sleep-quality
+#| label: fig-univariate-sleep-quality
 #| fig-cap: "Distribuzione della qualità soggettiva del sonno."
 
-ggplot(stress_sonno, aes(x = factor(qualita_sonno))) +
+ggplot(
+  studenti,
+  aes(x = qualita_sonno)
+) +
   geom_bar() +
   labs(
     x = "Qualità soggettiva del sonno",
-    y = "Numero di studenti",
-    title = "Come si distribuiscono le risposte ordinali?"
+    y = "Numero di studenti"
   )
 ```
 
-Per scale ordinali con pochi livelli, un grafico a barre è spesso più leggibile di un istogramma. La scelta del grafico deve seguire il significato della variabile, non soltanto il modo in cui R la codifica.
+La forma della distribuzione mostra quali risposte siano frequenti e se le osservazioni si concentrino verso un estremo della scala.
 
-## Confrontare una variabile numerica tra gruppi
+Se quasi tutte le risposte fossero pari a 5, potremmo osservare un **effetto soffitto**. La variabile distinguerebbe poco gli studenti con livelli elevati perché la scala non offre valori superiori. Una concentrazione al valore minimo suggerirebbe invece un **effetto pavimento**.
 
-L'esplorazione univariata può includere un primo confronto descrittivo tra i gruppi. Per esempio, si può osservare la distribuzione delle ore di sonno nei diversi anni di corso.
+Questi pattern possono riflettere il fenomeno, ma anche la formulazione dell'item, la popolazione selezionata o una scala non adeguata all'intervallo reale delle risposte. L'EDA rende visibile il limite; la sua spiegazione richiede di tornare alla misurazione.
+
+## Variabili numeriche: forma, posizione e dispersione
+
+Per una variabile numerica non basta conoscere il minimo e il massimo. Dobbiamo osservare almeno tre caratteristiche.
+
+La **forma** descrive come i valori sono distribuiti: simmetria, asimmetria, concentrazioni, vuoti e possibili gruppi distinti.
+
+La **posizione** descrive dove si trova il centro della distribuzione. Media e mediana rispondono a definizioni differenti di centro.
+
+La **dispersione** descrive quanto i valori differiscono tra loro. Intervallo, distanza interquartile e deviazione standard ne evidenziano aspetti diversi.
+
+Queste caratteristiche devono essere lette insieme.
 
 ```{r}
-#| label: sleep-by-year-summary
+#| label: univariate-stress-summary
 
-stress_sonno |>
-  group_by(anno) |>
+studenti |>
   summarise(
-    n = sum(!is.na(sonno_ore)),
-    mediana = median(sonno_ore, na.rm = TRUE),
-    media = mean(sonno_ore, na.rm = TRUE),
-    q25 = quantile(sonno_ore, .25, na.rm = TRUE),
-    q75 = quantile(sonno_ore, .75, na.rm = TRUE),
-    .groups = "drop"
+    n_osservato =
+      sum(!is.na(stress)),
+    n_mancante =
+      sum(is.na(stress)),
+    minimo =
+      min(stress, na.rm = TRUE),
+    q25 =
+      quantile(
+        stress,
+        .25,
+        na.rm = TRUE
+      ),
+    mediana =
+      median(stress, na.rm = TRUE),
+    media =
+      mean(stress, na.rm = TRUE),
+    q75 =
+      quantile(
+        stress,
+        .75,
+        na.rm = TRUE
+      ),
+    massimo =
+      max(stress, na.rm = TRUE),
+    deviazione_standard =
+      sd(stress, na.rm = TRUE)
   )
 ```
+
+La tabella offre punti di riferimento. Il grafico mostra come quei numeri siano prodotti dalla distribuzione.
 
 ```{r}
-#| label: boxplot-sleep-by-year
-#| fig-cap: "Ore medie di sonno per anno di corso."
+#| label: fig-univariate-stress-hist
+#| fig-cap: "Distribuzione dei punteggi di stress."
 
-ggplot(stress_sonno, aes(x = anno, y = sonno_ore)) +
-  geom_boxplot() +
+ggplot(
+  studenti,
+  aes(x = stress)
+) +
+  geom_histogram(
+    binwidth = 1,
+    boundary = .5,
+    na.rm = TRUE
+  ) +
   labs(
-    x = "Anno di corso",
-    y = "Ore medie di sonno per notte",
-    title = "La distribuzione del sonno cambia tra anni di corso?"
+    x = "Punteggio di stress",
+    y = "Numero di studenti"
   )
 ```
 
-Questo grafico può suggerire delle differenze tra i vari gruppi, ma non dimostra che l'anno di corso sia la causa delle differenze nel sonno. Ci potrebbero essere molte altre variabili in gioco: il carico di lavoro, l'età, il lavoro part-time, la salute, il periodo dell'anno o la selezione del campione.
+Poiché `stress` assume valori interi da 1 a 10, intervalli di ampiezza 1 rispettano la risoluzione della misura. Non stiamo cercando un'impostazione grafica universale: stiamo scegliendo una rappresentazione coerente con i valori possibili.
 
-::: {.callout-warning}
-## Non saltare alla causalità
+## Media e mediana rispondono a domande differenti
 
-Un boxplot tra gruppi può mostrare differenze descrittive. Tuttavia, ciò non è sufficiente per concludere che il gruppo abbia prodotto tali differenze.
+La media utilizza la distanza numerica di ogni osservazione. È il punto di equilibrio della distribuzione ed è sensibile ai valori estremi.
 
-La distinzione tra associazione e causalità verrà ripresa nel capitolo dedicato.
+La mediana divide le osservazioni ordinate in due metà. Dipende dalla posizione dei valori, non dall'ampiezza delle distanze più estreme.
+
+Se la distribuzione è approssimativamente simmetrica, media e mediana possono essere simili. Se è asimmetrica o contiene valori molto lontani, possono differire.
+
+Non occorre adottare la regola meccanica “usa la mediana quando la distribuzione non è normale”. La scelta dipende da ciò che vogliamo descrivere. La media è informativa sul livello complessivo della variabile; la mediana descrive il valore che divide il campione in due parti.
+
+Spesso è preferibile riportarle entrambe durante l'esplorazione e spiegare la forma della distribuzione. La decisione su quale statistica privilegiare nel report finale può essere presa dopo avere osservato i dati e considerato il significato della scala.
+
+::: {.callout-important title="Il centro non descrive la distribuzione"}
+Due campioni possono avere la stessa media e dispersioni, asimmetrie o concentrazioni molto differenti. Una statistica di posizione deve essere accompagnata almeno da una misura di dispersione e da una rappresentazione della forma.
 :::
 
-## Quale grafico scegliere?
+## La dispersione non è rumore da eliminare
 
-Non esiste un grafico migliore in assoluto. Esiste un grafico più adatto alla domanda che stai ponendo.
+In psicologia, la variabilità tra persone o tra osservazioni è spesso parte del fenomeno studiato.
 
-| Situazione | Prima scelta ragionevole | Domanda a cui risponde |
-|---|---|---|
-| Una variabile categoriale | Grafico a barre | Quante osservazioni ci sono in ogni categoria? |
-| Due variabili categoriali | Barre proporzionali o tabella | Le proporzioni cambiano tra gruppi? |
-| Una variabile numerica | Istogramma | Qual è la forma della distribuzione? |
-| Variabile numerica con valori estremi | Boxplot | Ci sono valori lontani dal centro? |
-| Variabile ordinale con pochi livelli | Grafico a barre | Come si distribuiscono le risposte? |
-| Numerica per gruppi | Boxplot o punti + boxplot | Le distribuzioni differiscono tra gruppi? |
+Una deviazione standard elevata non significa automaticamente che la misura sia scadente. Può indicare che il campione contiene esperienze molto differenti. Al contrario, una variabilità ridotta può derivare da una popolazione omogenea, da una selezione restrittiva o da un effetto pavimento o soffitto.
 
-I grafici più complessi, come i density plot, i violin plot o i beeswarm plot, possono essere utili, ma non devono diventare obbligatori. Prima è necessario saper leggere bene i grafici semplici.
+La dispersione deve quindi essere interpretata insieme al disegno e alla misurazione.
 
-## Usare l'AI con criterio
+Il boxplot offre un riepilogo compatto della posizione e della dispersione:
 
-Gli strumenti di IA possono generare rapidamente codice per tabelle e grafici. Questo è utile, ma non esime gli studenti dalle loro responsabilità.
+```{r}
+#| label: fig-univariate-stress-box
+#| fig-cap: "Boxplot dei punteggi di stress."
 
-::: {.callout-tip}
-## Cosa puoi chiedere all'AI
+ggplot(
+  studenti,
+  aes(y = stress)
+) +
+  geom_boxplot(
+    na.rm = TRUE
+  ) +
+  labs(
+    x = NULL,
+    y = "Punteggio di stress"
+  )
+```
 
-Puoi chiedere, per esempio:
+Il boxplot non sostituisce l'istogramma. Riduce la distribuzione a pochi elementi: mediana, quartili e osservazioni oltre una regola convenzionale. È utile per una sintesi rapida, ma può nascondere picchi, vuoti e gruppi distinti.
 
-> Scrivi codice R con `ggplot2` per visualizzare la distribuzione delle ore di sonno e controllare se ci sono valori mancanti.
+## I valori estremi appartengono prima di tutto alla distribuzione
 
-Oppure:
+Un valore distante dagli altri non è automaticamente un errore.
 
-> Spiega riga per riga questo codice `dplyr` e dimmi quali osservazioni vengono escluse.
+Può essere una registrazione sbagliata, ma può anche rappresentare una persona reale che si colloca in una regione rara della popolazione. Il boxplot può segnalarlo secondo una convenzione geometrica; non può stabilirne l'origine.
+
+L'analisi univariata deve quindi distinguere due domande:
+
+> Il valore è possibile secondo lo strumento e la procedura?
+
+> Il valore è raro rispetto alle altre osservazioni del campione?
+
+La prima domanda riguarda validità e pulizia. La seconda riguarda la distribuzione empirica. Un valore può essere possibile e raro; in quel caso eliminarlo renderebbe il campione meno fedele alle osservazioni raccolte.
+
+Quando una statistica cambia molto includendo o escludendo un'osservazione, non abbiamo automaticamente trovato una ragione per eliminarla. Abbiamo scoperto che la descrizione è sensibile a quel caso. Questa sensibilità deve essere riportata e approfondita.
+
+## I valori mancanti fanno parte della descrizione
+
+Una distribuzione viene costruita sui valori osservati. Se alcuni valori mancano, il grafico e le statistiche rappresentano soltanto le persone per cui la misura è disponibile.
+
+```{r}
+#| label: univariate-stress-missing
+
+studenti |>
+  summarise(
+    n_totale = n(),
+    n_osservato =
+      sum(!is.na(stress)),
+    n_mancante =
+      sum(is.na(stress)),
+    proporzione_mancante =
+      mean(is.na(stress))
+  )
+```
+
+Il numero dei mancanti dovrebbe essere riportato insieme al numero dei valori osservati. Scrivere soltanto `na.rm = TRUE` rende possibile il calcolo, ma non informa il lettore sulla parte del campione che non contribuisce al risultato.
+
+Nell'analisi univariata possiamo descrivere quanti valori mancano e verificare se l'assenza deriva da codici non ancora riconosciuti. Stabilire se i mancanti siano associati ad altre caratteristiche richiede invece di passare a una domanda multivariata.
+
+::: {.callout-warning title="La distribuzione osservata non include chi non ha risposto"}
+Se la mancata risposta è collegata al livello della variabile o ad altre caratteristiche dei partecipanti, la distribuzione dei soli valori osservati può essere diversa da quella che avremmo ottenuto con informazioni complete.
 :::
 
-::: {.callout-caution}
-## Cosa devi controllare tu
+## Limiti, risoluzione e accumuli di valori
 
-Quando l'AI propone del codice o delle interpretazioni, è sempre necessario controllare:
+Una distribuzione è influenzata dai limiti dello strumento.
 
-- se la variabile esiste davvero nel dataset;
-- se il grafico è adatto al tipo di variabile;
-- se i valori mancanti vengono eliminati automaticamente;
-- se il codice trasforma una variabile ordinale in numerica senza discuterne la possibilità;
-- se l'interpretazione confonde descrizione, associazione e causalità;
-- se il testo prodotto dall'AI va oltre le informazioni fornite dai dati.
+Una scala da 1 a 10 non può mostrare valori inferiori a 1 o superiori a 10. Se molte persone avrebbero livelli di stress maggiori di quanto lo strumento riesca a rappresentare, le risposte si accumuleranno vicino a 10. Il grafico mostrerà la distribuzione dei punteggi consentiti, non necessariamente quella completa del costrutto.
+
+Anche la risoluzione è importante. Un item con cinque categorie produce pochi valori possibili; un tempo di reazione misurato in millisecondi ne produce molti. Non ha senso chiedere allo stesso grafico lo stesso livello di dettaglio.
+
+Talvolta osserviamo accumuli su valori tondi, come 5, 10 o 15. Questo fenomeno, spesso chiamato *heaping*, può riflettere approssimazione nella risposta o nel processo di registrazione. Non è necessariamente un errore, ma informa sulla precisione effettiva della misura.
+
+L'esplorazione deve quindi chiedersi non soltanto dove si trovino i valori, ma anche quali valori lo strumento permetta di osservare.
+
+## Campione e popolazione
+
+Le statistiche descrittive riassumono il campione disponibile. Non dimostrano che la popolazione possieda la stessa distribuzione.
+
+Se il campione proviene da un singolo corso universitario, la distribuzione dello stress descrive quelle persone nel contesto e nel periodo della raccolta. La generalizzazione ad altri studenti dipende dal campionamento, dalla partecipazione e dalle differenze tra contesti.
+
+Anche una descrizione perfettamente calcolata può essere poco rappresentativa. Un campione di volontari può sottorappresentare chi ha meno tempo, maggiore disagio o minore familiarità con gli strumenti digitali. I valori mancanti e le esclusioni durante la pulizia possono restringere ulteriormente la popolazione effettivamente descritta.
+
+Per questo motivo, il linguaggio deve rimanere proporzionato:
+
+> Nel campione, la maggior parte dei punteggi di stress si concentra tra...
+
+è diverso da:
+
+> Nella popolazione degli studenti, lo stress si distribuisce...
+
+La seconda frase richiede un passaggio inferenziale e una giustificazione del campionamento che l'EDA, da sola, non fornisce.
+
+## Una lettura integrata della variabile
+
+Al termine dell'esplorazione non dovremmo avere soltanto una tabella e un grafico, ma una breve descrizione coerente.
+
+Per `stress`, una descrizione potrebbe seguire questo ordine narrativo:
+
+> La variabile è un punteggio intero compreso tra 1 e 10. Sono disponibili 117 osservazioni su 120. I valori occupano gran parte dell'intervallo della scala e si concentrano nella regione centrale, con una lieve asimmetria. Media e mediana sono simili, mentre il boxplot non suggerisce valori impossibili. La distribuzione descrive il campione osservato e non dimostra che la stessa forma caratterizzi l'intera popolazione studentesca.
+
+La formulazione collega significato, completezza, forma, posizione, dispersione e limite della generalizzazione. Nessuna singola statistica potrebbe sostituirla.
+
+## L'EDA è un ciclo, non una checklist
+
+L'esplorazione univariata può farci tornare indietro.
+
+Una categoria inattesa richiede di consultare il codebook. Un valore impossibile richiede di verificare la fonte. Un accumulo al limite della scala richiede di riflettere sulla misurazione. Una grande quota di mancanti può costringere a ridefinire ciò che il dataset analitico rappresenta.
+
+Il ciclo è:
+
+$$
+\text{descrivere}
+\longrightarrow
+\text{osservare una discrepanza}
+\longrightarrow
+\text{verificare}
+\longrightarrow
+\text{eventualmente trasformare}
+\longrightarrow
+\text{descrivere di nuovo}.
+$$
+
+La prima visualizzazione non è quindi un risultato definitivo. È uno strumento diagnostico.
+
+## Chiedere all'AI una lettura, non un verdetto
+
+Una richiesta generica come «descrivi questa variabile» può produrre una lunga lista di statistiche e un'interpretazione troppo sicura.
+
+Una richiesta più utile specifica il significato della variabile e chiede di separare osservazione e inferenza.
+
+::: {.callout-tip title="Un prompt per l'esplorazione univariata"}
+> Ho un data frame chiamato `studenti`, con una riga per studente. `stress` è un punteggio intero da 1 a 10 e può contenere valori mancanti.
+>
+> Proponi una sequenza semplice per descriverne la distribuzione. Includi numerosità totale, valori osservati e mancanti, intervallo, media, mediana, quartili, deviazione standard, istogramma e boxplot.
+>
+> Non eliminare valori e non dichiararli outlier senza una verifica del loro significato. Spiega che cosa mostra ogni riassunto, segnala eventuali effetti pavimento o soffitto e mantieni le conclusioni riferite al campione.
 :::
 
-Un buon esercizio consiste nel chiedere all'AI di produrre un grafico e poi scrivere una spiegazione di tre frasi.
+Dopo avere ricevuto il codice, dobbiamo controllare che la variabile esista, che i limiti dichiarati siano corretti, che i mancanti siano quantificati e che il grafico rispetti la risoluzione della misura.
 
-1. che cosa rappresenta ogni asse;
-2. quale è il pattern principale che si osserva;
-3. quale conclusione sarebbe invece prematura.
+Se l'AI conclude che la distribuzione è “normale” basandosi soltanto sull'aspetto dell'istogramma, possiamo chiedere una formulazione più prudente:
 
-## Cosa portare al capitolo successivo
+> Descrivi la forma visibile senza trasformarla in una classificazione definitiva e senza anticipare assunzioni richieste da modelli successivi.
 
-Dopo l'esplorazione univariata, dovresti avere un'idea più chiara di ciascuna variabile:
+## Che cosa non appartiene ancora a questo capitolo
 
-- quali valori assume;
-- quali valori mancano;
-- quale forma ha la distribuzione;
-- quali categorie sono frequenti o rare;
-- quali grafici sono più appropriati;
-- quali decisioni richiedono documentazione.
+Confrontare la distribuzione dello stress tra anni di corso, studiare la relazione tra stress e sonno o verificare se i mancanti siano più frequenti in un gruppo significa introdurre una seconda variabile.
 
-Nel capitolo sulla visualizzazione dei dati, riprenderemo questi strumenti da una prospettiva più generale: non solo quale grafico produrre, ma anche come costruire grafici che aiutino a capire senza distorcere.
+Queste sono domande importanti, ma non sono più univariate. Verranno affrontate nei capitoli successivi.
+
+Mantenere questa distinzione aiuta a capire quale informazione venga aggiunta passando da una variabile a due o più variabili.
+
+## Riflessioni conclusive {.unnumbered .unlisted}
+
+Esplorare una variabile significa ricostruire la sua distribuzione nel campione, non produrre automaticamente una media e un grafico.
+
+Per una variabile categoriale osserviamo categorie, conteggi e proporzioni. Per una variabile ordinale conserviamo l'ordine e cerchiamo concentrazioni verso i limiti. Per una variabile numerica leggiamo insieme forma, posizione e dispersione.
+
+I valori mancanti, gli estremi, la risoluzione e i limiti della scala fanno parte della descrizione. Possono indicare problemi nei dati, ma anche caratteristiche reali della misura o del campione. L'EDA deve renderli visibili prima di interpretarli.
+
+Il risultato finale è una descrizione narrativa e controllabile che rimane riferita al campione osservato. Solo dopo avere compreso le singole variabili sarà sensato chiedersi come cambino insieme.
 
 ## Esercizi {.unnumbered .unlisted}
 
-::: {.callout-important title="Esercizio 1: leggere una variabile categoriale" collapse="true"}
+1. Perché la media non è una descrizione completa della distribuzione? Costruisci due configurazioni semplici con la stessa media ma forma differente.
 
-Usa il dataset `stress_sonno` creato nel capitolo.
+2. Esplora la variabile `anno`. Riporta conteggi e proporzioni e formula una frase che descriva il campione senza generalizzare alla popolazione studentesca.
 
-1. Conta le frequenze della variabile `anno`.
-2. Calcola le proporzioni.
-3. Costruisci un grafico a barre.
-4. Scrivi due frasi: una descrittiva e una che dica quale conclusione non puoi trarre da questo grafico.
+3. Esplora `qualita_sonno`. Spiega perché il grafico a barre è più trasparente di un istogramma per un singolo item ordinale con cinque livelli.
+
+4. Per `stress`, confronta media e mediana e osserva l'istogramma. Spiega che cosa aggiunge il grafico rispetto ai due numeri.
+
+5. Il boxplot segnala un valore distante dagli altri. Quali domande devi porre prima di considerarlo un errore?
+
+6. Una variabile presenta il 18% di valori mancanti. Quali affermazioni puoi fare in questa fase e quali richiedono il confronto con altre variabili?
+
+7. Una scala da 1 a 5 presenta il 70% delle risposte pari a 5. Quali spiegazioni considereresti prima di concludere che il costrutto sia molto elevato nel campione?
+
+8. Formula un prompt che chieda all'AI di esplorare una variabile numerica senza eliminare osservazioni, senza classificare automaticamente gli estremi come errori e senza generalizzare oltre il campione.
+
+::: {.callout-tip title="Soluzioni" collapse="true"}
+1. La media riassume il punto di equilibrio ma non mostra dispersione, asimmetria o presenza di gruppi. I valori `4, 5, 6` e `1, 5, 9` hanno entrambi media 5, ma dispersioni molto differenti.
+
+2. La risposta deve riportare il numero e la proporzione di studenti in ciascun anno. Una formulazione appropriata è: «Nel campione osservato, il primo anno è la categoria più rappresentata».
+
+3. Il grafico a barre mostra separatamente le frequenze dei cinque livelli e ne conserva l'ordine. L'istogramma suggerirebbe una continuità tra valori che il singolo item non garantisce.
+
+4. Media e mediana descrivono la posizione. L'istogramma mostra come i valori producano quei centri, rendendo visibili asimmetrie, accumuli, vuoti o più picchi.
+
+5. Occorre verificare che il valore sia possibile secondo la scala, che non derivi da un errore di registrazione, che sia coerente con la fonte originale e che la sua rarità non sia una caratteristica reale della popolazione.
+
+6. Possiamo descrivere la quantità di dati mancanti e il numero di osservazioni disponibili. Per stabilire se la mancanza sia associata a gruppi o ad altre caratteristiche dobbiamo introdurre almeno una seconda variabile.
+
+7. Potrebbe trattarsi di un livello realmente elevato, di un campione selezionato, di un item troppo facile o poco discriminante, di desiderabilità sociale oppure di un effetto soffitto dovuto alla scala.
+
+8. Il prompt deve specificare significato, intervallo e unità della variabile, chiedere conteggio dei mancanti, riassunti di posizione e dispersione, rappresentazioni della forma e una descrizione limitata al campione.
 :::
 
-::: {.callout-important title="Esercizio 2: leggere una variabile numerica" collapse="true"}
-
-Esplora la variabile `stress`.
-
-1. Calcola minimo, massimo, media e mediana.
-2. Costruisci un istogramma.
-3. Costruisci un boxplot.
-4. La media sembra un riassunto adeguato? Motiva la risposta guardando la distribuzione.
+::: {.callout-note title="Punti chiave" collapse="true"}
+- L'oggetto dell'analisi univariata è la distribuzione empirica.
+- Il significato della variabile precede la scelta della statistica.
+- Conteggi e proporzioni descrivono variabili categoriali e ordinali.
+- Le variabili numeriche richiedono una lettura congiunta di forma, posizione e dispersione.
+- Media, mediana, istogramma e boxplot mostrano aspetti differenti.
+- Un valore estremo non è automaticamente un errore.
+- I valori mancanti determinano chi contribuisce alla distribuzione osservata.
+- Limiti e risoluzione dello strumento influenzano la forma visibile.
+- Le descrizioni riguardano il campione; la generalizzazione richiede ulteriori giustificazioni.
+- L'AI può produrre sintassi e riassunti, ma non deve sostituire la valutazione della misura e del campionamento.
 :::
 
-::: {.callout-important title="Esercizio 3: controllare codice prodotto con AI" collapse="true"}
+::: {.callout-note title="Ambiente di sviluppo" collapse="true"}
+Il capitolo usa `dplyr` e `ggplot2`. Le informazioni sulla sessione possono essere ottenute con:
 
-Chiedi a uno strumento di AI:
+```{r}
+#| echo: true
 
-> Scrivi codice R per visualizzare la distribuzione di `qualita_sonno`.
-
-Poi controlla:
-
-1. Il codice tratta `qualita_sonno` come variabile ordinale o come continua?
-2. Il grafico scelto è appropriato?
-3. I valori mancanti sono gestiti in modo esplicito?
-4. L'interpretazione proposta resta descrittiva o suggerisce conclusioni non giustificate?
-:::
-
-## Punti chiave {.unnumbered .unlisted}
-
-::: {.callout-tip icon=false}
-## Da ricordare
-
-- Prima di cercare relazioni tra variabili, esplora ogni variabile da sola.
-- Per le variabili categoriali, inizia da conteggi e proporzioni.
-- Per le variabili numeriche, guarda forma, centro, variabilità e valori estremi.
-- Per variabili ordinali con pochi livelli, spesso un grafico a barre è più adatto di un istogramma.
-- Nessun grafico parla da solo: va interpretato in relazione alla domanda di ricerca, al disegno dello studio e alla misurazione.
-- L'AI può aiutare a scrivere codice, ma sei tu a dover controllare se il codice e l'interpretazione sono appropriati.
+sessionInfo()
+```
 :::

@@ -1,433 +1,489 @@
----
-title: "Principi della visualizzazione dei dati"
-subtitle: "Grafici chiari, onesti e utili per l'EDA"
----
+# Visualizzare senza deformare {#sec-data-visualization-principles}
 
-::: {.callout-note appearance="minimal"}
-Un grafico non è una semplice decorazione. È un modo per pensare con i dati.
+::: {.callout-note title="In sintesi"}
+**Da sapere**  Un grafico è una rappresentazione selettiva dei dati. Decide quali osservazioni mostrare, quali differenze rendere salienti e quali aspetti lasciare sullo sfondo. Una visualizzazione utile deve essere coerente con la domanda, fedele ai dati e proporzionata alle conclusioni che il disegno consente.
 
-In un'analisi esplorativa dei dati, una buona visualizzazione aiuta a individuare distribuzioni, confronti, relazioni, valori inattesi e possibili errori. Una cattiva visualizzazione, invece, può nascondere proprio ciò che dovremmo controllare.
-
-In questo capitolo non impareremo nuove tecniche di programmazione.  La sintassi di `ggplot2` è stata introdotta nella parte dedicata a R. Qui ci concentriamo su una domanda più importante: **Quale grafico più è adatto alla domanda che stiamo ponendo ai dati?**
+**Da saper fare**  Identificare il confronto richiesto al lettore; scegliere una rappresentazione che mostri distribuzione, numerosità e valori inattesi quando sono rilevanti; riconoscere assi, aggregazioni, colori e trasformazioni potenzialmente fuorvianti; valutare criticamente un grafico prodotto dall'AI.
 :::
 
-## Perché visualizzare i dati
+## Introduzione {.unnumbered .unlisted}
 
-Le statistiche riassuntive sono utili, ma non bastano. Una media, una deviazione standard o una correlazione possono dare l'impressione di aver compreso i dati, anche quando la distribuzione è asimmetrica, presenta valori estremi, mostra sottogruppi o suggerisce relazioni non lineari.
+Nel capitolo su `ggplot2` abbiamo visto come tradurre una domanda visiva in codice. Qui il problema è diverso. Non ci interessa imparare nuove geometrie o opzioni grafiche, ma capire quando una figura aiuta davvero a ragionare con i dati.
 
-Prima di scegliere un riassunto numerico, è meglio guardare i dati.
+Un grafico non è una finestra neutrale sulla realtà. Per costruirlo scegliamo una tabella, alcune variabili, una scala, un segno grafico e spesso una forma di aggregazione. Ogni scelta rende qualcosa più visibile e qualcos'altro meno visibile.
 
-::: {.callout-tip title="Idea guida"}
-Un grafico utile non deve necessariamente essere spettacolare. Deve aiutare a rispondere a una domanda precisa senza distorcere ciò che i dati permettono di dire.
+Un grafico che mostra soltanto le medie rende immediato il confronto tra i centri dei gruppi, ma nasconde la dispersione e la sovrapposizione. Un asse ristretto rende più facile osservare piccole differenze, ma può farle apparire molto più grandi. Un colore può distinguere categorie, ma anche suggerire un ordine o un giudizio che i dati non contengono.
+
+La domanda centrale del capitolo è quindi:
+
+> Quale confronto vogliamo rendere possibile, e quali informazioni devono rimanere visibili perché quel confronto sia onesto?
+
+::: {.callout-tip title="Prerequisiti"}
+Il capitolo presuppone i concetti introdotti in @sec-r-ggplot2 e @sec-univariate. La sintassi di `ggplot2` non viene spiegata nuovamente. Gli esempi servono a confrontare rappresentazioni differenti dello stesso oggetto.
 :::
 
-Nel contesto di questo modulo, la visualizzazione serve soprattutto a quattro scopi:
+## Panoramica del capitolo {.unnumbered .unlisted}
 
-1. **controllare i dati**, per individuare valori mancanti, errori, codifiche inattese e outlier;
-2. **descrivere le variabili**, osservando distribuzioni, frequenze e differenze tra gruppi;
-3. **esplorare relazioni**, prima di calcolare coefficienti o stimare modelli;
-4. **comunicare risultati**, rendendo trasparente ciò che è stato osservato.
+Partiremo dal rapporto tra domanda e compito percettivo. Vedremo perché la posizione su una scala comune è spesso più facile da confrontare di aree, angoli e volumi. Discuteremo poi ciò che viene perso quando i dati vengono aggregati, il ruolo degli assi e delle trasformazioni, l'uso del colore e la distinzione tra grafici esplorativi e grafici destinati alla comunicazione. Concluderemo con un protocollo per controllare le figure generate dall'AI.
 
-## Un piccolo dataset didattico
-
-Useremo un esempio semplice, coerente con i capitoli precedenti. Immaginiamo di avere dei dati relativi agli studenti universitari, con misure di stress accademico, qualità del sonno e sintomi depressivi.
+::: {.callout-note title="Preparazione del notebook"}
+Gli esempi usano `dplyr` e `ggplot2`. Il dataset è simulato e ha una riga per studente.
 
 ```{r}
-#| label: setup-visualization-principles
+#| label: visualization-principles-setup
 #| message: false
 #| warning: false
 
 library(dplyr)
 library(ggplot2)
-library(tibble)
 
-set.seed(123)
+set.seed(2026)
 
-eda_studenti <- tibble(
-  id = 1:120,
-  gruppo = rep(c("Controllo", "Intervento"), each = 60),
-  stress = c(
-    rnorm(60, mean = 61, sd = 10),
-    rnorm(60, mean = 54, sd = 11)
+n_gruppo <- 60
+
+studenti <- data.frame(
+  id = seq_len(2 * n_gruppo),
+  gruppo = rep(
+    c("controllo", "intervento"),
+    each = n_gruppo
   ),
-  sonno = 8.2 - 0.045 * stress + rnorm(120, 0, 0.7),
-  depressione = 5 + 0.22 * stress - 0.70 * sonno + rnorm(120, 0, 3)
-) |>
-  mutate(
-    stress = round(stress, 1),
-    sonno = round(pmax(pmin(sonno, 10), 3), 1),
-    depressione = round(pmax(depressione, 0), 1)
+  stress = c(
+    rnorm(
+      n_gruppo,
+      mean = 61,
+      sd = 10
+    ),
+    rnorm(
+      n_gruppo,
+      mean = 55,
+      sd = 12
+    )
+  )
+)
+
+studenti$stress <- round(
+  pmin(
+    pmax(studenti$stress, 20),
+    95
+  ),
+  1
+)
+
+studenti$stress[c(14, 93)] <- NA
+```
+:::
+
+## Il grafico deve rispondere a una domanda
+
+La scelta della figura non dovrebbe partire dal nome di un grafico. Dovrebbe partire dall'operazione che chiediamo al lettore di compiere.
+
+Vogliamo riconoscere la forma di una distribuzione? Confrontare quantità? Osservare la sovrapposizione tra gruppi? Seguire un cambiamento nel tempo? Cercare una relazione tra due misure?
+
+| Domanda | Compito del lettore | Rappresentazione iniziale |
+|---|---|---|
+| Come si distribuisce una misura? | Individuare concentrazioni, asimmetrie e valori insoliti | Istogramma o punti |
+| Come è composto il campione? | Confrontare frequenze o proporzioni | Barre su scala comune |
+| Quanto si sovrappongono due gruppi? | Confrontare posizione e dispersione | Punti individuali e sintesi |
+| Come cambiano due misure insieme? | Valutare forma e direzione della relazione | Diagramma di dispersione |
+| Come evolve una misura? | Seguire un ordine temporale | Linee, mantenendo visibili le unità rilevanti |
+
+Questa associazione è un punto di partenza, non una procedura automatica. La rappresentazione va valutata osservando ciò che produce e chiedendosi se il confronto importante sia realmente possibile.
+
+## La percezione non tratta tutti i segni allo stesso modo
+
+Confrontare due punti collocati sulla stessa scala è relativamente semplice. Confrontare due lunghezze che partono dalla stessa origine è anch'esso abbastanza diretto. È più difficile confrontare angoli, aree o volumi.
+
+Questa differenza spiega perché un grafico a barre sia generalmente più leggibile di una torta quando vogliamo confrontare frequenze. Nella torta il lettore deve valutare angoli e superfici; nelle barre confronta posizioni e lunghezze rispetto a una base comune.
+
+Supponiamo di avere tre categorie:
+
+```{r}
+#| label: visualization-category-data
+
+frequenze <- data.frame(
+  livello = factor(
+    c("basso", "medio", "alto"),
+    levels = c("basso", "medio", "alto")
+  ),
+  n = c(28, 63, 29)
+)
+```
+
+Una rappresentazione a barre rende il confronto immediato:
+
+```{r}
+#| label: fig-ordered-bars
+#| fig-cap: "Frequenze rappresentate mediante lunghezze su una scala comune."
+
+ggplot(
+  frequenze,
+  aes(
+    x = livello,
+    y = n
+  )
+) +
+  geom_col() +
+  labs(
+    x = "Livello",
+    y = "Numero di studenti"
   )
 ```
 
-```{r}
-#| label: data-preview-visualization-principles
-head(eda_studenti)
-```
+Non esiste un divieto assoluto contro i grafici a torta. La domanda è se la forma scelta renda il compito più facile o più difficile senza offrire un'informazione aggiuntiva.
 
-Questo dataset è artificiale, ma abbastanza realistico da poter discutere i principi generali. L'obiettivo non è ottenere una conclusione sostanziale, ma imparare a costruire grafici che aiutino a controllare e comprendere i dati.
+## Un riassunto può essere corretto e insufficiente
 
-## Tre principi pratici
-
-La letteratura sulla visualizzazione dei dati è molto ampia. Per questo modulo, possiamo ridurla a tre principi operativi.
-
-### 1. Fedeltà ai dati
-
-Un grafico deve rappresentare i dati in modo fedele. Non dovrebbe nascondere distribuzioni, valori estremi, numerosità diverse tra gruppi o trasformazioni di scala.
-
-Domande da porsi:
-
-- il grafico mostra i dati osservati o solo un riassunto?
-- la scala degli assi è dichiarata?
-- sono visibili eventuali outlier?
-- il grafico suggerisce differenze più grandi o più piccole di quelle reali?
-
-### 2. Chiarezza percettiva
-
-Non tutti i modi di rappresentare un numero sono ugualmente leggibili. Le persone confrontano bene posizioni e lunghezze; confrontano molto peggio angoli, aree e volumi.
-
-Per questo motivo, quando l'obiettivo è confrontare delle quantità, in genere sono preferibili:
-
-- punti su una scala comune;
-- barre ordinate;
-- linee per serie temporali;
-- boxplot o punti individuali per confrontare le distribuzioni.
-
-Sono invece da usare con cautela:
-
-- grafici a torta;
-- grafici tridimensionali;
-- bolle molto grandi;
-- doppio asse verticale;
-- colori usati come unica fonte di informazione.
-
-### 3. Onestà interpretativa
-
-Un grafico può essere tecnicamente corretto, ma comunque fuorviante. Ciò accade quando il grafico induce il lettore a trarre una conclusione più forte di quella giustificata dai dati.
-
-Esempi comuni:
-
-- un grafico suggerisce una causalità laddove c'è solo un'associazione;
-- un asse troncato amplifica una piccola differenza;
-- due serie sovrapposte su assi diversi sembrano correlate;
-- una media nasconde distribuzioni molto diverse;
-- i colori o le etichette possono orientare l'interpretazione in modo emotivo.
-
-::: {.callout-important title="Responsabilità di chi costruisce il grafico"}
-Chi produce un grafico non è responsabile solo del codice, ma anche dell'interpretazione che il grafico stesso suggerisce.
-:::
-
-## Scegliere il grafico in base alla domanda
-
-La scelta del grafico deve partire dalla domanda esplorativa e non dal desiderio di usare una tecnica particolare.
-
-| Domanda | Grafico utile | Cosa controllare |
-|---|---|---|
-| Quanti casi ci sono in ogni categoria? | barre | categorie ordinate, etichette chiare |
-| Com'è distribuita una variabile numerica? | istogramma, densità, boxplot | asimmetria, valori estremi, multimodalità |
-| Due gruppi differiscono? | punti + boxplot, violin plot | sovrapposizione, numerosità, outlier |
-| Due variabili variano insieme? | scatterplot | forma della relazione, sottogruppi, outlier |
-| Una variabile cambia nel tempo? | line plot | scala temporale, unità osservate, trend individuali |
-
-## Mostrare la distribuzione, non solo la media
-
-Un errore molto frequente è quello di mostrare soltanto una media per gruppo. Questo è problematico, perché gruppi con la stessa media possono avere distribuzioni molto diverse.
+Consideriamo la media dello stress nei due gruppi.
 
 ```{r}
-#| label: fig-mean-only-problem
-#| fig-cap: "Una media per gruppo nasconde la distribuzione dei dati."
-#| fig-width: 8
-#| fig-height: 4
-#| warning: false
-#| message: false
+#| label: visualization-group-means
 
-media_stress <- eda_studenti |>
+stress_medio <- studenti |>
   group_by(gruppo) |>
-  summarise(media = mean(stress), .groups = "drop")
+  summarise(
+    n = sum(!is.na(stress)),
+    media = mean(
+      stress,
+      na.rm = TRUE
+    ),
+    .groups = "drop"
+  )
 
-ggplot(media_stress, aes(x = gruppo, y = media)) +
-  geom_col(width = 0.55) +
-  labs(
-    x = NULL,
-    y = "Stress medio",
-    title = "Grafico poco informativo",
-    subtitle = "La media non mostra dispersione, sovrapposizione e outlier"
-  ) +
-  theme_minimal()
+stress_medio
 ```
 
-Questo grafico non è sbagliato in senso stretto, ma è povero: comunica un solo numero e nasconde quasi tutto il resto.
-
-Una versione più informativa mostra anche i dati osservati.
+Possiamo rappresentare le due medie con due barre:
 
 ```{r}
-#| label: fig-show-observed-data
-#| fig-cap: "Mostrare i punti aiuta a valutare distribuzione, sovrapposizione e valori estremi."
-#| fig-width: 8
-#| fig-height: 4.5
-#| warning: false
-#| message: false
+#| label: fig-means-only
+#| fig-cap: "Le sole medie rendono visibile il centro ma nascondono le distribuzioni."
 
-ggplot(eda_studenti, aes(x = gruppo, y = stress)) +
-  geom_jitter(width = 0.12, alpha = 0.45, size = 1.8) +
-  geom_boxplot(width = 0.35, outlier.shape = NA, alpha = 0.25) +
+ggplot(
+  stress_medio,
+  aes(
+    x = gruppo,
+    y = media
+  )
+) +
+  geom_col(
+    width = .55
+  ) +
   labs(
     x = NULL,
-    y = "Stress accademico",
-    title = "Grafico più informativo",
-    subtitle = "I dati individuali rendono visibile la variabilità entro ciascun gruppo"
-  ) +
-  theme_minimal()
+    y = "Stress medio"
+  )
 ```
 
-Questo secondo grafico non sostituisce l'analisi statistica. Tuttavia, aiuta a capire meglio cosa dovrà spiegare un eventuale modello.
+La figura non contiene un errore aritmetico. Mostra esattamente le medie calcolate. Tuttavia, non permette di vedere quanto i punteggi varino, quanto i gruppi si sovrappongano, se le distribuzioni siano asimmetriche o se pochi casi influenzino il risultato.
 
-## Grafici fuorvianti comuni
+Una rappresentazione che conserva le osservazioni rende visibile una parte maggiore dell'informazione:
 
-### Grafici a barre con errore standard
+```{r}
+#| label: fig-observations-and-summary
+#| fig-cap: "Punti individuali e boxplot rendono visibili variabilità, sovrapposizione e numerosità."
 
-I grafici a barre con errore standard sono molto diffusi in psicologia, ma spesso non sono adatti all'EDA. Mostrano la media e la misura di incertezza o variabilità, ma nascondono la distribuzione dei dati.
+ggplot(
+  studenti,
+  aes(
+    x = gruppo,
+    y = stress
+  )
+) +
+  geom_jitter(
+    width = .12,
+    alpha = .55,
+    na.rm = TRUE
+  ) +
+  geom_boxplot(
+    width = .32,
+    outlier.shape = NA,
+    alpha = .2,
+    na.rm = TRUE
+  ) +
+  labs(
+    x = NULL,
+    y = "Punteggio di stress"
+  )
+```
 
-Sono particolarmente problematici quando:
+Il secondo grafico non è automaticamente superiore per ogni scopo. In una figura molto piccola o con migliaia di osservazioni, tutti i punti potrebbero diventare illeggibili. Il principio da conservare è che l'aggregazione deve essere consapevole: quando mostriamo soltanto una sintesi, dobbiamo sapere quale informazione stiamo togliendo.
 
-- il campione è piccolo;
-- la distribuzione è asimmetrica.
-- ci sono outlier;
-- i gruppi hanno numerosità diverse;
-- la sovrapposizione tra i gruppi è rilevante.
-
-Quando possibile, è meglio mostrare i dati individuali e una sintesi robusta.
-
-::: {.callout-tip title="Regola pratica"}
-Se il grafico serve per esplorare i dati, prova a mostrare i dati osservati. Se mostri solo le medie, spiega cosa stai nascondendo.
+::: {.callout-important title="La media non è il gruppo"}
+Una barra che rappresenta una media non rappresenta una persona tipica né mostra la distribuzione del gruppo. È un singolo riassunto costruito a partire da molte osservazioni.
 :::
 
-### Grafici a torta
+## Numerosità e denominatori devono rimanere visibili
 
-I grafici a torta costringono il lettore a confrontare angoli e aree. Questo è difficile, soprattutto quando le categorie sono più di due o tre.
+Due gruppi possono avere la stessa media ma numerosità molto diverse. Una percentuale può apparire impressionante pur derivando da pochi casi. Una variazione può sembrare stabile perché il grafico non mostra quante osservazioni la sostengano.
 
-Confrontiamo due rappresentazioni della stessa informazione.
+Il denominatore fa parte dell'informazione. In un confronto tra gruppi, possiamo mostrare i dati individuali, riportare `n` nella didascalia oppure accompagnare il grafico con una tabella essenziale.
+
+I valori mancanti modificano a loro volta il denominatore. Nel dataset ci sono 120 righe, ma il grafico dello stress non rappresenta gli studenti con `stress` mancante.
 
 ```{r}
-#| label: fig-pie-vs-bars-simple
-#| fig-cap: "Le barre ordinate rendono il confronto più chiaro di un grafico a torta."
-#| fig-width: 9
-#| fig-height: 4
-#| warning: false
-#| message: false
+#| label: visualization-count-observations
 
-frequenze <- tibble(
-  livello = c("Basso", "Medio", "Alto"),
-  n = c(28, 63, 29)
-) |>
-  mutate(livello = factor(livello, levels = c("Basso", "Medio", "Alto")))
-
-p_torta <- ggplot(frequenze, aes(x = "", y = n, fill = livello)) +
-  geom_col(width = 1) +
-  coord_polar(theta = "y") +
-  labs(title = "Grafico a torta", fill = "Stress") +
-  theme_void()
-
-p_barre <- ggplot(frequenze, aes(x = livello, y = n)) +
-  geom_col(width = 0.65) +
-  labs(title = "Barre ordinate", x = "Livello di stress", y = "Numero di studenti") +
-  theme_minimal()
-
-p_torta
-p_barre
+studenti |>
+  group_by(gruppo) |>
+  summarise(
+    n_totale = n(),
+    n_rappresentato =
+      sum(!is.na(stress)),
+    n_mancante =
+      sum(is.na(stress)),
+    .groups = "drop"
+  )
 ```
 
-Nel secondo grafico, il confronto è più diretto: basta confrontare le lunghezze su una scala comune.
+Sopprimere l'avviso con `na.rm = TRUE` rende il risultato più pulito, ma non rende irrilevante l'esclusione. La figura dovrebbe essere interpretata come rappresentazione delle osservazioni disponibili, non automaticamente dell'intero campione reclutato.
 
-### Assi troncati
+## Gli assi definiscono il confronto visivo
 
-Un asse troncato può essere legittimo in alcuni casi, ma deve essere dichiarato chiaramente. Nei grafici a barre, troncare l'asse verticale è spesso fuorviante, in quanto la lunghezza della barra viene interpretata come proporzionale al valore.
+La scala degli assi influenza la dimensione apparente delle differenze.
+
+Nei grafici a barre, la lunghezza della barra viene interpretata rispetto alla sua origine. Se l'asse verticale parte da un valore molto elevato, una piccola differenza può apparire enorme.
 
 ```{r}
-#| label: fig-truncated-axis-example
-#| fig-cap: "Un asse troncato può amplificare visivamente differenze modeste."
-#| fig-width: 7
-#| fig-height: 4
-#| warning: false
-#| message: false
+#| label: visualization-axis-data
 
-confronto <- tibble(
+confronto <- data.frame(
   gruppo = c("A", "B"),
   media = c(52, 56)
 )
-
-ggplot(confronto, aes(x = gruppo, y = media)) +
-  geom_col(width = 0.55) +
-  coord_cartesian(ylim = c(50, 57)) +
-  labs(
-    x = NULL,
-    y = "Punteggio medio",
-    title = "Attenzione agli assi troncati",
-    subtitle = "La differenza appare più grande perché l'asse non parte da zero"
-  ) +
-  theme_minimal()
 ```
 
-Il problema non è che il grafico sia sempre vietato. Il problema è che il lettore deve capire subito che la scala è stata ristretta.
+```{r}
+#| label: fig-truncated-bars
+#| fig-cap: "Un asse ristretto amplifica visivamente una differenza modesta tra le lunghezze delle barre."
 
-### Doppio asse verticale
+ggplot(
+  confronto,
+  aes(
+    x = gruppo,
+    y = media
+  )
+) +
+  geom_col(
+    width = .55
+  ) +
+  coord_cartesian(
+    ylim = c(50, 57)
+  ) +
+  labs(
+    x = NULL,
+    y = "Punteggio medio"
+  )
+```
 
-I grafici con due assi verticali permettono di sovrapporre serie misurate su scale diverse. Il rischio è che due linee sembrino collegate solo perché le scale sono state scelte in modo opportuno.
+Il problema non è che ogni asse debba sempre partire da zero. Nei diagrammi di dispersione e nelle serie temporali, restringere l'intervallo può essere necessario per osservare variazioni importanti. Nei grafici a barre, però, la lunghezza porta direttamente il significato quantitativo e l'origine assume un ruolo speciale.
 
-Per confrontare variabili su scale diverse, di solito è meglio:
+La scala deve quindi essere scelta in relazione al segno grafico e dichiarata con chiarezza. Una buona domanda di controllo è:
 
-- usare pannelli separati;
-- standardizzare le variabili;
-- dichiarare esplicitamente che le scale non sono confrontabili;
-- evitare di suggerire causalità o correlazione da una semplice somiglianza visiva.
+> Se modificassi l'intervallo dell'asse, la conclusione apparirebbe sostanzialmente diversa?
 
-### Effetti tridimensionali
+Quando la risposta è sì, la figura deve rendere particolarmente evidente la scelta di scala.
 
-Gli effetti tridimensionali sono raramente utili nei grafici EDA. Spesso, invece, deformano le lunghezze e le aree, rendono meno leggibili i valori e attirano l'attenzione sulla forma del grafico piuttosto che sui dati.
+## Le trasformazioni possono rivelare oppure occultare
 
-Regola pratica: se la terza dimensione non rappresenta una variabile, non serve.
+Una scala logaritmica può rendere leggibile una variabile fortemente asimmetrica e può trasformare relazioni moltiplicative in pattern più semplici. Non è una manipolazione illegittima.
 
-## Colore: usare poco, usare bene
+Diventa problematica quando non viene dichiarata oppure quando viene scelta soltanto perché rende il pattern più convincente.
 
-Il colore può aiutare a distinguere gruppi, indicare un ordine o evidenziare un valore importante. Ma può anche confondere.
+La trasformazione cambia la distanza visiva tra i valori. Passare da 10 a 20 occupa lo stesso spazio del passaggio da 100 a 200 su una scala logaritmica, perché entrambi rappresentano un raddoppio.
 
-Tre usi frequenti:
+Una figura trasformata dovrebbe quindi indicare chiaramente la scala e, quando l'interpretazione non è immediata, spiegare quale confronto venga favorito.
 
-1. **Categorie distinte**: colori diversi per gruppi senza ordine naturale.
-2. **Valori ordinati**: gradiente chiaro-scuro per quantità crescenti.
-3. **Deviazioni da un riferimento**: due colori divergenti intorno a un valore centrale.
-
-Errori comuni:
-
-- usare troppi colori;
-- usare il colore solo come elemento decorativo.
-- usare solo il rosso e il verde come distinzione;
-- usare palette arcobaleno per dati ordinati;
-- non verificare la comprensibilità del grafico in scala di grigi.
-
-::: {.callout-tip title="Controllo rapido"}
-Se il grafico diventa incomprensibile senza colori, probabilmente il colore svolge un lavoro eccessivo. Usa anche la posizione, la forma, le etichette o i pannelli.
+::: {.callout-note title="Trasformare non significa falsificare"}
+La scala originale non è sempre la rappresentazione più informativa. L'onestà consiste nel dichiarare la trasformazione, motivarla e non confondere le distanze trasformate con quelle originali.
 :::
 
-## Trasformazioni di scala
+## Il doppio asse può costruire somiglianze
 
-Le trasformazioni di scala possono essere utili. Una scala logaritmica, per esempio, può rendere leggibili variabili molto asimmetriche o relazioni moltiplicative.
+Sovrapporre due serie con assi verticali differenti permette di modificarne separatamente scala e origine. Cambiando questi parametri, due linee possono apparire quasi parallele oppure molto diverse.
 
-Tuttavia, ogni trasformazione deve sempre essere dichiarata. In caso contrario, può diventare una forma di manipolazione visiva.
+La somiglianza visiva può quindi essere in parte costruita dal grafico.
 
-Una trasformazione è ragionevole quando:
+Se due variabili possiedono unità differenti, è spesso più trasparente collocarle in pannelli separati con lo stesso asse temporale. Se vengono standardizzate, la trasformazione deve essere dichiarata e il confronto va interpretato come andamento relativo, non come uguaglianza delle quantità.
 
-- rende visibile un pattern che nella scala originale era nascosto;
-- è coerente con la natura della variabile;
-- è chiaramente indicata negli assi o nella didascalia.
-- non viene utilizzata per far sembrare più forte una conclusione.
+Il doppio asse non è sempre vietato, ma richiede una ragione forte e una particolare cautela. Nell'EDA introduttiva, raramente è la scelta più chiara.
 
-::: {.callout-caution title="Da ricordare"}
-Una scala trasformata non è sbagliata. È sbagliato usarla senza spiegarla.
+## Il colore deve codificare informazione
+
+Il colore può distinguere gruppi, rappresentare un ordine o attirare l'attenzione su un elemento importante. Se viene usato senza uno scopo, aggiunge competizione visiva.
+
+Un colore diverso per ogni osservazione non aiuta a comprendere una distribuzione. Una palette arcobaleno applicata a valori ordinati può creare confini percettivi arbitrari. Rosso e verde usati come unica distinzione possono essere difficili da leggere per una parte del pubblico.
+
+La scelta dovrebbe seguire il significato:
+
+- categorie senza ordine richiedono differenze riconoscibili ma non gerarchiche;
+- valori ordinati richiedono una progressione percettiva;
+- deviazioni rispetto a un riferimento possono richiedere due direzioni chiaramente distinguibili.
+
+Questa breve articolazione è utile perché i tre casi corrispondono a funzioni informative diverse del colore.
+
+Un controllo semplice consiste nell'immaginare la figura in scala di grigi. Se tutta l'informazione scompare, può essere necessario aggiungere posizione, forma, etichette o pannelli.
+
+## Le etichette orientano l'interpretazione
+
+Titoli e didascalie non sono elementi decorativi. Possono descrivere la domanda oppure anticipare una conclusione.
+
+Confrontiamo:
+
+> Effetto dell'intervento sullo stress
+
+con:
+
+> Distribuzione dei punteggi di stress nei due gruppi
+
+Il primo titolo formula già una relazione causale. È appropriato soltanto se il disegno e l'analisi giustificano quell'interpretazione. Il secondo descrive ciò che la figura mostra direttamente.
+
+Anche parole come *miglioramento*, *crollo*, *successo* o *fallimento* possono orientare emotivamente il lettore. Una figura esplorativa dovrebbe preferire un linguaggio descrittivo.
+
+Le etichette degli assi devono inoltre indicare che cosa è stato misurato e, quando utile, l'unità o l'intervallo della scala. I nomi interni delle colonne raramente sono sufficienti per un lettore esterno.
+
+## Esplorare e comunicare non sono la stessa attività
+
+Durante l'EDA produciamo spesso molte figure. Proviamo scale, osserviamo sottogruppi, controlliamo singole osservazioni e confrontiamo rappresentazioni alternative. Questi grafici possono essere provvisori e ridondanti perché servono al ragionamento.
+
+Una figura destinata al report ha una funzione diversa. Deve selezionare l'evidenza necessaria per una domanda e renderla leggibile senza richiedere una spiegazione orale.
+
+La selezione finale non dovrebbe però cancellare le caratteristiche scomode emerse durante l'esplorazione. Se la distribuzione contiene forte sovrapposizione o valori insoliti, scegliere una figura che mostri soltanto le medie produce un racconto più semplice ma meno fedele.
+
+Possiamo quindi distinguere:
+
+$$
+\text{grafico esplorativo}
+=
+\text{strumento per fare domande}
+$$
+
+$$
+\text{grafico esplicativo}
+=
+\text{strumento per sostenere un'affermazione}
+$$
+
+Entrambi devono essere onesti, ma rispondono a esigenze differenti.
+
+## Il grafico non sostituisce il disegno
+
+Una linea discendente in un diagramma di dispersione mostra un'associazione osservata. Non stabilisce quale variabile venga prima, se esista una causa comune o se il pattern dipenda dalla selezione del campione.
+
+Allo stesso modo, una differenza tra gruppi non diventa un effetto dell'intervento soltanto perché viene rappresentata con barre separate.
+
+La figura rende visibile una struttura nei dati. L'interpretazione causale dipende dal disegno, dall'assegnazione, dalla misurazione e dalle assunzioni del modello.
+
+Questa distinzione è particolarmente importante nei titoli generati dall'AI, che tendono talvolta a convertire associazioni in effetti o differenze osservate in miglioramenti.
+
+## Controllare una figura prodotta dall'AI
+
+Un assistente può generare rapidamente una figura elegante. Prima di valutarne l'estetica dobbiamo ricostruire le decisioni incorporate nel codice.
+
+Dobbiamo sapere quale tabella viene usata, se sono stati applicati filtri, se le osservazioni sono state aggregate, quali valori mancanti non entrano nella figura e che cosa rappresentano assi, colori e segni.
+
+Una richiesta iniziale utile è:
+
+::: {.callout-tip title="Un prompt per una figura controllabile"}
+> Ho un data frame chiamato `studenti`, con una riga per studente. Voglio confrontare la distribuzione di `stress` tra i livelli di `gruppo`.
+>
+> Proponi una figura `ggplot2` semplice che mostri le osservazioni individuali e una sintesi della distribuzione. Non aggregare prima i dati e non applicare filtri. Conta i valori osservati e mancanti per gruppo.
+>
+> Usa etichette descrittive e non causali. Spiega che cosa rappresenta ogni elemento e indica quali caratteristiche della distribuzione potrebbero rimanere nascoste.
 :::
 
-## Usare l'AI con criterio
+Dopo avere ricevuto la figura, possiamo chiedere un audit:
 
-Gli strumenti di IA possono produrre rapidamente il codice per i grafici, suggerire palette di colori, correggere gli errori sintattici e proporre alternative. Questo è utile, ma non esime dalla responsabilità di valutare il grafico.
+> Elenca tutte le decisioni grafiche contenute nel codice. Per ciascuna, spiega quale confronto facilita e quale informazione potrebbe rendere meno visibile.
 
-Quando l'AI propone un grafico, è sempre necessario controllare:
+Questo secondo passaggio è spesso più utile della richiesta generica di “migliorare il grafico”.
 
-- le variabili usate esistono davvero nel dataset?
-- il grafico è adatto al tipo di variabile?
-- sono stati eliminati i casi con valori mancanti? Quanti?
-- il grafico mostra i dati o solo i loro riassunti?
-- le scale sono oneste e dichiarate?
-- il titolo interpreta correttamente il risultato?
-- il grafico suggerisce una causalità laddove c'è solo un'associazione?
+## Un protocollo di revisione
 
-::: {.callout-important title="Prompt utile"}
-Dopo aver chiesto all'AI di produrre un grafico, chiedi anche:
+La valutazione finale può essere organizzata come una breve lettura narrativa.
 
-> Spiega riga per riga che cosa fa questo codice e indica tre possibili modi in cui il grafico potrebbe essere fuorviante.
-:::
+Prima identifichiamo la domanda. Poi ricostruiamo quali dati entrano nella figura e che cosa rappresenta ogni segno. Osserviamo quale confronto venga richiesto al lettore e se scale, aggregazioni e colori lo rendano fedele. Infine formuliamo una frase su ciò che la figura mostra direttamente e una frase su ciò che non permette di concludere.
 
-## Checklist per valutare un grafico
+Il protocollo può essere riassunto così:
 
-Prima di includere un grafico in un report, usa questa checklist.
+$$
+\text{domanda}
+\longrightarrow
+\text{dati rappresentati}
+\longrightarrow
+\text{compito percettivo}
+\longrightarrow
+\text{possibile conclusione}
+\longrightarrow
+\text{limite}.
+$$
 
-::: {.callout-tip title="Checklist"}
+Non serve una checklist molto lunga se questa sequenza viene applicata con attenzione.
 
-### Domanda
+## Riflessioni conclusive {.unnumbered .unlisted}
 
-- [ ] Il grafico risponde a una domanda chiara?
-- [ ] Il titolo aiuta a capire che cosa guardare?
-- [ ] Le variabili sono nominate in modo comprensibile?
+Una buona visualizzazione non è necessariamente elaborata. È una rappresentazione nella quale il confronto importante risulta facile e le informazioni necessarie per giudicarlo non vengono nascoste.
 
-### Dati
+La posizione e la lunghezza su scale comuni sono generalmente più leggibili di angoli, aree e volumi. Le sole medie possono essere insufficienti quando dispersione, sovrapposizione e numerosità fanno parte della domanda. Assi, trasformazioni e colori devono avere una funzione dichiarata e non devono costruire un'impressione sproporzionata rispetto ai dati.
 
-- [ ] Il grafico mostra i dati osservati quando è utile farlo?
-- [ ] Sono visibili outlier o valori inattesi?
-- [ ] La numerosità dei gruppi è chiara o ricavabile?
-- [ ] I valori mancanti sono stati gestiti in modo documentato?
+Nell'EDA il grafico serve anche a scoprire problemi e generare nuove domande. Nel report serve a sostenere un'affermazione. Il passaggio dalla prima funzione alla seconda richiede selezione, ma non deve cancellare la complessità rilevante.
 
-### Forma grafica
-
-- [ ] Il tipo di grafico è adatto al tipo di variabile?
-- [ ] Le categorie sono ordinate in modo sensato?
-- [ ] Le scale sono dichiarate e non fuorvianti?
-- [ ] Si evitano effetti tridimensionali, doppio asse e decorazioni inutili?
-
-### Interpretazione
-
-- [ ] Il grafico non suggerisce causalità senza disegno adeguato?
-- [ ] Le trasformazioni di scala sono dichiarate?
-- [ ] Il colore non è l'unico modo per distinguere informazioni importanti?
-- [ ] Il grafico rimane comprensibile anche senza spiegazioni orali?
-
-:::
-
-## Cosa portare al capitolo successivo
-
-Una buona visualizzazione non serve solo a comunicare risultati già noti. È utile anche per decidere quali riassunti numerici sono più appropriati.
-
-Prima di calcolare la media, la mediana, la deviazione standard o gli intervalli, dobbiamo chiederci:
-
-- la distribuzione è simmetrica o asimmetrica?
-- ci sono valori estremi?
-- i gruppi hanno forme simili o diverse?
-- Un singolo numero riassume davvero ciò che vediamo?
-
-Il capitolo successivo utilizzerà queste domande per discutere la tendenza centrale e la variabilità.
+L'AI può produrre codice e alternative visive. Il ricercatore rimane responsabile della domanda, dei dati rappresentati e dell'interpretazione suggerita dalla figura.
 
 ## Esercizi {.unnumbered .unlisted}
 
-::: {.callout-important title="Esercizio 1: leggere un grafico"}
-Scegli un grafico prodotto in un report, in un articolo o online.
+1. Scegli una figura da un articolo o da un report. Descrivi la domanda a cui sembra rispondere, il confronto richiesto al lettore e una caratteristica dei dati che potrebbe non essere visibile.
 
-Rispondi:
+2. Confronta il grafico delle sole medie con quello che mostra punti e boxplot. Scrivi una frase che il primo consente di formulare e due domande a cui soltanto il secondo permette di rispondere.
 
-1. Qual è la domanda a cui il grafico dovrebbe rispondere?
-2. Quali variabili sono rappresentate?
-3. Che tipo di confronto viene richiesto al lettore?
-4. Il grafico mostra i dati o solo un riassunto?
-5. C'è qualcosa che potrebbe indurre a un'interpretazione eccessiva?
+3. Ricostruisci il grafico delle barre con asse troncato usando un asse che parta da zero. Spiega perché la differenza numerica non cambia mentre cambia la sua impressione visiva.
+
+4. Una percentuale del 50% deriva da 2 casi su 4. Come modificheresti la figura o la didascalia per rendere visibile il denominatore?
+
+5. Un grafico usa un colore per il gruppo, una forma per il genere e pannelli per l'anno di corso. Quale domanda dovrebbe giustificare ciascuna codifica? Quando la figura diventerebbe troppo frammentata?
+
+6. Un assistente AI propone il titolo «L'intervento riduce lo stress». Quali informazioni sul disegno e sull'analisi servono prima di accettarlo? Proponi un titolo puramente descrittivo.
+
+7. Descrivi una situazione in cui una scala logaritmica migliorerebbe la leggibilità. Indica che cosa dovrebbe essere dichiarato al lettore.
+
+8. Formula un prompt che chieda all'AI due rappresentazioni alternative della stessa domanda e un confronto esplicito tra ciò che ciascuna rende visibile e ciò che nasconde.
+
+::: {.callout-tip title="Soluzioni" collapse="true"}
+1. La risposta deve distinguere lo scopo dichiarato dalla struttura effettivamente visibile. Una figura di medie, per esempio, può rispondere al confronto dei centri ma non mostrare sovrapposizione e forma delle distribuzioni.
+
+2. Il primo consente di dire quale gruppo possiede la media più elevata. Il secondo permette anche di osservare quanto i gruppi si sovrappongano e se la differenza dipenda da pochi valori o da uno spostamento più generale.
+
+3. I valori rimangono 52 e 56. Con origine zero, la differenza occupa una parte minore della scala e appare proporzionata alla grandezza complessiva delle quantità.
+
+4. Riporterei i conteggi insieme alle percentuali, mostrerei direttamente i quattro casi quando possibile oppure inserirei `2/4` nella didascalia o nell'etichetta.
+
+5. Il colore dovrebbe sostenere un confronto tra gruppi, la forma un confronto tra generi e i pannelli un confronto tra anni. Se alcune combinazioni contengono pochi casi o la domanda non richiede tutte queste distinzioni, la frammentazione ostacola la lettura.
+
+6. Servono almeno un disegno che identifichi l'effetto, una definizione temporale appropriata e un'analisi coerente. Un titolo descrittivo è: «Distribuzione dei punteggi di stress nei gruppi controllo e intervento».
+
+7. È utile, per esempio, per tempi o concentrazioni che variano su più ordini di grandezza. L'asse deve dichiarare la trasformazione e il testo deve spiegare che distanze uguali rappresentano rapporti, non differenze assolute uguali.
+
+8. Il prompt deve specificare domanda, dati e variabili; chiedere due figure semplici; vietare filtri o aggregazioni non dichiarati; richiedere per ciascuna un'analisi del compito percettivo, dell'informazione conservata e di quella perduta.
 :::
 
-::: {.callout-important title="Esercizio 2: migliorare un grafico"}
-Prendi un grafico a barre con una media per gruppo.
-
-Costruisci una versione più informativa che mostri anche:
-
-1. i dati individuali;
-2. una sintesi della distribuzione;
-3. etichette chiare degli assi;
-4. un titolo che descriva la domanda, non solo la variabile.
-
-Scrivi due frasi per spiegare perché la nuova versione è migliore.
+::: {.callout-note title="Punti chiave" collapse="true"}
+- Un grafico è una selezione, non una copia neutrale dei dati.
+- La scelta della figura parte dal confronto che il lettore deve compiere.
+- Posizioni e lunghezze su una scala comune sono generalmente facili da confrontare.
+- Una sintesi corretta può nascondere distribuzione, sovrapposizione e numerosità.
+- Assi e trasformazioni modificano l'impressione visiva e devono essere motivati.
+- Il colore deve rappresentare informazione, non soltanto decorare.
+- Un grafico esplorativo genera domande; un grafico esplicativo sostiene un'affermazione.
+- La visualizzazione non sostituisce le condizioni necessarie per un'interpretazione causale.
+- L'AI deve rendere esplicite le decisioni incorporate nella figura.
+- La revisione deve terminare distinguendo ciò che la figura mostra da ciò che non permette di concludere.
 :::
 
-::: {.callout-important title="Esercizio 3: controllare un grafico prodotto con AI"}
-Chiedi a uno strumento di AI di produrre un grafico per confrontare due gruppi.
+::: {.callout-note title="Ambiente di sviluppo" collapse="true"}
+Il capitolo usa `dplyr` e `ggplot2`. Le informazioni sulla sessione possono essere ottenute con:
 
-Poi valuta il risultato con la checklist del capitolo. In particolare, controlla:
+```{r}
+#| echo: true
 
-1. se il codice usa le variabili corrette;
-2. se il grafico è adatto alla domanda;
-3. se i dati mancanti sono gestiti in modo esplicito;
-4. se il titolo o la descrizione suggeriscono una conclusione troppo forte.
+sessionInfo()
+```
 :::

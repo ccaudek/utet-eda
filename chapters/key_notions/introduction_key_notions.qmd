@@ -2,95 +2,113 @@
 
 *Pensare prima di calcolare.*
 
-Questa sezione introduce le domande che precedono qualsiasi analisi dei dati. Prima di aprire R, costruire un grafico o stimare un modello, dobbiamo chiederci cosa stiamo osservando, da dove provengono i dati e quali conclusioni possiamo trarre.
+::: {.callout-note title="In sintesi"}
+Questa parte introduce le domande che precedono qualsiasi analisi dei dati. Prima di usare R, costruire un grafico o stimare un modello, occorre capire quale fenomeno si vuole studiare, come sono state prodotte le osservazioni, che cosa rappresentano le variabili e quali conclusioni il disegno consente di sostenere.
 
-Nel linguaggio comune, i dati sono spesso considerati semplicemente come numeri disponibili in una tabella. Nella ricerca psicologica, però, i dati non sono numeri neutri. Sono il risultato di una serie di scelte: una domanda di ricerca, un disegno di studio, uno strumento di misurazione, una procedura di raccolta, criteri di inclusione ed esclusione, decisioni di codifica e, infine, procedure di analisi. Ogni passaggio apre possibilità, ma introduce anche dei limiti.
-
-Per esempio, se vogliamo studiare la relazione tra lo stress accademico e la qualità del sonno negli studenti universitari, non basta raccogliere due punteggi e calcolare una correlazione. Dobbiamo prima chiarire cosa intendiamo per "stress", come lo misuriamo, a quale popolazione vogliamo generalizzare, come sono stati scelti gli studenti, se il disegno permette solo di descrivere un'associazione o anche di sostenere un'interpretazione causale e quali fonti di incertezza restano presenti nei dati.
-
-::: {.callout-note appearance="minimal"}
-Questa parte del modulo ha quindi una funzione preparatoria: insegna a leggere i dati prima di analizzarli. L'obiettivo non è anticipare le tecniche statistiche, ma costruire il vocabolario concettuale necessario per poterle utilizzare in modo sensato.
+L'obiettivo non è anticipare le tecniche statistiche, ma costruire il quadro concettuale necessario per usarle in modo scientificamente sensato.
 :::
 
-## Perché questi fondamenti vengono prima di R e dell'EDA
+## Pensare prima di calcolare
 
-La sezione successiva del modulo introdurrà il linguaggio R, mentre la parte dedicata all'EDA mostrerà come esplorare distribuzioni, relazioni, anomalie e modelli nei dati. Tuttavia, nessuna procedura operativa può sostituire una comprensione preliminare del significato dei dati.
+Nel linguaggio quotidiano, i dati vengono spesso immaginati come numeri già disponibili in una tabella. Nella ricerca psicologica, invece, un dataset è il punto di arrivo di molte decisioni. Prima che compaia una singola riga, qualcuno ha formulato una domanda, definito una popolazione, scelto un disegno, selezionato partecipanti o unità di osservazione, stabilito come misurare i fenomeni e deciso come codificare le risposte.
 
-Un grafico può essere ben costruito, ma rappresentare una misura poco valida. Una media può essere calcolata correttamente, ma riferirsi a una variabile per cui la media è poco informativa. Una correlazione può essere numericamente precisa, ma interpretata in modo improprio come prova causale. Un modello statistico può essere stimato senza errori di calcolo, ma rispondere a una domanda formulata in modo errato.
+Queste decisioni non costituiscono una premessa esterna all'analisi. Determinano il significato dei dati e delimitano ciò che possiamo apprendere da essi.
 
-Per questo motivo, la prima parte del percorso è dedicata al passaggio dai fenomeni psicologici ai dati analizzabili. Il filo conduttore è il seguente:
+Supponiamo di voler studiare la relazione tra stress accademico e qualità del sonno negli studenti universitari. Non basta raccogliere due punteggi e calcolare una correlazione. Dobbiamo chiarire che cosa intendiamo per stress, come viene misurato il sonno, quali studenti entrano nello studio, in quale periodo vengono osservati e quale popolazione dovrebbe essere rappresentata. Dobbiamo inoltre distinguere una semplice associazione dalla conclusione più forte secondo cui lo stress produrrebbe un cambiamento nel sonno.
 
-> **Fenomeno psicologico → domanda di ricerca → disegno → misurazione → dati → esplorazione → modello → inferenza.**
+Un calcolo può essere eseguito correttamente e rispondere comunque a una domanda mal definita. Un grafico può essere elegante e rappresentare una misura poco valida. Una stima può essere molto precisa e riferirsi a un campione selezionato. Un modello può convergere senza rappresentare adeguatamente il processo psicologico che gli viene attribuito.
 
-L'inferenza bayesiana, trattata nel manuale principale, fornisce un metodo coerente per ragionare sull'incertezza, aggiornare le credenze alla luce dei dati e valutare i modelli alternativi. Tuttavia, anche l'inferenza più raffinata dipende dalla qualità delle domande, delle misure e dei disegni che hanno generato i dati. Questa sezione serve a rendere esplicite tali condizioni.
+Per questo motivo, il percorso comincia dai fondamenti e non dalla sintassi di R.
 
-## Tre domande guida
+## Dai fenomeni psicologici ai dati
 
-I capitoli di questa parte ruotano attorno a tre domande fondamentali.
+Molti oggetti della psicologia non sono direttamente osservabili. Attenzione, ansia, motivazione, memoria, impulsività e benessere sono costrutti teorici. Entrano nel dataset attraverso risposte a questionari, comportamenti, tempi di reazione, giudizi di osservatori, prestazioni e segnali fisiologici.
 
-### Che cosa stiamo cercando di capire?
+Il passaggio dal fenomeno al dato può essere rappresentato come una sequenza:
 
-Ogni analisi nasce da una domanda. In psicologia, queste domande riguardano spesso processi non direttamente osservabili, come l'attenzione, la memoria, l'ansia, la motivazione, l'impulsività, la regolazione emotiva, l'apprendimento e il benessere. Questi fenomeni devono essere tradotti in ipotesi, variabili e procedure osservabili.
+$$
+\text{fenomeno}
+\longrightarrow
+\text{domanda}
+\longrightarrow
+\text{disegno}
+\longrightarrow
+\text{misurazione}
+\longrightarrow
+\text{dati}.
+$$
 
-La prima difficoltà è dunque di natura teorica: dobbiamo distinguere il fenomeno psicologico che vogliamo comprendere dagli indicatori empirici che possiamo effettivamente raccogliere. Questa distinzione sarà essenziale per tutto il percorso, perché i dati non parlano da sé, ma acquistano significato all'interno di un quadro teorico.
+Ogni passaggio restringe il significato di ciò che osserviamo. La domanda seleziona un aspetto del fenomeno. Il disegno stabilisce quali confronti siano possibili. La misurazione traduce il costrutto in indicatori. Il dataset conserva il risultato di queste operazioni, ma non sempre ne conserva automaticamente la storia.
 
-### Che cosa osserviamo davvero?
+Quando riceviamo un file già pronto, è facile dimenticare questo percorso e trattare le colonne come entità naturali. Una variabile chiamata `stress` sembra rappresentare direttamente lo stress; una colonna numerica sembra autorizzare il calcolo della media; più righe sembrano indicare più informazioni indipendenti. Queste conclusioni possono essere sbagliate.
 
-Molti costrutti psicologici non sono osservabili direttamente. Non misuriamo l'ansia in sé, ma le risposte a un questionario, i comportamenti, i tempi di reazione, le valutazioni cliniche, gli indicatori fisiologici o altre manifestazioni parziali del costrutto. Ogni indicatore contiene informazioni, ma anche errori.
+La prima competenza nell'analisi dei dati consiste quindi nel ricostruire che cosa rappresentano righe, colonne e valori.
 
-Per interpretare un dato, quindi, dobbiamo sapere che cosa rappresenta, come è stato prodotto e quali sono i suoi limiti. La misurazione non è un dettaglio tecnico, ma il punto in cui una teoria psicologica entra in contatto con l'osservazione empirica.
+## Quattro passaggi concettuali
 
-### Che cosa possiamo concludere?
+I capitoli di questa Parte seguono una progressione. Non costituiscono un elenco di definizioni da memorizzare, ma quattro prospettive da applicare ogni volta che si incontra un nuovo dataset.
 
-Non tutti i dati permettono di trarre le stesse conclusioni. Alcuni dati sono utili per descrivere un gruppo specifico, altri permettono una generalizzazione più ampia e altri ancora, se raccolti con un disegno adeguato, possono sostenere ipotesi causali.
-
-Il tipo di studio, la strategia di campionamento, la qualità delle misure e la presenza di possibili fattori confondenti determinano i limiti dell'inferenza. Una parte importante della competenza statistica consiste nel riconoscere tali limiti prima di trarre conclusioni troppo affrettate.
-
-## Mappa della sezione
-
-I capitoli che seguono costruiscono progressivamente questa competenza.
-
-| Capitolo | Domanda guida | Funzione nel percorso |
+| Capitolo | Domanda centrale | Funzione nel percorso |
 |---|---|---|
-| **Concetti chiave** | Che cos'è un dato? | Introdurre il lessico minimo: popolazione, campione, unità statistica, variabile, parametro, statistica, variabilità e incertezza. |
-| **Disegno della ricerca** | Come sono stati generati i dati? | Comprendere campionamento, studi osservazionali, esperimenti, generalizzabilità, bias e limiti dell'interpretazione causale. |
-| **Misurazione** | Che cosa significa il valore osservato? | Collegare costrutti teorici, indicatori empirici, errore di misura, validità, affidabilità e livelli di scala. |
-| **Modelli psicologici** | Descrivere basta? | Preparare il passaggio dalla descrizione dei pattern alla spiegazione dei processi che potrebbero averli generati. |
+| @sec-key-notions | Che cos'è un dato? | Introduce popolazione, campione, unità di analisi, variabile, parametro, statistica e incertezza. |
+| @sec-key-notions-design | Come sono state generate le osservazioni? | Collega campionamento, assegnazione, struttura dei dati, generalizzazione e causalità. |
+| @sec-measurement | Che cosa significa il valore osservato? | Distingue costrutto, operazionalizzazione, indicatore, punteggio, affidabilità e validità. |
+| @sec-key-notions-cogn-models | Quale processo può generare il pattern? | Introduce il passaggio dalla descrizione dei dati alla modellizzazione dei processi psicologici. |
 
-Questa mappa non va letta come una sequenza di definizioni da memorizzare, ma come un insieme di strumenti per orientarsi. Quando ci troveremo di fronte a un dataset, torneremo implicitamente a queste domande: chi o cosa è stato osservato? Con quale misura? In quale contesto? Con quale disegno? Quale forma di incertezza rimane?
+Il primo capitolo costruisce il lessico minimo. Il secondo mostra che il modo in cui i dati vengono raccolti determina le conclusioni giustificate. Il terzo affronta il problema centrale della psicologia quantitativa: il rapporto tra costrutti e punteggi. Il quarto sposta infine l'attenzione dalla descrizione di un pattern alla formulazione di un processo capace di generarlo.
 
-## Un esempio ricorrente
+La progressione può essere letta anche come un aumento graduale delle pretese scientifiche. Prima descriviamo che cosa è stato osservato. Poi chiediamo a chi e a quali condizioni la descrizione possa essere estesa. Successivamente valutiamo se i valori rappresentino davvero i costrutti dichiarati. Solo allora possiamo proporre modelli esplicativi.
 
-Per rendere i concetti più concreti, useremo spesso esempi tratti dalla ricerca psicologica. Un caso semplice può accompagnare l'intera sezione: lo studio della relazione tra lo stress accademico e la qualità del sonno.
+## Un esempio che accompagna la Parte
 
-Questo esempio ci permette di vedere come una stessa domanda possa assumere significati diversi a seconda del livello di analisi:
+La relazione tra stress accademico e qualità del sonno accompagnerà diversi capitoli perché permette di vedere come una stessa domanda cambi significato quando cambiano disegno, misura e obiettivo.
 
-- come **domanda descrittiva**, potremmo chiederci quanto siano frequenti i livelli elevati di stress in un determinato gruppo di studenti;
-- come **domanda associativa**, potremmo chiederci se gli studenti più stressati riportano una qualità del sonno peggiore;
-- come **domanda causale**, potremmo chiederci se una riduzione dello stress produce un miglioramento della qualità del sonno;
-- come **domanda esplicativa**, potremmo chiederci attraverso quali meccanismi psicologici lo stress interferisce con il sonno.
+Possiamo limitarci a descrivere quanto siano diffusi livelli elevati di stress in uno specifico gruppo di studenti. Possiamo studiare se stress e sonno varino insieme. Possiamo osservare le stesse persone nel tempo per capire se una variabile preceda l'altra. Possiamo infine valutare un intervento progettato per ridurre lo stress e verificare se il sonno cambi di conseguenza.
 
-Le analisi statistiche richieste da queste domande possono essere diverse, ma soprattutto cambiano le condizioni necessarie per interpretare correttamente i risultati. Una correlazione può essere sufficiente per descrivere un'associazione, ma non per dimostrare da sola un effetto causale. Un questionario può essere utile, ma solo se misura in modo valido e affidabile il costrutto di interesse. Un campione di convenienza può essere informativo, ma non autorizza generalizzazioni automatiche a tutti gli studenti universitari.
+Queste domande non richiedono soltanto analisi statistiche differenti. Richiedono soprattutto dati generati in modi differenti.
 
-## Collegamenti con il resto del modulo
+Anche la misurazione modifica il problema. Lo stress può essere rappresentato da un singolo item, da una scala composta, da un diario giornaliero o da indicatori fisiologici. La qualità del sonno può essere descritta mediante ore dichiarate, valutazioni soggettive, risvegli o dati strumentali. Due studi che usano la stessa parola possono quindi osservare aspetti differenti del fenomeno.
 
-La sezione **R** tradurrà molte di queste idee in procedure operative. Impareremo a organizzare i dati, manipolare le tabelle, scrivere le funzioni, produrre i grafici e documentare le analisi riproducibili. Tuttavia, il codice sarà sempre al servizio di una domanda: non lo scriveremo per accumulare comandi, ma per rendere esplicito e controllabile il percorso che va dai dati grezzi all'interpretazione.
+Un modello esplicativo aggiunge un ulteriore livello. Potremmo ipotizzare che lo stress aumenti la ruminazione serale e che la ruminazione interferisca con il sonno. Questa proposta non deriva automaticamente da una correlazione. Richiede una teoria, misure adatte e un disegno capace di distinguere il processo da spiegazioni alternative.
 
-La sezione **EDA** mostrerà come osservare i dati prima di formalizzare un modello.  Esploreremo distribuzioni, valori anomali, relazioni tra variabili, indici di posizione e dispersione, nonché visualizzazioni e primi ragionamenti su correlazione e causalità. L'esplorazione sarà utile solo se sapremo cosa stiamo esplorando e quali limiti derivano dalla misurazione e dal disegno.
+L'esempio mostra perché l'analisi non inizia dal comando da eseguire. Inizia dalla relazione tra la domanda e i dati necessari per affrontarla.
 
-Il manuale principale sull'inferenza bayesiana riprenderà molti di questi temi a un livello più generale. In quel contesto, l'attenzione sarà rivolta al significato epistemologico delle procedure: cosa significa aggiornare una credenza, stimare un parametro, confrontare modelli e quantificare l'incertezza. Questa sezione prepara il terreno per questo percorso, mostrando che l'incertezza non deriva solo dal calcolo statistico, ma anche dalla teoria, dal campionamento, dalla misurazione e dal disegno della ricerca.
+## Il rapporto con R e con l'EDA
 
-## Cosa portare con sé
+La Parte dedicata a R introdurrà gli strumenti necessari per lavorare con i dati in modo riproducibile. Impareremo a creare e ispezionare oggetti, selezionare variabili, trasformare tabelle, trattare valori mancanti e produrre rappresentazioni grafiche.
 
-Al termine di questa prima parte, lo studente dovrebbe essere in grado di affrontare un dataset ponendosi alcune domande essenziali:
+Queste operazioni non saranno presentate come esercizi di programmazione autonomi. Ogni comando dovrà essere collegato al significato dei dati. Se una persona compare più volte, per esempio, dovremo preservare l'identificatore che lega le osservazioni. Se una colonna numerica contiene categorie ordinate, dovremo evitare di interpretarla automaticamente come una misura continua. Se alcuni valori mancano, dovremo capire come e perché siano diventati mancanti prima di eliminarli da un calcolo.
 
-1. Qual è il fenomeno psicologico di interesse?
-2. Quale domanda di ricerca ha motivato la raccolta dei dati?
-3. Qual è la popolazione di riferimento e quale campione è stato osservato?
-4. Quali variabili sono state misurate e che cosa rappresentano?
-5. Le misure sono plausibilmente valide e affidabili?
-6. Il disegno consente descrizione, previsione, generalizzazione o inferenza causale?
-7. Quali fonti di incertezza, errore o bias devono essere considerate?
-8. Quali conclusioni sarebbero giustificate e quali sarebbero eccessive?
+L'uso di un assistente AI non modifica questa responsabilità. L'AI può generare rapidamente una sintassi corretta, ma non conosce automaticamente l'unità di analisi, la validità della misura o la logica del disegno. Chi analizza i dati deve saper verificare se il codice rispetti queste caratteristiche.
 
-Queste domande accompagneranno tutto il percorso. Imparare a formularle è il primo passo per evitare il rischio più comune nell'analisi dei dati: produrre risultati tecnicamente corretti ma scientificamente poco rilevanti.
+La Parte dedicata all'EDA mostrerà poi come osservare distribuzioni, differenze, relazioni e anomalie. L'esplorazione sarà più informativa proprio perché sapremo che cosa rappresentano le variabili e quali strutture del disegno devono rimanere visibili.
+
+Il percorso complessivo diventa quindi:
+
+$$
+\text{domanda}
+\longrightarrow
+\text{dati comprensibili}
+\longrightarrow
+\text{esplorazione}
+\longrightarrow
+\text{modello}
+\longrightarrow
+\text{controllo}.
+$$
+
+## Il rapporto con il manuale e il Companion
+
+Il manuale *Inferenza bayesiana in psicologia: Ragionare con l'incertezza* sviluppa il quadro concettuale della modellizzazione bayesiana. Il Companion mostra come costruire, stimare e controllare modelli con R, `brms` e Stan. Questo sito prepara quel lavoro concentrandosi su ciò che viene prima del modello.
+
+L'inferenza bayesiana rappresenta l'incertezza sui parametri e sulle predizioni in modo esplicito. Non può però correggere automaticamente una misura che non rappresenta il costrutto, un campione che non rappresenta la popolazione o un disegno che non identifica il confronto causale.
+
+Una distribuzione a posteriori può essere calcolata con grande precisione rispetto a un problema scientifico mal posto. Per questo il progetto editoriale non separa la statistica dalla metodologia. Imparare a ragionare con l'incertezza significa anche riconoscere l'incertezza introdotta dalla selezione, dalla misurazione, dal contesto e dalle assunzioni teoriche.
+
+## Come leggere questa Parte
+
+La Parte può essere letta interamente prima di iniziare R oppure consultata durante il lavoro pratico. La seconda modalità è spesso utile: quando una variabile non è chiara, si può tornare al capitolo sulla misurazione; quando le righe non sembrano indipendenti, al capitolo sul disegno; quando un grafico mostra un pattern interessante, al capitolo sui modelli.
+
+Alla fine del percorso, l'obiettivo non è ricordare una lunga lista di termini. È acquisire un'abitudine di lettura. Di fronte a un dataset dovremmo riuscire a ricostruire quale fenomeno viene studiato, chi o che cosa è stato osservato, come sono stati prodotti i valori e quale tipo di conclusione sia proporzionato alle informazioni disponibili.
+
+Questa abitudine protegge dal rischio più comune nell'analisi dei dati: ottenere una risposta tecnicamente corretta a una domanda che i dati non potevano realmente affrontare.

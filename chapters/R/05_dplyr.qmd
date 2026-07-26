@@ -1,556 +1,549 @@
-# Trasformare i dati con `dplyr` {#sec-dplyr}
+# Trasformare tabelle con `dplyr` {#sec-dplyr}
 
-## Perché questo capitolo {.unnumbered .unlisted}
+::: {.callout-note title="In sintesi"}
+**Da sapere**  Una trasformazione dei dati è una procedura che modifica righe, colonne o valori per produrre una nuova tabella. `dplyr` rende questa procedura leggibile attraverso pochi verbi. La sintassi è utile perché rende esplicite le decisioni, non perché debba essere memorizzata.
 
-Prima di descrivere, visualizzare o modellare i dati, è necessario trasformarli. Raramente un file appena importato è pronto per l'analisi: può contenere variabili inutili, nomi poco chiari, valori mancanti, codifiche diverse da quelle attese o informazioni che devono essere riorganizzate.
-
-Il pacchetto `dplyr` rende queste operazioni esplicite e leggibili. In questo capitolo non cercheremo di imparare tutto il pacchetto `dplyr`. L'obiettivo è più limitato, ma anche più importante: imparare a leggere, modificare e controllare le trasformazioni più comuni dei dati.
-
-Al termine del capitolo, dovresti essere in grado di:
-
-- riconoscere i principali verbi di `dplyr`;
-- leggere una pipeline riga per riga;
-- selezionare variabili, filtrare le osservazioni e creare nuove colonne;
-- calcolare sintesi descrittive per l'intero campione o per gruppi;
-- verificare che una trasformazione abbia effettivamente prodotto il risultato desiderato;
-- valutare il codice `dplyr` prodotto con l'aiuto dell'AI.
-
-::: {.callout-important title="Idea chiave"}
-`dplyr` non serve solo a "manipolare" dati. Consente di rendere visibile il percorso che porta dal file iniziale alla tabella utilizzata per l'analisi. Ogni riga di codice dovrebbe poter essere spiegata.
+**Da saper fare**  Leggere una pipeline come una sequenza di operazioni; riconoscere quali righe, colonne e valori cambiano; produrre semplici riepiloghi per gruppi; controllare numerosità e valori mancanti; descrivere all'AI una trasformazione senza delegarle decisioni metodologiche implicite.
 :::
 
-## Dati ordinati: una convenzione utile
+## Introduzione {.unnumbered .unlisted}
 
-Molti strumenti del `tidyverse`, incluso `dplyr`, funzionano meglio quando i dati
-sono organizzati in forma *tidy*. In un dataset tidy:
+Dopo avere importato e controllato un dataset, raramente lo analizziamo esattamente nella forma in cui è stato ricevuto. Potremmo aver bisogno di conservare soltanto alcune variabili, lavorare su un sottoinsieme di osservazioni, creare un indicatore o calcolare una sintesi per gruppi.
 
-1. ogni variabile è una colonna;
-2. ogni osservazione è una riga;
-3. ogni valore è una cella.
+Queste operazioni vengono spesso chiamate *manipolazione dei dati*. Il termine può suggerire un'attività tecnica e quasi neutrale. In realtà, ogni trasformazione incorpora una decisione. Filtrare significa stabilire quali casi entrano nell'analisi. Creare una variabile significa definire una nuova rappresentazione delle informazioni disponibili. Raggruppare significa decidere quali osservazioni debbano essere confrontate o riassunte insieme.
 
-Questa regola non è una legge naturale. Si tratta di una convenzione pratica. La sua utilità sta nel fatto che rende più semplice descrivere, trasformare e visualizzare i dati.
+Il pacchetto `dplyr` è utile perché esprime tali decisioni attraverso pochi verbi. In questo capitolo non cercheremo di imparare tutto il pacchetto. Useremo soltanto le operazioni necessarie per comprendere e controllare una trasformazione semplice.
 
-Per esempio, se si studia la relazione tra stress accademico e qualità del sonno, si potrebbe avere una tabella in cui ogni riga rappresenta uno studente e ogni colonna rappresenta una variabile:
+La domanda guida sarà:
+
+> Quale tabella entra, quali operazioni vengono applicate e quale tabella deve uscire?
+
+::: {.callout-tip title="Prerequisiti"}
+È utile avere letto @sec-r, @sec-r-environment e @sec-r-programming. Dovresti riconoscere la struttura input--trasformazione--output, sapere che cosa rappresentano righe e colonne e avere già controllato il file importato.
+:::
+
+## Panoramica del capitolo {.unnumbered .unlisted}
+
+Partiremo dalla struttura ordinata di una tabella e leggeremo la pipe come una sequenza algoritmica. Vedremo poi quattro operazioni essenziali: scegliere colonne, scegliere righe, creare variabili e produrre riepiloghi. L'ultima parte mostrerà come controllare una pipeline e come formulare richieste all'AI che mantengano esplicite unità di analisi, esclusioni e trattamento dei valori mancanti.
+
+::: {.callout-note title="Preparazione del notebook"}
+Gli esempi richiedono `dplyr`. Il dataset didattico viene creato direttamente nel documento, in modo che ogni blocco possa essere riprodotto senza file esterni.
 
 ```{r}
+#| label: dplyr-setup
 #| message: false
 #| warning: false
+
 library(dplyr)
-library(tibble)
 
 studenti <- tibble(
   id = 1:10,
-  genere = c("F", "F", "M", "F", "M", "F", "M", "F", "M", "F"),
-  corso = c("psicologia", "psicologia", "scienze", "psicologia", "scienze",
-            "psicologia", "psicologia", "scienze", "psicologia", "scienze"),
-  stress = c(18, 25, 21, 30, 16, 28, 24, NA, 19, 27),
-  sonno_ore = c(7.2, 6.1, 6.8, 5.4, 7.5, 5.9, 6.2, 6.7, NA, 5.8),
-  caffeina = c(1, 3, 2, 4, 1, 3, 2, 2, 1, 4)
+  genere = c(
+    "F", "F", "M", "F", "M",
+    "F", "M", "F", "M", "F"
+  ),
+  corso = c(
+    "psicologia", "psicologia", "scienze",
+    "psicologia", "scienze", "psicologia",
+    "psicologia", "scienze", "psicologia",
+    "scienze"
+  ),
+  stress = c(
+    18, 25, 21, 30, 16,
+    28, 24, NA, 19, 27
+  ),
+  sonno_ore = c(
+    7.2, 6.1, 6.8, 5.4, 7.5,
+    5.9, 6.2, 6.7, NA, 5.8
+  )
 )
-
-studenti
 ```
+:::
 
-In questa tabella:
+## Una tabella ordinata rende visibile l'unità di analisi
 
-- `id` identifica lo studente;
-- `genere` e `corso` sono variabili categoriali;
-- `stress`, `sonno_ore` e `caffeina` sono variabili numeriche;
-- `NA` indica un valore mancante.
+Gli strumenti di `dplyr` funzionano in modo particolarmente chiaro quando ogni colonna rappresenta una variabile, ogni riga rappresenta un'osservazione e ogni cella contiene un valore.
 
-Prima di procedere, è sempre utile guardare la struttura dei dati:
+Nel dataset `studenti`, ogni riga rappresenta uno studente. `id` identifica l'unità osservata; `corso` e `genere` sono variabili categoriali; `stress` e `sonno_ore` sono misure numeriche.
 
 ```{r}
+#| label: dplyr-glimpse
+
 glimpse(studenti)
 ```
 
-## La pipe: leggere il codice come una sequenza di operazioni
+Questa organizzazione è una convenzione pratica, non una proprietà naturale dei dati. In uno studio longitudinale, per esempio, la stessa persona potrebbe comparire in più righe perché l'unità osservata è una combinazione di persona e momento. Prima di trasformare una tabella dobbiamo quindi sapere che cosa rappresenta una riga.
 
-In R moderno si usa spesso la pipe `|>`. La pipe prende il risultato di una riga
-e lo passa alla riga successiva.
+## La pipe rappresenta una sequenza
 
-Questo permette di leggere il codice dall'alto verso il basso:
+La pipe `|>` passa il risultato di un'operazione a quella successiva. Il suo significato può essere letto come *poi*.
 
 ```{r}
+#| label: dplyr-first-pipeline
+
 studenti |>
   filter(stress >= 20) |>
   select(id, stress, sonno_ore)
 ```
 
-Il codice può essere letto così:
+La procedura è:
 
-1. parti dalla tabella `studenti`;
-2. tieni solo gli studenti con `stress >= 20`;
-3. mostra solo le colonne `id`, `stress` e `sonno_ore`.
+> Parti da `studenti`. Poi conserva le righe con `stress` almeno pari a 20. Poi conserva le colonne `id`, `stress` e `sonno_ore`.
 
-La pipe non è indispensabile, ma rende il flusso dell'analisi più chiaro. Questo è particolarmente importante quando il codice viene prodotto o modificato con l'aiuto dell'intelligenza artificiale: una pipeline leggibile è più facile da controllare.
+La pipe non aggiunge capacità statistiche. Rende visibile l'ordine delle trasformazioni.
 
-::: {.callout-tip title="Come leggere una pipeline"}
-Quando leggi codice `dplyr`, chiediti sempre:
+Possiamo rappresentare qualsiasi pipeline attraverso:
 
-1. quale tabella entra nella pipeline?
-2. quali righe vengono incluse o escluse?
-3. quali colonne vengono tenute, eliminate o create?
-4. quale tabella esce alla fine?
-:::
+$$
+\text{tabella iniziale}
+\longrightarrow
+\text{operazione 1}
+\longrightarrow
+\text{operazione 2}
+\longrightarrow
+\text{tabella finale}.
+$$
 
-## I verbi essenziali
+Quando il codice è prodotto dall'AI, questa lettura è il primo controllo. Se non sappiamo spiegare una riga con una frase, non sappiamo ancora quali dati stiamo analizzando.
 
-I verbi principali di `dplyr` corrispondono a operazioni molto semplici.
+## Quattro verbi essenziali
 
-| Verbo | Domanda a cui risponde |
-|---|---|
-| `select()` | Quali colonne mi servono? |
-| `filter()` | Quali righe voglio includere? |
-| `mutate()` | Quali nuove variabili voglio creare? |
-| `arrange()` | In quale ordine voglio vedere le righe? |
-| `group_by()` | Rispetto a quali gruppi voglio calcolare i risultati? |
-| `summarise()` | Quale sintesi voglio ottenere? |
+Per le trasformazioni introduttive sono sufficienti quattro idee.
 
-Questi verbi sono sufficienti per la maggior parte delle trasformazioni necessarie in una prima analisi esplorativa.
+| Verbo | Cambia | Domanda |
+|---|---|---|
+| `select()` | Colonne | Quali variabili devono rimanere? |
+| `filter()` | Righe | Quali osservazioni devono rimanere? |
+| `mutate()` | Valori o nuove colonne | Quale nuova informazione viene calcolata? |
+| `summarise()` | Granularità della tabella | Quale sintesi deve sostituire le osservazioni? |
 
-## Selezionare colonne con `select()`
+`group_by()` non produce da solo una sintesi. Indica a `summarise()` che il calcolo deve essere ripetuto separatamente per ciascun gruppo.
 
-`select()` serve a scegliere le variabili che vogliamo mantenere.
+Questi verbi descrivono la logica della procedura. I loro argomenti specificano i dettagli.
+
+## Scegliere colonne con `select()`
+
+`select()` conserva le variabili necessarie.
 
 ```{r}
+#| label: dplyr-select
+
 studenti |>
   select(id, stress, sonno_ore)
 ```
 
-Questa operazione non modifica i valori. Cambia solo le colonne visibili nella tabella risultante.
+Il numero delle righe non cambia. Cambia soltanto l'insieme delle colonne.
 
-Possiamo anche rimuovere una colonna utilizzando il segno meno:
+Questa operazione può semplificare una tabella molto ampia, ma eliminare una variabile troppo presto può rendere impossibile un controllo successivo. Per esempio, perdere `id` rende più difficile individuare duplicazioni o ritrovare un'osservazione problematica.
 
-```{r}
-studenti |>
-  select(-caffeina)
-```
+Una richiesta all'AI dovrebbe quindi specificare non soltanto quali variabili servano per il calcolo, ma anche quali debbano essere conservate per documentare il risultato.
 
-::: {.callout-warning title="Controllo"}
-Dopo  la funzione `select()`, controlla sempre se hai mantenuto tutte le variabili necessarie per l'analisi. Eliminare una colonna troppo presto può rendere difficile capire che cosa è successo nelle fasi successive.
-:::
+## Scegliere righe con `filter()`
 
-## Filtrare righe con `filter()`
-
-La funzione `filter()` serve a includere solo le osservazioni che soddisfano una determinata condizione.
+`filter()` valuta una condizione per ogni riga e conserva quelle per cui la condizione è vera.
 
 ```{r}
+#| label: dplyr-filter
+
 studenti |>
   filter(stress >= 20)
 ```
 
-Possiamo combinare più condizioni:
+La soglia `20` non è una scelta tecnica di `dplyr`. Deve provenire dalla domanda, dal disegno o da una regola definita prima dell'analisi.
+
+Possiamo combinare condizioni:
 
 ```{r}
+#| label: dplyr-filter-two-conditions
+
 studenti |>
-  filter(stress >= 20, sonno_ore < 6.5)
+  filter(
+    stress >= 20,
+    sonno_ore < 6.5
+  )
 ```
 
-Questa pipeline include solo gli studenti con punteggio di stress almeno pari a
-20 e meno di 6.5 ore di sonno.
+Le due condizioni separate da una virgola devono essere entrambe vere.
 
-Si possono usare anche operatori logici:
-
-| Operatore | Significato |
-|---|---|
-| `==` | uguale a |
-| `!=` | diverso da |
-| `>` | maggiore di |
-| `<` | minore di |
-| `>=` | maggiore o uguale a |
-| `<=` | minore o uguale a |
-| `&` | entrambe le condizioni sono vere |
-| `|` | almeno una delle condizioni è vera |
-| `%in%` | appartiene a un insieme di valori |
-
-Esempio:
+Quando la variabile usata nel filtro contiene `NA`, la condizione non può essere valutata come vera o falsa. Quelle righe non vengono conservate.
 
 ```{r}
+#| label: dplyr-filter-missing
+
 studenti |>
-  filter(corso %in% c("psicologia", "scienze"), caffeina >= 3)
+  filter(is.na(stress))
 ```
 
-::: {.callout-important title="Attenzione ai valori mancanti"}
-Quando una variabile contiene `NA`, una condizione logica può produrre risultati
-inattesi. Le righe con valori mancanti nella variabile utilizzata per il filtraggio vengono solitamente escluse dal risultato.
+Prima e dopo un filtro è utile contare le righe:
+
+```{r}
+#| label: dplyr-filter-check
+
+studenti_stress_alto <- studenti |>
+  filter(stress >= 20)
+
+nrow(studenti)
+nrow(studenti_stress_alto)
+```
+
+Il confronto rende visibile l'effetto della decisione. Dire soltanto che «sono stati esclusi i casi non pertinenti» nasconde quante osservazioni siano state rimosse e per quale ragione.
+
+::: {.callout-warning title="Filtrare modifica il campione analizzato"}
+Una condizione sintatticamente corretta può produrre un campione diverso da quello definito nel disegno. Prima di usare un filtro, occorre sapere perché quei casi devono essere esclusi e documentare quanti ne vengono rimossi.
 :::
 
-Per controllare esplicitamente i valori mancanti possiamo usare `is.na()`:
+## Creare una variabile con `mutate()`
+
+`mutate()` calcola una nuova colonna oppure sostituisce i valori di una colonna esistente.
 
 ```{r}
-studenti |>
-  filter(is.na(stress) | is.na(sonno_ore))
-```
+#| label: dplyr-mutate
 
-Questa pipeline mostra gli studenti per cui manca il punteggio di stress oppure
-il numero di ore di sonno.
-
-## Creare variabili con `mutate()`
-
-La funzione `mutate()` serve a creare nuove colonne o modificare colonne esistenti.
-
-Per esempio, possiamo creare una variabile che indica se lo studente dorme meno
-di 6 ore:
-
-```{r}
-studenti |>
-  mutate(sonno_basso = sonno_ore < 6)
-```
-
-Possiamo anche creare una variabile categoriale a partire da una variabile
-numerica:
-
-```{r}
 studenti |>
   mutate(
-    livello_stress = case_when(
-      stress < 20 ~ "basso",
-      stress >= 20 & stress < 27 ~ "medio",
-      stress >= 27 ~ "alto",
-      TRUE ~ NA_character_
-    )
+    sonno_insufficiente = sonno_ore < 6
   ) |>
-  select(id, stress, livello_stress)
+  select(
+    id,
+    sonno_ore,
+    sonno_insufficiente
+  )
 ```
 
-In questo esempio, `case_when()` assegna un'etichetta a seconda del valore di
-`stress`. L'ultima riga, `TRUE ~ NA_character_`, specifica che i casi non
-classificabili ricevono un valore mancante.
+La nuova variabile vale `TRUE` quando le ore di sonno sono inferiori a 6, `FALSE` negli altri casi osservati e `NA` quando `sonno_ore` è mancante.
 
-::: {.callout-warning title="Controllo"}
-Dopo `mutate()`, controlla sempre la nuova variabile. Un errore nella definizione
-di una categoria può alterare l'interpretazione dell'intera analisi.
-:::
+Il codice traduce una regola:
+
+> Confronta ogni valore con la soglia 6 e registra il risultato.
+
+La regola è trasparente, ma la soglia deve essere giustificata. Creare categorie a partire da una misura continua riduce informazione e può introdurre confini arbitrari. Non dovrebbe essere fatto soltanto perché rende più semplice una tabella o un grafico.
+
+Dopo `mutate()` dobbiamo controllare i valori prodotti:
 
 ```{r}
+#| label: dplyr-mutate-check
+
 studenti |>
   mutate(
-    livello_stress = case_when(
-      stress < 20 ~ "basso",
-      stress >= 20 & stress < 27 ~ "medio",
-      stress >= 27 ~ "alto",
-      TRUE ~ NA_character_
-    )
+    sonno_insufficiente = sonno_ore < 6
   ) |>
-  count(livello_stress)
-```
-
-## Ordinare righe con `arrange()`
-
-La funzione `arrange()` cambia l'ordine delle righe.
-
-```{r}
-studenti |>
-  arrange(stress)
-```
-
-Per ordinare in modo decrescente si usa `desc()`:
-
-```{r}
-studenti |>
-  arrange(desc(stress))
-```
-
-Questa operazione è utile per ispezionare i valori estremi, gli errori di inserimento e i casi che meritano attenzione.
-
-## Riassumere dati con `summarise()`
-
-La funzione `summarise()` riduce una tabella a una o più statistiche descrittive.
-
-```{r}
-studenti |>
-  summarise(
-    n = n(),
-    stress_medio = mean(stress, na.rm = TRUE),
-    sonno_medio = mean(sonno_ore, na.rm = TRUE)
+  count(
+    sonno_insufficiente,
+    .drop = FALSE
   )
 ```
 
-L'argomento `na.rm = TRUE` dice a R di ignorare i valori mancanti nel calcolo
-della media. Ciò non significa che i valori mancanti siano irrilevanti, ma solo che non bloccano il calcolo.
+`count()` mostra quante righe appartengono a ciascun valore, compresi i mancanti.
 
-::: {.callout-important title="Non nascondere i mancanti"}
-Quando si utilizza `na.rm = TRUE` è necessario anche verificare quanti valori mancanti sono presenti. Una media calcolata su pochi casi può non essere molto significativa.
+::: {.callout-important title="Una nuova colonna è una nuova definizione"}
+`mutate()` esegue la regola indicata, ma non ne dimostra la validità. Il ricercatore deve poter spiegare che cosa rappresenta la nuova variabile, perché viene costruita e quali informazioni vengono perse.
 :::
 
+## Ridurre la tabella con `summarise()`
+
+`summarise()` sostituisce molte osservazioni con una o più statistiche.
+
 ```{r}
+#| label: dplyr-summarise
+
 studenti |>
   summarise(
-    n_totale = n(),
-    n_stress_mancante = sum(is.na(stress)),
-    n_sonno_mancante = sum(is.na(sonno_ore))
+    n_righe = n(),
+    n_sonno_osservato = sum(!is.na(sonno_ore)),
+    sonno_medio = mean(
+      sonno_ore,
+      na.rm = TRUE
+    )
   )
 ```
 
-## Calcolare sintesi per gruppi con `group_by()`
+La tabella iniziale contiene dieci righe. Il risultato ne contiene una, perché le osservazioni vengono riassunte.
 
-La funzione `group_by()` da sola non produce una tabella finale interessante. Serve a indicare a R che le operazioni successive devono essere eseguite separatamente per ciascun gruppo.
+La distinzione tra `n_righe` e `n_sonno_osservato` rende esplicito che la media non usa tutti i partecipanti. `na.rm = TRUE` consente il calcolo sui valori disponibili, ma non sostituisce il controllo dei mancanti.
+
+Una sintesi dovrebbe dichiarare almeno quante osservazioni contribuiscono al risultato. Una media senza numerosità può sembrare più informativa di quanto sia.
+
+## Produrre sintesi per gruppi
+
+Per calcolare la stessa sintesi separatamente per ciascun corso, possiamo raggruppare la tabella prima di usare `summarise()`.
 
 ```{r}
+#| label: dplyr-group-summarise
+
 studenti |>
-  group_by(genere) |>
+  group_by(corso) |>
   summarise(
-    n = n(),
-    stress_medio = mean(stress, na.rm = TRUE),
-    sonno_medio = mean(sonno_ore, na.rm = TRUE),
-    .groups = "drop"
+    n_righe = n(),
+    n_stress_osservato = sum(!is.na(stress)),
+    stress_medio = mean(
+      stress,
+      na.rm = TRUE
+    )
   )
 ```
 
-Questa pipeline può essere letta nel modo seguente:
+La procedura è:
 
-1) parti dalla tabella `studenti`;
-2) separa le righe in base al genere;
-3) per ciascun gruppo, calcola il numero di casi, lo stress medio e il sonno medio;
-4) restituisci una tabella non più raggruppata.
+> Dividi le righe in base a `corso`. All'interno di ogni gruppo conta le righe, conta i valori osservati e calcola la media.
 
-La riga `.groups = "drop"` evita che il risultato mantenga informazioni di raggruppamento non necessarie. Per analisi semplici non è sempre indispensabile, ma rende il risultato più esplicito.
+Il risultato contiene una riga per gruppo. La granularità della tabella è cambiata: non rappresenta più singoli studenti, ma corsi.
 
-## Contare casi con `count()`
+Questa trasformazione è semplice e concettualmente importante. Dopo una sintesi, le colonne non devono essere interpretate come se rappresentassero ancora dati individuali.
 
-Una delle operazioni più utili in EDA è contare quanti casi appartengono a
-ciascuna categoria.
-
-```{r}
-studenti |>
-  count(corso)
-```
-
-Possiamo contare anche combinazioni di variabili:
+::: {.callout-note title="Contare è spesso il primo riepilogo"}
+Per una variabile categoriale, `count()` offre una forma abbreviata e leggibile:
 
 ```{r}
 studenti |>
   count(corso, genere)
 ```
 
-Questi controlli sono semplici, ma spesso rivelano problemi importanti: categorie scritte in modo incoerente, gruppi troppo piccoli o valori inattesi.
+Prima di confrontare medie tra gruppi è utile sapere quanti casi appartengano a ciascuna combinazione.
+:::
 
 ## Una pipeline completa
 
-Consideriamo una domanda semplice:
+Supponiamo di voler rispondere alla domanda:
 
-> Tra gli studenti con dati completi su stress e sonno, qual è la media delle ore di sonno in base al livello di stress?
+> Qual è la qualità media del sonno nei diversi corsi, tra gli studenti che possiedono sia il punteggio di stress sia la misura del sonno?
 
-Possiamo costruire una pipeline in più passaggi:
+Possiamo costruire una nuova tabella senza modificare l'originale:
 
 ```{r}
-sonno_per_stress <- studenti |>
-  filter(!is.na(stress), !is.na(sonno_ore)) |>
-  mutate(
-    livello_stress = case_when(
-      stress < 20 ~ "basso",
-      stress >= 20 & stress < 27 ~ "medio",
-      stress >= 27 ~ "alto"
-    )
+#| label: dplyr-complete-pipeline
+
+sonno_per_corso <- studenti |>
+  filter(
+    !is.na(stress),
+    !is.na(sonno_ore)
   ) |>
-  group_by(livello_stress) |>
+  group_by(corso) |>
   summarise(
     n = n(),
     sonno_medio = mean(sonno_ore),
-    sonno_sd = sd(sonno_ore),
-    .groups = "drop"
-  ) |>
-  arrange(desc(sonno_medio))
+    sonno_sd = sd(sonno_ore)
+  )
 
-sonno_per_stress
+sonno_per_corso
 ```
 
-Questa pipeline non è solo codice. Si tratta di una sequenza di decisioni:
+La pipeline elimina le righe incomplete rispetto alle due variabili, forma gruppi definiti dal corso e produce tre statistiche per ciascun gruppo.
 
-- escludiamo i casi con dati mancanti relativi a stress o sonno;
-- trasformiamo lo stress in tre categorie;
-- calcolare la media e la deviazione standard del sonno per ciascuna categoria;
-- ordiniamo i risultati.
+Il codice non spiega perché siano necessari dati completi su `stress`, dato che la sintesi finale usa soltanto `sonno_ore`. Questa incongruenza deve attirare l'attenzione. Se la domanda riguarda soltanto il sonno per corso, escludere chi non possiede il punteggio di stress modifica inutilmente il campione.
 
-Ogni decisione dovrebbe poter essere giustificata.
-
-::: {.callout-tip title="Checklist dopo una pipeline"}
-Dopo una trasformazione importante, controlla sempre:
-
-1. quante righe sono rimaste;
-2. quali colonne sono presenti;
-3. se sono comparsi nuovi valori mancanti;
-4. se le categorie hanno una numerosità plausibile;
-5. se il risultato risponde davvero alla domanda iniziale.
-:::
+Una versione coerente con la domanda è:
 
 ```{r}
-studenti |>
-  filter(!is.na(stress), !is.na(sonno_ore)) |>
-  summarise(n_righe = n())
-```
+#| label: dplyr-complete-pipeline-revised
 
-## Usare l'AI con criterio
-
-L'AI può essere molto utile per scrivere codice `dplyr`. Per esempio, puoi
-chiedere:
-
-> Scrivi una pipeline `dplyr` che elimini i casi con valori mancanti per stress e sonno, crei tre livelli di stress e calcoli la media del sonno per ciascun livello.
-
-Questo è un uso legittimo dell'AI. Ma il controllo resta tuo.
-
-### Cosa puoi chiedere all'AI
-
-- Generare una prima bozza della pipeline;
-- spiegare una riga di codice;
-- correggere un errore sintattico;
-- suggerire una funzione adatta;
-- trasformare un codice lungo in uno più leggibile.
-
-### Cosa devi controllare tu
-
-- Che le variabili esistano davvero nel dataset;
-- che i nomi delle colonne siano corretti;
-- che i filtri non eliminino casi in modo non intenzionale;
-- che i valori mancanti siano trattati esplicitamente;
-- che le nuove variabili abbiano il significato psicologico desiderato;
-- che le statistiche calcolate siano appropriate per la domanda.
-
-::: {.callout-warning title="Errore frequente"}
-Un codice può essere sintatticamente corretto, ma concettualmente errato. Per esempio, una pipeline può calcolare la media di una variabile ordinale trattandola come se fosse a intervalli o può escludere tutti i casi con dati mancanti senza dichiararlo.
-:::
-
-## Leggere codice generato dall'AI
-
-Supponiamo che l'AI produca questo codice:
-
-```{r}
-studenti |>
-  filter(stress > 20 & sonno_ore > 6) |>
-  group_by(corso) |>
-  summarise(media_stress = mean(stress))
-```
-
-Il codice funziona, ma prima di usarlo dobbiamo capirlo.
-
-Domande da porsi:
-
-- Perché vengono mantenuti solo studenti con `stress > 20` e `sonno_ore > 6`?
-- Questa selezione risponde alla domanda di ricerca?
-- Che cosa succede ai valori mancanti?
-- La media dello stress per corso è la sintesi che volevamo?
-- È necessario aggiungere `na.rm = TRUE`?
-
-Una versione più esplicita potrebbe essere:
-
-```{r}
-studenti |>
-  filter(!is.na(stress), !is.na(sonno_ore)) |>
+sonno_per_corso <- studenti |>
+  filter(!is.na(sonno_ore)) |>
   group_by(corso) |>
   summarise(
     n = n(),
-    media_stress = mean(stress),
-    media_sonno = mean(sonno_ore),
-    .groups = "drop"
+    sonno_medio = mean(sonno_ore),
+    sonno_sd = sd(sonno_ore)
+  )
+
+sonno_per_corso
+```
+
+L'esempio mostra perché leggere una pipeline come procedura sia più importante che riconoscerne la sintassi. Un'operazione può essere eseguita correttamente e non essere necessaria per la domanda.
+
+## Controllare una trasformazione
+
+Una pipeline importante dovrebbe lasciare evidenza dei propri effetti. I controlli dipendono dall'operazione.
+
+Dopo un filtro, confrontiamo la numerosità iniziale e finale. Dopo `select()`, controlliamo i nomi delle colonne. Dopo `mutate()`, esaminiamo i valori della nuova variabile. Dopo `summarise()`, verifichiamo quale unità rappresenti ciascuna riga del risultato.
+
+Un controllo semplice della pipeline precedente può essere:
+
+```{r}
+#| label: dplyr-pipeline-checks
+
+studenti |>
+  summarise(
+    n_totale = n(),
+    n_sonno_osservato = sum(!is.na(sonno_ore)),
+    n_sonno_mancante = sum(is.na(sonno_ore))
+  )
+
+sonno_per_corso
+```
+
+Non esiste un unico comando che convalidi ogni trasformazione. Il controllo deve mostrare ciò che l'operazione avrebbe potuto alterare.
+
+Il principio generale è:
+
+$$
+\text{trasformazione}
+\longrightarrow
+\text{conseguenza attesa}
+\longrightarrow
+\text{controllo osservabile}.
+$$
+
+## Descrivere il compito all'AI
+
+Una richiesta come «fammi una tabella con `dplyr`» lascia implicite troppe decisioni. L'assistente non sa quale sia l'unità di analisi, quali casi debbano essere inclusi o perché una variabile debba essere ricodificata.
+
+Una richiesta controllabile può essere formulata così:
+
+::: {.callout-tip title="Un prompt per una pipeline semplice"}
+> Ho una tabella R chiamata `studenti`, con una riga per studente. Le variabili rilevanti sono `id`, `corso`, `stress` e `sonno_ore`.  
+>
+> Voglio una tabella con una riga per corso che riporti il numero totale di studenti, il numero di valori osservati di `sonno_ore`, la media e la deviazione standard di `sonno_ore`. Non escludere una riga a causa di valori mancanti in variabili che non entrano nel calcolo.  
+>
+> Usa `dplyr`, non modificare `studenti` e salva il risultato in `sonno_per_corso`. Spiega come cambia l'unità rappresentata dalle righe e aggiungi un controllo dei valori mancanti.
+:::
+
+Il prompt specifica input, unità di analisi, variabili, output, trattamento dei mancanti, vincoli e controlli. L'AI deve tradurre la procedura in sintassi, non inventarne la logica.
+
+Se il codice ricevuto è troppo complesso, possiamo chiedere:
+
+> Riscrivi la soluzione usando soltanto `filter()`, `select()`, `mutate()`, `group_by()`, `summarise()` e `count()`. Elimina ogni passaggio non necessario e spiega che cosa cambia dopo ciascun verbo.
+
+## Leggere criticamente il codice generato
+
+Consideriamo:
+
+```r
+studenti |>
+  filter(
+    stress > 20,
+    sonno_ore > 6
+  ) |>
+  group_by(corso) |>
+  summarise(
+    stress_medio = mean(stress)
   )
 ```
 
-Questa seconda versione chiarisce quali casi sono inclusi e quali statistiche vengono calcolate.
+La sintassi è valida. La procedura conserva soltanto persone con stress superiore a 20 e più di sei ore di sonno, poi calcola lo stress medio per corso.
 
-## Funzioni utili da conoscere
+Prima di usarla dobbiamo chiedere perché siano state introdotte quelle soglie, che cosa accada ai mancanti, quanti casi rimangano e se il campione risultante corrisponda alla domanda.
 
-Oltre ai verbi principali, alcune funzioni tornano spesso:
+Una richiesta di revisione può essere:
 
-| Funzione | Uso tipico |
-|---|---|
-| `n()` | conta le righe in un gruppo |
-| `is.na()` | identifica valori mancanti |
-| `sum(is.na(x))` | conta i valori mancanti di `x` |
-| `mean(x, na.rm = TRUE)` | calcola la media ignorando i mancanti |
-| `sd(x, na.rm = TRUE)` | calcola la deviazione standard ignorando i mancanti |
-| `case_when()` | crea categorie a partire da condizioni |
-| `if_else()` | crea una variabile con due condizioni |
-| `desc()` | ordina in senso decrescente |
-| `count()` | conta casi per categoria |
+> Elenca tutte le decisioni analitiche contenute nella pipeline. Distingui quelle necessarie dalla sintassi tecnica. Mostra la numerosità prima e dopo ogni filtro e non modificare le condizioni senza spiegare perché.
 
-Non è necessario memorizzarle tutte subito. È però importante riconoscerle quando
-compaiono nel codice.
+Questo tipo di richiesta trasforma l'AI in uno strumento di audit del codice, non soltanto in un generatore.
 
-## Cosa portare al capitolo successivo
+## Che cosa non serve ancora
 
-Da questo capitolo dovresti ricavare soprattutto tre idee:
+Non è necessario imparare tutte le funzioni di selezione, ricodifica, unione e riorganizzazione disponibili in `dplyr` e nel `tidyverse`. Non è necessario neppure produrre pipeline molto compatte.
 
-1. trasformare i dati significa prendere decisioni;
-2. `dplyr` rende queste decisioni visibili in forma di pipeline;
-3. l'AI può aiutare a scrivere codice, ma non può sostituire il controllo
-   sostanziale sull'analisi.
+Per i capitoli successivi bastano poche operazioni leggibili. Quando servirà combinare tabelle o modificarne la forma, introdurremo il concetto nel contesto del problema specifico.
 
-Nel capitolo su `ggplot2` useremo la stessa logica: non impareremo tutti i modi possibili per creare grafici, ma la grammatica minima per costruire e valutare visualizzazioni coerenti con le domande dell'EDA.
+La semplicità non consiste nel ridurre il numero di righe a ogni costo. Consiste nel rendere evidente la relazione tra domanda, trasformazione e controllo.
+
+## Riflessioni conclusive {.unnumbered .unlisted}
+
+`dplyr` permette di descrivere una trasformazione come una sequenza di verbi. `select()` decide quali colonne rimangono, `filter()` quali righe rimangono, `mutate()` quali valori vengono creati e `summarise()` quale nuova unità viene rappresentata dalla tabella finale.
+
+La pipe rende visibile l'ordine delle operazioni. Questa trasparenza è particolarmente importante quando la sintassi viene generata dall'AI. Il ricercatore deve comunque stabilire soglie, esclusioni, variabili da conservare, significato delle nuove colonne e trattamento dei mancanti.
+
+Una pipeline è adeguata quando ogni passaggio è necessario per la domanda e quando le sue conseguenze sono controllate. Il fatto che il codice funzioni indica soltanto che R ha eseguito le istruzioni.
+
+Nel capitolo successivo applicheremo lo stesso modo di pensare alla visualizzazione. Un grafico verrà costruito come una sequenza di scelte su dati, variabili e rappresentazioni, non come un oggetto decorativo.
 
 ## Esercizi {.unnumbered .unlisted}
 
-::: {.callout-tip title="Esercizio 1: leggere una pipeline" collapse="true"}
-Considera il codice seguente:
+1. Descrivi in linguaggio naturale questa pipeline, indicando input, effetto di ogni verbo e unità rappresentata dal risultato:
 
-```r
-studenti |>
-  filter(!is.na(stress), stress >= 20) |>
-  mutate(sonno_basso = sonno_ore < 6) |>
-  group_by(sonno_basso) |>
-  summarise(
-    n = n(),
-    stress_medio = mean(stress),
-    .groups = "drop"
-  )
-```
+   ```r
+   studenti |>
+     filter(!is.na(stress)) |>
+     group_by(corso) |>
+     summarise(
+       n = n(),
+       stress_medio = mean(stress)
+     )
+   ```
 
-Rispondi:
+2. Il dataset contiene 200 righe. Dopo un filtro ne rimangono 73. Quali informazioni devi ottenere prima di considerare appropriata la trasformazione?
 
-1. Quali righe vengono escluse?
-2. Quale nuova variabile viene creata?
-3. Che cosa rappresenta `n`?
-4. Quale domanda empirica potrebbe essere esplorata con questa pipeline?
+3. Spiega perché questa operazione può essere metodologicamente problematica anche se la sintassi è corretta:
+
+   ```r
+   studenti |>
+     mutate(
+       stress_alto = stress >= 20
+     )
+   ```
+
+4. Modifica la seguente sintesi in modo che riporti anche il numero di valori osservati e mancanti:
+
+   ```r
+   studenti |>
+     summarise(
+       sonno_medio = mean(
+         sonno_ore,
+         na.rm = TRUE
+       )
+     )
+   ```
+
+5. L'AI propone di filtrare contemporaneamente i mancanti di `stress`, `sonno_ore` e `genere`, ma la tabella finale usa soltanto `sonno_ore` e `corso`. Quale problema introduce la proposta?
+
+6. Formula un prompt che chieda una tabella con una riga per corso, media del sonno, deviazione standard, numerosità utilizzata e controllo dei mancanti. Specifica che il dataset originale non deve essere modificato.
+
+7. Dopo `summarise()` ottieni una riga per corso. Perché non puoi più interpretare ogni riga come uno studente?
+
+8. Quale controllo assoceresti a ciascuna operazione: `filter()`, `select()`, `mutate()` e `summarise()`?
+
+::: {.callout-tip title="Soluzioni" collapse="true"}
+1. L'input è `studenti`. `filter()` conserva le righe in cui `stress` è osservato. `group_by()` forma gruppi in base al corso. `summarise()` sostituisce le righe individuali con numerosità e media per gruppo. Il risultato contiene una riga per corso.
+
+2. Occorre sapere quale condizione è stata applicata, perché è giustificata, quanti casi sono stati esclusi per ciascuna ragione, se i gruppi sono stati alterati e se i casi rimasti rappresentano ancora la popolazione analitica prevista.
+
+3. La soglia 20 può essere arbitraria. La trasformazione riduce una misura numerica a due categorie e perde informazione. Deve essere sostenuta da una definizione teorica, clinica o progettuale.
+
+4. Una possibile soluzione è:
+
+   ```r
+   studenti |>
+     summarise(
+       n_totale = n(),
+       n_sonno_osservato =
+         sum(!is.na(sonno_ore)),
+       n_sonno_mancante =
+         sum(is.na(sonno_ore)),
+       sonno_medio = mean(
+         sonno_ore,
+         na.rm = TRUE
+       )
+     )
+   ```
+
+5. Esclude osservazioni per informazioni che non sono necessarie alla domanda finale. Il campione viene ridotto senza motivo e può cambiare composizione.
+
+6. Il prompt deve specificare `studenti` come input, una riga per studente, `corso` come variabile di raggruppamento, `sonno_ore` come variabile da riassumere, gestione esplicita dei mancanti, nome del nuovo oggetto e divieto di sovrascrivere l'originale.
+
+7. `summarise()` aggrega tutte le osservazioni dello stesso corso. I valori della riga descrivono il gruppo e non una singola persona.
+
+8. Dopo `filter()` si confrontano le numerosità; dopo `select()` si controllano i nomi delle colonne; dopo `mutate()` si esaminano valori e frequenze della nuova variabile; dopo `summarise()` si verifica l'unità rappresentata da ogni riga e il numero di osservazioni usate.
 :::
 
-::: {.callout-tip title="Esercizio 2: trovare il problema" collapse="true"}
-L'AI ha prodotto questo codice:
-
-```r
-studenti |>
-  filter(stress > 25) |>
-  summarise(media_sonno = mean(sonno_ore))
-```
-
-Il codice è sintatticamente corretto. Quali controlli dovresti fare prima di
-fidarti del risultato? Prova a riscrivere la pipeline rendendo esplicito il
-trattamento dei valori mancanti e il numero di casi usati nel calcolo.
+::: {.callout-note title="Punti chiave" collapse="true"}
+- Una trasformazione modifica righe, colonne, valori o granularità della tabella.
+- La pipe rende visibile l'ordine delle operazioni.
+- `select()` agisce sulle colonne e `filter()` sulle righe.
+- `mutate()` crea una nuova definizione operativa.
+- `summarise()` cambia l'unità rappresentata dalla tabella.
+- I filtri e le soglie sono decisioni metodologiche, non dettagli sintattici.
+- `na.rm = TRUE` deve essere accompagnato dal conteggio dei valori utilizzati.
+- Ogni trasformazione importante richiede un controllo osservabile.
+- L'AI deve tradurre una procedura dichiarata, non inventare esclusioni o ricodifiche.
+- Una pipeline corretta è composta soltanto dai passaggi necessari alla domanda.
 :::
 
-::: {.callout-tip title="Esercizio 3: modificare una pipeline" collapse="true"}
-Parti da questa pipeline:
+::: {.callout-note title="Ambiente di sviluppo" collapse="true"}
+Il capitolo usa `dplyr`. Le informazioni sull'ambiente possono essere ottenute con:
 
-```r
-studenti |>
-  group_by(corso) |>
-  summarise(media_stress = mean(stress, na.rm = TRUE))
-```
-
-Modificala in modo che restituisca, per ciascun corso:
-
-- il numero totale di studenti;
-- il numero di valori mancanti in `stress`;
-- la media di `stress`;
-- la media di `sonno_ore`.
-:::
-
-::: {.callout-tip title="Esercizio 4: prompt e controllo" collapse="true"}
-Scrivi un prompt per chiedere all'AI una pipeline `dplyr` che:
-
-1. usi la tabella `studenti`;
-2. escluda i casi con valori mancanti su `stress` o `sonno_ore`;
-3. crei una variabile `stress_alto`, uguale a `TRUE` se `stress >= 27`;
-4. calcoli media e deviazione standard di `sonno_ore` separatamente per
-   `stress_alto`.
-
-Poi indica almeno tre controlli che dovresti eseguire sul codice prodotto.
-:::
-
-::: {.callout-note collapse=true title="Informazioni sull'ambiente di sviluppo"}
 ```{r}
+#| echo: true
+
 sessionInfo()
 ```
 :::
-
-## Bibliografia {.unnumbered .unlisted}
-

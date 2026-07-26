@@ -1,430 +1,524 @@
-# Relazioni tra variabili {#sec-correlation}
+# Esplorare relazioni tra due variabili {#sec-correlation}
 
-::: {.callout-note appearance="minimal"}
-Nell'EDA non ci interessa soltanto sapere come è fatta una variabile presa da sola. Vogliamo anche capire se due variabili cambiano insieme: per esempio, gli studenti che riportano più stress dormono meno? Chi dorme meno mostra punteggi più alti di disagio? La correlazione aiuta a descrivere queste associazioni, ma non basta a spiegarne il motivo.
+::: {.callout-note title="In sintesi"}
+**Da sapere**  Una relazione tra due variabili riguarda il modo in cui le loro osservazioni sono accoppiate. Lo scatterplot rende visibile questa distribuzione congiunta. La correlazione di Pearson ne riassume soltanto la componente lineare; non descrive ogni possibile relazione e non possiede, da sola, un significato causale.
+
+**Da saper fare**  Controllare quali coppie di valori entrano nell'analisi; leggere direzione, forma, dispersione e osservazioni influenti nello scatterplot; interpretare la correlazione come concordanza tra valori standardizzati; riconoscere relazioni non lineari, sottogruppi e restrizioni dell'intervallo; formulare conclusioni riferite all'associazione osservata.
 :::
 
-### Panoramica del capitolo {.unnumbered .unlisted}
+## Introduzione {.unnumbered .unlisted}
 
-In questo capitolo impareremo a:
+L'analisi univariata descrive una variabile alla volta. Quando passiamo a due variabili, la domanda cambia. Non ci interessa più soltanto quali valori compaiano, ma **come i valori delle due misure siano accoppiati nelle stesse unità di analisi**.
 
-- distinguere associazione, correlazione e causalità;
-- leggere uno scatterplot prima di calcolare un coefficiente;
-- interpretare la direzione, la forma e la forza di una relazione;
-- calcolare e interpretare la correlazione di Pearson e di Spearman;
-- riconoscere le situazioni in cui la correlazione può essere fuorviante.
-- usare l'AI per produrre codice senza delegare l'interpretazione.
+Se ogni riga rappresenta uno studente, la coppia formata da stress e ore di sonno appartiene alla stessa persona. Scambiare tra loro i valori di sonno lascerebbe inalterate le due distribuzioni univariate, ma cambierebbe completamente la relazione.
 
-::: {.callout-tip title="Idea guida"}
-Prima di calcolare una correlazione, è sempre necessario esaminare i dati. Un coefficiente riassume una nuvola di punti, ma non può sostituirla.
+L'oggetto dell'analisi bivariata è quindi la **distribuzione congiunta osservata**.
+
+La teoria probabilistica di covarianza e correlazione è già sviluppata nel capitolo [*Covarianza e correlazione*](https://ccaudek.github.io/utet-prob/chapters/probability/09_cov_cor.html) del modulo `utet-prob`. Qui useremo quei concetti in una funzione diversa: leggere criticamente una relazione nei dati.
+
+Anche la causalità rimane fuori dallo scopo del capitolo. Il Companion distingue sistematicamente associazione, previsione ed effetto causale. In questa sede la domanda è soltanto:
+
+> Come variano insieme due misure nel campione osservato?
+
+::: {.callout-tip title="Prerequisiti"}
+È necessario avere compreso distribuzione e deviazione standard in @sec-central-tendency-variability e i principi della visualizzazione in @sec-data-visualization-principles. Il capitolo successivo chiarirà il confine tra descrizione associativa e domanda causale.
 :::
 
-## Perche studiare relazioni tra variabili?
+## Panoramica del capitolo {.unnumbered .unlisted}
 
-Molte domande psicologiche riguardano le relazioni tra variabili:
+Cominceremo dalle coppie osservate e dallo scatterplot. La correlazione di Pearson verrà poi collegata agli scarti standardizzati, senza ripetere la teoria probabilistica. Vedremo infine perché un solo coefficiente può nascondere curvature, punti influenti, sottogruppi, intervalli ristretti e dati mancanti. La correlazione di Spearman verrà introdotta come descrizione di un andamento monotono basata sui ranghi, non come rimedio generico alla non normalità.
 
-- lo stress accademico è associato alla qualità del sonno?
-- il supporto sociale è associato a sintomi depressivi meno intensi?
-- Il tempo di reazione aumenta quando il compito diventa più difficile?
-- due scale psicometriche che dovrebbero misurare lo stesso costrutto producono punteggi simili?
-
-Queste domande sono diverse da quelle univariate viste nei capitoli precedenti. Non ci si chiede più soltanto:
-
-> Che forma ha questa distribuzione?
-
-Ma anche:
-
-> Come cambiano insieme due variabili?
-
-Questa domanda è importante, ma va formulata con cautela. Una relazione statistica può essere un indizio, non una spiegazione completa. In particolare, una correlazione non dimostra che una variabile causi l'altra. Questo punto sarà ripreso nel capitolo successivo sulla causalità.
-
-## Associazione, correlazione, causalita
-
-Nel linguaggio comune, spesso usiamo i termini "relazione", "associazione" e "correlazione" come se fossero sinonimi. Nel lavoro scientifico, invece, è meglio distinguerle.
-
-- "Associazione" è il termine più generale: conoscere una variabile ci dice qualcosa, almeno in parte, sull'altra.
-- "Correlazione" è una misura specifica dell'associazione, di solito riferita alla tendenza di due variabili numeriche a variare insieme.
-- La causalità riguarda una domanda diversa: cosa accadrebbe a una variabile se intervenissimo sull'altra?
-
-Per esempio, se gli studenti che dormono meno riportano più stress, c'è un'associazione. Tuttavia, da questa associazione non possiamo ancora dedurre se lo stress riduce il sonno, se il sonno ridotto aumenta lo stress, se entrambe le variabili dipendono da un terzo fattore o se tutte e tre le spiegazioni sono parzialmente vere.
-
-::: {.callout-warning title="Correlazione non significa causalità"}
-La correlazione descrive come due variabili si presentano insieme nei dati osservati. La causalità richiede una domanda diversa: cosa cambierebbe se potessimo modificare una variabile mantenendo sotto controllo il resto?
-:::
-
-## Un esempio ricorrente: stress e sonno
-
-Useremo un piccolo dataset didattico. Ogni riga rappresenta uno studente. Le variabili principali sono:
-
-- `stress`: punteggio di stress accademico, da 0 a 40;
-- `sonno`: ore medie di sonno per notte;
-- `supporto`: supporto sociale percepito, da 0 a 30;
-- `anno`: anno di corso.
+::: {.callout-note title="Preparazione del notebook"}
+Il dataset simulato contiene una riga per studente. Stress e sonno sono costruiti in modo da mostrare un'associazione negativa imperfetta; alcuni valori mancanti ricordano che la relazione può essere calcolata soltanto sulle coppie complete.
 
 ```{r}
-#| label: corr-packages
+#| label: correlation-setup
 #| message: false
 #| warning: false
+
 library(dplyr)
 library(ggplot2)
-```
 
-```{r}
-#| label: corr-data
-set.seed(42)
+set.seed(2026)
 
-n <- 120
+n <- 140
 
-eda_stress <- tibble::tibble(
+studenti <- data.frame(
   id = seq_len(n),
-  anno = sample(c("Primo", "Secondo", "Terzo"), n, replace = TRUE),
-  supporto = round(rnorm(n, mean = 20, sd = 5), 1),
-  stress = round(28 - 0.45 * supporto + rnorm(n, mean = 0, sd = 5), 1),
-  sonno = round(8.2 - 0.09 * stress + rnorm(n, mean = 0, sd = 0.7), 1)
-) |>
-  mutate(
-    supporto = pmax(pmin(supporto, 30), 0),
-    stress = pmax(pmin(stress, 40), 0),
-    sonno = pmax(pmin(sonno, 10), 3)
+  stress = round(
+    pmin(
+      pmax(
+        rnorm(n, mean = 6, sd = 1.7),
+        1
+      ),
+      10
+    ),
+    1
   )
-
-glimpse(eda_stress)
-```
-
-Questo dataset è artificiale. È stato creato solo per mostrare il ragionamento.
-
-## Prima il grafico: lo scatterplot
-
-Quando le variabili sono numeriche, il primo strumento da utilizzare è quasi sempre lo **scatterplot**. Ogni punto rappresenta un caso. La posizione del punto indica il valore della prima variabile sull'asse orizzontale e della seconda variabile sull'asse verticale.
-
-```{r}
-#| label: corr-stress-sonno-plot
-#| fig-cap: "Relazione tra stress accademico e ore di sonno. Ogni punto rappresenta uno studente."
-ggplot(eda_stress, aes(x = stress, y = sonno)) +
-  geom_point(alpha = 0.7) +
-  geom_smooth(method = "lm", se = FALSE) +
-  labs(
-    x = "Stress accademico",
-    y = "Ore di sonno",
-    title = "Stress e sonno"
-  )
-```
-
-Prima di calcolare qualsiasi indice, è necessario porsi alcune domande:
-
-1. **Direzione**: la relazione sembra positiva o negativa?
-2. **Forma**: la relazione sembra approssimativamente lineare?
-3. **Forza**: i punti sono vicini a una tendenza comune o molto dispersi?
-4. **Anomalie**: ci sono punti isolati che potrebbero influenzare in modo rilevante il risultato?
-5. **Gruppi**: ci sono sottogruppi che dovrebbero essere distinti?
-
-Nel grafico precedente, la relazione sembra negativa: a valori più alti di stress tendono a corrispondere meno ore di sonno. Tuttavia, la relazione non è perfetta: studenti con lo stesso livello di stress possono dormire un numero diverso di ore.
-
-## Descrivere la relazione: direzione, forma e forza
-
-Una relazione tra due variabili può essere descritta utilizzando tre concetti.
-
-### Direzione
-
-Una relazione è **positiva** quando valori alti di una variabile tendono ad accompagnarsi a valori alti dell'altra. È **negativa** quando valori alti di una variabile tendono ad accompagnarsi a valori bassi dell'altra.
-
-### Forma
-
-Una relazione è **lineare** quando puo essere riassunta abbastanza bene da una linea retta. Molte relazioni psicologiche, però, non sono perfettamente lineari: possono essere curve, avere soglie, appiattirsi o cambiare direzione.
-
-### Forza
-
-Una relazione è più forte quando i punti sono vicini a una tendenza comune. È più debole quando i punti sono molto dispersi.
-
-::: {.callout-important title="Il coefficiente di correlazione di Pearson riassume  la forza di una relazione lineare"}
-La correlazione di Pearson riassume soprattutto la forza di una relazione lineare. Se la relazione non è lineare, se ci sono gruppi nascosti o se pochi punti estremi dominano il grafico, il coefficiente può essere poco informativo.
-:::
-
-## La covarianza: variare insieme
-
-La **covarianza** e una prima misura del fatto che due variabili variano insieme.  L'idea è semplice: si osserva se gli scarti dalla media di una variabile tendono ad avere lo stesso segno degli scarti dalla media dell'altra.
-
-La covarianza campionaria tra due variabili $X$ e $Y$ e:
-
-$$
-s_{XY} = \frac{1}{n - 1} \sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y}).
-$$
-
-Se i valori sopra la media di $X$ tendono ad accompagnarsi a valori sopra la media di $Y$, e i valori sotto la media di $X$ a valori sotto la media di $Y$, la covarianza è positiva. Se accade il contrario, la covarianza è negativa.
-
-```{r}
-#| label: corr-covariance
-cov(eda_stress$stress, eda_stress$sonno)
-```
-
-Nel nostro esempio, la covarianza è negativa, coerentemente con lo scatterplot: un livello più alto di stress tende ad accompagnarsi a un numero inferiore di ore di sonno.
-
-La covarianza, però, ha un limite: dipende dalle unità di misura. Cambiare la scala di una variabile modifica anche il valore numerico della covarianza. Per questo motivo, nella pratica, si usa più spesso la correlazione.
-
-## La correlazione di Pearson
-
-La **correlazione di Pearson** è una versione standardizzata della covarianza. Assume valori compresi tra -1 e +1.
-
-$$
-r = \frac{s_{XY}}{s_X s_Y}.
-$$
-
-Il valore di $r$ indica:
-
-- il **segno** della relazione lineare: positivo o negativo;
-- la **forza** della relazione lineare;
-- non le unità di misura, perché il coefficiente è standardizzato.
-
-```{r}
-#| label: corr-pearson
-cor(eda_stress$stress, eda_stress$sonno)
-```
-
-Un valore vicino a -1 indica una relazione lineare negativa molto forte. Un valore vicino a +1 indica una relazione lineare positiva molto forte. Un valore vicino a 0 indica l'assenza di una relazione lineare, ma non necessariamente l'assenza di una relazione in generale.
-
-::: {.callout-note title="Come interpretare la grandezza di r?"}
-Non esiste una soglia universale per stabilire se una correlazione è "piccola", "media" o "grande". Il suo significato dipende dal contesto, dalla qualità della misura, dalla variabilità del campione, dal disegno della ricerca e dalla teoria psicologica.
-:::
-
-### Leggere il coefficiente insieme al grafico
-
-Il coefficiente di correlazione è utile, ma non deve mai essere letto da solo. Nel report EDA, è consigliabile accompagnarlo sempre con uno scatterplot e con un'interpretazione prudente.
-
-```{r}
-#| label: corr-summary-table
-eda_stress |>
-  summarise(
-    n = n(),
-    r_stress_sonno = cor(stress, sonno),
-    media_stress = mean(stress),
-    media_sonno = mean(sonno)
-  )
-```
-
-Una formulazione corretta potrebbe essere:
-
-> Nel campione osservato, lo stress accademico e le ore di sonno mostrano un'associazione lineare negativa: gli studenti con punteggi più alti di stress tendono a dormire meno. Tale associazione, tuttavia, non dimostra che lo stress causi una riduzione del sonno.
-
-## Correlazione di Spearman
-
-La correlazione di Pearson è sensibile alla forma della relazione e ai valori estremi. Quando la relazione è monotona, ma non lineare, oppure quando le variabili sono ordinali, può essere utile la **correlazione di Spearman**.
-
-Spearman non lavora direttamente sui valori originali, ma sui loro ranghi. Per questo motivo, la correlazione di Spearman descrive se, al crescere di una variabile, l'altra tende ad aumentare o diminuire, senza richiedere una relazione lineare perfetta.
-
-```{r}
-#| label: corr-spearman
-cor(eda_stress$stress, eda_stress$sonno, method = "spearman")
-```
-
-Nel nostro esempio, i coefficienti di Pearson e Spearman sono simili, perché la relazione è abbastanza regolare. In altri casi, invece, possono differire di più.
-
-## Quando Pearson puo ingannare
-
-La correlazione di Pearson è utile, ma riassume solo un aspetto dei dati. Esaminiamo tre casi in cui il coefficiente può essere fuorviante.
-
-### Relazioni non lineari
-
-Una correlazione vicina a zero non implica necessariamente l'assenza di una relazione. Consideriamo, ad esempio, una relazione a U: i valori intermedi di stress possono associarsi a un certo esito, mentre i valori molto bassi e molto alti possono associarsi a esiti diversi.
-
-```{r}
-#| label: corr-nonlinear-data
-set.seed(123)
-nonlinear <- tibble::tibble(
-  attivazione = seq(-3, 3, length.out = 120),
-  prestazione = 8 - attivazione^2 + rnorm(120, 0, 0.7)
 )
 
-cor(nonlinear$attivazione, nonlinear$prestazione)
+studenti$sonno_ore <- round(
+  9.2 -
+    0.38 * studenti$stress +
+    rnorm(n, mean = 0, sd = .85),
+  1
+)
+
+studenti$anno <- factor(
+  sample(
+    c("primo", "secondo", "terzo"),
+    n,
+    replace = TRUE
+  )
+)
+
+studenti$stress[c(12, 87)] <- NA
+studenti$sonno_ore[c(31, 109, 133)] <- NA
+```
+:::
+
+## La relazione dipende dall'accoppiamento
+
+Consideriamo due brevi sequenze:
+
+```{r}
+#| label: correlation-pairing-example
+
+x <- c(1, 2, 3, 4, 5)
+y_crescente <- c(2, 4, 5, 7, 9)
+y_decrescente <- rev(y_crescente)
+
+data.frame(
+  x = x,
+  y_crescente = y_crescente,
+  y_decrescente = y_decrescente
+)
+```
+
+`y_crescente` e `y_decrescente` contengono esattamente gli stessi valori. Hanno quindi la stessa media, la stessa deviazione standard e lo stesso istogramma. Cambia soltanto il modo in cui vengono accoppiati con `x`.
+
+```{r}
+#| label: correlation-pairing-coefficients
+
+c(
+  crescente =
+    cor(x, y_crescente),
+  decrescente =
+    cor(x, y_decrescente)
+)
+```
+
+La relazione non appartiene alle due colonne considerate separatamente. Appartiene alle coppie:
+
+$$
+(x_1,y_1),\ldots,(x_n,y_n).
+$$
+
+Questo è il motivo per cui l'unità di analisi e l'allineamento delle righe sono fondamentali. Un errore di ordinamento o di unione tra tabelle può produrre una correlazione priva di significato anche quando le distribuzioni marginali sembrano corrette.
+
+## Prima del coefficiente: quali coppie entrano?
+
+Per descrivere stress e sonno dobbiamo sapere quante osservazioni possiedono entrambe le misure.
+
+```{r}
+#| label: correlation-complete-pairs
+
+studenti |>
+  summarise(
+    n_totale = n(),
+    stress_osservato =
+      sum(!is.na(stress)),
+    sonno_osservato =
+      sum(!is.na(sonno_ore)),
+    coppie_complete =
+      sum(
+        complete.cases(
+          stress,
+          sonno_ore
+        )
+      )
+  )
+```
+
+La media dello stress può usare un insieme di studenti, la media del sonno un altro e la correlazione soltanto la loro intersezione. Il coefficiente non descrive automaticamente l'intero campione reclutato.
+
+La prima frase di un report bivariato dovrebbe quindi dichiarare il numero di coppie complete. Se la perdita è consistente, occorre chiedersi chi rimanga escluso prima di interpretare la relazione.
+
+## Lo scatterplot rappresenta la distribuzione congiunta
+
+Ogni punto dello scatterplot rappresenta una coppia di valori appartenente alla stessa unità.
+
+```{r}
+#| label: fig-correlation-stress-sleep
+#| fig-cap: "Relazione osservata tra stress e ore di sonno. Ogni punto rappresenta uno studente con entrambe le misure disponibili."
+
+ggplot(
+  studenti,
+  aes(
+    x = stress,
+    y = sonno_ore
+  )
+) +
+  geom_point(
+    alpha = .65,
+    na.rm = TRUE
+  ) +
+  geom_smooth(
+    method = "lm",
+    se = FALSE,
+    na.rm = TRUE
+  ) +
+  labs(
+    x = "Punteggio di stress",
+    y = "Ore di sonno"
+  )
+```
+
+Il grafico permette di leggere quattro aspetti collegati.
+
+La **direzione** indica se valori più alti di una variabile tendano ad accompagnarsi a valori più alti o più bassi dell'altra.
+
+La **forma** indica se l'andamento possa essere riassunto approssimativamente da una linea retta oppure presenti curvature, soglie o cambiamenti di direzione.
+
+La **dispersione** indica quanto le osservazioni siano vicine a una tendenza comune. Anche in presenza di un andamento visibile, persone con lo stesso livello di stress possono dormire quantità molto differenti.
+
+Le **discrepanze locali** comprendono punti isolati, vuoti, accumuli e possibili sottogruppi. Queste caratteristiche possono avere un significato sostantivo o segnalare problemi di misura e preparazione.
+
+La linea non costituisce una spiegazione. È soltanto un riassunto lineare della nuvola di punti.
+
+## La covarianza come concordanza degli scarti
+
+La covarianza campionaria è:
+
+$$
+s_{XY}
+=
+\frac{1}{n-1}
+\sum_{i=1}^{n}
+(x_i-\bar{x})
+(y_i-\bar{y}).
+$$
+
+La formula confronta gli scarti delle due variabili dalle rispettive medie.
+
+Se una persona è sopra la media in entrambe le variabili, il prodotto degli scarti è positivo. È positivo anche quando entrambi gli scarti sono negativi. Se una variabile è sopra la media e l'altra sotto, il prodotto è negativo.
+
+La covarianza è quindi positiva quando le osservazioni tendono a collocarsi dallo stesso lato delle due medie e negativa quando tendono a collocarsi su lati opposti.
+
+```{r}
+#| label: correlation-covariance
+
+studenti |>
+  summarise(
+    covarianza =
+      cov(
+        stress,
+        sonno_ore,
+        use = "complete.obs"
+      )
+  )
+```
+
+Il valore numerico dipende dalle unità. Cambiare le ore in minuti moltiplicherebbe la covarianza, pur lasciando invariata la struttura della relazione.
+
+## La correlazione standardizza la covarianza
+
+La correlazione di Pearson è:
+
+$$
+r =
+\frac{s_{XY}}
+{s_Xs_Y}.
+$$
+
+Dividere per le due deviazioni standard rimuove le unità di misura. Il coefficiente è compreso tra $-1$ e $1$.
+
+Possiamo leggerlo anche attraverso gli z-score:
+
+$$
+r =
+\frac{1}{n-1}
+\sum_{i=1}^{n}
+z_{Xi}z_{Yi}.
+$$
+
+La correlazione è quindi la media corretta dei prodotti tra le posizioni standardizzate delle due variabili. Un valore positivo nasce quando punteggi relativamente alti si accompagnano ad altri punteggi relativamente alti, e punteggi relativamente bassi ad altri punteggi relativamente bassi. Un valore negativo nasce da posizioni opposte.
+
+```{r}
+#| label: correlation-pearson
+
+studenti |>
+  summarise(
+    n =
+      sum(
+        complete.cases(
+          stress,
+          sonno_ore
+        )
+      ),
+    r =
+      cor(
+        stress,
+        sonno_ore,
+        use = "complete.obs"
+      )
+  )
+```
+
+Il segno descrive la direzione lineare. Il valore assoluto descrive quanto strettamente i punti seguano una linea, non quanto sia importante il fenomeno e non quanto sia grande un effetto causale.
+
+::: {.callout-important title="La correlazione è una sintesi della relazione lineare osservata"}
+$r=0$ significa assenza di una componente lineare netta nel campione. Non significa indipendenza, assenza di ogni relazione o assenza di rilevanza psicologica.
+:::
+
+## Non esistono soglie universali
+
+Etichette come “piccola”, “media” e “grande” possono essere utili in contesti specifici, ma non possiedono un significato universale.
+
+Una correlazione modesta può essere importante quando la misura è rumorosa, il fenomeno è influenzato da molte cause o l'esito ha conseguenze rilevanti. Una correlazione elevata può derivare da costrutti quasi sovrapposti, da un ristretto processo di selezione o da una componente comune del metodo di misura.
+
+L'interpretazione richiede quindi teoria, qualità della misura, intervallo dei valori e popolazione campionata. Il coefficiente deve essere riportato insieme al grafico e alla numerosità.
+
+## Pearson può nascondere la forma
+
+Consideriamo una relazione a U:
+
+```{r}
+#| label: correlation-nonlinear-data
+
+set.seed(47)
+
+relazione_u <- data.frame(
+  attivazione =
+    seq(-3, 3, length.out = 130)
+)
+
+relazione_u$prestazione <-
+  9 -
+  relazione_u$attivazione^2 +
+  rnorm(130, mean = 0, sd = .65)
+
+cor(
+  relazione_u$attivazione,
+  relazione_u$prestazione
+)
 ```
 
 ```{r}
-#| label: corr-nonlinear-plot
-#| fig-cap: "Esempio di relazione non lineare. La correlazione lineare puo essere vicina a zero anche quando esiste un pattern chiaro."
-ggplot(nonlinear, aes(x = attivazione, y = prestazione)) +
-  geom_point(alpha = 0.7) +
-  geom_smooth(se = FALSE) +
+#| label: fig-correlation-nonlinear
+#| fig-cap: "Una relazione evidente può avere correlazione lineare vicina a zero."
+
+ggplot(
+  relazione_u,
+  aes(
+    x = attivazione,
+    y = prestazione
+  )
+) +
+  geom_point(
+    alpha = .65
+  ) +
+  geom_smooth(
+    se = FALSE
+  ) +
   labs(
     x = "Attivazione",
-    y = "Prestazione",
-    title = "Una relazione non lineare"
+    y = "Prestazione"
   )
 ```
 
-In questo esempio, il coefficiente lineare non riassume bene la struttura del grafico. Lo scatterplot rivela un modello che il numero da solo non riesce a mostrare.
+Il coefficiente è vicino a zero perché la tendenza crescente in una parte dell'intervallo compensa quella decrescente nell'altra. Il grafico mostra invece una struttura regolare.
 
-### Valori estremi
+Non dobbiamo cercare un coefficiente alternativo finché non abbiamo descritto la forma. Una relazione a U non è monotona e non viene riassunta adeguatamente neppure dalla correlazione di Spearman.
 
-Un singolo valore estremo può cambiare molto una correlazione, soprattutto in campioni piccoli. Per questo motivo, quando calcoliamo una correlazione, dobbiamo sempre osservare il grafico e chiederci se alcuni punti abbiano un'influenza sproporzionata.
+## La correlazione di Spearman descrive l'ordine monotono
+
+La correlazione di Spearman applica il coefficiente di Pearson ai ranghi dei valori.
 
 ```{r}
-#| label: corr-outlier-data
-set.seed(321)
-con_outlier <- tibble::tibble(
-  x = rnorm(30),
-  y = rnorm(30)
-) |>
-  bind_rows(tibble::tibble(x = 5, y = 5))
+#| label: correlation-spearman
 
-cor(con_outlier$x, con_outlier$y)
+studenti |>
+  summarise(
+    rho =
+      cor(
+        stress,
+        sonno_ore,
+        method = "spearman",
+        use = "complete.obs"
+      )
+  )
 ```
 
+È utile quando le variabili hanno un significato prevalentemente ordinale o quando la relazione è monotona ma non ben rappresentata da una linea retta. Una relazione è monotona se, al crescere di una variabile, l'altra tende sempre nella stessa direzione, anche con velocità diversa.
+
+Spearman non deve essere scelto semplicemente perché una variabile “non è normale”. La normalità delle distribuzioni marginali non è ciò che distingue concettualmente Pearson da Spearman in un'analisi descrittiva.
+
+## Un punto può cambiare il riassunto
+
+In campioni piccoli, una singola osservazione lontana dalle altre può creare, rafforzare, indebolire o invertire una correlazione.
+
+La prima domanda non è se il punto debba essere eliminato, ma se sia valido e da quale processo provenga. Se è un errore confermato, si torna alla pulizia. Se è un caso reale, fa parte della distribuzione e la sensibilità del coefficiente deve essere resa visibile.
+
+Un confronto trasparente può riportare il coefficiente con tutti i casi e, come analisi di sensibilità, il valore ottenuto senza l'osservazione influente. La seconda analisi non autorizza automaticamente l'esclusione; mostra quanto il riassunto dipenda dal caso.
+
+## I sottogruppi possono modificare la relazione
+
+Un'associazione complessiva può combinare gruppi con livelli medi e relazioni interne differenti. Per esempio, una nuvola di punti può riflettere anni di corso, contesti clinici o strumenti di misura diversi.
+
+Colorare o separare il grafico secondo una variabile prevista dal disegno può rendere visibile questa struttura:
+
 ```{r}
-#| label: corr-outlier-plot
-#| fig-cap: "Un valore estremo puo produrre o rafforzare una correlazione apparente."
-ggplot(con_outlier, aes(x = x, y = y)) +
-  geom_point(alpha = 0.8) +
-  geom_smooth(method = "lm", se = FALSE) +
+#| label: fig-correlation-groups
+#| fig-cap: "La stessa relazione osservata separata per anno di corso."
+
+ggplot(
+  studenti,
+  aes(
+    x = stress,
+    y = sonno_ore
+  )
+) +
+  geom_point(
+    alpha = .6,
+    na.rm = TRUE
+  ) +
+  facet_wrap(
+    ~ anno
+  ) +
   labs(
-    x = "Variabile X",
-    y = "Variabile Y",
-    title = "Effetto di un valore estremo"
+    x = "Punteggio di stress",
+    y = "Ore di sonno"
   )
 ```
 
-Un valore estremo non va eliminato automaticamente. Potrebbe trattarsi di un errore, ma potrebbe anche rappresentare un caso reale e significativo. La decisione deve essere documentata, come discusso nel capitolo sugli outlier.
+Non dobbiamo però cercare sottogruppi arbitrari fino a trovare una storia interessante. La variabile di stratificazione deve provenire dal disegno, dalla teoria o da una discrepanza concreta osservata nei dati.
 
-### Gruppi nascosti e paradosso di Simpson
+Il significato causale dell'aggregazione e del condizionamento verrà affrontato nel Companion. Qui il punto è descrittivo: un solo coefficiente può riassumere male dati eterogenei.
 
-Un'associazione osservata nell'intero campione può cambiare quando si distinguono i gruppi. Questo fenomeno è noto come **paradosso di Simpson**.
+## L'intervallo osservato influenza la correlazione
 
-```{r}
-#| label: corr-simpson-data
-set.seed(11)
+Una correlazione descrive la relazione nel campione disponibile. Se selezioniamo soltanto una regione ristretta della variabile, il coefficiente può diminuire perché rimane poca variazione da associare.
 
-gruppo_a <- tibble::tibble(
-  gruppo = "A",
-  x = rnorm(60, mean = 3, sd = 0.7),
-  y = 7 + 0.6 * x + rnorm(60, sd = 0.6)
-)
+La correlazione tra abilità e prestazione osservata in tutta la popolazione può essere più elevata di quella osservata soltanto tra studenti già selezionati per alta abilità. Questo fenomeno è chiamato **restrizione dell'intervallo**.
 
-gruppo_b <- tibble::tibble(
-  gruppo = "B",
-  x = rnorm(60, mean = 7, sd = 0.7),
-  y = 2 + 0.6 * x + rnorm(60, sd = 0.6)
-)
+Di conseguenza, non è corretto trattare la correlazione come una proprietà immutabile di due costrutti. Dipende dalla popolazione, dal campionamento, dalle misure e dall'intervallo effettivamente osservato.
 
-simpson <- bind_rows(gruppo_a, gruppo_b)
+## La misura limita la relazione osservata
 
-cor(simpson$x, simpson$y)
-```
+L'errore di misurazione e gli effetti pavimento o soffitto possono ridurre o deformare la correlazione.
 
-```{r}
-#| label: corr-simpson-bygroup
-simpson |>
-  group_by(gruppo) |>
-  summarise(r = cor(x, y), .groups = "drop")
-```
+Se una scala assegna quasi a tutti lo stesso punteggio, non rimane variabilità sufficiente per osservare come la misura cambi insieme a un'altra variabile. Se due questionari condividono formulazione, metodo di risposta o desiderabilità sociale, una parte della correlazione può riflettere il metodo comune più che i costrutti.
 
-```{r}
-#| label: corr-simpson-plot
-#| fig-cap: "Associazioni nei gruppi e associazione complessiva possono raccontare storie diverse."
-ggplot(simpson, aes(x = x, y = y, shape = gruppo)) +
-  geom_point(alpha = 0.7) +
-  geom_smooth(method = "lm", se = FALSE) +
-  labs(
-    x = "X",
-    y = "Y",
-    shape = "Gruppo",
-    title = "Gruppi nascosti e associazione complessiva"
-  )
-```
+L'interpretazione deve quindi tornare alla validità delle misure discussa in @sec-measurement. La precisione del coefficiente numerico non compensa una definizione debole delle variabili.
 
-Questo esempio mostra perché l'EDA deve considerare il disegno dello studio e le variabili di gruppo. Una correlazione complessiva può essere diversa dalle correlazioni osservate nei sottogruppi.
+## Una procedura EDA bivariata
 
-## Una procedura pratica per l'EDA bivariata
+Il percorso può essere riassunto senza trasformarlo in una checklist meccanica.
 
-1. Controllare il significato delle variabili: che cosa misurano? Si tratta di punteggi, tempi, frequenze o categorie ordinate?
-2. Controllare i dati mancanti: la correlazione viene calcolata sugli stessi casi per entrambe le variabili?
-3. Disegnare uno scatterplot: la relazione sembra lineare, monotona, curva o assente?
-4. Cercare i valori estremi: pochi punti dominano la relazione?
-5. Considerare i gruppi: la relazione è simile in tutti i sottogruppi rilevanti?
-6. Calcolare un coefficiente:
-  - Pearson se la relazione è approssimativamente lineare;
-  - Spearman se la relazione è monotona o le variabili sono ordinali.
-7. Interpretare con cautela: l'associazione non implica la causalità.
+Prima definiamo l'unità e le due variabili. Poi contiamo le coppie complete e osserviamo separatamente le distribuzioni marginali. Costruiamo lo scatterplot e descriviamo direzione, forma, dispersione e discrepanze. Soltanto a questo punto calcoliamo un coefficiente coerente con la struttura osservata. Infine controlliamo sensibilità a casi influenti, sottogruppi previsti e restrizione dell'intervallo.
 
-## Usare l'AI con criterio
+$$
+\text{coppie valide}
+\longrightarrow
+\text{grafico}
+\longrightarrow
+\text{forma}
+\longrightarrow
+\text{coefficiente}
+\longrightarrow
+\text{controlli}.
+$$
 
-L'AI può essere molto utile per generare codice R, proporre grafici o spiegare gli errori. Per esempio, si può chiedere:
+Il coefficiente conclude una lettura, non la sostituisce.
 
-> Scrivi del codice R con `ggplot2` per visualizzare la relazione tra lo stress accademico e le ore di sonno e per calcolare la correlazione di Pearson e Spearman.
+## Scrivere il risultato
 
-Tuttavia, lo studente deve controllare alcuni punti.
+Una formulazione appropriata potrebbe essere:
 
-::: {.callout-warning title="Cosa devi controllare tu"}
-- Le variabili indicate dall'AI sono presenti davvero nel dataset?
-- I casi con valori mancanti sono stati esclusi? Quanti sono?
-- Il grafico prodotto e adatto al tipo di variabili?
-- La relazione sembra lineare o solo monotona?
-- La correlazione e calcolata sull'intero campione o per gruppi?
-- L'AI sta interpretando una correlazione come se fosse una causa?
+> Nel campione, 135 studenti possiedono entrambe le misure. Lo scatterplot mostra un andamento approssimativamente lineare negativo, con considerevole sovrapposizione e senza una curvatura evidente. La correlazione di Pearson è negativa. Gli studenti con punteggi di stress più elevati tendono quindi a riportare meno ore di sonno, ma la relazione presenta ampia variabilità individuale.
+
+Questa frase descrive la distribuzione osservata. Non afferma che lo stress riduca il sonno, che il sonno riduca lo stress o che una terza variabile non contribuisca alla relazione.
+
+## Usare l'AI senza ridurre la relazione a un numero
+
+::: {.callout-tip title="Un prompt per l'EDA bivariata"}
+> Ho un data frame `studenti`, con una riga per studente. Voglio descrivere la relazione osservata tra `stress` e `sonno_ore`.
+>
+> Conta prima le coppie complete e mostra le distribuzioni marginali. Produci poi uno scatterplot con una linea lineare usata soltanto come riassunto descrittivo.
+>
+> Descrivi direzione, forma, dispersione, punti influenti e possibili sottogruppi prima di calcolare Pearson. Calcola Spearman soltanto come confronto dell'ordine monotono e non perché le variabili non sono normali.
+>
+> Mantieni il linguaggio associativo e segnala quali conclusioni causali non sono giustificate.
 :::
 
-Un buon esercizio non consiste solo nell'ottenere il codice, ma anche nel saperlo spiegare. Dopo aver usato l'AI, proviamo sempre a rispondere:
+Dopo avere ricevuto il codice, dobbiamo verificare che le righe siano correttamente accoppiate, che il trattamento dei mancanti sia visibile e che nessun filtro abbia ristretto silenziosamente l'intervallo.
 
-> Quale domanda risponde questo codice? Quali casi utilizza? Quale relazione mostra? Quale conclusione non posso trarre?
+## Riflessioni conclusive {.unnumbered .unlisted}
 
-## Dal coefficiente al modello
+Una relazione bivariata appartiene alle coppie di valori osservate. Lo scatterplot è la rappresentazione primaria della distribuzione congiunta e deve precedere il coefficiente.
 
-La correlazione è uno strumento descrittivo. Ci aiuta a capire se due variabili cambiano insieme, ma non ci dice quale processo abbia generato tale associazione. Per passare dalla descrizione alla spiegazione sono necessari una teoria, un disegno di ricerca, il controllo dei confondenti e modelli statistici più espliciti.
+La covarianza descrive la concordanza degli scarti dalle medie. La correlazione di Pearson standardizza questa quantità e riassume la componente lineare su una scala da $-1$ a $1$. Spearman descrive invece la concordanza dei ranghi in un andamento monotono.
 
-Questa distinzione prepara il terreno per il capitolo successivo: l'EDA può suggerire ipotesi causali, ma non può fondarle da sola.
+Nessuno dei due coefficienti rappresenta curvature, sottogruppi, valori influenti o processi di selezione. Il loro valore dipende inoltre dall'intervallo osservato e dalla qualità delle misure.
 
-## Riepilogo {.unnumbered .unlisted}
-
-- Lo scatterplot precede il coefficiente.
-- La correlazione di Pearson descrive la forza e la direzione di una relazione lineare.
-- La correlazione di Spearman descrive relazioni monotone usando i ranghi.
-- Una correlazione vicina a zero non esclude relazioni non lineari.
-- I valori estremi e i gruppi nascosti possono modificare fortemente il coefficiente.
-- La correlazione è un risultato descrittivo, non una prova causale.
+L'EDA bivariata termina con una descrizione dell'associazione nel campione. Il passaggio verso previsione, effetto causale o spiegazione richiede domande e condizioni ulteriori, sviluppate nel Companion.
 
 ## Esercizi {.unnumbered .unlisted}
 
-::: {.callout-tip collapse="true" title="Esercizio 1: leggere uno scatterplot"}
-Usa il dataset `eda_stress`. Crea uno scatterplot tra `supporto` e `stress`.
+1. Spiega perché due variabili possono conservare le stesse distribuzioni univariate ma cambiare correlazione quando i valori vengono riaccoppiati.
 
-1. La relazione sembra positiva o negativa?
-2. Sembra lineare?
-3. Ci sono punti anomali?
-4. Quale interpretazione psicologica prudente puoi proporre?
+2. Costruisci lo scatterplot di `stress` e `sonno_ore`. Descrivi direzione, forma e dispersione prima di calcolare il coefficiente.
+
+3. Spiega la formula di Pearson usando i prodotti tra z-score. Che cosa rende positivo o negativo un singolo contributo?
+
+4. Costruisci una relazione a U e mostra perché Pearson e Spearman possono entrambi essere vicini a zero nonostante un pattern evidente.
+
+5. Un coefficiente cambia da $-.55$ a $-.12$ dopo avere rimosso un punto. Quali verifiche sono necessarie prima di decidere se escluderlo?
+
+6. Perché Spearman non è una soluzione automatica quando una distribuzione marginale è asimmetrica?
+
+7. Descrivi due modi in cui la restrizione dell'intervallo o l'errore di misura possono modificare una correlazione.
+
+8. Formula un prompt che chieda all'AI di controllare una relazione bivariata senza interpretarla causalmente.
+
+::: {.callout-tip title="Soluzioni" collapse="true"}
+1. Media, deviazione standard e istogrammi dipendono dai valori presenti in ciascuna colonna. La correlazione dipende invece da quali valori compaiono nella stessa riga.
+
+2. La risposta deve partire dal grafico e indicare se l'andamento sia crescente o decrescente, lineare o curvo e quanto i punti siano dispersi.
+
+3. Prodotti positivi derivano da due z-score con lo stesso segno; prodotti negativi da segni opposti. La media corretta di questi prodotti determina direzione e forza lineare.
+
+4. In una relazione a U, la parte crescente e quella decrescente si compensano. Poiché l'andamento non è monotono, anche l'ordinamento non procede sempre nella stessa direzione.
+
+5. Occorre verificare la fonte, la plausibilità e la correttezza della riga; esaminare se il caso appartenga alla popolazione di interesse; riportare la sensibilità senza trasformarla automaticamente in criterio di esclusione.
+
+6. Spearman risponde a una domanda sui ranghi e sugli andamenti monotoni. L'asimmetria di una singola variabile non implica che Pearson sia concettualmente inappropriato.
+
+7. Un intervallo ristretto riduce la variabilità disponibile; l'errore di misura aggiunge variazione non condivisa o metodo comune. Entrambi possono modificare il coefficiente osservato.
+
+8. Il prompt deve specificare unità, variabili e coppie complete; chiedere grafico e descrizione della forma; rendere visibili filtri e mancanti; vietare linguaggio causale.
 :::
 
-::: {.callout-tip collapse="true" title="Esercizio 2: Pearson e Spearman"}
-Calcola la correlazione di Pearson e quella di Spearman tra `supporto` e `stress`.
+::: {.callout-note title="Punti chiave" collapse="true"}
+- La relazione appartiene alle coppie, non alle colonne considerate separatamente.
+- Lo scatterplot rappresenta la distribuzione congiunta osservata.
+- Pearson riassume la componente lineare.
+- La correlazione può essere letta come concordanza tra z-score.
+- Un valore vicino a zero non esclude relazioni non lineari.
+- Spearman riguarda ranghi e monotonia, non la normalità marginale.
+- Punti influenti e sottogruppi devono essere resi visibili.
+- Restrizione dell'intervallo e qualità della misura modificano il coefficiente.
+- La correlazione descrive il campione e non possiede da sola significato causale.
+- Il coefficiente conclude l'EDA bivariata; non sostituisce il grafico.
+:::
+
+::: {.callout-note title="Ambiente di sviluppo" collapse="true"}
+Il capitolo usa `dplyr` e `ggplot2`.
 
 ```{r}
-#| label: corr-exercise-spearman
-cor(eda_stress$supporto, eda_stress$stress)
-cor(eda_stress$supporto, eda_stress$stress, method = "spearman")
+#| echo: true
+
+sessionInfo()
 ```
-
-I due valori sono simili? Che cosa suggerisce questa somiglianza o differenza?
-:::
-
-::: {.callout-tip collapse="true" title="Esercizio 3: controllare il codice prodotto dall'AI"}
-Supponi che l'AI produca questo codice:
-
-```{r}
-#| label: corr-exercise-ai-code
-eda_stress |>
-  summarise(r = cor(stress, sonno, use = "complete.obs"))
-```
-
-Rispondi:
-
-1. Che cosa fa `use = "complete.obs"`?
-2. Quanti casi sono usati nel calcolo?
-3. Il codice basta per interpretare la relazione?
-4. Quale grafico aggiungeresti prima di commentare il risultato?
-:::
-
-::: {.callout-tip collapse="true" title="Esercizio 4: correlazione e causalita"}
-Scrivi tre possibili spiegazioni alternative dell'associazione negativa tra stress e sonno:
-
-1. stress causa minore sonno;
-2. minore sonno aumenta lo stress;
-3. una terza variabile influenza entrambe.
-
-Per ciascuna spiegazione, indica quale informazione aggiuntiva servirebbe per valutarla.
 :::

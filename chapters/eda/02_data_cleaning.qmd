@@ -1,412 +1,503 @@
----
-title: "Pulizia dei dati"
-subtitle: "Dai dati grezzi a un dataset documentato"
----
+# Pulire i dati senza nascondere le decisioni {#sec-data-cleaning}
 
-## Perché questo capitolo
+::: {.callout-note title="In sintesi"}
+**Da sapere**  I dati grezzi non sono normalmente pronti per l'analisi. Codici speciali, duplicazioni, errori di registrazione, categorie incoerenti e valori mancanti possono deformare distribuzioni, associazioni e composizione del campione. La pulizia è quindi necessaria, ma non è un procedimento automatico: ogni intervento richiede una giustificazione legata al disegno, al codebook e alla provenienza dei dati.
 
-L'analisi esplorativa dei dati precede la creazione di grafici e statistiche descrittive. Inizia quando apriamo un file e ci chiediamo se i dati in esso contenuti sono comprensibili, coerenti e pertinenti alla domanda di ricerca.
-
-La pulizia dei dati non è una fase puramente tecnica. Ogni correzione, esclusione, ricodifica o trasformazione è una **decisione metodologica**. Alcune decisioni sono semplici, come correggere un nome di variabile scritto in modo incoerente. Altre decisioni sono più delicate, come ad esempio cosa fare con i valori mancanti, le risposte impossibili o le osservazioni duplicate.
-
-In questo capitolo useremo un principio semplice:
-
-::: {.callout-important}
-## Principio fondamentale
-
-**Non modificare mai i dati grezzi.**
-
-I dati originali devono restare intatti. Tutte le trasformazioni devono essere eseguite tramite codice e salvate in un nuovo file documentato.
+**Da saper fare**  Distinguere un'anomalia da un errore confermato; diagnosticare prima di correggere; quantificare l'effetto di esclusioni e ricodifiche; confrontare dati grezzi e dati preparati; documentare le decisioni; chiedere all'AI controlli e proposte senza autorizzarla a modificare automaticamente il dataset.
 :::
 
-Al termine del capitolo dovresti essere in grado di:
+## Introduzione {.unnumbered .unlisted}
 
-- distinguere i dati grezzi da quelli puliti;
-- ispezionare la struttura iniziale di un dataset;
-- riconoscere i problemi più comuni dei dati;
-- applicare semplici operazioni di pulizia;
-- verificare che il dataset pulito sia coerente;
-- documentare le decisioni prese durante la pulizia;
-- valutare criticamente il codice di pulizia prodotto con l'aiuto dell'AI.
+Il file prodotto da un questionario, da un laboratorio o da una piattaforma online è un punto di partenza, non il dataset finale.
 
-## La logica generale: quattro fasi
+Una colonna può contenere `999` per indicare una risposta mancante. La stessa categoria può essere registrata come `F`, `f` e `femmina`. Una persona può comparire due volte perché ha riaperto il questionario. Un tempo di risposta molto breve può derivare da una prova anticipata, da un errore tecnico oppure da una risposta realmente eccezionale.
 
-Useremo una sequenza in quattro fasi.
+Se questi problemi vengono ignorati, le statistiche descrittive non rappresentano fedelmente né le osservazioni raccolte né la popolazione a cui vorremmo riferirci. Una media può essere trascinata da codici speciali trattati come numeri reali; una relazione può dipendere da poche righe duplicate; l'eliminazione automatica dei casi incompleti può lasciare nel campione soprattutto i partecipanti più facili da misurare.
 
-| Fase | Domanda guida | Obiettivo |
-|---|---|---|
-| **Ispeziona** | Che cosa contiene il file? | Capire struttura, variabili, tipi di dato e problemi iniziali. |
-| **Pulisci** | Che cosa deve essere corretto? | Rinominare, ricodificare, gestire duplicati, missing e formati errati. |
-| **Valida** | Il dataset è coerente? | Controllare che i valori rispettino vincoli plausibili. |
-| **Documenta** | Che cosa è stato fatto? | Rendere esplicite e riproducibili tutte le decisioni. |
+La pulizia è dunque indispensabile. Tuttavia, non esiste un comando capace di distinguere automaticamente ciò che è errato da ciò che è raro, ciò che manca per caso da ciò che manca in modo sistematico, o una duplicazione accidentale da una misura ripetuta prevista dal disegno.
 
-Questa sequenza non va intesa come una ricetta rigida. Nella pratica si torna spesso indietro: un controllo può rivelare un problema che richiede una nuova correzione. L'importante è che il processo sia trasparente.
+La domanda centrale non è:
 
-## Un esempio ricorrente: stress e sonno
+> Come posso rendere il dataset ordinato?
 
-Supponiamo di aver raccolto dati da studenti universitari per studiare la relazione tra stress accademico e qualità del sonno. Il file grezzo contiene una riga per ogni studente e le seguenti variabili:
+È piuttosto:
 
-| Variabile | Significato atteso |
-|---|---|
-| `id` | Identificatore anonimo dello studente |
-| `eta` | Età in anni |
-| `genere` | Categoria dichiarata dallo studente |
-| `stress` | Punteggio di stress accademico, da 1 a 10 |
-| `sonno_ore` | Ore medie di sonno per notte |
-| `qualita_sonno` | Valutazione soggettiva del sonno, da 1 a 5 |
-| `data_compilazione` | Data di compilazione del questionario |
+> Quale trasformazione è giustificata dall'evidenza disponibile, e come modifica ciò che il dataset rappresenta?
 
-Questo esempio ci accompagnerà nei capitoli successivi: prima controlleremo il dataset, poi esploreremo le singole variabili, visualizzeremo le distribuzioni, esamineremo la variabilità e, infine, studieremo le associazioni tra le variabili.
-
-## Prima regola: separare dati grezzi e dati puliti
-
-Una struttura minima del progetto potrebbe essere:
-
-```text
-progetto_eda/
-├── data_raw/       # dati originali, mai modificati
-├── data_clean/     # dati puliti prodotti dal codice
-├── reports/        # file Quarto e report finali
-└── scripts/        # eventuali script R separati
-```
-
-I dati grezzi devono essere conservati in `data_raw/`. Il dataset pulito deve essere salvato in `data_clean/`. In questo modo, se qualcosa va storto, è sempre possibile ricostruire il percorso dall'inizio.
-
-::: {.callout-warning}
-## Errore comune
-
-Aprire un file `.csv` in Excel, correggere qualche cella manualmente e salvare il file sopra quello originale sembra un'operazione veloce, ma rende difficile verificare l'analisi.
-
-La domanda da porsi è: **Un'altra persona potrebbe ricostruire esattamente ciò che ho fatto?**
+::: {.callout-tip title="Prerequisiti"}
+Il capitolo prosegue il lavoro iniziato in @sec-eda-proj-structure. Presuppone inoltre i principi di progettazione, misurazione e riproducibilità discussi in @sec-key-notions-design, @sec-measurement e @sec-quarto.
 :::
 
-## Fase 1: ispeziona
+## Panoramica del capitolo {.unnumbered .unlisted}
 
-La prima cosa da fare è guardare il dataset senza modificarlo.
+Partiremo dalla distinzione tra dato insolito ed errore confermato. Vedremo poi come codici mancanti, duplicazioni, categorie incoerenti ed esclusioni possano alterare i risultati. Un piccolo esempio in R mostrerà una procedura basata su diagnosi, decisione, trasformazione e validazione. Concluderemo collegando la pulizia ai gradi di libertà del ricercatore e alla crisi della replicabilità.
+
+::: {.callout-note title="Preparazione del notebook"}
+Gli esempi usano `dplyr` e un dataset didattico costruito nel documento. Le anomalie sono intenzionali. Alcune possono essere risolte perché il testo fornisce il codebook o una verifica della fonte; altre devono rimanere segnalate finché non disponiamo di evidenza sufficiente.
 
 ```{r}
-#| label: inspect-import
-#| eval: false
+#| label: cleaning-setup
+#| message: false
+#| warning: false
 
-library(readr)
 library(dplyr)
 
-stress_raw <- read_csv("data_raw/stress_sonno.csv")
-
-glimpse(stress_raw)
+dati_grezzi <- data.frame(
+  id = c(
+    "S01", "S02", "S03", "S03",
+    "S04", "S05", "S06", "S07"
+  ),
+  data_compilazione = as.Date(c(
+    "2026-03-01", "2026-03-01",
+    "2026-03-02", "2026-03-04",
+    "2026-03-03", "2026-03-03",
+    "2026-03-04", "2026-03-05"
+  )),
+  anno = c(
+    "primo", "primo", "secondo", "secondo",
+    "terzo", "primo", "terzo", "terzo"
+  ),
+  genere = c(
+    "F", "femmina", "M", "M",
+    "F", "non indicato", "f", "maschio"
+  ),
+  stress = c(
+    7, 999, 5, 6,
+    11, 8, NA, 3
+  ),
+  sonno_ore = c(
+    6.5, 7.2, 5.8, 6.0,
+    5.1, -99, 8.0, 28
+  )
+)
 ```
-
-In questa fase non cerchiamo ancora di correggere tutto. Cerchiamo piuttosto di capire che cosa abbiamo davanti.
-
-Domande utili:
-
-- Il numero di righe è plausibile?
-- Le variabili attese sono presenti?
-- I nomi delle colonne sono comprensibili?
-- Le variabili numeriche sono state importate come numeriche?
-- Le categorie sono scritte in modo coerente?
-- Ci sono codici speciali per i valori mancanti, come `999`, `-99`, `NA`, `N/A`, `non so`?
-
-Un controllo iniziale può essere effettuato con funzioni semplici.
-
-```{r}
-#| label: inspect-basic
-#| eval: false
-
-nrow(stress_raw)
-ncol(stress_raw)
-names(stress_raw)
-summary(stress_raw)
-```
-
-Se usi pacchetti come `skimr`, puoi ottenere una panoramica più ricca.
-
-```{r}
-#| label: inspect-skim
-#| eval: false
-
-skimr::skim(stress_raw)
-```
-
-::: {.callout-note}
-## Che cosa guardare subito
-
-Durante l'ispezione iniziale presta attenzione soprattutto a:
-
-- valori mancanti;
-- valori impossibili, come `stress = 99` su una scala da 1 a 10;
-- categorie duplicate per errore, come `F`, `femmina`, `Femmina`;
-- date lette come testo;
-- variabili numeriche lette come caratteri;
-- righe duplicate;
-- colonne che contengono informazioni identificative.
 :::
 
-## Fase 2: pulisci
+## I dati grezzi possono produrre risultati plausibili e sbagliati
 
-Dopo l'ispezione si costruisce una versione pulita del dataset. La pulizia deve avvenire tramite codice, non manualmente.
+Il pericolo più evidente è un errore che interrompe il codice. Più insidioso è un dato problematico che R riesce comunque a elaborare.
 
-### Rinominare le variabili
-
-I nomi chiari riducono gli errori. È utile usare nomi brevi, descrittivi e coerenti.
+Se calcoliamo direttamente la media di `stress`, il codice `999` viene trattato come un punteggio reale:
 
 ```{r}
-#| label: clean-names
-#| eval: false
+#| label: cleaning-raw-mean
 
-stress <- stress_raw |>
-  janitor::clean_names()
+mean(
+  dati_grezzi$stress,
+  na.rm = TRUE
+)
 ```
 
-Dopo questa operazione è opportuno controllare i nuovi nomi.
+R non conosce il questionario. Dal suo punto di vista, `999` è un numero come gli altri. Il risultato è tecnicamente corretto rispetto ai valori presenti nella colonna, ma non descrive lo stress degli studenti.
+
+Lo stesso problema si verifica con `-99` nelle ore di sonno. Una statistica può quindi essere calcolata senza messaggi di errore e risultare profondamente distorta.
+
+Questo esempio chiarisce perché l'ispezione dei dati non sia una formalità. Prima di descrivere una variabile dobbiamo sapere quali valori sono possibili, quali codici possiedono un significato speciale e come la colonna è stata prodotta.
+
+## Un'anomalia è una domanda, non una correzione
+
+Un valore fuori dall'intervallo previsto segnala una discrepanza. Non ne stabilisce la causa.
+
+Il punteggio `stress = 11` è incompatibile con una scala da 1 a 10. Potrebbe derivare da un errore di trascrizione, da una regola di scoring diversa da quella documentata oppure dall'importazione della colonna sbagliata. Il valore `sonno_ore = 28` sembra implausibile come media giornaliera, ma non sappiamo ancora se rappresenti una risposta errata, una misura settimanale oppure un problema di unità.
+
+La prima operazione deve rendere visibili i casi:
 
 ```{r}
-#| label: check-names
-#| eval: false
+#| label: cleaning-flag-ranges
 
-names(stress)
-```
-
-### Eliminare informazioni identificative
-
-Se il dataset contiene nomi, indirizzi email, matricole o altre informazioni personali, queste devono essere rimosse o sostituite da identificatori anonimi prima dell'analisi.
-
-```{r}
-#| label: remove-identifiers
-#| eval: false
-
-stress <- stress |>
-  select(-email, -nome, -cognome)
-```
-
-Naturalmente questo codice è solo un esempio: le colonne da rimuovere dipendono dal dataset reale.
-
-### Gestire duplicati
-
-I duplicati non devono essere eliminati automaticamente. Bisogna prima capire perché esistono.
-
-```{r}
-#| label: check-duplicates
-#| eval: false
-
-stress |>
-  count(id) |>
-  filter(n > 1)
-```
-
-Se uno studente ha compilato il questionario due volte, dobbiamo decidere quale riga conservare. Per esempio, potremmo tenere in considerazione l'ultima compilazione.
-
-```{r}
-#| label: clean-duplicates
-#| eval: false
-
-stress <- stress |>
-  arrange(id, data_compilazione) |>
-  distinct(id, .keep_all = TRUE)
-```
-
-Questa scelta deve essere documentata. Non è sufficiente scrivere il codice, ma è necessario spiegare perché è stata presa quella decisione.
-
-### Ricodificare valori incoerenti
-
-Spesso i dati provenienti dai questionari contengono categorie scritte in modi diversi.
-
-```{r}
-#| label: recode-categories
-#| eval: false
-
-stress <- stress |>
-  mutate(
-    genere = case_when(
-      genere %in% c("F", "f", "Femmina", "femmina") ~ "femmina",
-      genere %in% c("M", "m", "Maschio", "maschio") ~ "maschio",
-      TRUE ~ "altro_o_non_indicato"
-    )
+dati_grezzi |>
+  filter(
+    stress < 1 |
+      stress > 10 |
+      sonno_ore < 0 |
+      sonno_ore > 16
   )
 ```
 
-Dopo ogni ricodifica è necessario controllare il risultato.
+Il filtro non “pulisce” nulla. Produce una lista di osservazioni che richiedono una verifica.
+
+::: {.callout-important title="Segnalare prima di modificare"}
+Un valore insolito non deve essere eliminato, troncato o sostituito soltanto perché disturba il riepilogo. L'intervento è giustificato quando possiamo collegarlo a una regola del codebook, a una verifica del dato originale o a un criterio definito dal disegno.
+:::
+
+La distinzione fondamentale è quindi tra **anomalia osservata** ed **errore confermato**. L'anomalia nasce dal confronto con un'aspettativa; l'errore richiede evidenza sulla causa.
+
+## La pulizia è un processo di inferenza
+
+Ogni decisione di pulizia contiene un ragionamento.
+
+Quando troviamo due righe con lo stesso identificatore, osserviamo una duplicazione. Per stabilire se sia un problema dobbiamo sapere che cosa rappresenta una riga. In uno studio longitudinale, identificatori ripetuti sono necessari. In un questionario trasversale con una sola compilazione prevista, possono indicare un invio ripetuto.
+
+Quando troviamo `999`, osserviamo un valore estremo. Soltanto il codebook può dirci che significa “nessuna risposta”. Quando troviamo categorie scritte in modi diversi, dobbiamo verificare che siano davvero etichette equivalenti e non categorie che il ricercatore sta unificando per comodità.
+
+La sequenza appropriata è:
+
+$$
+\text{discrepanza}
+\longrightarrow
+\text{ipotesi sulla causa}
+\longrightarrow
+\text{evidenza}
+\longrightarrow
+\text{decisione}
+\longrightarrow
+\text{controllo dell'effetto}.
+$$
+
+Chiamare tutto questo “pulizia” può farlo apparire come un lavoro di manutenzione. In realtà, è una forma di inferenza sul processo che ha generato i dati.
+
+## Correzioni sostenute dal codebook
+
+Supponiamo che il codebook specifichi che `999` nella scala di stress e `-99` nelle ore di sonno indicano risposte mancanti. In questo caso la ricodifica è giustificata:
 
 ```{r}
-#| label: check-categories
-#| eval: false
+#| label: cleaning-special-missing
 
-stress |>
-  count(genere)
-```
-
-### Gestire valori mancanti
-
-I valori mancanti sono una delle parti più delicate della pulizia dei dati. Non indicano sempre la stessa cosa. Una risposta mancante può indicare che lo studente ha saltato la domanda, che la domanda non era pertinente, che c'è stato un errore di inserimento o che il dato è stato rimosso per motivi di privacy.
-
-Prima di decidere come procedere, è necessario quantificare il problema.
-
-```{r}
-#| label: check-missing
-#| eval: false
-
-stress |>
-  summarise(across(everything(), ~ sum(is.na(.))))
-```
-
-A volte i valori mancanti sono codificati con numeri o stringhe particolari.
-
-```{r}
-#| label: recode-missing
-#| eval: false
-
-stress <- stress |>
+dati_preparati <- dati_grezzi |>
   mutate(
     stress = na_if(stress, 999),
     sonno_ore = na_if(sonno_ore, -99)
   )
 ```
 
-::: {.callout-caution}
-## Non cancellare i missing troppo presto
+Non stiamo eliminando osservazioni. Stiamo correggendo il significato informatico di due codici: da numeri apparentemente osservati a valori mancanti.
 
-Molte funzioni R eliminano automaticamente i casi con valori mancanti o richiedono opzioni come `na.rm = TRUE`.
-
-Prima di eliminare osservazioni, chiediti:
-
-- quanti casi sto perdendo?
-- i casi eliminati sono simili agli altri?
-- la perdita di dati può modificare le conclusioni?
-- devo dichiarare questa scelta nel report?
-:::
-
-Per un capitolo introduttivo è sufficiente sapere che esistono diverse strategie: l'esclusione dei casi incompleti, l'analisi dei pattern di missing, l'imputazione semplice e l'imputazione multipla. La scelta dipende dal disegno dello studio, dalla quantità di dati mancanti e dalla plausibilità delle assunzioni.
-
-In questa sede, l'aspetto più importante non è imparare una tecnica avanzata di imputazione, ma non considerare i valori mancanti come un dettaglio trascurabile.
-
-## Fase 3: valida
-
-Dopo la pulizia, è necessario verificare che il dataset rispetti vincoli plausibili.
-
-Per esempio:
-
-- `stress` deve essere compreso tra 1 e 10;
-- `qualita_sonno` deve essere compresa tra 1 e 5;
-- `sonno_ore` non deve essere negativa;
-- ogni `id` dovrebbe comparire una sola volta;
-- le categorie di `genere` dovrebbero essere quelle previste.
-
-Alcuni controlli possono essere eseguiti con semplici filtri.
+Dopo la trasformazione dobbiamo verificare il risultato:
 
 ```{r}
-#| label: validate-ranges
-#| eval: false
+#| label: cleaning-check-missing-codes
 
-stress |>
-  filter(stress < 1 | stress > 10)
-
-stress |>
-  filter(sonno_ore < 0 | sonno_ore > 16)
-```
-
-Possiamo anche sintetizzare i controlli in una piccola tabella.
-
-```{r}
-#| label: validate-summary
-#| eval: false
-
-stress |>
+dati_preparati |>
   summarise(
-    n = n(),
-    id_duplicati = n() - n_distinct(id),
-    stress_fuori_range = sum(stress < 1 | stress > 10, na.rm = TRUE),
-    sonno_fuori_range = sum(sonno_ore < 0 | sonno_ore > 16, na.rm = TRUE),
-    missing_stress = sum(is.na(stress)),
-    missing_sonno = sum(is.na(sonno_ore))
+    n_stress_mancante =
+      sum(is.na(stress)),
+    n_sonno_mancante =
+      sum(is.na(sonno_ore))
   )
 ```
 
-Per progetti più complessi, è possibile utilizzare pacchetti dedicati alla validazione dei dati. Per questo percorso introduttivo, però, è più importante acquisire l'abitudine al controllo piuttosto che conoscere molti strumenti.
+Il controllo mostra quante celle sono state ricodificate. Nel registro delle decisioni dovremmo indicare la fonte della regola, non soltanto il comando usato.
 
-## Fase 4: documenta
+## Categorie incoerenti e perdita di informazione
 
-La documentazione è parte integrante della pulizia, non un'aggiunta finale.
-
-Per ogni trasformazione importante, il report o lo script dovrebbe spiegare:
-
-| Decisione | Che cosa documentare |
-|---|---|
-| Rimozione di duplicati | Quale criterio è stato usato? |
-| Ricodifica di categorie | Quali valori sono stati uniti o rinominati? |
-| Gestione dei missing | Quanti valori mancavano? Come sono stati trattati? |
-| Esclusione di osservazioni | Quanti casi sono stati rimossi? Perché? |
-| Rimozione di identificatori | Quali informazioni personali sono state eliminate? |
-| Salvataggio del dataset pulito | Dove si trova il file finale? |
-
-Un esempio di annotazione nel report potrebbe essere il seguente.
-
-::: {.callout-note}
-## Esempio di decisione documentata
-
-Nel dataset grezzo erano presenti 3 studenti con due compilazioni del questionario. Per ciascuno di questi studenti è stata conservata la compilazione più recente, identificata tramite `data_compilazione`. Dopo questa operazione il dataset contiene una sola riga per studente.
-:::
-
-Il dataset pulito può essere salvato in `data_clean/`.
+Nel dataset, `F`, `f` e `femmina` sembrano indicare la stessa categoria; analogamente, `M` e `maschio` sembrano equivalenti. Poiché questa corrispondenza è confermata dal questionario, possiamo uniformare le etichette:
 
 ```{r}
-#| label: save-clean-data
-#| eval: false
+#| label: cleaning-recode-categories
 
-readr::write_csv(stress, "data_clean/stress_sonno_clean.csv")
+dati_preparati <- dati_preparati |>
+  mutate(
+    genere = case_when(
+      genere %in%
+        c("F", "f", "femmina") ~
+        "femmina",
+      genere %in%
+        c("M", "m", "maschio") ~
+        "maschio",
+      TRUE ~ genere
+    )
+  )
 ```
 
-## Usare l'AI con criterio
+La clausola finale conserva le categorie che non abbiamo autorizzazione a modificare. In particolare, `non indicato` non viene trasformato automaticamente in `altro`, perché le due espressioni possono avere significati differenti.
 
-L'intelligenza artificiale può essere molto utile per la pulizia dei dati. Può suggerire il codice per importare i file, individuare i duplicati, ricodificare le categorie, calcolare i valori mancanti o produrre controlli di validazione.
+```{r}
+#| label: cleaning-check-categories
 
-Tuttavia, non può decidere al posto tuo il significato di una risposta mancante, se una riga duplicata sia un errore o se un valore estremo sia impossibile o solo raro.
+dati_preparati |>
+  count(genere)
+```
 
-::: {.callout-tip}
-## Prompt utile
+Una ricodifica può sembrare innocua, ma modifica la composizione delle categorie. Il controllo dopo la trasformazione deve quindi mostrare non soltanto che il codice ha funzionato, ma anche quali frequenze ha prodotto.
 
-Puoi chiedere all'AI:
+## Duplicazioni e unità di analisi
 
-> Ho un dataset con variabili `id`, `stress`, `sonno_ore`, `qualita_sonno` e `genere`. Scrivi il codice R con `dplyr` per controllare duplicati, valori mancanti e valori fuori range. Non eliminare nulla automaticamente: produci solo tabelle di controllo.
+Nel nostro esempio `S03` compare due volte. Il protocollo stabilisce che ogni studente debba comparire una sola volta e che, in caso di invio ripetuto accidentale, venga conservata la compilazione più recente.
 
-Questo prompt è migliore di:
+Questa regola permette di applicare una trasformazione esplicita:
 
-> Pulisci il dataset.
+```{r}
+#| label: cleaning-resolve-duplicate
 
-perché chiede controlli espliciti e impedisce trasformazioni automatiche non documentate.
+dati_preparati <- dati_preparati |>
+  arrange(
+    id,
+    desc(data_compilazione)
+  ) |>
+  distinct(
+    id,
+    .keep_all = TRUE
+  )
+```
+
+L'ordinamento decrescente colloca per prima la compilazione più recente; `distinct()` conserva quella riga.
+
+Il codice non rende la regola automaticamente corretta. La sua giustificazione proviene dal protocollo. Con una domanda diversa potremmo conservare entrambe le compilazioni, confrontarle oppure escludere il partecipante. Queste alternative produrrebbero dataset differenti.
+
+Dopo la decisione controlliamo che l'unità di analisi prevista sia stata ottenuta:
+
+```{r}
+#| label: cleaning-check-duplicate
+
+dati_preparati |>
+  summarise(
+    n_righe = n(),
+    n_id = n_distinct(id),
+    duplicazioni =
+      n() - n_distinct(id)
+  )
+```
+
+## I valori mancanti possono cambiare la popolazione osservata
+
+Dopo avere ricodificato i codici speciali, alcune righe non possiedono entrambe le misure. Una soluzione rapida consiste nel conservare soltanto i casi completi:
+
+```r
+dati_completi <- dati_preparati |>
+  filter(
+    !is.na(stress),
+    !is.na(sonno_ore)
+  )
+```
+
+Il codice è semplice. La decisione non lo è.
+
+Se la probabilità di avere dati completi differisce tra gruppi, il nuovo campione può rappresentare una popolazione diversa. Nel dataset didattico possiamo controllare la completezza per anno:
+
+```{r}
+#| label: cleaning-completeness-by-group
+
+dati_preparati |>
+  mutate(
+    completo =
+      complete.cases(
+        stress,
+        sonno_ore
+      )
+  ) |>
+  count(
+    anno,
+    completo
+  )
+```
+
+Se gli studenti del primo anno hanno più valori mancanti, l'analisi dei soli casi completi li rappresenterà meno. Le stime non saranno distorte soltanto perché il campione è più piccolo; potranno esserlo perché il meccanismo che determina l'assenza dei dati è collegato alle caratteristiche che vogliamo studiare.
+
+::: {.callout-warning title="La completezza non è neutralità"}
+L'eliminazione dei casi incompleti non “toglie soltanto i mancanti”. Separa le persone che hanno fornito tutte le informazioni da quelle che non le hanno fornite. Prima di procedere dobbiamo chiederci se questa separazione sia plausibilmente irrilevante per la domanda.
 :::
 
-Dopo aver ricevuto il codice dall'AI, controlla sempre:
+In un capitolo introduttivo non è necessario scegliere subito una tecnica avanzata per i dati mancanti. È necessario evitare che l'esclusione avvenga in modo silenzioso e descrivere come cambia il campione.
 
-- quali righe vengono eliminate;
-- quali variabili vengono trasformate;
-- quali valori vengono ricodificati;
-- se i missing vengono rimossi senza avviso;
-- se il codice modifica i dati grezzi;
-- se il risultato viene salvato in un nuovo file.
+## Valori estremi: errore, rarità o parte della popolazione?
 
-## Checklist finale
+La pulizia viene talvolta descritta come eliminazione degli *outlier*. Questa formulazione è pericolosa perché confonde una posizione statistica con un errore.
 
-Prima di passare all'analisi esplorativa vera e propria, verifica che:
+Una persona può avere un punteggio molto lontano dagli altri e appartenere comunque alla popolazione di interesse. Eliminandola, rendiamo il campione più omogeneo ma forse meno rappresentativo. In psicologia clinica, del lavoro o dello sviluppo, proprio i casi rari possono essere sostantivamente importanti.
 
-- i dati grezzi siano conservati senza modifiche;
-- il dataset pulito sia stato prodotto tramite codice;
-- i nomi delle variabili siano chiari e coerenti;
-- i tipi di dato siano appropriati;
-- i duplicati siano stati controllati;
-- i valori mancanti siano stati quantificati;
-- i valori fuori range siano stati identificati;
-- eventuali esclusioni o ricodifiche siano documentate;
-- il dataset pulito sia salvato in una cartella separata;
-- il report permetta a un'altra persona di ricostruire il processo.
+Un valore estremo dovrebbe quindi attivare tre domande narrative. È possibile secondo lo strumento di misura? È coerente con le altre informazioni sulla stessa osservazione? La conclusione cambia se lo includiamo oppure lo escludiamo?
 
-::: {.callout-important}
-## Messaggio chiave
+L'ultima domanda introduce l'**analisi di sensibilità**. Quando più decisioni sono ragionevoli, possiamo mostrare come cambiano le descrizioni sotto alternative trasparenti, invece di scegliere in segreto quella che produce il risultato preferito.
 
-Pulire i dati non significa renderli "belli" o eliminare ciò che disturba. Significa costruire un dataset che sia coerente con la domanda di ricerca, controllabile da altri e adatto alle analisi successive.
+Nel nostro esempio, `stress = 11` e `sonno_ore = 28` rimangono segnalati finché non controlliamo la fonte. Non devono entrare nelle statistiche come se fossero valori validi, ma non devono neppure essere corretti per intuizione.
+
+## Dalla verifica della fonte alla correzione
+
+Supponiamo di tornare ai questionari originali. Verifichiamo che per `S04` il valore corretto dello stress sia `1`, mentre per `S07` le ore di sonno siano `8`, non `28`.
+
+A questo punto la correzione può essere espressa nel codice:
+
+```{r}
+#| label: cleaning-source-verified-corrections
+
+dati_preparati <- dati_preparati |>
+  mutate(
+    stress = if_else(
+      id == "S04" &
+        stress == 11,
+      1,
+      stress
+    ),
+    sonno_ore = if_else(
+      id == "S07" &
+        sonno_ore == 28,
+      8,
+      sonno_ore
+    )
+  )
+```
+
+La condizione identifica in modo preciso le celle corrette. Nel registro scriveremo che i valori sono stati verificati sulla fonte originale.
+
+Una correzione manuale nel file avrebbe potuto produrre lo stesso dataset, ma avrebbe cancellato la storia della decisione. Il codice conserva invece la relazione tra valore osservato, evidenza e intervento.
+
+## Validare significa confrontare prima e dopo
+
+La pulizia non termina quando il codice viene eseguito. Dobbiamo verificare che il dataset risultante rispetti le aspettative e che le trasformazioni non abbiano prodotto conseguenze inattese.
+
+```{r}
+#| label: cleaning-final-validation
+
+dati_preparati |>
+  summarise(
+    n_righe = n(),
+    n_id = n_distinct(id),
+    stress_fuori_intervallo =
+      sum(
+        stress < 1 |
+          stress > 10,
+        na.rm = TRUE
+      ),
+    sonno_fuori_intervallo =
+      sum(
+        sonno_ore < 0 |
+          sonno_ore > 16,
+        na.rm = TRUE
+      ),
+    stress_mancante =
+      sum(is.na(stress)),
+    sonno_mancante =
+      sum(is.na(sonno_ore))
+  )
+```
+
+Questo controllo risponde a domande locali. Per valutare l'effetto complessivo dobbiamo confrontare anche numerosità e composizione:
+
+```{r}
+#| label: cleaning-before-after
+
+data.frame(
+  versione = c(
+    "grezzi",
+    "preparati"
+  ),
+  n_righe = c(
+    nrow(dati_grezzi),
+    nrow(dati_preparati)
+  ),
+  n_id = c(
+    dplyr::n_distinct(
+      dati_grezzi$id
+    ),
+    dplyr::n_distinct(
+      dati_preparati$id
+    )
+  )
+)
+```
+
+In un progetto reale confronteremmo anche distribuzioni, frequenze dei gruppi e percentuali di dati mancanti. La domanda è se il cambiamento osservato corrisponda esattamente alle decisioni documentate.
+
+## Pulizia, flessibilità analitica e crisi della replicabilità
+
+La crisi della replicabilità ha mostrato che risultati scientifici fragili non derivano soltanto da errori statistici finali. Possono nascere lungo l'intero percorso che conduce dai dati grezzi al risultato pubblicato.
+
+La pulizia offre molti **gradi di libertà del ricercatore**. Possiamo scegliere quale duplicato conservare, quale soglia definisca un valore anomalo, quanti item mancanti siano accettabili, quali partecipanti escludere e come costruire un punteggio. Molte alternative possono apparire ragionevoli considerate singolarmente.
+
+Il problema emerge quando le decisioni vengono prese dopo avere osservato il loro effetto sul risultato e soltanto il percorso finale viene riportato. Non è necessaria la frode. È sufficiente una successione di scelte flessibili, influenzate dalle aspettative, perché l'analisi finisca per favorire un pattern particolare.
+
+Questo problema è discusso nel manuale e nel Companion nel quadro della crisi della replicabilità e dei *researcher degrees of freedom*. Qui ne ricaviamo una conseguenza operativa: i criteri di pulizia dovrebbero essere definiti prima di osservare gli esiti principali quando ciò è possibile; le decisioni emerse successivamente devono essere registrate; le alternative ragionevoli dovrebbero essere confrontate con analisi di sensibilità.
+
+La riproducibilità del codice è necessaria ma non sufficiente. Un criterio arbitrario può essere applicato in modo perfettamente riproducibile. Occorre rendere riproducibile anche la **giustificazione** della scelta.
+
+## Un registro delle decisioni
+
+Il registro può essere breve, purché colleghi ogni intervento alla sua evidenza.
+
+| Problema osservato | Evidenza utilizzata | Decisione | Effetto verificato |
+|---|---|---|---|
+| `999` in `stress` | Codebook | Ricodificato come `NA` | Aumenta di uno il conteggio dei mancanti |
+| Due righe per `S03` | Protocollo e date | Conservata la compilazione più recente | Una riga per identificatore |
+| `stress = 11` per `S04` | Questionario originale | Corretto in `1` | Nessun valore fuori intervallo |
+| `sonno_ore = 28` per `S07` | Questionario originale | Corretto in `8` | Nessun valore fuori intervallo |
+
+Questa tabella non sostituisce il codice. Il codice mostra *come* è avvenuta la trasformazione; il registro spiega *perché*.
+
+## Usare l'AI come assistente alla diagnosi
+
+Una richiesta generica come «pulisci il dataset» delega all'assistente decisioni che non può giustificare. L'AI potrebbe eliminare duplicati, convertire valori fuori intervallo in mancanti o unire categorie basandosi soltanto sulla loro apparenza.
+
+È preferibile separare diagnosi e intervento.
+
+::: {.callout-tip title="Un prompt per diagnosticare senza modificare"}
+> Ho un data frame chiamato `dati_grezzi`, con una riga prevista per studente. Le variabili `stress` e `sonno_ore` dovrebbero variare rispettivamente da 1 a 10 e da 0 a 16. Il codebook indica `999` come mancante per `stress` e `-99` come mancante per `sonno_ore`.
+>
+> Non modificare il dataset. Scrivi codice R semplice che segnali identificatori ripetuti, codici mancanti speciali, valori fuori intervallo e grafie differenti delle categorie. Per ogni controllo mostra le righe coinvolte e il loro numero. Distingui ciò che può essere ricodificato usando il codebook da ciò che richiede una verifica della fonte.
 :::
 
-## Collegamento con il capitolo successivo
+Dopo avere verificato i problemi, una seconda richiesta può chiedere trasformazioni specifiche. Il prompt dovrebbe indicare quale evidenza autorizza ciascuna modifica, chiedere di conservare `dati_grezzi` e creare un nuovo oggetto, e richiedere un confronto prima--dopo.
 
-Nel prossimo capitolo useremo il dataset pulito per iniziare l'analisi esplorativa vera e propria. Inizieremo analizzando una variabile alla volta: distribuzioni, frequenze, valori mancanti, valori inattesi e primi segnali di struttura nei dati.
+Quando l'AI propone di escludere osservazioni, la domanda decisiva è:
 
+> Come cambia la composizione del campione, e quali gruppi vengono rappresentati meno?
 
+## Riflessioni conclusive {.unnumbered .unlisted}
+
+I dati grezzi non sono immediatamente utilizzabili perché conservano tracce del processo di raccolta: codici speciali, errori, duplicazioni, mancate risposte e differenze di formato. Ignorare questi aspetti può produrre statistiche fortemente distorte. Eliminarli in modo automatico può produrre un problema diverso: un campione più ordinato ma meno rappresentativo.
+
+La pulizia richiede quindi un equilibrio. Dobbiamo intervenire abbastanza da rendere i dati coerenti con il disegno e la misurazione, ma non così liberamente da trasformarli nella forma che preferiamo.
+
+Ogni anomalia deve essere prima resa visibile. La causa deve essere ricostruita attraverso codebook, protocollo o fonte originale. La trasformazione deve essere espressa nel codice e il suo effetto deve essere quantificato. Quando più scelte sono ragionevoli, l'analisi di sensibilità è più informativa di una decisione nascosta.
+
+Questo modo di lavorare risponde direttamente alle lezioni della crisi della replicabilità. Riduce la flessibilità non dichiarata e permette ad altri di comprendere non soltanto quali dati siano stati analizzati, ma perché il dataset abbia assunto quella forma.
+
+Nel capitolo successivo potremo finalmente descrivere le variabili. Le statistiche e i grafici avranno significato soltanto perché il percorso dai dati grezzi al dataset analitico è stato reso esplicito.
+
+## Esercizi {.unnumbered .unlisted}
+
+1. Spiega perché `999` può produrre una media sintatticamente corretta ma scientificamente priva di significato.
+
+2. Un identificatore compare tre volte. Descrivi due disegni nei quali la ripetizione avrebbe significati differenti e richiederebbe decisioni diverse.
+
+3. Una scala da 0 a 40 contiene il valore `44`. Quali fonti controlleresti prima di trasformarlo in `NA`?
+
+4. L'esclusione dei casi incompleti riduce il campione da 300 a 210 persone. Quali confronti useresti per valutare se il campione rimanente sia ancora rappresentativo di quello reclutato?
+
+5. L'AI unifica automaticamente `"altro"`, `"non indicato"` e `"preferisco non rispondere"`. Perché questa trasformazione può essere problematica?
+
+6. Scrivi una voce del registro delle decisioni per una correzione verificata sul questionario originale.
+
+7. Due regole plausibili per costruire un punteggio producono campioni di numerosità diversa. Come useresti un'analisi di sensibilità?
+
+8. Formula un prompt che chieda all'AI di diagnosticare problemi nei dati senza eliminare, correggere o ricodificare automaticamente alcun valore.
+
+::: {.callout-tip title="Soluzioni" collapse="true"}
+1. R tratta `999` come un normale numero se non riceve informazioni sul suo significato. Il calcolo è coerente con i valori memorizzati, ma il codice speciale non rappresenta il costrutto misurato e distorce la statistica.
+
+2. In uno studio trasversale con una sola risposta prevista, le tre righe possono indicare invii duplicati. In uno studio longitudinale possono rappresentare tre momenti programmati. Nel primo caso occorre una regola per risolvere la duplicazione; nel secondo servono identificatore e variabile temporale.
+
+3. Controllerei il codebook, l'intervallo teorico e quello effettivamente usato nella versione del questionario, il file originale e l'eventuale procedura di scoring. Verificherei inoltre che la colonna importata sia quella corretta.
+
+4. Confronterei gruppi, età e altre variabili disponibili tra casi completi e incompleti. Esaminerei dove si concentrano i mancanti e se la probabilità di completezza è associata alle variabili centrali dello studio.
+
+5. Le etichette possono rappresentare scelte differenti. Unificarle perde informazione e può alterare la composizione delle categorie senza una giustificazione nel questionario o nel protocollo.
+
+6. La voce dovrebbe indicare il valore osservato, la fonte consultata, il valore corretto, la riga interessata e il controllo eseguito dopo la trasformazione.
+
+7. Applicherei entrambe le regole in versioni separate del dataset e confronterei numerosità, distribuzioni e risultati. Una conclusione che cambia molto tra regole ragionevoli deve essere presentata come sensibile alla scelta di scoring.
+
+8. Il prompt dovrebbe specificare unità di analisi, intervalli, codici speciali e variabili centrali. Dovrebbe chiedere tabelle con righe coinvolte e numerosità, distinguere problemi risolvibili dal codebook da problemi che richiedono verifica e vietare modifiche al dataset.
+:::
+
+::: {.callout-note title="Punti chiave" collapse="true"}
+- I dati grezzi possono produrre risultati tecnicamente validi ma scientificamente distorti.
+- Un'anomalia segnala una domanda; non autorizza automaticamente una correzione.
+- La causa deve essere ricostruita mediante codebook, protocollo o fonte originale.
+- Duplicati e valori estremi devono essere interpretati alla luce del disegno.
+- I casi completi possono rappresentare una popolazione diversa dal campione reclutato.
+- La pulizia modifica il dataset e deve essere valutata confrontando prima e dopo.
+- Le scelte di pulizia costituiscono gradi di libertà del ricercatore.
+- Codice riproducibile e giustificazione trasparente sono entrambi necessari.
+- Le alternative ragionevoli possono essere confrontate con analisi di sensibilità.
+- L'AI dovrebbe diagnosticare e implementare decisioni confermate, non inventarle.
+:::
+
+::: {.callout-note title="Ambiente di sviluppo" collapse="true"}
+Il capitolo usa `dplyr`. Le informazioni sulla sessione possono essere ottenute con:
+
+```{r}
+#| echo: true
+
+sessionInfo()
+```
+:::

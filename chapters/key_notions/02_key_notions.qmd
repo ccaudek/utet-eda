@@ -1,114 +1,84 @@
 # Concetti chiave {#sec-key-notions}
 
-::: {.callout-note appearance="minimal"}
-Prima di utilizzare R, costruire grafici o stimare modelli, è necessario chiarire la natura dei dati che analizziamo. In psicologia, i dati non sono numeri neutri, ma osservazioni prodotte da una domanda di ricerca, da un disegno di studio, da strumenti di misura e da decisioni operative. Questo capitolo introduce il lessico minimo per passare da un fenomeno psicologico a una matrice di dati interpretabile.
+::: {.callout-note title="In sintesi"}
+Prima di usare R, costruire grafici o stimare modelli, bisogna chiarire che cosa rappresentano i dati. In psicologia, i numeri non sono osservazioni neutrali: derivano da una domanda di ricerca, da un disegno, da strumenti di misura e da decisioni operative. Questo capitolo introduce il lessico necessario per passare da un fenomeno psicologico a una matrice di dati interpretabile.
 :::
 
-L'obiettivo del capitolo non è ancora quello di insegnare tecniche di analisi. Prima di calcolare una media, disegnare un istogramma o stimare un modello, è necessario porsi le seguenti domande:
+## Introduzione {.unnumbered .unlisted}
 
-- quale fenomeno vogliamo comprendere;
-- quali persone, situazioni o risposte abbiamo osservato;
-- quali variabili rappresentano il fenomeno;
-- a quale popolazione vorremmo generalizzare.
-- quali fonti di variabilità, errore e bias sono presenti nei dati.
-- cosa possiamo descrivere, stimare o inferire in modo giustificato.
+Quando si apre un dataset, è naturale guardare subito le colonne, calcolare qualche statistica descrittiva o produrre un grafico. Dal punto di vista scientifico, però, l'analisi comincia prima del file. Occorre capire quale fenomeno si vuole studiare, quali unità sono state osservate, come sono state definite le variabili e a quale popolazione si vorrebbero riferire le conclusioni.
 
-Il filo conduttore del capitolo è semplice: i dati acquistano significato solo quando sappiamo da dove provengono e cosa rappresentano. Questo concetto sarà presente anche nei capitoli successivi, dedicati al disegno di ricerca, alla misurazione, all'esplorazione dei dati e alla modellazione.
+Il filo conduttore del capitolo è semplice: i dati acquistano significato soltanto quando sappiamo da dove provengono e che cosa rappresentano. Questa idea accompagnerà l'intero percorso, dal disegno di ricerca alla misurazione, dalla preparazione dei dati all'analisi esplorativa e, infine, alla costruzione dei modelli.
 
-::: {.callout-note collapse=true title="Statistica"}
-Il termine *statistica* può indicare due cose diverse.
+::: {.callout-note title="Due significati di statistica" collapse="true"}
+Il termine *statistica* può indicare sia la disciplina che studia come raccogliere, organizzare, analizzare e interpretare i dati, sia un valore numerico calcolato su un campione, come una media, una deviazione standard o una correlazione.
 
-1. La statistica è la disciplina che studia i metodi per raccogliere, organizzare, analizzare, interpretare e comunicare i dati.
-2. Con il termine "statistica" si indica anche un valore numerico calcolato su un campione, come la media campionaria, la deviazione standard campionaria o la correlazione campionaria.
-
-Nel primo senso, la statistica è un metodo di ragionamento sui dati. Nel secondo senso, una statistica è un riassunto numerico dei dati osservati.
+Nel primo senso, la statistica è un metodo di ragionamento. Nel secondo, una statistica è un riassunto dei dati osservati.
 :::
 
-### Panoramica del capitolo {.unnumbered .unlisted}
+::: {.callout-tip title="Prerequisiti"}
+Non sono richieste conoscenze tecniche di statistica o di R. È sufficiente avere familiarità con domande empiriche tipiche della psicologia, per esempio se lo stress accademico sia associato alla qualità del sonno oppure se un intervento riduca i sintomi d'ansia.
 
-In questo capitolo imparerai a:
+Per un approfondimento facoltativo si possono consultare *Horoscopes*, discusso nell'ultimo capitolo di @McElreath_rethinking, e *The Effect: An Introduction to Research Design and Causality*, in particolare il capitolo dedicato ai treatment effects.
+:::
 
-- distinguere fenomeni, domande di ricerca, dati e variabili;
-- riconoscere unità statistiche, osservazioni e matrici di dati;
-- distinguere popolazione, campione, parametro e statistica;
-- comprendere perché il campione introduce incertezza;
-- riconoscere alcune fonti di bias nella raccolta dei dati;
-- distinguere descrizione, stima e inferenza;
-- capire perché un'associazione osservata non è automaticamente una relazione causale.
+## Panoramica del capitolo {.unnumbered .unlisted}
 
-::: {.callout-tip collapse=true title="Prerequisiti"}
-Per seguire questo capitolo non sono richieste conoscenze tecniche di statistica o di R. È sufficiente avere familiarità con il modo in cui in psicologia si formulano domande empiriche, per esempio: *lo stress accademico è associato alla qualità del sonno?* oppure *un intervento riduce i sintomi d'ansia?*
+Il capitolo segue il percorso che trasforma un fenomeno in dati analizzabili. Partiremo dalla domanda di ricerca, distingueremo unità statistiche, osservazioni e variabili, chiariremo il rapporto tra popolazione e campione e introdurremo parametri, statistiche, variabilità e bias. Nella parte finale distingueremo descrizione, stima e inferenza e vedremo perché un'associazione osservata non autorizza automaticamente una conclusione causale.
 
-Letture facoltative per chi desidera approfondire:
-
-- [Horoscopes](../../figures/horoscopes.pdf), discusso nell'ultimo capitolo di @McElreath_rethinking;
-- *The Effect: An Introduction to Research Design and Causality*, in particolare il capitolo sui treatment effects.
+::: {.callout-note title="Preparazione del notebook"}
+Questo capitolo è concettuale e non richiede di eseguire codice. Gli esempi preparano però il vocabolario che useremo nei capitoli su R, sulla struttura dei dataset e sull'analisi esplorativa.
 :::
 
 ## Perché partire dai concetti chiave
 
-Quando ci troviamo di fronte a un dataset, è facile pensare che l'analisi inizi dal file: lo apriamo, controlliamo le colonne, calcoliamo qualche statistica descrittiva e produciamo un grafico. Dal punto di vista scientifico, però, l'analisi inizia prima.
+Un dataset è il risultato di una sequenza di decisioni. Un fenomeno viene considerato rilevante, trasformato in una domanda di ricerca e collegato a persone, situazioni o comportamenti osservabili. Le osservazioni vengono poi registrate come variabili e organizzate in una matrice di dati. Soltanto a quel punto possono essere descritte, esplorate e usate per costruire inferenze.
 
-Un dataset è il risultato di una serie di passaggi:
-
-1. un fenomeno viene considerato rilevante;
-2. il fenomeno viene trasformato in una domanda di ricerca;
-3. la domanda suggerisce quali persone, situazioni o comportamenti osservare;
-4. le osservazioni vengono registrate come variabili;
-5. le variabili vengono organizzate in una matrice di dati;
-6. la matrice viene descritta, esplorata e, eventualmente, utilizzata per costruire inferenze.
-
-Ogni passaggio introduce delle scelte. Alcune riguardano il disegno dello studio, altre la misurazione e altre ancora il modo in cui i dati vengono codificati e analizzati. Per questo motivo, i dati non sono mai completamente indipendenti dal contesto in cui sono stati prodotti [@Johnson2022bayesrules].
+Ogni passaggio introduce delle scelte. Alcune riguardano il disegno dello studio, altre la misurazione, altre ancora il modo in cui i dati vengono codificati e analizzati. I dati non sono quindi indipendenti dal contesto in cui sono stati prodotti [@Johnson2022bayesrules].
 
 ::: {.callout-important title="Idea guida"}
-Una buona analisi dei dati non inizia con una tecnica, ma con una domanda: "Che cosa rappresentano questi dati e quale conclusione possono sostenere?".
+Una buona analisi non inizia chiedendosi quale tecnica applicare, ma che cosa rappresentino i dati e quali conclusioni possano sostenere.
 :::
 
 ## Un esempio guida: stress accademico e sonno
 
-Useremo come esempio ricorrente una domanda semplice:
+Useremo come esempio ricorrente una domanda apparentemente semplice:
 
 > Gli studenti universitari che riportano livelli più alti di stress accademico dormono peggio?
 
-Questa domanda può sembrare immediata, ma in realtà nasconde molte decisioni implicite.
+Per trasformarla in uno studio bisogna precisare diversi aspetti. La popolazione potrebbe comprendere gli studenti di un singolo corso, di un ateneo o tutti gli studenti universitari. Lo stress accademico potrebbe indicare il carico di studio, la pressione percepita o l'ansia da prestazione. Anche *dormire peggio* può riferirsi a meno ore di sonno, a una qualità soggettiva inferiore o a un maggior numero di risvegli.
 
-- A quali studenti ci riferiamo? Gli studenti di un corso specifico, di una facoltà, di un ateneo o gli studenti universitari in generale?
-- Che cosa intendiamo per "stress accademico"? Numero di esami, pressione percepita, ansia da prestazione o carico di studio?
-- Che cosa intendiamo per "dormire peggio"? Meno ore di sonno, peggiore qualità del sonno, più risvegli notturni?
-- Come raccogliamo i dati? Con un questionario, un diario del sonno o un dispositivo indossabile?
-- Vogliamo solo descrivere un'associazione o vogliamo sostenere che lo stress provoca un peggioramento del sonno?
+La modalità di raccolta modifica ulteriormente il significato dei dati. Un questionario, un diario del sonno e un dispositivo indossabile non producono osservazioni equivalenti. Infine, occorre stabilire se lo scopo sia descrivere un'associazione oppure sostenere che lo stress provochi un peggioramento del sonno.
 
-Il passaggio da una domanda apparentemente semplice a un dataset richiede dunque molte specificazioni. Questo è particolarmente importante in psicologia, dove spesso studiamo costrutti non osservabili direttamente, come lo stress, l'ansia, l'autostima, il benessere e la motivazione.
+Il passaggio da una domanda intuitiva a un dataset richiede dunque molte specificazioni. Questo è particolarmente importante in psicologia, dove si studiano spesso costrutti che non sono osservabili direttamente, come stress, ansia, autostima, benessere e motivazione.
 
 ## Fenomeni, domande e dati
 
-Un *fenomeno* è qualcosa che vogliamo comprendere: un comportamento, un processo mentale, una differenza tra gruppi, un cambiamento nel tempo o una relazione tra variabili. Una *domanda di ricerca* traduce il fenomeno in una forma osservabile e discutibile empiricamente.
+Un *fenomeno* è qualcosa che vogliamo comprendere: un comportamento, un processo mentale, una differenza tra gruppi, un cambiamento nel tempo o una relazione tra variabili. Una *domanda di ricerca* traduce quel fenomeno in una forma che può essere discussa empiricamente.
 
-Nel nostro esempio, il fenomeno generale è il rapporto tra vita accademica e benessere. Una possibile domanda empirica potrebbe essere: "Esiste un'associazione tra lo stress accademico percepito e la qualità del sonno?"
+Nel nostro esempio, il fenomeno generale riguarda il rapporto tra vita accademica e benessere. Una domanda empirica potrebbe chiedere se esista un'associazione tra stress accademico percepito e qualità del sonno.
 
-I *dati* sono le osservazioni raccolte per rispondere a questa domanda. Questi dati possono essere numeri, categorie, risposte testuali, tempi di reazione, punteggi di questionari, scelte comportamentali o misure fisiologiche. Ciò che rende i dati scientificamente utili non è il fatto che siano numerici, ma il fatto che siano collegati a una domanda e raccolti con procedure esplicite.
+I *dati* sono le osservazioni raccolte per affrontare la domanda. Possono essere numeri, categorie, risposte testuali, tempi di reazione, punteggi di questionari, scelte comportamentali o misure fisiologiche. Ciò che li rende scientificamente utili non è il fatto che siano numerici, ma il collegamento con una domanda e una procedura di raccolta esplicita.
 
 ::: {.callout-tip title="Errore comune"}
-Un errore frequente è pensare che un numero sia automaticamente più scientifico di una descrizione verbale. In realtà, un numero è utile solo se sappiamo cosa rappresenta, come è stato ottenuto e quali limiti interpretativi comporta.
+Un numero non è automaticamente più scientifico di una descrizione verbale. Diventa informativo soltanto quando sappiamo che cosa rappresenta, come è stato ottenuto e quali limiti interpretativi comporta.
 :::
 
 ## Unità statistiche, osservazioni e variabili
 
-Per organizzare i dati, dobbiamo distinguere tre elementi:
+L'*unità statistica* è l'entità sulla quale vengono raccolte le informazioni. In molti studi psicologici coincide con una persona, ma può essere anche una coppia, una classe, una seduta terapeutica, una risposta a un item, una prova sperimentale o un gruppo.
 
-- l'unità statistica, ovvero l'entità su cui raccogliamo le informazioni; In molti studi psicologici, l'unità è una persona, ma può anche essere una coppia, una classe, una seduta terapeutica, una risposta a un item, una prova sperimentale o un gruppo.
-- Un'osservazione è un'informazione registrata su un'unità statistica.
-- Una variabile è una caratteristica che può assumere valori diversi da un'unità all'altra o da un'occasione di misura all'altra.
+Un'*osservazione* è un'informazione registrata su una determinata unità. Una *variabile* è invece una caratteristica che può assumere valori diversi tra unità o tra occasioni di misura.
 
-Nel nostro esempio, le unità statistiche potrebbero essere gli studenti. Per ciascuno di essi, potremmo osservare il punteggio di stress, le ore di sonno, la qualità soggettiva del sonno, l'età, il genere, il corso di laurea e il numero di esami imminenti.
+Nello studio su stress e sonno, le unità potrebbero essere gli studenti. Per ciascuno potremmo osservare il punteggio di stress, le ore di sonno, la qualità soggettiva del sonno, l'età, il genere, il corso di laurea e il numero di esami imminenti.
 
 ::: {.callout-note title="Esempio"}
-Se osserviamo 120 studenti e registriamo per ciascuno di essi il livello di stress percepito, le ore di sonno e la qualità del sonno, abbiamo 120 unità statistiche. Le colonne del dataset rappresentano le variabili. Ogni riga rappresenta, di norma, uno studente.
+Se osserviamo 120 studenti e registriamo per ciascuno stress percepito, ore di sonno e qualità del sonno, abbiamo 120 unità statistiche. In una tabella ordinaria ogni riga rappresenta uno studente e ogni colonna una variabile.
 :::
 
 ## La matrice dei dati
 
-Nella maggior parte delle analisi introduttive, i dati vengono organizzati in una *matrice dei dati*, ovvero una tabella in cui le righe rappresentano le unità statistiche e le colonne rappresentano le variabili.
+Nelle analisi introduttive, i dati sono spesso organizzati in una tabella in cui le righe rappresentano le unità statistiche e le colonne le variabili.
 
 | id_studente | stress | ore_sonno | qualita_sonno | genere | esami_imminenti |
 |---:|---:|---:|---:|:---|---:|
@@ -116,192 +86,152 @@ Nella maggior parte delle analisi introduttive, i dati vengono organizzati in un
 | 2 | 27 | 5.0 | 2 | M | 4 |
 | 3 | 11 | 7.5 | 4 | F | 1 |
 
-Questa forma tabellare è alla base di molte operazioni in R: la selezione delle colonne, il filtraggio delle righe, il calcolo delle statistiche descrittive, la produzione di grafici e la costruzione di modelli. Tuttavia, una matrice ordinata non garantisce che i dati siano adeguati alla domanda. Prima di procedere con l'analisi, è necessario verificare che le variabili siano state definite in modo chiaro, che le osservazioni siano affidabili e che il campione sia rappresentativo della popolazione di riferimento.
+Questa struttura è alla base di molte operazioni in R: selezionare colonne, filtrare righe, calcolare statistiche descrittive, costruire grafici e stimare modelli. Una tabella ben ordinata, tuttavia, non garantisce che i dati siano adeguati alla domanda. Le variabili devono essere definite con chiarezza, le osservazioni devono avere una qualità sufficiente e il campione deve essere pertinente rispetto alla popolazione di interesse.
 
 ::: {.callout-tip title="Collegamento con R"}
-Nei capitoli su R e su `dplyr`, una matrice di dati verrà trattata come un oggetto su cui eseguire diverse operazioni: selezione, filtrazione, trasformazione, raggruppamento e riassunzione. In questo caso, ci interessa soprattutto il significato scientifico di righe e colonne.
+Nei capitoli su R e `dplyr` la matrice dei dati diventerà un oggetto da selezionare, filtrare, trasformare, raggruppare e riassumere. Qui interessa soprattutto il significato scientifico delle righe e delle colonne.
 :::
 
 ## Popolazione e campione
 
-La *popolazione* è l'insieme delle unità a cui vorremmo riferire le nostre conclusioni. Il *campione* è l'insieme delle unità che abbiamo effettivamente osservato.
+La *popolazione* è l'insieme delle unità alle quali vorremmo riferire le conclusioni. Il *campione* è l'insieme delle unità effettivamente osservate.
 
-Nel nostro esempio, la popolazione potrebbe essere costituita da:
+Nel nostro esempio, la popolazione potrebbe comprendere gli studenti di uno specifico corso, tutti gli studenti di un ateneo oppure una popolazione universitaria più ampia. Queste formulazioni non sono equivalenti. Se i dati provengono soltanto dagli studenti di un singolo corso, non è automatico che il risultato descriva tutti gli studenti universitari.
 
-- tutti gli studenti del corso;
-- tutti gli studenti di un ateneo.
-- tutti gli studenti universitari italiani.
-- tutti gli studenti universitari in generale.
-
-Queste alternative non sono equivalenti. Se si raccolgono dati solo tra gli studenti di un singolo corso, sarà difficile sostenere che i risultati siano automaticamente validi per tutti gli studenti universitari. La qualità del passaggio dal campione alla popolazione dipende dal modo in cui il campione è stato formato.
+La qualità del passaggio dal campione alla popolazione dipende dal modo in cui il campione è stato formato.
 
 ::: {.callout-important title="Generalizzazione"}
-Generalizzare significa usare ciò che abbiamo osservato in un campione per trarre conclusioni su una popolazione più ampia. Questa operazione è sempre delicata: un campione di grandi dimensioni non è necessariamente rappresentativo e un campione non rappresentativo può produrre conclusioni fuorvianti.
+Generalizzare significa usare ciò che abbiamo osservato nel campione per ragionare su una popolazione più ampia. Un campione numeroso non è necessariamente rappresentativo, e un campione non rappresentativo può produrre conclusioni molto precise ma fuorvianti.
 :::
 
 ### Campioni e rappresentatività
 
-Un *campione* è rappresentativo quando riflette, rispetto agli aspetti rilevanti per la domanda di ricerca, la popolazione di interesse. In pratica, molti studi psicologici utilizzano campioni di convenienza, come gli studenti reclutati durante le lezioni, i volontari online o i partecipanti disponibili in un determinato contesto. Questi campioni possono rivelarsi utili, soprattutto nelle fasi esplorative, ma limitano la validità delle generalizzazioni.
+Un campione è rappresentativo quando riflette la popolazione rispetto agli aspetti rilevanti per la domanda. In psicologia sono frequenti i campioni di convenienza, composti per esempio da studenti reclutati durante le lezioni, volontari online o persone disponibili in un contesto specifico.
 
-Il punto non è evitare sempre i campioni di convenienza. Il punto è dichiarare con precisione quali conclusioni è possibile trarre e quali no.
+Questi campioni possono essere utili, soprattutto nelle fasi esplorative, ma limitano le generalizzazioni. Il punto non è escluderli sempre, bensì dichiarare con precisione quali conclusioni consentano e quali no.
 
 ## Parametri e statistiche
 
-Un *parametro* è una caratteristica numerica della popolazione. Una *statistica* è una caratteristica numerica calcolata sul campione.
+Un *parametro* è una caratteristica numerica della popolazione. Una *statistica* è una quantità numerica calcolata sul campione.
 
-Per esempio, immaginiamo di voler conoscere la media delle ore di sonno degli studenti universitari italiani durante la sessione d'esame. Questa media nella popolazione è un parametro. Se raccogliamo i dati di 120 studenti e calcoliamo la media delle ore di sonno nel campione, otterremo una statistica.
+Immaginiamo di voler conoscere la media delle ore di sonno degli studenti universitari italiani durante la sessione d'esame. La media nella popolazione è un parametro. Se osserviamo 120 studenti e calcoliamo la loro media, otteniamo una statistica campionaria.
 
 ::: {.callout-note title="Parametro e statistica"}
-Il parametro è ciò che vorremmo conoscere nella popolazione. La statistica è ciò che possiamo calcolare a partire dai dati osservati. L'inferenza statistica nasce dallo scarto tra queste due cose.
+Il parametro è ciò che vorremmo conoscere nella popolazione. La statistica è ciò che possiamo calcolare dai dati osservati. L'inferenza nasce dalla distanza tra queste due quantità.
 :::
 
-La statistica campionaria raramente coincide esattamente con il parametro della popolazione. Se ripetessimo lo studio con un altro campione, otterremmo probabilmente una media diversa. Questa variabilità tra i campioni è una delle principali fonti di incertezza statistica.
+La statistica campionaria raramente coincide esattamente con il parametro. Ripetendo lo studio con un altro campione, otterremmo probabilmente un valore diverso. Questa variabilità tra campioni è una delle fonti fondamentali dell'incertezza statistica.
 
 ## Variabilità e incertezza
 
-La variabilità è una caratteristica fondamentale dei dati psicologici. Le persone sono diverse tra loro, cambiano nel tempo e reagiscono in modo diverso a contesti simili. Anche quando studiamo lo stesso fenomeno, non osserviamo sempre gli stessi valori.
+La variabilità è una caratteristica normale dei dati psicologici. Le persone differiscono tra loro, cambiano nel tempo e reagiscono in modo diverso a contesti simili. Anche studiando lo stesso fenomeno, non osserviamo sempre gli stessi valori.
 
-L'incertezza può derivare da diverse fonti:
+L'incertezza non deriva soltanto dal fatto che osserviamo un campione invece dell'intera popolazione. I costrutti psicologici vengono misurati in modo imperfetto, i dati possono contenere errori o valori mancanti, il disegno può introdurre distorsioni e ogni modello statistico semplifica il fenomeno.
 
-- osserviamo un campione e non l'intera popolazione;
-- misuriamo i costrutti psicologici in modo imperfetto;
-- i dati possono contenere errori, valori mancanti o risposte inattendibili;
-- il disegno dello studio può introdurre bias;
-- il modello statistico usato per l'analisi dei dati è sempre una semplificazione.
-
-L'analisi statistica serve anche a rendere esplicita questa incertezza. Nell'approccio bayesiano, che verrà trattato nel manuale principale, l'incertezza viene rappresentata direttamente tramite distribuzioni di probabilità. In questo capitolo, ci basta riconoscere che l'incertezza non è un difetto occasionale, ma una condizione normale dell'inferenza sui dati.
+L'analisi statistica serve anche a rendere esplicita questa incertezza. Nel progetto bayesiano essa verrà rappresentata direttamente mediante distribuzioni di probabilità. Per ora è sufficiente riconoscere che non costituisce un difetto occasionale dei dati, ma una condizione ordinaria del ragionamento empirico.
 
 ## Bias: quando i dati si spostano in una direzione
 
-La variabilità non è l'unico problema. Un campione o una misura possono anche essere *distorti*. Un bias è un errore sistematico che tende a spostare i risultati in una direzione.
+La variabilità non è l'unico problema. Un campione, una misura o un procedimento possono essere sistematicamente distorti. Con *bias* indichiamo una distorsione che tende a spostare i risultati in una determinata direzione.
 
+Nello studio su stress e sonno, potrebbe verificarsi un bias se rispondessero soprattutto gli studenti più stressati, se venissero inclusi soltanto quelli presenti a lezione o se la qualità del sonno fosse misurata con una domanda ambigua. Anche la desiderabilità sociale può modificare le risposte. Raccogliere dati soltanto durante la settimana degli esami e interpretarli come rappresentativi dell'intero semestre produrrebbe un'altra forma di distorsione.
 
-Nel nostro esempio, potremmo avere un bias se:
-
-- al questionario rispondono soprattutto studenti molto stressati;
-- partecipano solo gli studenti presenti a lezione, escludendo chi ha difficoltà di frequenza;
-- la domanda sulla qualità del sonno è formulata in modo ambiguo.
-- gli studenti rispondono in modo socialmente desiderabile;
-- raccogliamo i dati solo durante la settimana d'esame e li trattiamo come se rappresentassero l'intero semestre.
-
-Comprendere chi ha raccolto i dati, come, quando e con quali strumenti è essenziale per interpretarli correttamente [@Johnson2022bayesrules]. Nei capitoli successivi vedremo che il bias può dipendere dal disegno dello studio, dalla misurazione o dalle decisioni prese durante la pulizia dei dati.
+Comprendere chi ha raccolto i dati, in quale momento, con quali strumenti e secondo quali criteri è quindi essenziale [@Johnson2022bayesrules]. Nei capitoli successivi distingueremo i bias che derivano dal disegno, dalla misurazione e dalle decisioni prese durante la preparazione dei dati.
 
 ::: {.callout-tip title="Errore comune"}
-Aumentare la dimensione del campione può ridurre la variabilità campionaria, ma non elimina automaticamente il bias. Un campione molto grande ma distorto può produrre una stima molto precisa di una quantità errata.
+Aumentare la dimensione del campione può ridurre la variabilità campionaria, ma non elimina automaticamente il bias. Un campione molto grande e distorto può produrre una stima estremamente precisa della quantità sbagliata.
 :::
 
 ## Variabili: significato e ruolo nella domanda
 
-Una variabile può essere numerica o categoriale, osservata direttamente o costruita a partire da più risposte. In questa fase è utile distinguere due aspetti.
+Una variabile può essere numerica o categoriale, osservata direttamente oppure costruita a partire da più risposte. Per interpretarla occorre considerare sia il tipo di informazione sia il ruolo che svolge nella domanda.
 
-Il primo è il *tipo di informazione* contenuta nella variabile. Per esempio, le ore di sonno sono una misura quantitativa; il genere, se registrato in categorie, è una variabile categoriale; la qualità soggettiva del sonno potrebbe essere registrata su una scala ordinale.
+Le ore di sonno sono una misura quantitativa. Il genere, quando viene registrato mediante categorie, è una variabile categoriale. Una valutazione della qualità del sonno su pochi livelli ordinati può essere trattata come variabile ordinale.
 
-Il secondo aspetto è il *ruolo della variabile nella domanda di ricerca*. In una domanda come "Lo stress accademico è associato alla qualità del sonno?", lo stress è la variabile esplicativa o predittiva, mentre la qualità del sonno è la variabile esito. Questa distinzione è utile per formulare ipotesi, ma non è sufficiente a stabilire la causalità.
+Nella domanda «lo stress accademico è associato alla qualità del sonno?», lo stress svolge il ruolo di variabile esplicativa o predittiva e la qualità del sonno quello di variabile esito. Questa distinzione organizza l'analisi, ma non stabilisce da sola una relazione causale.
 
 ::: {.callout-note title="Variabile indipendente e variabile dipendente"}
-Nei disegni sperimentali si parla spesso di *variabile indipendente* e *variabile dipendente*. La variabile indipendente è quella manipolata dal ricercatore, mentre la variabile dipendente è l'esito osservato. Negli studi osservazionali, invece, è più prudente parlare di variabile esplicativa o predittiva e di variabile esito.
+Nei disegni sperimentali si parla spesso di variabile indipendente e variabile dipendente. La prima è manipolata dal ricercatore e la seconda costituisce l'esito osservato. Negli studi osservazionali è generalmente più prudente parlare di variabile esplicativa o predittiva e di variabile esito.
 :::
 
-## Descrivere, stimare, inferire
+## Descrivere, stimare e inferire
 
-Una stessa matrice di dati può essere utilizzata per diversi scopi.
+Una stessa matrice di dati può essere usata per scopi differenti.
 
-- *Descrivere* significa riassumere ciò che osserviamo nel campione: medie, frequenze, distribuzioni, grafici, valori anomali, relazioni visive tra variabili.
-- *Stimare* significa usare i dati del campione per ottenere un valore plausibile di una quantità nella popolazione, per esempio una media o una differenza tra medie.
-- *Inferire* significa trarre conclusioni più generali tenendo conto dell'incertezza, delle assunzioni e dei limiti del disegno.
+*Descrivere* significa riassumere ciò che è stato osservato nel campione attraverso medie, frequenze, distribuzioni, grafici e identificazione di osservazioni insolite. *Stimare* significa usare il campione per ottenere un valore riferito a una quantità della popolazione, come una media o una differenza tra medie. *Inferire* significa formulare conclusioni più generali tenendo conto dell'incertezza, delle assunzioni e dei limiti del disegno.
 
-L'EDA, ovvero l'analisi esplorativa dei dati, parte soprattutto dalla descrizione: l'osservazione di distribuzioni, pattern, anomalie e possibili relazioni. Tuttavia, anche la descrizione richiede un'attenta analisi concettuale. Un grafico può mostrare un'associazione, ma la sua interpretazione dipende dal campione, dalla misura e dal disegno dello studio.
+L'analisi esplorativa si concentra soprattutto sulla descrizione di distribuzioni, pattern, anomalie e possibili relazioni. Anche una descrizione richiede però attenzione concettuale. Un grafico può mostrare un'associazione, ma il suo significato dipende dal campione, dalla misura e dal modo in cui lo studio è stato costruito.
 
 ## Effetti e causalità: una cautela iniziale
 
-Nel linguaggio statistico e psicologico si parla spesso di *effetto*. Tuttavia, il termine può generare ambiguità. A volte indica una differenza o un'associazione osservata nei dati, altre volte suggerisce una relazione causale.
+Nel linguaggio psicologico e statistico, la parola *effetto* può essere ambigua. A volte indica semplicemente una differenza o un'associazione osservata; altre volte suggerisce una relazione causale.
 
-Se, per esempio, osserviamo che gli studenti con un livello di stress più alto riportano una qualità del sonno più bassa, abbiamo osservato un'associazione. Possiamo definirla, in senso descrittivo, un effetto dello stress sul sonno, ma con molta cautela. Per poter sostenere una conclusione causale, è necessario sapere come sono stati raccolti i dati e se il disegno consente di escludere spiegazioni alternative, quali il carico di lavoro, la salute mentale pregressa, le abitudini di studio o le condizioni economiche [@huntington2021effect].
+Se gli studenti con stress più elevato riportano una qualità del sonno inferiore, abbiamo osservato un'associazione. Per sostenere che lo stress provochi il peggioramento del sonno, occorre però considerare il disegno e le spiegazioni alternative. Carico di lavoro, salute mentale precedente, abitudini di studio e condizioni economiche potrebbero influenzare entrambe le variabili [@huntington2021effect].
 
-Questo tema verrà ripreso nel capitolo dedicato al disegno di ricerca e in quello introduttivo alla causalità. Qui è sufficiente ricordare che i modelli statistici possono quantificare le associazioni, ma non creano da soli le condizioni per una conclusione causale.
+Il tema sarà approfondito nei capitoli sul disegno di ricerca e sulla causalità. Per ora è sufficiente ricordare che i modelli statistici possono quantificare le associazioni, ma non producono da soli le condizioni necessarie per una conclusione causale.
 
 ## Collegamento con il resto del percorso
 
-Questo capitolo introduce il vocabolario minimo per i capitoli successivi.
+I concetti introdotti qui ricompariranno in tutte le parti del sito. Il capitolo sul disegno di ricerca esaminerà come vengono generati i dati e quali inferenze siano autorizzate. Quello sulla misurazione discuterà che cosa rappresentino i valori osservati. Nei capitoli su R e `dplyr` impareremo a organizzare e controllare la matrice dei dati, mentre la parte EDA mostrerà come descrivere distribuzioni, anomalie e relazioni prima di costruire un modello.
 
-| Capitolo successivo | Domanda che riprende questo capitolo |
-|---|---|
-| Disegno di ricerca | Come sono stati generati i dati e quale inferenza autorizzano? |
-| Misurazione | Che cosa rappresentano davvero i valori osservati? |
-| R e `dplyr` | Come organizziamo, trasformiamo e controlliamo la matrice dei dati? |
-| EDA | Che cosa possiamo vedere nei dati prima di stimare un modello? |
-| Correlazione e causalità | Quando un'associazione è solo descrittiva e quando può sostenere ipotesi causali? |
-| Inferenza bayesiana | Come rappresentiamo l'incertezza sui parametri e sui modelli? |
+Il modulo sulla probabilità fornirà il linguaggio necessario per rappresentare formalmente l'incertezza. Quello frequentista mostrerà come stime, intervalli e test vengano valutati attraverso campionamenti ripetuti. Il manuale e il Companion svilupperanno infine la modellizzazione bayesiana.
 
 ::: {.callout-tip title="Collegamento con il manuale bayesiano"}
-L'inferenza bayesiana non elimina i problemi relativi al disegno, al campionamento o alla misurazione. Li rende espliciti all'interno di un ragionamento probabilistico. Per questo motivo, è importante imparare fin da subito a porsi le seguenti domande: cosa è stato osservato, cosa è incerto e quali assunzioni collegano i dati alla conclusione.
+L'inferenza bayesiana non elimina i problemi di disegno, campionamento o misurazione. Li incorpora in un ragionamento probabilistico che richiede comunque di sapere che cosa è stato osservato, che cosa resta incerto e quali assunzioni collegano i dati alle conclusioni.
 :::
 
 ## Riflessioni conclusive {.unnumbered .unlisted}
 
-I dati psicologici sono il risultato di un percorso che va dal fenomeno alla domanda, dalla domanda alla misura, dalla misura alla matrice dei dati e dalla matrice all'interpretazione. In ogni passaggio, le decisioni che prendiamo influenzano ciò che potremo concludere.
+I dati psicologici sono il risultato di un percorso che va dal fenomeno alla domanda, dalla domanda alla misura, dalla misura alla matrice dei dati e dalla matrice all'interpretazione. In ogni passaggio, le decisioni influenzano ciò che sarà possibile concludere.
 
-Il messaggio centrale di questo capitolo è che l'analisi dei dati non consiste solo nell'applicare procedure corrette. Consiste anche nel capire se le procedure applicate sono appropriate alla domanda, ai dati e al modo in cui questi sono stati prodotti. Prima di calcolare, dobbiamo interpretare e, prima di interpretare, dobbiamo sapere cosa stiamo osservando.
+Il messaggio centrale è che analizzare dati non significa soltanto applicare correttamente una procedura. Significa capire se quella procedura sia appropriata alla domanda, ai dati e al modo in cui sono stati prodotti. Prima di calcolare bisogna interpretare; prima di interpretare bisogna sapere che cosa si sta osservando.
 
-::: {.callout-important title="Cosa portare al capitolo successivo"}
-Quando leggi o costruisci un dataset, prova sempre a rispondere a quattro domande:
-
-1. Qual è la popolazione a cui vorrei riferirmi?
-2. Quale campione ho effettivamente osservato?
-3. Quali variabili rappresentano il fenomeno di interesse?
-4. Quali fonti di incertezza o bias possono limitare le conclusioni?
+::: {.callout-important title="Domande da portare con sé"}
+Quando leggi o costruisci un dataset, chiediti quale sia la popolazione di interesse, quale campione sia stato osservato, quali variabili rappresentino il fenomeno e quali fonti di incertezza o bias limitino le conclusioni.
 :::
 
-::: {.callout-important title="Problemi" collapse="true"}
+## Esercizi {.unnumbered .unlisted}
+
 1. Nel caso dello studio su stress accademico e sonno, identifica il fenomeno generale, una possibile domanda di ricerca e almeno tre variabili osservabili.
 
 2. Spiega la differenza tra popolazione e campione usando un esempio diverso da quello discusso nel capitolo.
 
 3. Che differenza c'è tra un parametro e una statistica? Perché questa distinzione è importante per l'inferenza?
 
-4. Immagina che uno studio sul benessere degli studenti recluti solo partecipanti volontari tramite un annuncio online. Quali bias potrebbero emergere?
+4. Immagina che uno studio sul benessere degli studenti recluti soltanto partecipanti volontari tramite un annuncio online. Quali bias potrebbero emergere?
 
 5. Perché un campione molto grande non garantisce necessariamente conclusioni valide?
 
-6. In che senso una variabile può essere definita dal suo tipo di informazione e dal suo ruolo nella domanda di ricerca?
+6. In che senso una variabile può essere definita dal tipo di informazione che contiene e dal ruolo che svolge nella domanda?
 
 7. Spiega la differenza tra descrivere, stimare e inferire.
 
-8. Perché osservare un'associazione tra due variabili non basta per concludere che una causa l'altra?
-:::
+8. Perché osservare un'associazione tra due variabili non basta per concludere che una causi l'altra?
 
 ::: {.callout-tip title="Soluzioni" collapse="true"}
-**1. Nel caso dello studio su stress accademico e sonno, identifica il fenomeno generale, una possibile domanda di ricerca e almeno tre variabili osservabili.**
+1. Il fenomeno generale è il rapporto tra vita accademica e benessere. Una possibile domanda è se gli studenti con maggiore stress accademico riportino una qualità del sonno inferiore. Tra le variabili osservabili potrebbero comparire stress percepito, ore di sonno, qualità soggettiva del sonno, numero di esami imminenti e anno di corso.
 
-Il fenomeno generale è il rapporto tra vita accademica e benessere. Una possibile domanda di ricerca è: *gli studenti con livelli più alti di stress accademico riportano una qualità del sonno peggiore?* Variabili osservabili potrebbero essere il punteggio di stress percepito, le ore di sonno, la qualità soggettiva del sonno, il numero di esami imminenti e l'anno di corso.
+2. La popolazione è l'insieme al quale si vorrebbero riferire le conclusioni; il campione è l'insieme osservato. Se si studia l'uso dei social media negli adolescenti italiani, la popolazione può comprendere tutti gli adolescenti italiani, mentre il campione potrebbe essere costituito da 300 studenti reclutati in alcune scuole.
 
-**2. Spiega la differenza tra popolazione e campione usando un esempio diverso da quello discusso nel capitolo.**
+3. Un parametro descrive una caratteristica della popolazione; una statistica è la corrispondente quantità calcolata nel campione. L'inferenza usa le statistiche osservate per ragionare sui parametri non osservati, tenendo conto dell'incertezza.
 
-La popolazione è l'insieme a cui vorremmo generalizzare. Il campione è l'insieme che osserviamo davvero. Per esempio, se vogliamo studiare l'uso dei social media negli adolescenti italiani, la popolazione potrebbe essere l'insieme degli adolescenti italiani, mentre il campione potrebbe essere formato da 300 studenti reclutati in alcune scuole.
+4. Potrebbe emergere un bias di autoselezione: parteciperebbero soprattutto studenti interessati al tema, particolarmente motivati oppure con esperienze molto positive o negative. Potrebbero inoltre essere esclusi studenti con minore accesso alle comunicazioni online o minore disponibilità di tempo.
 
-**3. Che differenza c'è tra un parametro e una statistica? Perché questa distinzione è importante per l'inferenza?**
+5. Un campione grande riduce spesso la variabilità casuale, ma non elimina una selezione distorta, una misura inadeguata o un errore sistematico. Può quindi produrre una stima molto precisa ma riferita alla quantità sbagliata.
 
-Un parametro è una caratteristica della popolazione, come la media reale del tempo di sonno di tutti gli studenti di un ateneo. Una statistica è la corrispondente quantità calcolata nel campione. L'inferenza statistica usa le statistiche campionarie per ragionare sui parametri non osservati, tenendo conto dell'incertezza.
+6. Il tipo di informazione riguarda il formato della variabile, per esempio numerico, categoriale o ordinale. Il ruolo riguarda la funzione nella domanda, come predittore, esito, variabile di controllo o possibile confondente.
 
-**4. Immagina che uno studio sul benessere degli studenti recluti solo partecipanti volontari tramite un annuncio online. Quali bias potrebbero emergere?**
+7. Descrivere significa riassumere ciò che è osservato nel campione. Stimare significa usare il campione per ottenere un valore riferito alla popolazione. Inferire significa formulare conclusioni più generali tenendo conto dell'incertezza, delle assunzioni e dei limiti del disegno.
 
-Potrebbe emergere un bias di autoselezione: partecipano soprattutto gli studenti più interessati al tema, più motivati o con esperienze particolarmente positive o negative. Potrebbero inoltre essere esclusi studenti con minore accesso alle comunicazioni online o con meno tempo disponibile. Il campione potrebbe quindi non rappresentare bene la popolazione di interesse.
+8. L'associazione potrebbe dipendere da variabili non considerate, selezione, errori di misura o causalità inversa. Una conclusione causale richiede informazioni aggiuntive sul disegno e sulle spiegazioni alternative.
+:::
 
-**5. Perché un campione molto grande non garantisce necessariamente conclusioni valide?**
+::: {.callout-note title="Punti chiave" collapse="true"}
+I dati acquistano significato dal legame con una domanda, una misura e un disegno. Righe e colonne di un dataset rappresentano unità e variabili, non semplici contenitori numerici. Il campione non coincide con la popolazione, una statistica non coincide con il parametro e un'associazione non coincide con una relazione causale. Variabilità e bias sono problemi distinti: la prima produce oscillazioni casuali, il secondo una distorsione sistematica.
+:::
 
-Un campione grande riduce spesso la variabilità casuale delle stime, ma non elimina il bias. Se il campione è selezionato in modo distorto, anche molte osservazioni possono produrre una stima precisa ma sbagliata rispetto alla popolazione di interesse.
-
-**6. In che senso una variabile può essere definita dal suo tipo di informazione e dal suo ruolo nella domanda di ricerca?**
-
-Il tipo di informazione riguarda il formato della variabile: numerica, categoriale, ordinale, testuale e così via. Il ruolo nella domanda riguarda invece la funzione della variabile nell'analisi: per esempio variabile predittiva, esito, variabile di controllo o possibile confondente.
-
-**7. Spiega la differenza tra descrivere, stimare e inferire.**
-
-Descrivere significa riassumere ciò che osserviamo nel campione. Stimare significa usare il campione per ottenere un valore plausibile di una quantità nella popolazione. Inferire significa trarre conclusioni più generali tenendo conto dell'incertezza, delle assunzioni e dei limiti del disegno.
-
-**8. Perché osservare un'associazione tra due variabili non basta per concludere che una causa l'altra?**
-
-Perché l'associazione potrebbe dipendere da altre variabili non considerate, da bias di selezione, da errori di misura o dalla direzione inversa della relazione. Per sostenere una conclusione causale servono informazioni sul disegno dello studio e sulle possibili spiegazioni alternative.
+::: {.callout-note title="Ambiente di sviluppo" collapse="true"}
+Il capitolo non richiede pacchetti o codice R. Le informazioni sull'ambiente di lavoro diventeranno rilevanti nella parte dedicata a R.
 :::
 
 ## Bibliografia {.unnumbered .unlisted}

@@ -1,475 +1,368 @@
-# La misurazione in psicologia {#sec-measurement}
+# Misurare i costrutti psicologici {#sec-measurement}
 
-::: {.callout-note appearance="minimal"}
-Prima di calcolare una media, costruire un grafico o stimare un modello, è necessario chiedersi cosa rappresentano i numeri che abbiamo di fronte. In psicologia questa domanda è particolarmente importante, perché molti fenomeni di interesse, come ansia, stress, motivazione, benessere, autostima e attenzione, non sono osservabili direttamente. Li conosciamo attraverso risposte, comportamenti, tempi, scelte, punteggi o indicatori fisiologici. Ogni misura è quindi una traduzione imperfetta di un costrutto teorico in un dato osservabile.
+::: {.callout-note title="In sintesi"}
+**Da sapere**  In psicologia, un costrutto come ansia, motivazione o benessere non viene osservato direttamente. Viene collegato a risposte, comportamenti o segnali attraverso una procedura di misurazione. Il punteggio ottenuto acquista significato soltanto entro questa relazione teorica e operativa.
+
+**Da saper fare**  Distinguere costrutto, operazionalizzazione, indicatore e dato; separare affidabilità e validità; riconoscere errore casuale e distorsione sistematica; comprendere quali operazioni sono coerenti con una scala; valutare criticamente item Likert, punteggi aggregati e codice R che li tratta come numeri.
 :::
 
-Questo capitolo introduce gli strumenti concettuali minimi per ragionare su questa traduzione. L'obiettivo non è memorizzare una tassonomia di scale di misura, ma imparare a porsi tre domande:
+## Introduzione {.unnumbered .unlisted}
 
-1. **Che cosa vogliamo misurare?**  
-   Qual è il costrutto psicologico di interesse?
+Prima di calcolare una media, costruire un grafico o stimare un modello, dobbiamo chiederci che cosa rappresentino i numeri presenti nel dataset. In psicologia questa domanda è particolarmente importante, perché molti fenomeni di interesse non sono direttamente osservabili. Non vediamo l'ansia, la motivazione, l'impulsività o il benessere nello stesso modo in cui osserviamo la lunghezza di un oggetto. Vediamo risposte a domande, scelte, tempi di reazione, errori, comportamenti, giudizi di osservatori e segnali fisiologici.
 
-2. **Che cosa osserviamo davvero?**  
-   Quale indicatore, risposta o comportamento viene registrato nei dati?
+La misurazione è il processo che collega questi eventi osservabili a un concetto teorico. Ogni collegamento è parziale e dipende dal contesto. Un questionario sullo stress, un diario giornaliero e un indicatore fisiologico possono riguardare lo stesso tema generale, ma non misurano necessariamente la stessa cosa.
 
-3. **Che cosa possiamo fare con quei valori?**  
-   Quali descrizioni, grafici, statistiche e modelli sono coerenti con la natura della misura?
+La domanda guida del capitolo è:
 
-Queste domande collegano il capitolo precedente, dedicato al disegno della ricerca, ai capitoli successivi sull'analisi esplorativa dei dati. Anche il disegno migliore può produrre conclusioni fragili se le variabili osservate non rappresentano adeguatamente i costrutti che intendiamo studiare.
+> Quale argomento ci permette di interpretare un valore osservato come informazione su un costrutto psicologico?
 
-### Panoramica del capitolo {.unnumbered .unlisted}
+Una risposta adeguata non può limitarsi al nome della variabile. Deve spiegare come il costrutto è stato definito, come è stato trasformato in osservazioni, quali errori possono intervenire e quali conclusioni sono sostenute dai punteggi.
 
-In questo capitolo imparerai a:
+::: {.callout-tip title="Prerequisiti"}
+È utile avere letto @sec-key-notions e @sec-key-notions-design. Il primo distingue fenomeno, variabile, unità di analisi, popolazione e campione; il secondo mostra come il disegno delimiti le conclusioni sostenute dai dati.
 
-- distinguere costrutti psicologici, indicatori osservabili e valori registrati;
-- comprendere il ruolo dell'errore di misura;
-- distinguere affidabilità e validità;
-- usare i livelli di scala come strumenti diagnostici;
-- riconoscere quali operazioni statistiche sono coerenti con una misura;
-- discutere il caso delle scale Likert in modo non dogmatico;
-- collegare la misurazione alla scelta di grafici, statistiche descrittive e modelli;
-- comprendere perché la misurazione è un problema epistemologico, non solo tecnico.
-
-::: {.callout-tip collapse=true title="Prerequisiti"}
-Per seguire questo capitolo è utile avere chiari i concetti introdotti nei capitoli precedenti: fenomeno psicologico, domanda di ricerca, variabile, unità statistica, campione, popolazione, bias e incertezza.
-
-Letture facoltative per chi desidera approfondire:
-
-- @maul2016philosophical, sui fondamenti filosofici della misurazione psicologica;
-- @lilienfeld2020psychological, sul rapporto tra misurazione psicologica e crisi della replicabilità;
-- @stevens_46, per la tassonomia classica dei livelli di misura.
-
-Queste letture non sono prerequisiti obbligatori. Il capitolo fornisce tutto il necessario per seguire il percorso introduttivo.
+Le letture di approfondimento su fondamenti della misurazione, replicabilità e livelli di scala sono @maul2016philosophical, @lilienfeld2020psychological e @stevens_46.
 :::
 
-## Perché la misurazione viene prima dell'analisi
+## Panoramica del capitolo {.unnumbered .unlisted}
 
-Quando apriamo un dataset, vediamo righe, colonne e valori. È naturale pensare che il lavoro statistico inizi da lì. Ma quei valori sono il risultato finale di una serie di decisioni:
+Il capitolo segue il percorso che conduce dal costrutto al dato. Chiarisce innanzitutto la differenza tra costrutto, operazionalizzazione, indicatore e punteggio. Introduce poi l'errore di misura e distingue il punteggio vero della teoria classica dei test dal costrutto psicologico. Su questa base affronta affidabilità e validità, discute il significato dei livelli di scala e dedica particolare attenzione agli item Likert e ai punteggi aggregati. Le ultime sezioni collegano la misurazione all'EDA, al codice R e alla modellizzazione bayesiana.
 
-1. abbiamo scelto un fenomeno psicologico da studiare;
-2. abbiamo formulato una domanda empirica;
-3. abbiamo definito uno o più costrutti;
-4. abbiamo scelto indicatori osservabili;
-5. abbiamo raccolto risposte, comportamenti o misure;
-6. abbiamo codificato queste osservazioni in variabili;
-7. abbiamo organizzato le variabili in una matrice di dati.
-
-Ogni passaggio può introdurre errore, ambiguità o bias. Per questo motivo, una variabile non è solo una colonna in un file, ma il risultato di una serie di scelte teoriche e operative.
-
-::: {.callout-important title="Idea guida"}
-In psicologia non misuriamo direttamente i costrutti. Osserviamo indicatori che li rappresentano in modo parziale, fallibile e dipendente dal contesto.
+::: {.callout-note title="Preparazione del notebook"}
+Il capitolo è prevalentemente concettuale. L'unico esempio in R usa funzioni di base e non richiede pacchetti aggiuntivi. Il suo scopo non è insegnare una tecnica di ricodifica, ma mostrare che una codifica numerica incorpora assunzioni sul significato delle distanze tra categorie.
 :::
 
-Consideriamo l'esempio guida già introdotto nei capitoli precedenti:
+## Dal costrutto al dato osservato
 
-> Gli studenti universitari che riportano livelli più alti di stress accademico dormono peggio?
+Consideriamo la domanda:
 
-Questa domanda contiene almeno due costrutti: *stress accademico* e *qualità del sonno*. Nessuno dei due è osservabile direttamente, come lo è la lunghezza di un tavolo. Dobbiamo quindi decidere come rappresentarli.
+> Gli studenti che sperimentano più stress accademico dormono peggio?
 
-Per lo stress accademico potremmo usare:
+La domanda contiene almeno due costrutti: **stress accademico** e **qualità del sonno**. Per studiarli dobbiamo decidere che cosa significhino nel contesto della ricerca e quali osservazioni possano fornire informazioni su di essi.
 
-- una scala self-report sulla pressione percepita;
-- il numero di esami imminenti;
-- il numero di ore di studio settimanali;
-- una misura fisiologica, come la variabilità della frequenza cardiaca;
-- una combinazione di più indicatori.
+Per lo stress potremmo usare un questionario sulla pressione percepita, il numero di scadenze imminenti, un diario giornaliero o un indicatore fisiologico. Per il sonno potremmo registrare le ore dichiarate, una valutazione soggettiva, i risvegli notturni oppure dati provenienti da un dispositivo indossabile. Queste scelte non sono equivalenti. Ognuna mette in primo piano un aspetto del fenomeno e ne lascia altri sullo sfondo.
 
-Per il sonno potremmo usare:
+La relazione tra teoria e dati può essere descritta attraverso quattro passaggi.
 
-- ore di sonno dichiarate dallo studente;
-- qualità soggettiva del sonno su scala Likert;
-- diario del sonno;
-- dati raccolti da un dispositivo indossabile;
-- numero di risvegli notturni.
-
-Queste scelte non sono equivalenti. Ciascuna misura coglie un aspetto diverso del fenomeno e presenta limiti specifici. Misurare significa stabilire quale relazione intendiamo instaurare tra il costrutto teorico e l'indicatore osservato.
-
-## Costrutti, indicatori e dati
-
-Un *costrutto* è un concetto teorico utilizzato per spiegare o descrivere un fenomeno psicologico. Esempi di costrutti sono ansia, depressione, intelligenza, stress, motivazione, impulsività e benessere. Sono utili perché aiutano a organizzare il pensiero teorico, ma non sono direttamente visibili.
-
-Un *indicatore* è ciò che osserviamo per avvicinarci al costrutto. Può trattarsi di una risposta a un questionario, di un comportamento, di un tempo di reazione, di un numero di errori, di una scelta, di una valutazione da parte di un osservatore o di una misura fisiologica.
-
-Un *dato* è il valore registrato per quell'indicatore in una specifica unità statistica.
-
-| Livello | Esempio nello studio su stress e sonno |
-|---|---|
-| Costrutto | Stress accademico |
-| Indicatore | Punteggio a una scala di stress percepito |
-| Dato osservato | Uno studente ottiene 27 su 40 |
-
-Questa distinzione è fondamentale. Il punteggio 27 non è *lo stress* dello studente. Si tratta di un valore osservato che, secondo una determinata teoria e una determinata procedura di misurazione, dovrebbe fornire informazioni sul suo stress accademico.
-
-::: {.callout-tip title="Errore comune"}
-Un errore frequente è quello di identificare il costrutto con il punteggio. Dire "lo stress è 27" è scorretto. È più prudente dire: "Lo studente ha ottenuto 27 con questo strumento che, si suppone, misuri lo stress accademico".
-:::
-
-## L'equazione fondamentale della misurazione
-
-Una misura osservata può essere rappresentata in modo molto semplice:
-
-$$
-y = z + \varepsilon_y,
-$$
-dove:
-
-- $y$ è il valore osservato;
-- $z$ è il valore teorico del costrutto che vorremmo conoscere;
-- $\varepsilon_y$ è l'errore di misura.
-
-Questa equazione non va letta come una formula tecnica da applicare immediatamente, ma come una mappa concettuale. Ci ricorda che il dato osservato non corrisponde mai perfettamente al costrutto. Ogni misura contiene una componente informativa e una componente di errore.
-
-Nel caso dello stress accademico, l'errore può nascere da molteplici fonti:
-
-- lo studente interpreta male un item;
-- risponde in modo socialmente desiderabile;
-- compila il questionario in una giornata particolarmente difficile;
-- la scala non copre bene tutte le dimensioni dello stress;
-- alcuni item misurano l'ansia generale più che lo stress accademico;
-- la modalità di somministrazione influenza le risposte.
-
-L'equazione $y = z + \varepsilon_y$ aiuta a organizzare tre domande centrali.
-
-| Domanda | Concetto collegato | Significato |
+| Passaggio | Significato | Esempio |
 |---|---|---|
-| Quanto rumore contiene la misura? | Affidabilità | La misura è stabile e coerente? |
-| La misura cattura il costrutto giusto? | Validità | Stiamo misurando ciò che diciamo di misurare? |
-| Quali operazioni sono legittime sui valori osservati? | Livello di scala | Media, differenze, rapporti e modelli hanno senso? |
+| **Costrutto** | Concetto teorico che vogliamo comprendere | Stress accademico |
+| **Operazionalizzazione** | Regola con cui il costrutto viene reso osservabile | Somministrare una scala di dieci item riferita all'ultima settimana |
+| **Indicatore** | Risposta, comportamento o segnale registrato | Risposte ai dieci item |
+| **Dato o punteggio** | Valore memorizzato per una specifica unità | Punteggio totale pari a 27 |
 
-## Affidabilità: quanto rumore contiene la misura
+Il punteggio 27 non è lo stress dello studente. È il risultato prodotto da uno strumento, da una modalità di somministrazione e da una regola di calcolo. Può essere informativo sullo stress soltanto se esistono buone ragioni per collegare quel punteggio al costrutto.
 
-Una misura è *affidabile* quando produce risultati coerenti, stabili e poco rumorosi, a parità di ciò che si intende misurare. Se uno strumento è molto instabile, il valore osservato dipenderà eccessivamente da fattori accidentali.
-
-L'affidabilità può assumere forme diverse:
-
-- *stabilità nel tempo*: la misura produce risultati simili se ripetuta in condizioni comparabili;
-- *coerenza interna*: gli item di una scala che dovrebbero misurare lo stesso costrutto tendono a muoversi insieme;
-- *accordo tra valutatori*: osservatori diversi assegnano valutazioni simili agli stessi comportamenti;
-- *precisione della procedura*: lo strumento registra valori con poca variabilità accidentale.
-
-Una misura poco affidabile rende difficile individuare dei pattern nei dati. Se lo stress viene misurato con un elevato livello di rumore, l'associazione tra stress e sonno può apparire più debole, instabile o addirittura scomparire.
-
-::: {.callout-note title="Precisione e bias"}
-La precisione riguarda la variabilità accidentale delle misure. Il bias, invece, riguarda una distorsione sistematica. Uno strumento può essere preciso, ma distorto: può, per esempio, fornire valori molto coerenti, ma costantemente spostati nella stessa direzione.
+::: {.callout-important title="Il nome della colonna non dimostra che cosa è stato misurato"}
+Chiamare una variabile `stress` non stabilisce che essa rappresenti adeguatamente lo stress accademico. Il significato dipende dagli item, dal periodo di riferimento, dalla popolazione, dal contesto e dalla regola con cui le risposte sono state trasformate in un punteggio.
 :::
 
-## Validità: stiamo misurando il costrutto giusto?
+## Due relazioni da non confondere
 
-Una misura è *valida* nella misura in cui sostiene l'interpretazione che vogliamo attribuirle. La validità non è una proprietà magica dello strumento in sé, ma dipende dall'uso che se ne fa, dalla popolazione presa in esame, dal contesto e dalle conclusioni che si vogliono trarre.
+Per comprendere la misurazione dobbiamo tenere separate due relazioni.
 
-Per esempio, una scala può essere valida per misurare lo stress accademico degli studenti universitari durante la sessione d'esame, ma non necessariamente per i lavoratori adulti, gli adolescenti o i pazienti clinici. Una misura può funzionare bene per descrivere le differenze tra i gruppi, ma può non essere adatta per prendere decisioni individuali.
+La prima collega il **costrutto** agli **indicatori**. È una relazione teorica: perché una risposta, un comportamento o un segnale dovrebbe informarci sul fenomeno psicologico?
 
-Alcune domande utili sono:
+La seconda collega il **punteggio osservato** alla componente stabile e all'errore prodotti dalla procedura. È una relazione statistica: quanto cambierebbe il punteggio se la misurazione fosse ripetuta in condizioni equivalenti?
 
-- gli item coprono davvero il costrutto di interesse?
-- la misura distingue il costrutto da fenomeni simili, ma diversi?
-- i punteggi sono associati ad altri indicatori in modo coerente con la teoria?
-- la misura funziona allo stesso modo in gruppi diversi?
-- l'interpretazione dei punteggi è giustificata nel contesto specifico dello studio?
+Confondere queste due relazioni porta a pensare che una misura stabile rappresenti necessariamente il costrutto giusto. Non è così. Uno strumento può produrre risultati molto coerenti e misurare sistematicamente qualcosa di diverso da ciò che interessa.
 
-::: {.callout-important title="Affidabilità non basta"}
-Una misura può essere affidabile, ma non valida. Un questionario può produrre punteggi molto stabili e coerenti, ma misurare l'ansia generale invece dello stress accademico.
+## Punteggio osservato, punteggio vero ed errore
+
+Nella teoria classica dei test, il punteggio osservato viene rappresentato come:
+
+$$
+X = T + E,
+$$
+
+dove $X$ è il punteggio osservato, $T$ è il **punteggio vero** ed $E$ è l'errore di misura.
+
+Questa equazione è semplice, ma il termine *punteggio vero* può trarre in inganno. $T$ non è il valore puro o direttamente nascosto del costrutto psicologico. È il valore medio che la stessa persona otterrebbe attraverso un numero ideale di ripetizioni equivalenti della medesima procedura di misurazione.
+
+Se uno studente compila ripetutamente la stessa scala in condizioni realmente equivalenti, i punteggi potrebbero variare per distrazione, comprensione momentanea, stanchezza o altre influenze accidentali. Il punteggio vero è il centro teorico di questa distribuzione di punteggi, non una misura completa e infallibile dello stress.
+
+::: {.callout-warning title="Punteggio vero e costrutto non sono sinonimi"}
+Una bilancia sempre spostata di due chilogrammi può produrre misure molto stabili. Il suo punteggio vero, nel senso della procedura ripetuta, rimane però sistematicamente distorto.
+
+Allo stesso modo, una scala psicologica può essere affidabile e avere un punteggio vero ben definito senza rappresentare adeguatamente il costrutto che intendiamo studiare.
 :::
 
-## Il livello di scala: quali operazioni sono legittime?
+L'equazione $X=T+E$ descrive soprattutto l'errore casuale entro una procedura. Non rappresenta automaticamente distorsioni sistematiche, ambiguità teoriche o differenze di significato tra gruppi.
 
-Dopo aver chiarito il rapporto tra costrutto e indicatore, dobbiamo chiederci che tipo di informazione è contenuta nei valori osservati. La tassonomia classica di @stevens_46 distingue quattro livelli di scala: nominale, ordinale, a intervalli e di rapporti.
+## Errore casuale e distorsione sistematica
 
-Questa classificazione non deve essere imparata a memoria. Si tratta di uno strumento diagnostico che aiuta a stabilire quali operazioni statistiche e quali interpretazioni sono coerenti con la misura.
+Un punteggio può differire dalla quantità che ci interessa per ragioni differenti.
 
-![Scale di misurazione.](../../figures/misurazione_2.png){ width=73% }
+L'**errore casuale** produce fluttuazioni non perfettamente prevedibili. Una persona può essere più stanca, leggere rapidamente un item o premere un tasto in ritardo. Ripetendo la misura, queste influenze tendono a cambiare e aumentano la variabilità dei punteggi.
 
-### Scala nominale
+La **distorsione sistematica** sposta invece le osservazioni in una direzione collegata alla procedura. Una traduzione può rendere alcuni item più severi, un questionario può indurre risposte socialmente desiderabili oppure un dispositivo può registrare sistematicamente valori superiori a quelli di riferimento.
 
-Una scala nominale classifica le osservazioni in categorie senza ordine intrinseco.
+La distinzione è importante perché raccogliere più dati riduce spesso l'incertezza dovuta al rumore casuale, ma non elimina automaticamente una distorsione sistematica. Una misura può diventare estremamente precisa intorno a un'interpretazione sbagliata.
 
-Esempi in psicologia:
+## Affidabilità: quanto sono riproducibili i punteggi?
 
-- condizione sperimentale: controllo, trattamento, placebo;
-- tipo di diagnosi;
-- modalità di risposta scelta;
-- gruppo di appartenenza.
+L'affidabilità riguarda la coerenza dei punteggi prodotti da una procedura in condizioni definite. Non è una proprietà assoluta dello strumento, indipendente da popolazione, contesto e uso.
 
-Con una variabile nominale è possibile contare le frequenze, calcolare le proporzioni e identificare la categoria più frequente. Non ha senso calcolare la media delle etichette numeriche eventualmente usate per codificare le categorie.
+Una scala può mostrare buona coerenza tra item in un campione universitario e funzionare diversamente in un campione clinico. Una valutazione comportamentale può avere elevato accordo tra osservatori addestrati e accordo molto più basso tra osservatori senza formazione. Una misura può essere stabile nel giro di pochi minuti ma cambiare legittimamente dopo una settimana, perché il fenomeno stesso è variabile.
 
-::: {.callout-tip title="Esempio"}
-Se codifichiamo controllo = 0 e trattamento = 1, i numeri sono etichette.  La media della variabile può essere utile come proporzione di partecipanti nel gruppo di trattamento, ma questo non significa che esista una quantità psicologica intermedia tra il gruppo di controllo e quello di trattamento.
+Per questo è più preciso parlare di **affidabilità dei punteggi in una particolare applicazione** che di strumento semplicemente affidabile.
+
+Le verifiche più comuni riguardano aspetti diversi. La stabilità temporale chiede se i punteggi rimangano simili quando il costrutto dovrebbe essere stabile. L'accordo tra valutatori chiede se osservatori differenti codifichino gli stessi eventi in modo simile. La coerenza interna studia quanto gli item di una scala condividano informazione, ma non dimostra da sola che misurino un unico costrutto o che il punteggio sia valido.
+
+::: {.callout-important title="Affidabilità elevata non significa validità elevata"}
+Item molto simili possono produrre una coerenza interna elevata anche se coprono una porzione ristretta del costrutto. Ripetere quasi la stessa domanda rende le risposte coerenti, ma non necessariamente complete o teoricamente appropriate.
 :::
 
-### Scala ordinale
+Una bassa affidabilità rende più difficile distinguere differenze reali dal rumore e può indebolire le associazioni osservate. Tuttavia, correggere o modellare l'errore casuale non risolve una definizione inadeguata del costrutto.
 
-Una scala ordinale introduce un ordine tra le categorie, ma non garantisce che le distanze tra categorie siano uguali.
+## Validità: che cosa autorizzano i punteggi?
 
-Esempi:
+La validità riguarda la qualità dell'interpretazione e dell'uso dei punteggi. Non è un'etichetta definitiva applicata una volta per tutte a un questionario.
 
-- gravità dei sintomi: lieve, moderata, severa;
-- giudizio di accordo: per nulla, poco, abbastanza, molto;
-- posizione in una graduatoria;
-- qualità del sonno valutata da 1 a 5.
+La domanda non è semplicemente:
 
-Con i dati ordinali è possibile ordinare i valori, calcolare le mediane, i percentili e le frequenze cumulative. Dobbiamo invece essere cauti con le medie e le differenze, perché presuppongono che le distanze tra le categorie siano interpretabili.
+> Questo test è valido?
 
-### Scala a intervalli
+La domanda più precisa è:
 
-Una scala a intervalli permette di interpretare le differenze tra valori. La distanza tra 10 e 20 ha lo stesso significato della distanza tra 40 e 50. Tuttavia, lo zero è un valore arbitrario e non indica l'assenza della proprietà misurata.
+> Quali evidenze sostengono questa interpretazione di questi punteggi, in questa popolazione, per questo scopo?
 
-Esempi classici sono la temperatura in gradi Celsius o Fahrenheit e molti punteggi standardizzati, come alcuni punteggi psicometrici. Se un test ha una media di 100 e una deviazione standard di 15, una differenza di 15 punti può essere interpretata in relazione alla scala, ma non ha senso affermare che un punteggio di 120 rappresenta il doppio di un punteggio di 60.
+Una scala sullo stress può essere adeguata per confrontare medie di gruppi universitari e non essere sufficientemente precisa per prendere decisioni cliniche individuali. Può funzionare durante la sessione d'esame e richiedere una nuova valutazione in un contesto lavorativo. Può essere interpretata in modo comparabile in due gruppi oppure contenere item che assumono significati differenti.
 
-Con le scale a intervalli hanno senso medie, differenze e deviazioni standard. Non hanno senso, invece, le interpretazioni basate su rapporti diretti tra valori.
+La validazione costruisce quindi un argomento. Dobbiamo verificare se il contenuto degli item rappresenti il dominio del costrutto, se la struttura dei punteggi sia coerente con la teoria, se le relazioni con altre variabili seguano aspettative plausibili e se interpretazioni alternative siano state considerate.
 
-### Scala di rapporti
+::: {.callout-note title="Validità convergente e discriminante"}
+Una misura di stress dovrebbe essere associata ad altri indicatori dello stress in modo coerente con la teoria. Dovrebbe però anche essere distinguibile da costrutti vicini, come ansia generale, umore negativo o carico di lavoro.
 
-Una scala di rapporti possiede tutte le proprietà di una scala a intervalli, ma ha anche uno zero non arbitrario che rappresenta l'assenza della quantità misurata. Ciò rende interpretabili i rapporti tra i valori.
+Una correlazione elevata con qualsiasi variabile psicologica non è automaticamente una prova di validità.
+:::
 
-Esempi:
+## Lo stesso punteggio deve avere lo stesso significato?
 
-- tempo di reazione;
-- numero di errori;
-- numero di parole ricordate;
-- frequenza di un comportamento in un intervallo di tempo;
-- durata di un'attività.
+Confrontare persone o gruppi presuppone che il punteggio rappresenti il costrutto in modo sufficientemente simile.
 
-Se una persona impiega 800 millisecondi e un'altra 400, ha senso dire che il primo tempo è il doppio del secondo. Questa interpretazione è possibile perché lo zero della scala temporale non è una convenzione arbitraria.
+Un item come «mi sento sopraffatto dagli impegni» può essere interpretato diversamente da studenti, lavoratori e persone con responsabilità di cura. Una risposta pari a 4 potrebbe quindi non indicare lo stesso livello del costrutto nei diversi gruppi.
 
-### Una sintesi operativa
+Questo problema viene studiato attraverso concetti come **equivalenza della misura**, **invarianza** e **funzionamento differenziale degli item**. In un capitolo introduttivo non occorre stimare questi modelli, ma è essenziale comprendere la domanda:
 
-| Livello | Che cosa preserva | Operazioni tipiche | Esempio |
+> Le differenze nei punteggi riflettono differenze nel costrutto oppure differenze nel modo in cui lo strumento funziona?
+
+Senza questa cautela, un confronto tra gruppi può attribuire al fenomeno psicologico una differenza prodotta dalla lingua, dal contesto, dalle norme sociali o dalla comprensione degli item.
+
+## Che cosa permettono di affermare i numeri?
+
+Una variabile numerica in R non è necessariamente una misura quantitativa. I valori possono rappresentare categorie, ordini, differenze o rapporti. La tassonomia classica di @stevens_46 distingue scale nominali, ordinali, a intervalli e di rapporti.
+
+| Scala | Informazione preservata | Esempio psicologico | Operazioni generalmente interpretabili |
 |---|---|---|---|
-| Nominale | Identità/diversità | Frequenze, proporzioni, moda | Tipo di terapia |
-| Ordinale | Ordine | Mediana, percentili, ranghi | Gravità dei sintomi |
-| Intervalli | Differenze | Media, deviazione standard, differenze | Punteggio standardizzato |
-| Rapporti | Rapporti | Tutte le operazioni precedenti più rapporti | Tempo di reazione |
+| **Nominale** | Identità e differenza tra categorie | Condizione sperimentale | Frequenze e proporzioni |
+| **Ordinale** | Ordine tra categorie | Gravità lieve, moderata, severa | Frequenze ordinate, quantili e ranghi |
+| **A intervalli** | Differenze comparabili | Punteggio standardizzato | Medie, differenze e deviazioni standard |
+| **Di rapporti** | Differenze e rapporti rispetto a uno zero non arbitrario | Tempo di reazione | Operazioni precedenti e rapporti |
 
-::: {.callout-tip title="Errore comune"}
-Assegnare dei numeri a una variabile non la rende automaticamente quantitativa. I numeri possono essere etichette, ranghi, punteggi approssimativi o vere e proprie misure quantitative. Il loro significato dipende dalla procedura di misurazione utilizzata.
+La classificazione è uno strumento di ragionamento, non un algoritmo che decide automaticamente l'analisi. Anche quando una variabile possiede proprietà metriche, dobbiamo considerare distribuzione, precisione, valori possibili e domanda scientifica.
+
+### Scale nominali
+
+Una scala nominale assegna osservazioni a categorie senza un ordine intrinseco. Se codifichiamo controllo con 0 e intervento con 1, i numeri funzionano come etichette. La media della variabile coincide con la proporzione di osservazioni codificate come 1, ma non rappresenta una posizione psicologica intermedia tra controllo e intervento.
+
+### Scale ordinali
+
+Una scala ordinale conserva l'ordine, ma non garantisce distanze uguali. Sappiamo che *molto* indica più di *abbastanza*, ma non sappiamo se la differenza psicologica tra *per nulla* e *poco* sia uguale a quella tra *abbastanza* e *molto*.
+
+### Scale a intervalli
+
+In una scala a intervalli, le differenze hanno un significato stabile, mentre lo zero è convenzionale. Molti punteggi standardizzati vengono interpretati in questo modo. Possiamo confrontare una differenza di 10 punti con un'altra differenza di 10 punti, ma non concludere che un punteggio di 80 rappresenti il doppio del costrutto di un punteggio di 40.
+
+### Scale di rapporti
+
+Una scala di rapporti possiede uno zero non arbitrario che rende interpretabili i rapporti. Un tempo di reazione di 800 millisecondi dura il doppio di uno di 400 millisecondi. Questo non implica, però, che la persona abbia il doppio della difficoltà cognitiva: la proprietà metrica del dato non determina da sola il significato psicologico.
+
+::: {.callout-warning title="Il doppio del punteggio non è necessariamente il doppio del costrutto"}
+Dire che 30 è il doppio di 15 è un'affermazione aritmetica. Dire che una persona possiede il doppio dello stress richiede una scala di rapporti del costrutto, una condizione raramente giustificata per i punteggi psicologici.
 :::
 
-## Il test della trasformazione
+## Le trasformazioni rivelano le assunzioni
 
-Un modo pratico per capire se un'interpretazione è legittima consiste nel chiedersi quali trasformazioni dei valori non alterano il significato della misura.
+Un modo per comprendere una scala è chiedersi quali trasformazioni conservino l'informazione rilevante.
 
-- Per una scala nominale, è possibile cambiare le etichette senza alterare l'informazione.
-- Per una scala ordinale, possiamo applicare trasformazioni monotone che preservano l'ordine.
-- Per una scala a intervalli, possiamo cambiare l'origine e le unità di misura con trasformazioni lineari.
-- Per una scala di rapporti, possiamo cambiare le unità di misura moltiplicando per una costante positiva, ma non possiamo spostare arbitrariamente lo zero.
+Per una variabile nominale possiamo cambiare le etichette. Per una variabile ordinale possiamo ricodificare le categorie purché l'ordine venga preservato. Una scala a intervalli consente un cambiamento lineare di unità e origine, come nel passaggio da Celsius a Fahrenheit. Una scala di rapporti consente il cambiamento dell'unità, ma non uno spostamento arbitrario dello zero.
 
-::: {.callout-important title="Test della trasformazione"}
-Se una conclusione cambia in modo sostanziale dopo una trasformazione che dovrebbe essere ammissibile per quel livello di scala, allora probabilmente stiamo attribuendo alla variabile proprietà metriche che non possiede.
-:::
-
-### Esempio pratico in R
-
-Consideriamo risposte su una scala Likert da 1 a 5. Se trattiamo la scala come puramente ordinale, ciò che deve essere preservato è l'ordine. Se invece calcoliamo le medie e le differenze, stiamo facendo un'assunzione ulteriore: che le distanze tra le categorie siano interpretabili.
+L'esempio seguente mostra che una ricodifica monotona conserva l'ordine delle risposte, ma modifica le distanze e quindi la media.
 
 ```{r}
-# Risposte su scala Likert 1-5
-likert <- c(2, 3, 4, 3, 5, 2, 4, 3, 4, 5)
+#| label: measurement-monotonic-transformation
+risposte <- c(2, 3, 4, 3, 5, 2, 4, 3, 4, 5)
 
-# Trasformazione monotona: preserva l'ordine ma cambia le distanze
-likert_monotona <- c(1, 2, 4, 2, 10, 1, 4, 2, 4, 10)
+ricodifica <- c(
+  `1` = 1,
+  `2` = 2,
+  `3` = 4,
+  `4` = 7,
+  `5` = 11
+)
 
-# La mediana è meno sensibile alla trasformazione monotona
-median(likert)
-median(likert_monotona)
+risposte_ricodificate <- unname(
+  ricodifica[as.character(risposte)]
+)
 
-# La media dipende invece dalle distanze numeriche assegnate
-mean(likert)
-mean(likert_monotona)
+c(
+  media_originale = mean(risposte),
+  media_ricodificata = mean(risposte_ricodificate)
+)
+
+identical(
+  order(risposte),
+  order(risposte_ricodificate)
+)
 ```
 
-Questo esempio non dimostra che le medie su scala Likert siano sempre errate. Mostra, però, che la media incorpora un'assunzione: i valori numerici devono rappresentare distanze interpretabili. Se tale assunzione è fragile, le conclusioni basate sulle medie devono essere presentate con cautela.
+L'ordine è preservato, mentre la media cambia perché dipende dalle distanze numeriche. Il codice non dimostra che la media sia sempre inappropriata per dati ordinali. Rende visibile l'assunzione aggiuntiva necessaria per interpretarla.
 
-## Il caso delle scale Likert
+## Item Likert e punteggi aggregati
 
-Le scale Likert sono molto diffuse in psicologia. Chiedono ai partecipanti di esprimere il loro grado di accordo, frequenza, intensità o valutazione soggettiva utilizzando categorie ordinate, solitamente da 1 a 5 o da 1 a 7.
+Un **item Likert** presenta categorie ordinate, come *per nulla d'accordo*, *poco d'accordo*, *abbastanza d'accordo* e *molto d'accordo*. Il singolo item è ordinale: l'ordine è noto, le distanze psicologiche non lo sono.
 
-Dal punto di vista strettamente statistico, ogni item Likert è ordinale: sappiamo che "molto d'accordo" indica un livello di accordo maggiore rispetto a "abbastanza d'accordo", ma non sappiamo se la distanza psicologica tra le categorie adiacenti sia costante.
+Una **scala Likert** combina più item, spesso attraverso una somma o una media. Il punteggio aggregato può assumere molti valori e comportarsi in modo più regolare del singolo item. Per questa ragione viene spesso trattato come approssimativamente continuo o intervallato.
 
-Nella pratica, tuttavia, molte analisi trattano i punteggi Likert aggregati come approssimazioni di scale a intervalli. Questa scelta può essere ragionevole quando:
+Questa scelta può essere ragionevole, ma non deriva automaticamente dal fatto che siano stati sommati più numeri. Richiede che gli item siano collegati a un costrutto interpretabile, che la regola di composizione sia giustificata e che il comportamento del punteggio sia esaminato.
 
-- il punteggio deriva dalla somma o dalla media di più item coerenti;
-- la scala ha un numero sufficiente di categorie;
-- la distribuzione non è estremamente asimmetrica o concentrata agli estremi.
-- le conclusioni sono robuste rispetto ad analisi alternative;
-- l'assunzione metrica viene dichiarata esplicitamente.
-
-La soluzione non è vietare sempre le medie né usarle sempre senza riflettere. La soluzione è rendere esplicita l'assunzione.
+È quindi utile distinguere sempre ciò che viene analizzato. Una tabella delle frequenze è spesso la prima rappresentazione appropriata per un singolo item. Per un punteggio aggregato possiamo considerare media e deviazione standard, ma dovremmo anche osservare distribuzione, limiti della scala, effetti di pavimento o soffitto e presenza di combinazioni di risposte molto diverse che producono lo stesso totale.
 
 ::: {.callout-note title="Una posizione pragmatica"}
-Trattare una scala Likert come approssimazione intervallare è una scelta modellistica, non una verità garantita dai dati. Può essere utile, ma va giustificata e controllata.
+Trattare un punteggio Likert aggregato come approssimativamente intervallato è una decisione modellistica. Può essere utile e robusta in molte applicazioni, ma deve essere distinta dall'affermazione più forte secondo cui le distanze psicologiche sarebbero note e perfettamente uguali.
 :::
 
-### Raccomandazioni pratiche
+## Self-report, comportamento e fisiologia
 
-Quando si lavora con scale Likert o punteggi psicologici simili:
+Le misure self-report forniscono accesso a esperienze soggettive che non potrebbero essere osservate direttamente. Sono però influenzate da memoria, desiderabilità sociale, interpretazione degli item, stanchezza e stile di risposta.
 
-1. specifica se stai analizzando singoli item o punteggi aggregati;
-2. dichiara se tratti il punteggio come ordinale o approssimativamente intervallato;
-3. Evita interpretazioni di rapporto, come "il doppio dell'accordo";
-4. controlla le distribuzioni, i valori estremi e i pattern di risposta;
-5. quando l'esito è centrale per la ricerca, valuta l'analisi di sensibilità o i modelli ordinali;
-6. Collegare sempre l'interpretazione dei punteggi al costrutto teorico.
+Le misure comportamentali e fisiologiche vengono talvolta considerate più oggettive. In realtà sono più direttamente osservabili, ma non automaticamente più valide. Un tempo di reazione lento può riflettere minore attenzione, maggiore cautela, difficoltà del compito, affaticamento o una strategia differente. Una variazione della frequenza cardiaca può dipendere da stress, attività fisica, postura, farmaci o caratteristiche individuali.
 
-## Misure self-report, comportamentali e fisiologiche
+Nessun indicatore interpreta se stesso. La scelta tra self-report, comportamento e fisiologia dipende dalla teoria e dalla domanda. Usare più metodi può essere informativo proprio perché ciascuno rende visibile una parte differente del fenomeno.
 
-Molte misure psicologiche sono *self-report*: chiedono alla persona di descrivere stati, atteggiamenti, emozioni o comportamenti. Questi strumenti sono preziosi perché molti fenomeni psicologici hanno una componente soggettiva accessibile solo attraverso il resoconto della persona.
+## Variabili discrete, continue e risoluzione
 
-Tuttavia, i self-report possono essere influenzati da:
+Il livello di scala non esaurisce le proprietà di una variabile.
 
-- desiderabilità sociale;
-- memoria imperfetta;
-- interpretazione diversa degli item;
-- stanchezza o scarsa attenzione;
-- stile di risposta, per esempio tendenza ad accordarsi con le affermazioni;
-- contesto di somministrazione.
+Una variabile **discreta** assume valori separati, come il numero di errori o di parole ricordate. Una variabile **continua** può assumere, almeno idealmente, qualsiasi valore in un intervallo, come la durata o una misura fisiologica.
 
-Le misure comportamentali e fisiologiche sembrano talvolta più oggettive, ma non sono automaticamente più valide. Anche un tempo di reazione, il numero di errori o un indicatore fisiologico richiedono una teoria che spieghi perché quell'indicatore dovrebbe rappresentare il costrutto.
+Nella pratica, ogni strumento possiede una risoluzione. Un tempo registrato al millisecondo viene memorizzato mediante valori discreti, pur rappresentando una durata concettualmente continua. Un punteggio totale può assumere molti valori, ma rimanere limitato da un minimo e un massimo.
 
-::: {.callout-tip title="Esempio"}
-Un tempo di reazione più lento in un compito cognitivo può riflettere minore attenzione, maggiore cautela, difficoltà del compito, affaticamento, scarsa motivazione o una strategia di risposta diversa. Il dato è osservabile, ma la sua interpretazione richiede un modello teorico.
+Queste caratteristiche influenzano grafici e modelli. I conteggi hanno uno zero e non possono assumere valori negativi. Le proporzioni sono vincolate. I tempi di reazione sono spesso asimmetrici. Un punteggio con pochi valori possibili non dovrebbe essere trattato come se provenisse da una misura continua senza verificare le conseguenze della scelta.
+
+## Misurazione ed esplorazione dei dati
+
+L'EDA deve rispettare il significato della variabile.
+
+Per una categoria nominale, una tabella di frequenza o un grafico a barre mostra quante osservazioni appartengano a ciascun gruppo. Per una variabile ordinale, l'ordine delle categorie deve essere conservato. Per una misura quantitativa, istogrammi, densità, boxplot e statistiche di posizione e dispersione possono descrivere la distribuzione.
+
+La prima operazione non dovrebbe però essere scelta soltanto dal tipo registrato in R. Una colonna numerica può contenere codici nominali, categorie ordinali o punteggi quantitativi. Prima di eseguire `mean()` dobbiamo sapere come sono stati prodotti i valori.
+
+::: {.callout-tip title="Controllare il codice generato dall'AI"}
+Se un assistente propone:
+
+```r
+mean(dati$qualita_sonno, na.rm = TRUE)
+```
+
+devi verificare almeno tre cose: se `qualita_sonno` è un singolo item o un punteggio aggregato, che cosa rappresentano i numeri e perché i valori mancanti possono essere esclusi.
+
+Il comando può essere sintatticamente corretto e statisticamente poco informativo.
 :::
 
-## Variabili discrete e continue
+## Misurazione e modellizzazione bayesiana
 
-Il livello di scala non esaurisce le proprietà di una variabile. Un'altra distinzione importante riguarda la granularità: alcune variabili sono discrete, altre continue.
+Il progetto bayesiano distingue con particolare chiarezza ciò che osserviamo da ciò che vogliamo conoscere. Questa distinzione è già il cuore della misurazione.
 
-Una *variabile discreta* assume valori separati, spesso interi. Esempi:
+Un modello può rappresentare esplicitamente un costrutto latente, l'errore di misura o le differenze tra item e persone. Può inoltre propagare questa incertezza fino alle conclusioni sui parametri e sulle predizioni. Ciò è più informativo che trattare ogni punteggio come perfettamente osservato.
 
-- numero di errori;
-- numero di parole ricordate;
-- numero di accessi a una piattaforma;
-- numero di episodi in un periodo.
+Tuttavia, un modello sofisticato non crea automaticamente una buona misura. Se gli item non rappresentano il costrutto, se funzionano diversamente tra gruppi o se il disegno non raccoglie gli indicatori necessari, la distribuzione a posteriori sarà precisa rispetto a un problema mal definito.
 
-Una *variabile continua* può assumere, almeno idealmente, infiniti valori all'interno di un intervallo. Esempi:
+Nel Companion questi temi riappariranno nei modelli gerarchici, nei modelli latenti e nei controlli predittivi. In questo modulo è sufficiente trattenere un principio:
 
-- tempo di reazione;
-- durata del sonno;
-- altezza;
-- intensità fisiologica misurata da uno strumento.
+> l'incertezza statistica sui parametri e l'incertezza sul significato delle misure sono problemi distinti, anche quando vengono rappresentati nello stesso modello.
 
-![Esempi di distribuzioni per variabili discrete e continue.](../../figures/misurazione_3.png){ width=67% }
+## Teoria, misura e dati
 
-Questa distinzione è importante perché influenza la scelta dei grafici, delle statistiche descrittive e dei modelli. Per esempio, il conteggio degli errori non ha le stesse proprietà di una misura continua del tempo. Allo stesso modo, un punteggio su una scala con pochi valori possibili può richiedere cautele diverse rispetto a una misura realmente continua.
+Teoria e misurazione formano un ciclo.
 
-::: {.callout-note title="Collegamento con i modelli"}
-Nei capitoli successivi, e soprattutto nel companion operativo su `brms` e `cmdstan`, il tipo di variabile aiuterà a scegliere la famiglia di distribuzioni: normale per molte misure continue, Bernoulli per esiti binari, binomiale per proporzioni, Poisson o negative binomial per conteggi, modelli ordinali per risposte ordinate.
-:::
+La teoria chiarisce il costrutto e suggerisce quali indicatori dovrebbero rispondere a determinate condizioni. Il disegno stabilisce come raccogliere osservazioni informative. La misura produce punteggi. L'EDA mostra come questi punteggi si distribuiscano, quali anomalie contengano e se si comportino in modo plausibile. Il modello formalizza le relazioni attese e i controlli mostrano dove la rappresentazione non è adeguata.
 
-## Misurazione ed EDA
-
-L'analisi esplorativa dei dati non è separata dalla misurazione. La scelta di un grafico o di una statistica descrittiva dipende dal tipo di variabile e dal significato dei valori.
-
-Alcuni esempi:
-
-- per le variabili nominali, sono utili le tabelle di frequenza e i grafici a barre;
-- per le variabili ordinali, sono utili le frequenze ordinate, i percentili, le mediane e i grafici che preservano l'ordine;
-- per le variabili quantitative, è possibile esplorare distribuzioni, medie, deviazioni standard, densità e boxplot.
-- per i tempi di reazione o i conteggi, è necessario controllare le asimmetrie, i valori estremi e i vincoli naturali della scala.
-- per le scale Likert, è spesso utile mostrare la distribuzione delle risposte prima di riassumerle in una media.
-
-::: {.callout-tip title="Collegamento con R"}
-In R, una variabile può essere codificata come numero anche se, concettualmente, è ordinale o nominale. Per esempio, una risposta da 1 a 5 può essere letta come numerica, ma questo non implica che ogni operazione aritmetica sia automaticamente significativa. La codifica informatica non sostituisce il ragionamento sulla misura.
-:::
-
-## Misurazione e inferenza bayesiana
-
-Nel manuale principale, l'inferenza bayesiana verrà presentata come un metodo per aggiornare le credenze alla luce dei dati e rappresentare l'incertezza mediante distribuzioni di probabilità. La misurazione entra in questo processo in modo fondamentale.
-
-Se il dato osservato è una misura imperfetta del costrutto, l'incertezza non riguarda solo il parametro del modello, ma anche il legame tra il costrutto e l'indicatore. In modelli più avanzati, questo legame può essere rappresentato esplicitamente attraverso modelli con errore di misura, modelli latenti o modelli gerarchici.
-
-Per ora, non dobbiamo stimare questi modelli. È sufficiente tenere a mente una cautela:
-
-> un modello statistico può essere molto sofisticato, ma le sue conclusioni dipendono sempre dalla qualità e dal significato delle misure osservate.
-
-::: {.callout-important title="Idea per il manuale bayesiano"}
-L'approccio bayesiano rende naturale distinguere ciò che osserviamo da ciò che vogliamo inferire. Questa distinzione è già presente nella misurazione: osserviamo $y$, ma siamo interessati a $z$.
-:::
-
-## Teoria e misurazione: un circolo virtuoso
-
-La teoria e la misurazione si sostengono a vicenda.
-
-Una teoria aiuta a decidere cosa misurare, quali indicatori utilizzare e quali modelli attendersi. Senza una teoria, rischiamo di accumulare numeri senza sapere cosa significano.
-
-La misurazione, a sua volta, mette alla prova la teoria. Se un costrutto non può essere collegato a indicatori osservabili in modo chiaro, la teoria resta troppo vaga. Se gli indicatori non si comportano come previsto, può essere necessario rivedere la misura, la teoria o entrambe.
-
-Nel percorso di questo modulo, questo circolo virtuoso ha una funzione pratica:
-
-1. la teoria definisce il costrutto;
-2. il disegno stabilisce come raccogliere dati utili;
-3. la misurazione traduce il costrutto in variabili;
-4. l'EDA controlla il comportamento di queste variabili nei dati;
-5. il modello statistico formalizza una spiegazione o una previsione;
-6. l'inferenza valuta quanto i dati sostengono il modello.
+Quando gli indicatori non si comportano come previsto, non dobbiamo concludere automaticamente che la teoria sia falsa o che i dati siano sbagliati. Può essere necessario rivedere la definizione del costrutto, la procedura di misurazione, il disegno o il modello.
 
 ## Riflessioni conclusive {.unnumbered .unlisted}
 
-La misurazione non è una fase preliminare da superare rapidamente prima della statistica. È il punto in cui la teoria entra nei dati.
+La misurazione è il punto in cui un concetto teorico entra nel dataset. Un punteggio non possiede significato psicologico per il solo fatto di essere numerico. Diventa informativo attraverso un argomento che collega costrutto, operazionalizzazione, indicatori, procedura e uso previsto.
 
-Da questo capitolo dovremmo portare con noi cinque idee:
+Abbiamo distinto il costrutto dal punteggio vero della teoria classica dei test. Abbiamo visto che l'affidabilità riguarda la riproducibilità dei punteggi in condizioni definite, mentre la validità riguarda le interpretazioni e gli usi sostenuti dalle evidenze. Abbiamo inoltre chiarito che la codifica numerica non determina automaticamente il livello di scala e che item Likert e punteggi aggregati richiedono considerazioni differenti.
 
-1. I costrutti psicologici non sono osservati direttamente.
-2. Ogni dato è un indicatore imperfetto di qualcosa che vogliamo conoscere.
-3. L'errore di misura può essere casuale o sistematico.
-4. Affidabilità, validità e livello di scala rispondono a domande diverse.
-5. Le analisi statistiche sono legittime solo se rispettano il significato della misura.
+Nel lavoro con R e con gli assistenti AI, questa competenza è essenziale. Un comando può funzionare perfettamente e riassumere la variabile sbagliata, applicare operazioni prive di significato o nascondere differenze nel funzionamento della misura.
 
-Nel prossimo blocco dedicato all'EDA, useremo queste idee per analizzare le variabili: controlleremo le distribuzioni, i valori mancanti, le codifiche, le anomalie e i pattern visivi, ricordando che un grafico o una statistica descrittiva hanno senso solo se conosciamo il significato dei dati.
+Il capitolo successivo completerà la parte sui fondamenti discutendo la relazione tra associazione e causalità. L'EDA potrà poi iniziare da una base più solida: non soltanto quali valori sono presenti, ma che cosa possono ragionevolmente rappresentare.
 
-## Esercizi {.unnumbered}
+## Esercizi {.unnumbered .unlisted}
 
-::: {.callout-important title="Problemi" collapse="true"}
-1. Nello studio su stress accademico e sonno, identifica il costrutto, l'indicatore e il dato osservato per ciascuna delle seguenti variabili: punteggio a una scala di stress, ore di sonno dichiarate, qualità del sonno da 1 a 5.
+1. Per una scala che misura lo stress accademico, distingui costrutto, operazionalizzazione, indicatore e dato osservato.
 
-2. Spiega, in massimo 8 righe, la differenza tra affidabilità e validità. Fai un esempio di misura affidabile ma non valida.
+2. Perché il punteggio vero della teoria classica dei test non coincide necessariamente con il valore del costrutto psicologico?
 
-3. Per ciascuna variabile, indica il livello di scala più plausibile e giustifica la risposta: tipo di terapia, gravità dei sintomi in tre categorie ordinate, punteggio QI, tempo di reazione, numero di parole ricordate.
+3. Costruisci un esempio di misura affidabile ma non valida. Spiega separatamente perché è affidabile e perché l'interpretazione non è valida.
 
-4. Una scala Likert da 1 a 5 misura l'accordo con l'affermazione "mi sento sotto pressione per gli esami". Quali assunzioni fai se calcoli la media delle risposte? Quali interpretazioni dovresti evitare?
+4. Una scala produce punteggi simili a distanza di una settimana, ma alcuni item vengono interpretati diversamente da studenti italiani e studenti internazionali. Quale proprietà appare buona e quale problema rimane aperto?
 
-5. Un ricercatore osserva che gli studenti con punteggio medio di stress pari a 30 dormono meno degli studenti con punteggio medio pari a 15 e conclude che "hanno il doppio dello stress". Perché questa interpretazione è problematica?
+5. Un ricercatore afferma che un punteggio di stress pari a 30 rappresenta il doppio dello stress di un punteggio pari a 15. Quale proprietà della scala sarebbe necessaria per sostenere questa conclusione?
 
-6. Scegli un costrutto psicologico, per esempio motivazione, ansia, impulsività o benessere. Proponi due indicatori possibili e discuti per ciascuno una fonte di errore di misura.
+6. Considera il codice:
 
-7. Spiega perché un tempo di reazione può essere una scala di rapporti, ma la sua interpretazione psicologica non è automaticamente semplice.
-:::
+   ```r
+   mean(dati$accordo, na.rm = TRUE)
+   ```
+
+   Quali informazioni sulla variabile e sui valori mancanti devi conoscere prima di interpretare il risultato?
+
+7. Spiega perché un singolo item Likert e la media di dieci item non dovrebbero essere trattati automaticamente nello stesso modo.
+
+8. Un tempo di reazione possiede uno zero non arbitrario. Perché questo non rende immediata la sua interpretazione come misura dell'attenzione?
 
 ::: {.callout-tip title="Soluzioni" collapse="true"}
-**1. Costrutto, indicatore e dato osservato**
+1. Il costrutto è lo stress accademico. L'operazionalizzazione specifica, per esempio, una scala di dieci item riferita all'ultima settimana. Gli indicatori sono le risposte ai singoli item. Il dato può essere una risposta particolare oppure il punteggio aggregato ottenuto da uno studente.
 
-Il costrutto è ciò che vogliamo studiare teoricamente. L'indicatore è il modo in cui proviamo a osservarlo. Il dato è il valore registrato.
+2. Il punteggio vero è il valore medio atteso in ripetizioni equivalenti della stessa procedura. Può includere una distorsione stabile e dipende dallo strumento adottato. Il costrutto è invece il concetto teorico che la procedura cerca di rappresentare.
 
-- Punteggio a una scala di stress: il costrutto è lo stress accademico; l'indicatore è la scala self-report; il dato è il punteggio ottenuto da uno studente.
-- Ore di sonno dichiarate: il costrutto può essere quantità di sonno; l'indicatore è il resoconto dello studente; il dato è il numero di ore riportato.
-- Qualità del sonno da 1 a 5: il costrutto è la qualità soggettiva del sonno; l'indicatore è la valutazione ordinata; il dato è il valore scelto.
+3. Una scala può produrre punteggi quasi identici in somministrazioni ripetute, mostrando elevata stabilità. Può però contenere item che misurano soprattutto ansia generale invece dello stress accademico. I punteggi sono affidabili, ma l'interpretazione desiderata non è adeguatamente sostenuta.
 
-**2. Affidabilità e validità**
+4. La stabilità temporale sembra buona. Rimane un problema di equivalenza o invarianza della misura: lo stesso punteggio potrebbe non avere lo stesso significato nei due gruppi linguistici e culturali.
 
-L'affidabilità riguarda la coerenza e stabilità della misura. La validità riguarda la correttezza dell'interpretazione: la misura rappresenta davvero il costrutto di interesse? Una misura può essere affidabile ma non valida. Per esempio, una scala può produrre punteggi molto stabili, ma misurare ansia generale quando lo studio vuole misurare stress accademico.
+5. Sarebbe necessaria una scala di rapporti del costrutto, con uno zero non arbitrario e rapporti interpretabili. Questa proprietà non è generalmente giustificata per i punteggi psicologici.
 
-**3. Livelli di scala**
+6. Occorre sapere se `accordo` è una categoria nominale, un item ordinale o un punteggio aggregato; che cosa significano i numeri; quanti valori mancano; perché mancano; e se escluderli modifica la popolazione rappresentata dal calcolo.
 
-- Tipo di terapia: nominale, perché le categorie non hanno un ordine naturale.
-- Gravità dei sintomi in tre categorie: ordinale, perché le categorie sono ordinate ma le distanze non sono note.
-- Punteggio QI: di solito trattato come scala a intervalli, perché le differenze sono interpretabili ma lo zero non indica assenza di intelligenza.
-- Tempo di reazione: scala di rapporti, perché ha uno zero non arbitrario e i rapporti sono interpretabili.
-- Numero di parole ricordate: scala di rapporti, perché è un conteggio con zero significativo.
+7. Il singolo item contiene poche categorie ordinate e non garantisce distanze uguali. Un punteggio aggregato assume più valori e può comportarsi in modo più regolare, ma richiede comunque una giustificazione teorica e psicometrica della combinazione degli item.
 
-**4. Media di una scala Likert**
-
-Calcolare la media implica trattare i valori numerici come se le distanze tra categorie fossero abbastanza regolari. Questa può essere una scelta pragmatica, soprattutto con punteggi aggregati, ma va dichiarata. Bisogna evitare interpretazioni di rapporto, per esempio dire che un punteggio 4 indica il doppio dell'accordo rispetto a un punteggio 2.
-
-**5. Interpretazione "doppio dello stress"**
-
-L'interpretazione è problematica perché un punteggio di stress non possiede necessariamente uno zero assoluto né rapporti interpretabili. Anche se 30 è il doppio di 15 come numero, non segue che il costrutto psicologico misurato sia doppio. Il rapporto tra punteggio osservato e costrutto dipende dalla scala e dalla validità della misura.
-
-**6. Due indicatori di un costrutto**
-
-Per la motivazione allo studio, due indicatori possibili sono: un questionario self-report e il tempo effettivo dedicato allo studio in una settimana. Il questionario può essere influenzato da desiderabilità sociale o interpretazione degli item. Il tempo di studio può essere registrato in modo impreciso e non distingue studio concentrato da tempo passato sui libri senza attenzione.
-
-**7. Tempo di reazione**
-
-Il tempo di reazione è una scala di rapporti perché zero ha un significato non arbitrario e un tempo di 800 ms è il doppio di 400 ms. Tuttavia, l'interpretazione psicologica richiede cautela: un tempo più lento può indicare minore velocità di elaborazione, maggiore cautela, affaticamento, difficoltà del compito o una strategia diversa.
+8. Il tempo è quantitativo e consente rapporti tra durate. Il collegamento con l'attenzione rimane però teorico: un tempo più lungo può dipendere anche da cautela, difficoltà, affaticamento, strategia o problemi motori.
 :::
 
-## Bibliografia {.unnumbered}
+::: {.callout-note title="Punti chiave" collapse="true"}
+- Un costrutto psicologico non viene osservato direttamente.
+- Operazionalizzazione, indicatore e dato sono passaggi distinti.
+- Il punteggio vero della teoria classica dei test non è il costrutto latente.
+- L'affidabilità riguarda la coerenza dei punteggi in condizioni definite.
+- La validità riguarda l'interpretazione e l'uso dei punteggi.
+- Una misura affidabile può non essere valida.
+- Lo stesso punteggio deve avere significato comparabile tra persone e gruppi.
+- La codifica numerica non determina automaticamente il livello di scala.
+- Il singolo item Likert è ordinale; un punteggio aggregato può essere trattato come approssimativamente continuo soltanto con una giustificazione.
+- L'EDA e il codice R devono rispettare il significato della misura.
+:::
+
+::: {.callout-note title="Ambiente di sviluppo" collapse="true"}
+Il capitolo usa soltanto funzioni incluse in R base. Le informazioni sull'ambiente possono essere ottenute con:
+
+```{r}
+#| echo: true
+sessionInfo()
+```
+:::
+
+## Bibliografia {.unnumbered .unlisted}

@@ -1,486 +1,291 @@
-# Dalla correlazione alla causalità {#sec-causality-intro}
+# Dall'associazione alla domanda causale {#sec-causality-intro}
 
-::: {.callout-note appearance="minimal"}
-Nel capitolo precedente abbiamo visto come descrivere l'associazione tra due variabili. A questo punto, è naturale chiedersi se una variabile possa essere la causa dell'altra. Questa domanda è importante, ma richiede cautela: una correlazione può indicare una possibile pista di ricerca, ma non dimostra da sola una relazione causale.
+::: {.callout-note title="In sintesi"}
+**Da sapere**  L'EDA descrive distribuzioni e associazioni osservate. Una domanda causale chiede invece che cosa cambierebbe sotto un intervento alternativo. Il passaggio non dipende dall'aggiunta di un coefficiente o di una covariata, ma dal disegno e dalle assunzioni che permettono di identificare il confronto causale.
+
+**Da saper fare**  Distinguere descrizione, previsione ed effetto causale; riconoscere quando il linguaggio eccede i dati; trasformare una vaga affermazione causale in una domanda che specifichi intervento, alternativa, esito, tempo e popolazione; spiegare che cosa l'EDA può controllare e che cosa richiede il percorso causale del Companion.
 :::
 
-::: {.callout-tip title="Messaggi chiave"}
-- L'**associazione** descrive come due variabili variano insieme.
-- Una **relazione causale** riguarda ciò che cambierebbe se intervenissimo su una variabile.
-- Il **confondimento** può far apparire causale una relazione che non lo è.
-- La **randomizzazione** è uno strumento potente perché rende i gruppi comparabili in media.
-- L'EDA può suggerire ipotesi causali, ma non può fondarle da sola.
+## Introduzione {.unnumbered .unlisted}
+
+Nel capitolo precedente abbiamo descritto come due variabili varino insieme. Una relazione osservata può essere scientificamente importante, ma non risponde automaticamente alla domanda su ciò che accadrebbe modificando una delle variabili.
+
+Se gli studenti con maggiore stress dormono meno, i dati sono compatibili con molte storie. Lo stress può ridurre il sonno; il sonno insufficiente può aumentare lo stress; il periodo degli esami può influenzare entrambi; la partecipazione allo studio può selezionare combinazioni particolari di studenti.
+
+L'EDA permette di vedere la relazione. Non sceglie da sola quale storia sia corretta.
+
+Il Companion dedica un intero percorso a questa distinzione. Il capitolo [*Associazione, previsione ed effetto causale*](https://ccaudek.github.io/utet-companion/chapters/modelli/10_associazione_previsione_effetto_causale.html) separa i tre obiettivi; [*Definire un effetto causale*](https://ccaudek.github.io/utet-companion/chapters/causalita/02_propedeutic_causality.html) formalizza interventi, esiti potenziali ed estimand; [*Identificare effetti causali nei dati osservazionali*](https://ccaudek.github.io/utet-companion/chapters/causalita/03_causality.html) sviluppa DAG e strategie di identificazione.
+
+Questo capitolo non ripete quei contenuti. Ha una funzione di confine:
+
+> insegnare dove termina una descrizione EDA e quale domanda deve essere formulata prima di entrare nell'inferenza causale.
+
+::: {.callout-tip title="Prerequisiti"}
+È necessario avere letto @sec-key-notions-design e @sec-correlation. Il contenuto qui presentato è soltanto una preparazione al percorso causale del Companion.
 :::
 
-## Perché questo capitolo è qui
+## Panoramica del capitolo {.unnumbered .unlisted}
 
-L'analisi esplorativa dei dati serve a osservare i dati prima di costruire modelli o trarre conclusioni. In psicologia, però, il passo dall'associazione alla spiegazione è spesso molto seducente. Osserviamo che due variabili sono correlate e siamo tentati di raccontare subito una storia causale.
+Distingueremo anzitutto descrizione, previsione e causalità. Vedremo poi come rendere precisa una domanda di intervento e perché associazione osservata ed effetto causale sono quantità differenti. La parte centrale chiarirà il ruolo limitato ma importante dell'EDA: controllare dati, sequenza temporale, composizione dei gruppi e incoerenze con il disegno, senza pretendere di identificare automaticamente l'effetto. Concluderemo con un protocollo linguistico e con richieste appropriate all'AI.
 
-Per esempio:
+## La stessa formula può rispondere a domande diverse
 
-- gli studenti che dormono meno riportano più stress;
-- chi usa di più lo smartphone ha punteggi più alti di ansia.
-- chi riceve supporto sociale mostra meno sintomi depressivi.
-- chi studia di più ottiene voti migliori.
+Una regressione o una correlazione possono comparire in analisi con finalità differenti. Il significato non è stabilito dal software.
 
-Tutte queste frasi descrivono associazioni possibili. Tuttavia, ciascuna di esse può essere interpretata in modi diversi. Il sonno scarso può aumentare lo stress, ma lo stress può anche peggiorare la qualità del sonno. L'uso dello smartphone può contribuire all'ansia, ma gli studenti più ansiosi potrebbero usare di più lo smartphone. Il supporto sociale può proteggere dal disagio, ma le persone con meno disagio possono anche avere più energie per mantenere relazioni sociali.
-
-Questo capitolo introduce quindi una distinzione fondamentale:
-
-> una associazione osservata nei dati non coincide necessariamente con un effetto causale.
-
-L'obiettivo non è imparare tecniche avanzate di inferenza causale. L'obiettivo è più modesto, ma importante per l'EDA: imparare a non interpretare troppo rapidamente le associazioni che osserviamo.
-
-```{r}
-#| label: causality-packages
-#| message: false
-#| warning: false
-
-library(dplyr)
-library(ggplot2)
-```
-
-## Associazione e causalità rispondono a domande diverse
-
-Una **domanda associativa** chiede se due variabili tendono a comparire insieme.
-
-Per esempio:
-
-> Gli studenti con più stress dormono meno?
-
-Questa domanda può essere affrontata con uno scatterplot, una correlazione o una regressione descrittiva. In questo caso, stiamo osservando come due variabili si dispongono nei dati.
-
-Una **domanda causale**, invece, chiede che cosa accadrebbe se intervenissimo su una variabile.
-
-Per esempio:
-
-> Se riducessimo lo stress degli studenti, migliorerebbe la qualità del loro sonno?
-
-Questa seconda domanda non riguarda solo ciò che osserviamo. Riguarda anche ciò che sarebbe accaduto in una condizione alternativa. Per questo motivo, la causalità richiede un ragionamento più forte della semplice descrizione dei dati.
-
-::: {.callout-warning title="Domanda da tenere sempre presente"}
-Quando osserviamo una relazione tra due variabili, dobbiamo chiederci:
-
-> Sto descrivendo una associazione oppure sto facendo un'affermazione causale?
-
-Molti errori interpretativi nascono quando una frase associativa viene trasformata, senza alcuna giustificazione, in una frase causale.
-:::
-
-## L'idea controfattuale
-
-Il modo più semplice per capire la causalità è pensare a un confronto tra due scenari.
-
-Immaginiamo uno studente che usa una tecnica di rilassamento prima di un esame. La domanda causale è:
-
-> La tecnica di rilassamento ha ridotto la sua ansia?
-
-Per rispondere in modo esaustivo, dovremmo osservare due versioni dello stesso studente, nello stesso momento e nelle stesse condizioni:
-
-1. lo studente usa la tecnica di rilassamento;
-2. lo stesso studente non usa la tecnica di rilassamento.
-
-La differenza tra i due livelli di ansia sarebbe l'effetto causale della tecnica.
-
-Il problema è evidente: nella realtà, osserviamo solo uno dei due scenari. O usa la tecnica o non la usa. L'altro scenario rimane non osservato. Si chiama **controfattuale**: riguarda ciò che sarebbe potuto accadere, ma che non si è verificato nel mondo osservato.
-
-::: {.callout-note title="Il problema fondamentale"}
-Per una singola persona, non è possibile osservare contemporaneamente ciò che accade con un intervento e ciò che sarebbe accaduto senza di esso. Questo è il motivo per cui l'inferenza causale è difficile.
-:::
-
-Nella ricerca empirica, però, non è possibile risolvere questo problema a livello individuale. Possiamo però cercare di confrontare gruppi che siano, per quanto possibile, comparabili.
-
-## Perché i gruppi osservati possono essere diversi
-
-Supponiamo di voler valutare se una tecnica di rilassamento riduce l'ansia. Osserviamo due gruppi:
-
-- studenti che hanno usato la tecnica;
-- studenti che non l'hanno usata.
-
-Se il primo gruppo mostra un livello di ansia inferiore, possiamo concludere che la tecnica è efficace?
-
-Non necessariamente.
-
-Forse gli studenti che scelgono questa tecnica sono anche quelli più motivati, più informati, più abituati a gestire lo stress o meno ansiosi di partenza. In questo caso, il confronto tra i gruppi mescola due cose:
-
-1. l'eventuale effetto della tecnica;
-2. le differenze preesistenti tra chi la usa e chi non la usa.
-
-Queste differenze preesistenti sono il cuore del problema del **confondimento**.
-
-## Il confondimento
-
-Una variabile è un **confondente** quando è collegata sia alla possibile causa sia all'esito.
-
-Esempio:
-
-```text
-Motivazione  --->  Studio pomeridiano
-      |
-      v
-Rendimento al test
-```
-
-Se gli studenti più motivati studiano di più e ottengono risultati migliori, potremmo osservare una relazione positiva tra lo studio pomeridiano e il rendimento, anche se lo studio pomeridiano, di per sé, non ha alcun effetto specifico. La motivazione genera una parte dell'associazione osservata.
-
-::: {.callout-warning title="Confondimento"}
-Il confondimento si verifica quando una terza variabile crea o altera l'associazione tra una possibile causa e un esito. In presenza di confondimento, l'associazione osservata può essere fuorviante.
-:::
-
-### Un esempio simulato
-
-Costruiamo un piccolo esempio. Immaginiamo che la motivazione influenzi sia la probabilità di studiare nel pomeriggio sia il rendimento nel test. In questa simulazione, però, lo studio pomeridiano non ha alcun effetto causale diretto sul rendimento.
-
-```{r}
-#| label: causality-confounding-data
-
-set.seed(123)
-n <- 300
-
-motivazione <- rbinom(n, size = 1, prob = 0.50)
-studio_pomeridiano <- rbinom(n, size = 1, prob = 0.25 + 0.45 * motivazione)
-rendimento <- rnorm(n, mean = 60 + 15 * motivazione, sd = 8)
-
-dati_conf <- tibble(
-  motivazione = factor(motivazione, labels = c("bassa", "alta")),
-  studio_pomeridiano = factor(studio_pomeridiano, labels = c("no", "si")),
-  rendimento = rendimento
-)
-
-dati_conf |> 
-  group_by(studio_pomeridiano) |> 
-  summarise(
-    n = n(),
-    rendimento_medio = mean(rendimento),
-    .groups = "drop"
-  )
-```
-
-Se si confronta chi studia nel pomeriggio con chi non lo fa, sembra che studiare nel pomeriggio sia associato a un rendimento più alto.
-
-```{r}
-#| label: causality-confounding-plot
-#| fig-cap: "Associazione osservata tra studio pomeridiano e rendimento."
-#| fig-width: 6
-#| fig-height: 4
-
- ggplot(dati_conf, aes(x = studio_pomeridiano, y = rendimento)) +
-  geom_boxplot(width = 0.45, outlier.alpha = 0.4) +
-  geom_jitter(width = 0.08, alpha = 0.35) +
-  labs(
-    x = "Studio pomeridiano",
-    y = "Rendimento al test"
-  )
-```
-
-Ma sappiamo come sono stati generati i dati: la differenza nasce dalla motivazione. Se analizziamo separatamente gli studenti con bassa e alta motivazione, la relazione si riduce drasticamente.
-
-```{r}
-#| label: causality-stratified-summary
-
-dati_conf |> 
-  group_by(motivazione, studio_pomeridiano) |> 
-  summarise(
-    n = n(),
-    rendimento_medio = mean(rendimento),
-    .groups = "drop"
-  )
-```
-
-```{r}
-#| label: causality-stratified-plot
-#| fig-cap: "Quando si considera la motivazione, l'associazione cambia."
-#| fig-width: 7
-#| fig-height: 4
-
- ggplot(dati_conf, aes(x = studio_pomeridiano, y = rendimento)) +
-  geom_boxplot(width = 0.45, outlier.alpha = 0.4) +
-  geom_jitter(width = 0.08, alpha = 0.35) +
-  facet_wrap(~ motivazione) +
-  labs(
-    x = "Studio pomeridiano",
-    y = "Rendimento al test"
-  )
-```
-
-Questo esempio non dimostra che la motivazione sia sempre il confondente giusto. Mostra un principio generale: prima di interpretare un'associazione come causale, dobbiamo chiederci se i gruppi confrontati erano comparabili.
-
-## Il ruolo della randomizzazione
-
-La randomizzazione è uno strumento potente perché assegna il trattamento in modo indipendente dalle caratteristiche iniziali delle persone.
-
-Se gli studenti vengono assegnati casualmente all'uso o meno di una tecnica di rilassamento, i due gruppi possono comunque differire per caso, ma non dovrebbero differire sistematicamente. In media, la motivazione, l'ansia iniziale, la preparazione e altre caratteristiche saranno distribuite in modo simile nei due gruppi.
-
-Ciò rende più plausibile interpretare la differenza osservata tra i gruppi come effetto del trattamento.
-
-::: {.callout-tip title="Perché la randomizzazione aiuta"}
-La randomizzazione non rende gli individui identici. Rende però i gruppi comparabili in media, soprattutto quando il campione è sufficientemente ampio. Per questo motivo, gli esperimenti randomizzati sono particolarmente importanti quando vogliamo rispondere a domande causali.
-:::
-
-### La stessa simulazione, ma con assegnazione casuale
-
-Ripetiamo la simulazione. La motivazione continua a influenzare il rendimento, ma lo studio pomeridiano viene assegnato in modo casuale.
-
-```{r}
-#| label: causality-randomized-data
-
-set.seed(456)
-n <- 300
-
-motivazione <- rbinom(n, size = 1, prob = 0.50)
-studio_pomeridiano <- rbinom(n, size = 1, prob = 0.50)
-rendimento <- rnorm(n, mean = 60 + 15 * motivazione, sd = 8)
-
-dati_rand <- tibble(
-  motivazione = factor(motivazione, labels = c("bassa", "alta")),
-  studio_pomeridiano = factor(studio_pomeridiano, labels = c("no", "si")),
-  rendimento = rendimento
-)
-
-dati_rand |> 
-  group_by(studio_pomeridiano) |> 
-  summarise(
-    n = n(),
-    rendimento_medio = mean(rendimento),
-    .groups = "drop"
-  )
-```
-
-```{r}
-#| label: causality-randomized-plot
-#| fig-cap: "Con assegnazione casuale, i gruppi sono più comparabili."
-#| fig-width: 6
-#| fig-height: 4
-
- ggplot(dati_rand, aes(x = studio_pomeridiano, y = rendimento)) +
-  geom_boxplot(width = 0.45, outlier.alpha = 0.4) +
-  geom_jitter(width = 0.08, alpha = 0.35) +
-  labs(
-    x = "Studio pomeridiano assegnato casualmente",
-    y = "Rendimento al test"
-  )
-```
-
-La differenza tra i gruppi ora è molto più piccola. Questo non significa che la motivazione non conti più, ma che non è più strettamente legata allo studio pomeridiano.
-
-## Studi osservazionali ed esperimenti
-
-La distinzione tra studi osservazionali ed esperimenti è fondamentale.
-
-In uno studio osservazionale, il ricercatore osserva ciò che accade, ad esempio chi studia di più, chi dorme meno, chi usa un'app di mindfulness o chi riceve supporto sociale. Questi studi sono preziosi, ma le associazioni osservate possono dipendere da differenze preesistenti tra le persone.
-
-In un esperimento, invece, il ricercatore interviene attivamente: assegna una condizione, manipola una variabile e controlla il contesto. Quando l'assegnazione è casuale, l'interpretazione causale è più solida.
-
-| Tipo di studio | Cosa permette bene | Cosa richiede cautela |
+| Obiettivo | Domanda | Criterio principale |
 |---|---|---|
-| Osservazionale | Descrivere associazioni reali nei dati | Interpretare le associazioni come effetti causali |
-| Sperimentale non randomizzato | Valutare effetti in contesti controllati | Escludere differenze iniziali tra gruppi |
-| Sperimentale randomizzato | Stimare effetti causali medi con maggiore credibilità | Generalizzare automaticamente a tutte le popolazioni |
+| Descrizione associativa | Come differisce $Y$ tra unità con valori diversi di $X$? | Adeguatezza alla distribuzione osservata |
+| Previsione | Quale valore di $Y$ è plausibile per una nuova unità? | Prestazione su dati nuovi pertinenti |
+| Effetto causale | Come cambierebbe $Y$ se intervenissimo su $X$? | Disegno e identificazione |
+| Spiegazione del processo | Quale meccanismo produce il cambiamento? | Teoria processuale e controlli discriminanti |
 
-La randomizzazione aiuta a risolvere i problemi di causalità interna, ma non li risolve completamente. Un esperimento condotto su studenti universitari volontari può fornire una stima accurata dell'effetto in quel contesto, ma non garantisce che lo stesso effetto valga per altre popolazioni.
+Questi obiettivi non formano una scala nella quale uno sia sempre superiore. Un'analisi può descrivere bene un'associazione senza prevedere accuratamente nuovi casi. Può prevedere bene usando segnali che non sono cause manipolabili. Un esperimento può identificare un effetto senza spiegare il meccanismo che lo produce.
 
-## Il paradosso di Simpson
+La prima decisione deve quindi riguardare la domanda, non il metodo.
 
-Il paradosso di Simpson mostra che un'associazione osservata nel campione totale può cambiare direzione quando si analizzano i sottogruppi.
+## La domanda associativa riguarda persone osservate
 
-Nel nostro contesto, ciò può accadere quando un gruppo significativo è distribuito in modo diverso tra le condizioni.
+Una quantità associativa confronta ciò che vediamo nei dati.
 
-```{r}
-#| label: causality-simpson-data
+Per un'esposizione binaria $A$, una differenza descrittiva elementare è:
 
-set.seed(789)
-n <- 800
+$$
+\Delta_{\mathrm{ass}}
+=
+E(Y\mid A=1)
+-
+E(Y\mid A=0).
+$$
 
-ansia_iniziale <- rbinom(n, size = 1, prob = 0.50)
-condizione <- ifelse(
-  ansia_iniziale == 1,
-  rbinom(n, size = 1, prob = 0.75),
-  rbinom(n, size = 1, prob = 0.25)
-)
+La formula confronta l'esito medio delle persone osservate nei due gruppi. Se chi riceve il trattamento presenta una gravità iniziale maggiore, una diversa motivazione o un diverso accesso alle cure, tali differenze fanno parte del confronto.
 
-# In entrambi i gruppi la condizione riduce leggermente l'esito.
-effetto_vero <- -3
-ansia_finale <- 45 + 18 * ansia_iniziale + effetto_vero * condizione + rnorm(n, 0, 6)
+L'associazione può essere importante. Può descrivere disuguaglianze, individuare gruppi con bisogni differenti, generare ipotesi e contribuire alla previsione.
 
-dati_simpson <- tibble(
-  ansia_iniziale = factor(ansia_iniziale, labels = c("bassa", "alta")),
-  condizione = factor(condizione, labels = c("controllo", "intervento")),
-  ansia_finale = ansia_finale
-)
+Il problema nasce soltanto quando la descrizione viene trasformata in un'affermazione su ciò che il trattamento **produce**.
 
-dati_simpson |> 
-  group_by(condizione) |> 
-  summarise(ansia_media = mean(ansia_finale), .groups = "drop")
-```
+## La domanda causale richiede un intervento
 
-Nel campione totale, l'intervento può sembrare associato a un'ansia finale maggiore, perché gli studenti con un'alta ansia iniziale sono sovrarappresentati nel gruppo di intervento.
+Una formulazione come:
 
-```{r}
-#| label: causality-simpson-stratified
+> Qual è l'effetto del sonno sull'ansia?
 
-dati_simpson |> 
-  group_by(ansia_iniziale, condizione) |> 
-  summarise(ansia_media = mean(ansia_finale), .groups = "drop")
-```
+è troppo vaga per definire un effetto.
 
-All'interno di ciascun livello di ansia iniziale, tuttavia, l'intervento è associato a una riduzione dell'ansia finale.
+Dobbiamo precisare che cosa significhi intervenire sul sonno, quale alternativa venga confrontata, quale esito venga misurato, quando venga misurato e in quale popolazione.
 
-```{r}
-#| label: causality-simpson-plot
-#| fig-cap: "Il confronto aggregato può essere fuorviante quando i gruppi non sono comparabili."
-#| fig-width: 7
-#| fig-height: 4
+Una domanda più precisa è:
 
- ggplot(dati_simpson, aes(x = condizione, y = ansia_finale)) +
-  geom_boxplot(width = 0.45, outlier.alpha = 0.35) +
-  geom_jitter(width = 0.08, alpha = 0.25) +
-  facet_wrap(~ ansia_iniziale) +
-  labs(
-    x = "Condizione",
-    y = "Ansia finale"
-  )
-```
+> Negli studenti universitari che dormono abitualmente meno di sei ore, quale sarebbe la differenza media nell'ansia di stato dopo quattro settimane tra un intervento che aumenta il sonno a sette ore per notte e il mantenimento delle abitudini correnti?
 
-::: {.callout-warning title="Lezione del paradosso di Simpson"}
-Prima di interpretare un'associazione aggregata, è necessario chiedersi se esistono sottogruppi importanti. La media complessiva può nascondere strutture diverse nei dati.
+La precisione non è un dettaglio stilistico. Definisce i due scenari da confrontare.
+
+Nel linguaggio dei potenziali esiti, l'effetto medio può essere scritto:
+
+$$
+\tau_{\mathrm{ATE}}
+=
+E\left[Y(1)-Y(0)\right].
+$$
+
+$Y(1)$ rappresenta l'esito sotto un intervento e $Y(0)$ l'esito sotto l'alternativa. La formula confronta due scenari riferiti alla stessa popolazione, non semplicemente due gruppi diversi già presenti nel dataset.
+
+La formalizzazione completa è sviluppata nel Companion. Qui è sufficiente comprendere che:
+
+$$
+E(Y\mid A=1)-E(Y\mid A=0)
+\neq
+E[Y(1)-Y(0)]
+$$
+
+in generale.
+
+## Perché l'associazione e l'effetto possono differire
+
+Supponiamo che gli studenti più ansiosi scelgano più spesso un corso di rilassamento. Dopo il corso, il gruppo partecipante può mostrare ancora più ansia del gruppo non partecipante, anche se il corso ha prodotto un beneficio.
+
+Il confronto osservato mescola l'eventuale effetto del corso con le differenze preesistenti.
+
+Una causa comune può essere rappresentata schematicamente come:
+
+$$
+A \leftarrow C \rightarrow Y,
+$$
+
+dove $C$ influenza sia l'esposizione $A$ sia l'esito $Y$.
+
+Questa struttura viene chiamata confondimento. Il punto essenziale, in questo modulo, non è imparare una procedura di aggiustamento. È riconoscere che il confondente viene definito da un'ipotesi sul processo generativo, non soltanto da una correlazione trovata nel dataset.
+
+Aggiungere automaticamente tutte le variabili a una regressione non risolve il problema. Alcune variabili possono essere conseguenze del trattamento, mediatori o effetti comuni. Condizionare su di esse può cambiare la domanda o creare una nuova associazione. La logica completa è trattata attraverso i DAG nel Companion.
+
+::: {.callout-important title="L'identificazione precede la stima"}
+Correlazione, regressione, matching e pesatura sono strumenti di stima. Non creano da soli il confronto causale. Prima occorre spiegare perché i dati osservati possano rappresentare gli scenari definiti dalla domanda.
 :::
 
-## Confondimento, mediazione e moderazione
+## Che cosa aggiunge la randomizzazione
 
-Molte difficoltà nascono dal fatto che parliamo genericamente di "terze variabili". Una terza variabile, infatti, può avere ruoli diversi.
+In un esperimento randomizzato, l'assegnazione del trattamento non dipende sistematicamente dalle caratteristiche iniziali delle persone. I gruppi possono differire per caso, ma risultano comparabili in aspettativa rispetto ai potenziali esiti.
 
-### Confondimento
+È il disegno randomizzato a giustificare il confronto causale, non il fatto che il valore-*p* sia piccolo, che il modello sia complesso o che le distribuzioni dei gruppi appaiano simili.
 
-Un confondente è una variabile che precede la possibile causa e l'esito, ed è collegata a entrambi.
+L'EDA rimane utile anche in un esperimento. Può controllare l'implementazione dell'assegnazione, le perdite successive, l'aderenza all'intervento, le distribuzioni degli esiti e la presenza di errori. Non deve però usare gli sbilanciamenti casuali osservati come prova che la randomizzazione abbia “fallito”.
 
-```text
-Confondente
-   |      \
-   v       v
-Causa --> Esito
-```
+## Che cosa può fare l'EDA
 
-Esempio: la motivazione può influenzare sia lo studio che il rendimento. Se non se ne tiene conto, la relazione tra studio e rendimento può risultare distorta.
+L'EDA possiede un ruolo preparatorio concreto.
 
-### Mediazione
+Può verificare se il dataset rispetti l'unità e la sequenza temporale previste. Può mostrare la composizione dei gruppi e rendere visibili differenze iniziali. Può identificare valori mancanti, perdite al follow-up, errori di codifica e restrizioni della popolazione effettivamente analizzata. Può inoltre mostrare se l'associazione cambi tra sottogruppi previsti dal disegno.
 
-Un mediatore è parte del meccanismo attraverso il quale una causa produce un effetto.
+Queste osservazioni possono mettere in discussione una storia causale o indicare che il dataset non rappresenta il disegno dichiarato.
 
-```text
-Causa --> Mediatore --> Esito
-```
+Non possono però dimostrare l'assenza di confondimento non misurato, scegliere automaticamente l'insieme corretto di covariate, stabilire la direzione causale o trasformare una relazione osservata in un effetto.
 
-Esempio: lo stress può peggiorare il sonno e un sonno di scarsa qualità può ridurre il rendimento. In questo caso, il sonno non è semplicemente un disturbo da eliminare, ma una possibile spiegazione del processo.
+Il rapporto può essere espresso così:
 
-### Moderazione
+$$
+\text{EDA}
+\longrightarrow
+\text{controllo dei dati e del disegno},
+$$
 
-Un moderatore indica quando e per chi un effetto è più forte o più debole.
+ma non:
 
-```text
-Causa --> Esito
-   ^
-   |
-Moderatore
-```
+$$
+\text{EDA}
+\longrightarrow
+\text{identificazione automatica dell'effetto}.
+$$
 
-Un esempio è rappresentato da un intervento di rilassamento, che può rivelarsi più efficace per gli studenti con un'ansia iniziale alta rispetto a quelli con un'ansia iniziale bassa.
+## Il tempo fa parte della domanda
 
-::: {.callout-tip title="Tre domande diverse"}
-- **Confondimento**: la relazione osservata è distorta da una terza variabile?
-- **Mediazione**: attraverso quale processo si produce l'effetto?
-- **Moderazione**: l'effetto cambia a seconda delle persone o delle condizioni?
+Una possibile causa deve precedere il proprio effetto alla scala temporale rilevante. Questa condizione è necessaria, ma non sufficiente.
+
+In uno studio trasversale, stress e sonno vengono spesso misurati nello stesso momento. Anche se la correlazione è forte, il dataset non permette di stabilire quale processo venga prima.
+
+Una misura longitudinale può chiarire la sequenza, ma non elimina automaticamente confondimento, selezione o feedback. Le relazioni psicologiche possono inoltre essere bidirezionali e svilupparsi su più scale temporali.
+
+L'EDA deve quindi controllare che le variabili temporali siano correttamente ordinate e che le osservazioni ripetute non vengano trattate come persone indipendenti. La direzione causale richiede comunque un modello sostantivo.
+
+## Stratificare non equivale ad aggiustare correttamente
+
+Separare un grafico per un terzo fattore può rivelare che la relazione aggregata combina gruppi differenti. È un'importante operazione descrittiva.
+
+Non segue, però, che ogni variabile che modifica il grafico debba essere controllata nel modello causale.
+
+Un confondente, un mediatore e un collider possono produrre pattern statistici interessanti, ma reagiscono in modo diverso al condizionamento. La loro classificazione dipende dalle frecce causali ipotizzate.
+
+Per questo motivo, il paradosso di Simpson non viene sviluppato nuovamente qui. Il suo significato causale è trattato nel capitolo del Companion dedicato all'identificazione. In EDA è sufficiente riconoscere che aggregazione e stratificazione possono produrre descrizioni differenti e che la scelta tra esse richiede una domanda esplicita.
+
+## Il linguaggio deve seguire il disegno
+
+Con dati osservazionali trasversali, una frase prudente è:
+
+> Nel campione, maggiore stress è associato a meno ore di sonno.
+
+Sono più impegnative:
+
+> Lo stress predice il sonno.
+
+> Lo stress riduce il sonno.
+
+La prima può essere appropriata soltanto se la capacità predittiva è stata valutata su osservazioni nuove o con una procedura pertinente. La seconda richiede un effetto causale identificato.
+
+Verbi come *determina*, *produce*, *porta a*, *protegge* e *riduce* devono essere sostenuti da una domanda causale definita e da un disegno o da assunzioni di identificazione.
+
+Linguaggio prudente non significa vago. Possiamo descrivere con precisione direzione, popolazione, tempo e grandezza dell'associazione senza attribuirle una causa.
+
+## Quando fermarsi e passare al Companion
+
+Il passaggio al percorso causale è necessario quando la domanda contiene, esplicitamente o implicitamente, un intervento:
+
+> Che cosa accadrebbe se modificassimo $X$?
+
+A quel punto occorre definire l'estimand, rappresentare la struttura causale, stabilire quali assunzioni rendano identificabile l'effetto e soltanto dopo scegliere un metodo di stima.
+
+Il percorso consigliato è:
+
+1. [Associazione, previsione ed effetto causale](https://ccaudek.github.io/utet-companion/chapters/modelli/10_associazione_previsione_effetto_causale.html);
+2. [Definire un effetto causale: interventi, controfattuali ed estimand](https://ccaudek.github.io/utet-companion/chapters/causalita/02_propedeutic_causality.html);
+3. [Identificare effetti causali nei dati osservazionali](https://ccaudek.github.io/utet-companion/chapters/causalita/03_causality.html).
+
+Questo modulo EDA fornisce il dataset controllato e la descrizione della relazione. Il Companion sviluppa il passaggio teorico e modellistico successivo.
+
+## Usare l'AI senza farle inventare una causa
+
+Una richiesta come:
+
+> Qual è la causa di questa correlazione?
+
+non può essere risolta dal dataset soltanto. L'assistente tenderà a proporre storie plausibili, ma la plausibilità narrativa non costituisce identificazione.
+
+::: {.callout-tip title="Un prompt per disciplinare l'interpretazione"}
+> Ho osservato un'associazione tra `stress` e `sonno_ore` in dati trasversali.
+>
+> Separa quattro possibili obiettivi: descrizione associativa, previsione, effetto causale e spiegazione del processo. Per ciascuno indica quale domanda potrei formulare e quale informazione aggiuntiva sarebbe necessaria.
+>
+> Non trasformare l'associazione in un effetto. Per la domanda causale, chiedimi di specificare intervento, alternativa, esito, tempo e popolazione. Elenca possibili spiegazioni alternative soltanto come ipotesi da sottoporre a disegno e teoria, non come conclusioni ricavate dai dati.
 :::
 
-Queste distinzioni sono importanti perché suggeriscono approcci analitici diversi. Un confondente deve essere preso in considerazione per evitare una stima distorta. Un mediatore non va rimosso se si vuole studiare l'effetto totale. Un moderatore va modellato se vogliamo capire per chi l'effetto cambia.
+L'AI può inoltre aiutare a revisionare il linguaggio:
 
-## Cosa può fare l'EDA e cosa non può fare
+> Evidenzia tutte le espressioni causali in questo paragrafo. Per ciascuna, indica quale disegno o assunzione sarebbe necessario e proponi una versione associativa coerente con i dati disponibili.
 
-L'EDA è indispensabile nella riflessione causale, ma presenta dei limiti precisi.
-Può aiutare a:
+## Riflessioni conclusive {.unnumbered .unlisted}
 
-- individuare associazioni interessanti;
-- riconoscere gruppi o sottogruppi rilevanti;
-- individuare relazioni non lineari;
-- scoprire i valori estremi che influenzano un'associazione;
-- generare ipotesi sui possibili fattori confondenti;
-- verificare se una storia causale è almeno compatibile con i dati osservati.
+L'EDA descrive ciò che è osservato. La causalità riguarda il confronto tra ciò che accadrebbe sotto interventi alternativi.
 
-Non può, da sola:
+Una differenza tra gruppi o una correlazione appartiene alla distribuzione osservata. Un effetto causale appartiene a una domanda definita da intervento, alternativa, esito, tempo e popolazione.
 
-- dimostrare che una variabile causa un'altra;
-- escludere tutti i confondenti non osservati;
-- trasformare uno studio osservazionale in un esperimento;
-- sostituire un disegno di ricerca adeguato;
-- giustificare conclusioni causali forti quando i dati non le supportano.
+Il passaggio non viene compiuto aggiungendo variabili a una regressione. Richiede identificazione: una giustificazione basata sul disegno e su ipotesi causali esplicite. La randomizzazione può fornire tale giustificazione; con dati osservazionali servono assunzioni e strutture sviluppate nel Companion.
 
-::: {.callout-note title="Collegamento con il progetto"}
-Nel manuale principale, l'inferenza bayesiana verrà utilizzata per quantificare l'incertezza e per confrontare i modelli. Tuttavia, nessun modello statistico, bayesiano o frequentista, può trasformare automaticamente un'associazione osservazionale in una prova causale. Rimangono fondamentali il disegno dello studio, la misurazione e le assunzioni causali.
-:::
+L'EDA rimane essenziale. Può mostrare incoerenze tra dati e disegno, perdite, squilibri, sottogruppi e sequenze temporali. Può indebolire una storia causale, ma non convalidarla da sola.
 
-## Usare l'AI con criterio
-
-L'AI può essere utile per generare codice, produrre grafici, proporre simulazioni o spiegare concetti. Tuttavia, è particolarmente rischiosa quando si tratta di causalità, in quanto tende spesso a trasformare le associazioni in spiegazioni causali fluide e convincenti.
-
-::: {.callout-warning title="Controlli da fare quando usi l'AI"}
-Quando l'AI commenta una relazione tra variabili, controlla sempre:
-
-- usa parole causali come "influenza", "determina", "produce", "riduce" o "aumenta"?
-- il disegno dello studio giustifica davvero l'uso di una frase causale?
-- Sono stati considerati possibili fattori confondenti?
-- il codice elimina casi o gruppi senza documentarlo?
-- il grafico mostra sottogruppi importanti o li nasconde?
-- L'AI distingue associazione, mediazione, moderazione e confondimento?
-:::
-
-Un buon uso dell'AI non consiste nel chiederle semplicemente "Interpreta questa correlazione". È meglio formulare prompt che mantengano esplicita la cautela metodologica.
-
-Esempio:
-
-> Ho osservato una correlazione negativa tra stress e qualità del sonno in uno studio osservazionale. Aiutami a interpretarla senza fare affermazioni causali non giustificate. Elenca possibili spiegazioni alternative e possibili fattori confondenti.
+Il risultato di questo capitolo non è una tecnica. È una disciplina interpretativa: sapere quando una frase descrive i dati e quando sta facendo una promessa causale che richiede un altro percorso.
 
 ## Esercizi {.unnumbered .unlisted}
 
-::: {.callout-important title="Esercizio 1" collapse="true"}
-In uno studio osservazionale, gli studenti che usano un'app di meditazione riportano meno ansia. Scrivi tre interpretazioni alternative di questa associazione.
+1. Trasforma «lo smartphone aumenta l'ansia» in una domanda causale che specifichi intervento, alternativa, esito, tempo e popolazione.
+
+2. Spiega perché la differenza osservata tra trattati e non trattati non coincide necessariamente con l'effetto medio del trattamento.
+
+3. Per la relazione tra stress e sonno, formula una domanda associativa, una predittiva, una causale e una meccanicistica.
+
+4. Un'analisi aggiunge alla regressione tutte le variabili disponibili. Perché questa strategia non garantisce una stima causale migliore?
+
+5. Elenca tre controlli EDA utili in un esperimento randomizzato e spiega perché nessuno di essi sostituisce la randomizzazione.
+
+6. Una relazione aggregata scompare separando i dati per anno di corso. Quale conclusione descrittiva puoi formulare? Quale conclusione causale non è ancora giustificata?
+
+7. Riscrivi in linguaggio associativo: «Il supporto sociale protegge dalla depressione».
+
+8. Formula un prompt che chieda all'AI di distinguere ciò che i dati mostrano dalle ipotesi causali necessarie per un'interpretazione più forte.
+
+::: {.callout-tip title="Soluzioni" collapse="true"}
+1. La domanda deve definire, per esempio, una riduzione operativa dell'uso, una condizione di confronto, una misura di ansia, un intervallo temporale e una popolazione precisa.
+
+2. I gruppi osservati possono differire per caratteristiche anteriori al trattamento che influenzano anche l'esito. La differenza combina queste differenze con l'eventuale effetto.
+
+3. Associativa: come varia il sonno tra studenti con stress diverso? Predittiva: quanto bene lo stress anticipa il sonno di nuovi studenti? Causale: come cambierebbe il sonno sotto un intervento sullo stress? Meccanicistica: attraverso quali processi psicologici o fisiologici avviene il cambiamento?
+
+4. Alcune variabili possono essere mediatori, collider o conseguenze del trattamento. La scelta dipende dalla struttura causale e dall'estimand, non dalla sola disponibilità o capacità predittiva.
+
+5. Si possono controllare assegnazione, perdite, aderenza, errori e distribuzioni degli esiti. Questi controlli verificano l'implementazione e la qualità dei dati; l'identificazione deriva dal disegno.
+
+6. Possiamo dire che l'associazione complessiva combina distribuzioni differenti per anno. Non possiamo stabilire che l'anno sia il confondente corretto o che il condizionamento identifichi un effetto.
+
+7. «Nel campione, livelli più elevati di supporto sociale sono associati a minori punteggi di depressione».
+
+8. Il prompt deve chiedere una descrizione associativa, possibili spiegazioni alternative etichettate come ipotesi, requisiti di una domanda causale e limiti del disegno disponibile.
 :::
 
-::: {.callout-important title="Esercizio 2" collapse="true"}
-Considera la relazione tra uso dei social media e sintomi depressivi. Proponi:
-
-1. un possibile confondente;
-2. un possibile mediatore;
-3. un possibile moderatore.
-
-Spiega perché ciascuna variabile ha quel ruolo.
-:::
-
-::: {.callout-important title="Esercizio 3" collapse="true"}
-
-L'AI produce questa frase:
-
-> Il supporto sociale riduce i sintomi depressivi, come mostra la correlazione negativa tra le due variabili.
-
-Riscrivila in modo più corretto per uno studio osservazionale.
-:::
-
-::: {.callout-important title="Esercizio 4" collapse="true"}
-
-Nel codice sul paradosso di Simpson, modifica la probabilità di assegnazione all'intervento nei due gruppi di ansia iniziale. Osserva come cambia il confronto aggregato.
-:::
-
-## Cosa portare al capitolo successivo
-
-Prima di proseguire, tieni a mente tre punti.
-
-1. **Associazione ≠ causalità**. Un legame anche forte e stabile non implica un nesso causale: occorre sempre chiedersi se variabili terze o meccanismi alternativi possano spiegarlo.
-
-2. **Il disegno dello studio definisce i confini dell'inferenza**. Gli RCT offrono basi più solide per la causalità rispetto agli studi osservazionali, ma richiedono comunque attenzione a misurazione, campionamento e generalizzabilità. In ogni caso, è il disegno a stabilire cosa possiamo affermare.
-
-3. **L'EDA è esplorativa, non confermativa**. Grafici e sintesi rivelano pattern e anomalie, ma ogni intuizione nata in questa fase resta un'ipotesi e va verificata con metodi inferenziali o nuovi dati.
-
-::: {.callout-tip collapse=true title="Informazioni sull'ambiente di sviluppo"}
-```{r}
-#| label: causality-session-info
-
-sessionInfo()
-```
+::: {.callout-note title="Punti chiave" collapse="true"}
+- Associazione, previsione, causalità e meccanismo rispondono a domande differenti.
+- Una formula statistica non stabilisce l'obiettivo dell'analisi.
+- L'effetto causale confronta interventi alternativi sulla stessa popolazione.
+- La differenza osservata tra gruppi non coincide in generale con l'effetto medio.
+- L'identificazione precede la scelta del metodo di stima.
+- Aggiustare per tutte le variabili non è una strategia causale.
+- L'EDA controlla dati e disegno, ma non elimina il confondimento non misurato.
+- La sequenza temporale è necessaria ma non sufficiente.
+- Il linguaggio deve rimanere proporzionato al disegno.
+- La trattazione completa della causalità appartiene al Companion.
 :::

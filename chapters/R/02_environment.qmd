@@ -1,45 +1,42 @@
-# Ambiente di lavoro e progetti R {#sec-r-environment}
+# Un ambiente di lavoro riproducibile {#sec-r-environment}
 
-## Perché questo capitolo viene prima dell'analisi
+::: {.callout-note title="In sintesi"}
+**Da sapere**  Un'analisi dipende non soltanto dal codice, ma anche da file, cartelle, pacchetti e oggetti presenti nella sessione. Un progetto riproducibile rende esplicite queste dipendenze e permette di ricostruire il percorso dai dati originali ai risultati.
 
-Spesso, quando un'analisi non funziona, il problema non è una formula statistica. Spesso il problema è molto più semplice: il file dei dati non si trova nella cartella giusta, il percorso è scritto in modo diverso sul computer di un'altra persona, un pacchetto non è stato caricato o il codice dipende da oggetti rimasti in memoria da una sessione precedente.
+**Da saper fare**  Organizzare una cartella di progetto, usare percorsi relativi, distinguere dati originali e dati trasformati, riavviare R ed eseguire il lavoro dall'inizio, descrivere con precisione all'AI la struttura reale dei file.
+:::
 
-Per questo motivo, prima di imparare a trasformare o visualizzare i dati, è necessario imparare a organizzare l'ambiente di lavoro.
+## Introduzione {.unnumbered .unlisted}
 
-In questo capitolo useremo il termine "ambiente" in senso pratico: il progetto, le cartelle, i file, la sessione di R, i pacchetti caricati e le condizioni che permettono di eseguire di nuovo un'analisi.
+Quando un'analisi non funziona, il problema non è sempre statistico. Il codice può cercare un file nella cartella sbagliata, dipendere da un oggetto creato ore prima oppure usare un pacchetto che non è stato caricato. Sul computer dell'autore tutto sembra funzionare; su quello di un collega, o dopo qualche settimana, il percorso non può più essere ricostruito.
 
-L'idea centrale è semplice:
+Questi problemi hanno una caratteristica comune: una parte della procedura è rimasta implicita.
 
-> Un'analisi è davvero utile solo se può essere capita, controllata e riprodotta.
+Un ambiente di lavoro ben organizzato rende invece visibile da dove provengono i dati, quali file contengono il codice, dove vengono salvati i risultati e quali passaggi devono essere eseguiti. L'obiettivo non è costruire una struttura perfetta o complessa. È permettere a una persona di rispondere alla domanda:
 
-Questo vale anche quando il codice è stato scritto con l'aiuto dell'AI. L'AI può suggerire comandi, correggere errori e proporre strutture di progetto, ma non può sapere da sola dove si trovano i vostri file, quale versione dei dati state utilizzando, quali passaggi avete già eseguito e quali scelte devono essere documentate.
+> Partendo soltanto da questa cartella, posso ricostruire il risultato?
 
-## Obiettivi del capitolo
+La stessa domanda vale quando il codice viene scritto con l'aiuto dell'AI. L'assistente può proporre comandi, ma non vede automaticamente il contenuto del computer e può inventare nomi o percorsi plausibili. Per ottenere una soluzione utile dobbiamo descrivere la struttura reale del progetto e controllare che il codice la rispetti.
 
-Alla fine del capitolo dovreste sapere:
+::: {.callout-tip title="Prerequisiti"}
+È utile avere letto @sec-r. In particolare, occorre riconoscere che un'analisi è una sequenza di input, trasformazioni, output e controlli.
+:::
 
-- riconoscere la differenza tra file, cartelle e progetto;
-- creare o aprire un progetto R in RStudio/Posit;
-- usare nomi di file leggibili e robusti;
-- distinguere percorsi assoluti e percorsi relativi;
-- capire perché `setwd()` va evitato nei documenti condivisi;
-- usare una struttura semplice per organizzare dati, codice e risultati;
-- controllare se un'analisi può essere rieseguita da zero.
+## Panoramica del capitolo {.unnumbered .unlisted}
 
-Non è necessario memorizzare ogni dettaglio tecnico. È invece importante sviluppare una buona abitudine: **analisi deve essere inserita in una cartella di progetto ben organizzata**.
+Il capitolo presenta il progetto come unità minima del lavoro riproducibile. Vedremo perché i percorsi devono essere relativi alla cartella del progetto, perché i dati originali non vanno modificati direttamente e perché la sessione di R non deve contenere informazioni indispensabili non espresse nel codice. Concluderemo formulando richieste efficaci all'AI per diagnosticare problemi di file, cartelle e dipendenze.
 
-## Il progetto come unità di lavoro
+::: {.callout-note title="Preparazione del notebook"}
+Gli esempi richiedono soltanto R e un progetto aperto in RStudio o Positron. Non è necessario creare subito una struttura complessa. È sufficiente una cartella dedicata contenente un file `.Rproj`, un documento Quarto e una sottocartella per i dati.
+:::
 
-Un progetto di analisi non è un singolo file. Si tratta di una piccola unità di ricerca che contiene almeno:
+## Il progetto è l'unità del lavoro
 
-- i dati;
-- il codice;
-- il testo che spiega le scelte fatte;
-- gli output prodotti dall'analisi.
+Un'analisi non coincide con un singolo script. Comprende almeno i dati in ingresso, le istruzioni che li trasformano, il testo che documenta le decisioni e gli output prodotti.
 
-In RStudio/Posit, un progetto R è una cartella che contiene un file con estensione `.Rproj`. Aprire quel file significa dire a R: "questa è la cartella principale del mio lavoro".
+In RStudio, un progetto è una cartella associata a un file con estensione `.Rproj`. Aprire quel file stabilisce la radice del lavoro: tutti i percorsi possono essere descritti a partire da quella cartella.
 
-Una struttura minima può essere questa:
+Una struttura minima può essere:
 
 ```text
 progetto_stress_sonno/
@@ -49,247 +46,334 @@ progetto_stress_sonno/
 │   │   └── stress_sonno_originale.csv
 │   └── processed/
 │       └── stress_sonno_pulito.csv
-├── code/
-│   └── 01_pulizia_dati.R
 ├── output/
-│   └── grafico_sonno.png
 └── report.qmd
 ```
 
-Non tutti i progetti devono avere esattamente questa struttura. L'importante è che la struttura sia chiara e stabile. Chi apre il progetto deve poter capire rapidamente dove si trovano i dati originali, il codice e i risultati.
+Non esiste una struttura obbligatoria per ogni ricerca. Questa è utile perché rende immediata una distinzione: ciò che è stato ricevuto rimane in `data/raw`, ciò che è stato prodotto dall'analisi può essere salvato in `data/processed` o `output`, mentre `report.qmd` contiene il percorso riproducibile.
 
-::: {.callout-tip title="Regola pratica"}
-Create una cartella separata per ogni progetto. Non lavorate in una cartella generica chiamata `Desktop`, `Download` o `R`.
+Il criterio non è il numero di cartelle. È la possibilità di capire che funzione abbia ciascun file.
+
+::: {.callout-important title="Una cartella per ogni progetto"}
+Lavorare direttamente in `Desktop`, `Download` o in una cartella generica chiamata `R` mescola analisi, versioni e dati differenti. Una cartella dedicata rende più semplice descrivere il progetto, condividerlo e controllarlo.
 :::
 
-## Nomi di file semplici
+## I nomi devono comunicare una funzione
 
-I nomi dei file devono essere facili da leggere per gli esseri umani e facili da gestire per il computer.
+Un nome utile anticipa il ruolo del file. `stress_sonno_originale.csv` comunica più di `dati1.csv`; `report_eda.qmd` comunica più di `nuovo_finale.qmd`.
 
-Usate:
-
-- lettere minuscole;
-- numeri;
-- trattini bassi `_` o trattini `-`;
-- date nel formato `YYYY-MM-DD`, quando servono.
-
-Evitate:
-
-- spazi;
-- accenti;
-- caratteri speciali;
-- nomi vaghi come `file1.csv`, `nuovo.csv`, `analisi_finale_vera.R`.
-
-Esempi:
+È preferibile usare nomi brevi, minuscoli e privi di spazi o caratteri speciali:
 
 ```text
-# Meglio
-2026-03-15_stress_sonno_raw.csv
-01_pulizia_dati.R
-02_grafici_eda.qmd
-
-# Peggio
-Dati Stress Sonno.csv
-analisi finale.R
-nuovo file corretto 2.csv
+stress_sonno_originale.csv
+stress_sonno_pulito.csv
+report_eda.qmd
 ```
 
-Questa regola può sembrare banale, ma permette di evitare molti errori. Inoltre, rende più semplice chiedere aiuto all'AI: un nome chiaro permette di descrivere meglio il problema e di controllare più facilmente il codice suggerito.
+Il vantaggio non è soltanto tecnico. Quando chiediamo aiuto all'AI, un nome chiaro riduce l'ambiguità. Possiamo indicare esattamente quale file è l'input e quale dovrebbe essere l'output.
 
-## Percorsi assoluti e relativi
+Nomi come `analisi_finale_vera_2.qmd` segnalano invece che le versioni non sono governate da una procedura chiara. In un progetto riproducibile, il documento viene aggiornato e il risultato viene rigenerato; non si accumulano copie manuali per ricordare quale fosse quella corretta.
 
-Un percorso indica la posizione di un file.
+## Percorsi relativi: descrivere la posizione nel progetto
 
-Un **percorso assoluto** descrive la posizione completa del file nel computer:
+Un percorso assoluto include la posizione completa sul computer:
 
 ```text
 /Users/maria/Desktop/progetto_stress_sonno/data/raw/stress_sonno_originale.csv
 ```
 
-oppure, su Windows:
+Quel percorso contiene informazioni locali: il nome dell'utente, la posizione sul desktop e la struttura del computer. Spostando la cartella o condividendola, il codice smette di funzionare.
 
-```text
-C:/Users/Maria/Desktop/progetto_stress_sonno/data/raw/stress_sonno_originale.csv
-```
-
-Il problema è che un percorso assoluto funziona solo su quel computer. Se il progetto viene spostato, condiviso o aperto da un'altra persona, il codice probabilmente non funzionerà più.
-
-Un **percorso relativo** descrive invece la posizione del file rispetto alla cartella principale del progetto:
+Un percorso relativo parte invece dalla radice del progetto:
 
 ```text
 data/raw/stress_sonno_originale.csv
 ```
 
-Questo percorso è più robusto. Funziona finché la struttura interna del progetto rimane la stessa.
+Il significato è:
 
-::: {.callout-important title="Da ricordare"}
-Nei progetti condivisi, nei report Quarto e negli esercizi, utilizzate percorsi relativi. Evitate i percorsi che contengono il nome del vostro computer, il nome del vostro utente o il nome del vostro desktop.
-:::
+> Dalla cartella principale del progetto, entra in `data`, poi in `raw`, e usa questo file.
 
-## Evitare `setwd()` nei file condivisi
+La struttura interna può quindi essere trasferita su un altro computer senza modificare il codice.
 
-In molti tutorial si trova un comando come questo:
+```r
+file.exists("data/raw/stress_sonno_originale.csv")
+```
+
+`file.exists()` non importa i dati. Verifica che il percorso indicato corrisponda a un file realmente presente. È un controllo semplice ma importante, soprattutto prima di chiedere all'AI di correggere un errore di importazione.
+
+::: {.callout-warning title="Evitare `setwd()` nei documenti condivisi"}
+Un comando come
 
 ```r
 setwd("/Users/maria/Desktop/progetto_stress_sonno")
 ```
 
-Questo comando cambia manualmente la cartella di lavoro. Può sembrare comodo, ma rende il codice fragile: funzionerà sul computer di Maria, ma non su quello di Luca o Giulia.
-
-In un progetto R ben organizzato, di solito non è necessario usare la funzione `setwd()`. Aprendo il file `.Rproj`, RStudio/Posit riconosce la cartella principale del progetto.
-
-Quando dobbiamo indicare un file all'interno del progetto, possiamo usare un percorso relativo:
-
-```r
-readr::read_csv("data/raw/stress_sonno_originale.csv")
-```
-
-In alternativa, si può usare il pacchetto `here`, che costruisce percorsi a partire dalla radice del progetto:
-
-```r
-readr::read_csv(here::here("data", "raw", "stress_sonno_originale.csv"))
-```
-
-La seconda forma è spesso più sicura quando il progetto contiene molti file e cartelle.
-
-## Dati originali e dati modificati
-
-Una buona abitudine è non modificare mai direttamente i dati originali.
-
-Distinguete tra:
-
-- `data/raw/`: dati originali, così come sono stati ricevuti o scaricati;
-- `data/processed/`: dati puliti o trasformati;
-- `code/`: script che spiegano come si passa dai dati originali ai dati modificati.
-
-Per esempio:
-
-```text
-data/raw/stress_sonno_originale.csv
-```
-
-può essere importato, controllato, corretto e salvato come:
-
-```text
-data/processed/stress_sonno_pulito.csv
-```
-
-L'obiettivo non è creare molte cartelle. Il punto è poter rispondere a questa domanda:
-
-> Da dove provengono questi dati e quali trasformazioni sono state effettuate?
-
-Questa domanda è più importante della sintassi. È una domanda metodologica.
-
-## La sessione di R
-
-Quando lavorate in R, create oggetti nella memoria della sessione: dataset, vettori, risultati, grafici, modelli. Questi oggetti vivono temporaneamente nello spazio di lavoro.
-
-Un errore frequente è scrivere codice che funziona solo perché alcuni oggetti sono già presenti in memoria. In quel caso, il codice sembra corretto, ma non è davvero riproducibile.
-
-Per controllare il vostro lavoro, fate spesso questa prova:
-
-1. riavviate R;
-2. eseguite il documento o lo script dall'inizio;
-3. verificate che non ci siano errori.
-
-In RStudio/Posit, potete riavviare R da:
-
-```text
-Session > Restart R
-```
-
-Poi rieseguite il codice. Se qualcosa si rompe, significa che il documento dipendeva da passaggi non espliciti.
-
-::: {.callout-tip title="Controllo minimo di riproducibilità"}
-Prima di consegnare un esercizio o un report, riavviate R ed eseguite tutto da capo. Se il documento non funziona dopo il riavvio, non è ancora riproducibile.
+rende il documento dipendente dal computer di Maria. Aprire il progetto e usare percorsi relativi elimina questa dipendenza nascosta.
 :::
 
-## Pacchetti: installare e caricare
+Il pacchetto `here` può aiutare nei progetti complessi, ma non è indispensabile per comprendere il principio. Prima di introdurre un nuovo pacchetto è sufficiente saper usare correttamente percorsi relativi.
 
-I pacchetti estendono R con nuove funzioni. Per utilizzarli, è necessario distinguere due operazioni.
+## I dati originali non si correggono a mano
 
-Installare un pacchetto significa scaricarlo sul computer:
+Il file originale dovrebbe essere conservato così come è stato ricevuto, scaricato o esportato. Se contiene errori, codici particolari o valori da riclassificare, le correzioni devono comparire nel codice.
+
+Il percorso diventa:
+
+$$
+\text{dati originali}
+\longrightarrow
+\text{trasformazioni documentate}
+\longrightarrow
+\text{dati analitici}.
+$$
+
+Supponiamo che `stress_sonno_originale.csv` contenga un valore `999` usato per indicare una risposta mancante. Aprire il file e cancellare manualmente quei valori produce una versione corretta, ma nasconde l'operazione. Un'altra persona non può sapere che cosa è stato modificato né ripetere la procedura su una nuova esportazione.
+
+Il codice deve invece rendere visibile la trasformazione. Il file originale rimane intatto e la versione pulita può essere rigenerata.
+
+Questa regola protegge anche dagli errori prodotti dall'AI. Un assistente può proporre di sovrascrivere il file di partenza per comodità. È preferibile chiedere esplicitamente:
+
+> Conserva il file originale e salva il risultato trasformato con un nome differente.
+
+## La sessione di R è temporanea
+
+Durante il lavoro, R conserva oggetti in memoria. Possiamo creare un dataset, un grafico o un risultato e continuare a usarli finché la sessione rimane aperta.
+
+Il rischio nasce quando un documento funziona soltanto perché un oggetto è già presente. Il codice visibile non contiene più tutti i passaggi necessari.
+
+Supponiamo che `dati_puliti` sia stato creato nella console il giorno precedente. Un blocco può funzionare:
 
 ```r
-install.packages("tidyverse")
+mean(dati_puliti$stress, na.rm = TRUE)
 ```
 
-Caricare un pacchetto significa renderlo disponibile nella sessione corrente:
+ma il documento non mostra come `dati_puliti` sia stato ottenuto. Dopo il riavvio, l'oggetto non esiste e la procedura si interrompe.
+
+Il controllo decisivo consiste nel riavviare R ed eseguire il documento dall'inizio. Se tutto funziona in una sessione vuota, le dipendenze principali sono espresse nel codice.
+
+::: {.callout-important title="Il test della sessione pulita"}
+Prima di considerare conclusa un'analisi:
+
+1. salva i file;
+2. riavvia R;
+3. esegui o renderizza il documento dall'inizio;
+4. verifica che dati e output vengano ricreati senza interventi manuali.
+
+Questo controllo è più informativo del fatto che l'ultima riga funzioni nella sessione corrente.
+:::
+
+È inoltre preferibile non dipendere dal salvataggio automatico dello spazio di lavoro in `.RData`. Un progetto dovrebbe ricreare gli oggetti eseguendo il codice, non recuperandoli da una memoria precedente.
+
+## Installare e usare un pacchetto sono operazioni diverse
+
+I pacchetti aggiungono funzioni a R. L'installazione scarica il pacchetto sul computer:
 
 ```r
-library(tidyverse)
+install.packages("readr")
 ```
 
-L'installazione di solito si effettua una sola volta. Il caricamento, invece, va effettuato ogni volta che si apre una nuova sessione o si esegue un nuovo documento.
+Di norma questa operazione viene eseguita una sola volta e non deve comparire nel documento analitico.
 
-Per rendere più chiaro da quale pacchetto proviene una funzione, si può usare la forma:
+L'uso di una funzione del pacchetto avviene invece durante l'analisi:
 
 ```r
-readr::read_csv("data/raw/stress_sonno_originale.csv")
+readr::read_csv(
+  "data/raw/stress_sonno_originale.csv"
+)
 ```
 
-In questo caso, `read_csv()` è la funzione e `readr` è il pacchetto.
+La notazione `readr::read_csv()` rende esplicito da quale pacchetto proviene la funzione. In alternativa, possiamo caricare il pacchetto con `library(readr)` e usare successivamente `read_csv()`.
 
-## Controlli iniziali su un progetto
+Per chi sta imparando, la forma `pacchetto::funzione()` è spesso più facile da controllare perché rende visibile la dipendenza nel punto in cui viene usata.
 
-Quando aprite un progetto, prima di analizzare i dati, effettuate alcuni controlli semplici.
+L'AI può proporre pacchetti non necessari oppure funzioni appartenenti a pacchetti non installati. Una richiesta utile è:
+
+> Usa R base o i pacchetti già presenti nel progetto. Se introduci un nuovo pacchetto, spiega perché è necessario e indica da quale pacchetto proviene ogni funzione non standard.
+
+## Orientarsi prima di analizzare
+
+Quando un progetto viene aperto, pochi controlli permettono di capire dove ci troviamo e quali file sono disponibili.
 
 ```r
-# Dove si trova la cartella di lavoro?
 getwd()
-
-# Quali file ci sono nella cartella principale?
 list.files()
-
-# Il file dei dati esiste?
-file.exists("data/raw/stress_sonno_originale.csv")
+list.files("data/raw")
+file.exists(
+  "data/raw/stress_sonno_originale.csv"
+)
 ```
 
-Se usate `here`:
+`getwd()` mostra la cartella di lavoro. In un progetto dovrebbe coincidere con la radice prevista. `list.files()` mostra il contenuto di una cartella. `file.exists()` controlla un percorso specifico.
 
-```r
-here::here()
-file.exists(here::here("data", "raw", "stress_sonno_originale.csv"))
-```
+Questi comandi non risolvono il problema, ma producono evidenza. Se l'importazione fallisce, possiamo distinguere un file inesistente da un errore nel contenuto o nella funzione utilizzata.
 
-Questi comandi non sono analisi statistiche. Sono controlli di orientamento.  Servono a evitare errori prima che diventino difficili da individuare.
+Un metodo utile è procedere dal generale allo specifico:
 
-## Usare l'AI con criterio
+$$
+\text{cartella del progetto}
+\longrightarrow
+\text{sottocartella}
+\longrightarrow
+\text{file}
+\longrightarrow
+\text{contenuto}.
+$$
 
-L'AI è molto utile per risolvere problemi legati all'ambiente di lavoro. Potete chiederle, per esempio:
+Prima si verifica la posizione, poi l'esistenza del file, infine si esamina il modo in cui viene letto.
 
-> Sto lavorando in un progetto R con cartelle `data/raw`, `data/processed` e `code`. Scrivi un esempio di codice per importare un file CSV da `data/raw` usando un percorso relativo.
+## Chiedere aiuto all'AI senza lasciare vuoti
 
-Oppure:
+Una richiesta come «R non trova il file» contiene poche informazioni. L'assistente potrebbe proporre `setwd()`, inventare un percorso o supporre una struttura diversa da quella reale.
 
-> Questo codice funziona sul mio computer, ma non su quello di un collega". Controlla se ci sono percorsi assoluti o dipendenze dall'ambiente locale.
+Una richiesta più utile descrive il progetto e riporta l'errore:
 
-Ci sono però cose che dovete controllare voi:
-
-- il nome del file è corretto?
-- il file si trova davvero nella cartella indicata?
-- il codice usa percorsi relativi o assoluti?
-- il pacchetto richiesto è installato e caricato?
-- il progetto funziona dopo aver riavviato R?
-
-::: {.callout-warning title="Errore frequente"}
-L'AI può generare nomi di file, cartelle o variabili plausibili ma inesistenti. Non copiate il codice senza prima aver verificato che corrisponda alla struttura reale del vostro progetto.
+::: {.callout-tip title="Un prompt per diagnosticare un percorso"}
+> Sto lavorando in un progetto R. La radice contiene `report.qmd` e la cartella `data/raw`. Il file si chiama esattamente `stress_sonno_originale.csv`.  
+>
+> Il comando `file.exists("data/raw/stress_sonno_originale.csv")` restituisce `FALSE`. Non voglio usare `setwd()` né percorsi assoluti. Indicami una sequenza breve di controlli per capire se il problema è nel nome, nella cartella o nella radice del progetto. Non inventare percorsi diversi da quelli che ho indicato.
 :::
 
-## Cosa portare ai capitoli successivi
+La richiesta specifica struttura, nome esatto, risultato di un controllo e vincoli della soluzione. In questo modo l'AI può contribuire a una diagnosi invece di sostituire un percorso errato con un altro.
 
-Nei capitoli successivi useremo R per importare, trasformare, riassumere e visualizzare i dati. Prima di procedere, è essenziale che ogni analisi abbia una casa: una cartella di progetto con nomi chiari, percorsi relativi e un documento che possa essere rieseguito.
+Quando l'assistente propone codice, dobbiamo confrontarlo con la cartella reale. Un nome plausibile come `data/clean/` non esiste soltanto perché appare ordinato. Se il progetto usa `data/processed/`, il codice deve rispettare quella scelta.
 
-La sintassi di R è importante, ma non sufficiente. Un'analisi ordinata richiede anche una struttura ben organizzata.
+Un secondo prompt utile riguarda la riproducibilità:
 
-Prima di procedere, verificate di saper eseguire le seguenti operazioni:
+::: {.callout-tip title="Un prompt per controllare il progetto"}
+> Esamina questa sequenza di codice e indicami tutte le dipendenze non esplicite: oggetti che devono già esistere, pacchetti necessari, file esterni e percorsi locali. Proponi poi controlli minimi per verificare ogni dipendenza in una sessione R appena riavviata.
+:::
 
-- aprire un progetto R;
-- trovare la cartella principale del progetto;
-- indicare un file con un percorso relativo;
-- distinguere i dati originali da quelli modificati;
-- riavviare R ed eseguire tutto da capo.
-- Spiegare a parole dove si trovano i dati e come vengono usati.
+La domanda importante non è «puoi far funzionare questo codice?», ma «da che cosa dipende e come posso controllarlo?».
 
-Se siete in grado di fare tutto questo, allora siete pronti a usare R non solo come calcolatrice, ma anche come ambiente per un'analisi trasparente e riproducibile.
+## Un flusso minimo riproducibile
 
+Immaginiamo di voler importare il file originale, controllarne la struttura e produrre una copia trasformata.
+
+La procedura in linguaggio naturale è:
+
+> Verifica che il file esista. Importalo senza modificare l'originale. Controlla righe, colonne e tipi delle variabili. Esegui trasformazioni esplicite. Salva il risultato in una posizione distinta. Riavvia R e verifica che la sequenza ricrei lo stesso output.
+
+Il codice specifico dipenderà dalle trasformazioni richieste, ma l'algoritmo rimane stabile.
+
+Possiamo iniziare con:
+
+```r
+percorso_input <-
+  "data/raw/stress_sonno_originale.csv"
+
+file.exists(percorso_input)
+```
+
+Diamo un nome al percorso perché venga usato in modo coerente. Se il file non esiste, l'analisi deve fermarsi e il problema va risolto prima dell'importazione.
+
+Dopo l'importazione controlleremo almeno struttura e dimensioni:
+
+```r
+str(dati)
+dim(dati)
+```
+
+Solo successivamente applicheremo le trasformazioni e creeremo un nuovo file o un nuovo oggetto. Il risultato non deve sostituire silenziosamente l'input.
+
+Questa sequenza è semplice, ma esprime una mentalità generale: ogni passaggio importante deve poter essere osservato e ricostruito.
+
+## Che cosa non serve ancora
+
+Non è necessario imparare sistemi complessi di gestione delle dipendenze, automazione dei workflow o controllo di versione prima di iniziare. Strumenti come Git, `renv`, pipeline e ambienti containerizzati diventano utili in progetti più ampi, ma non sono prerequisiti per i capitoli successivi.
+
+In questa fase bastano poche abitudini solide: una cartella dedicata, percorsi relativi, dati originali conservati, trasformazioni espresse nel codice e una verifica in sessione pulita.
+
+L'ambiente deve ridurre l'incertezza, non aggiungere complessità.
+
+## Riflessioni conclusive {.unnumbered .unlisted}
+
+Un progetto riproducibile rende esplicito ciò da cui dipende l'analisi. La cartella del progetto stabilisce un punto di riferimento comune; i percorsi relativi permettono di spostare e condividere il lavoro; la separazione tra dati originali e trasformati conserva la storia delle operazioni; la sessione pulita verifica che gli oggetti possano essere ricreati.
+
+Questi principi precedono qualsiasi tecnica statistica. Una media o un grafico non sono riproducibili se non sappiamo quale file sia stato usato o quali passaggi abbiano prodotto il dataset.
+
+L'AI può aiutare a diagnosticare percorsi, organizzare cartelle e individuare dipendenze. Per farlo bene deve ricevere una descrizione fedele del progetto. Il ricercatore deve poi confrontare ogni suggerimento con i file realmente presenti e rifiutare soluzioni che introducono percorsi locali, oggetti impliciti o modifiche non documentate.
+
+Nel prossimo capitolo applicheremo questa struttura al primo vero input dell'analisi: l'importazione e l'ispezione dei dati.
+
+## Esercizi {.unnumbered .unlisted}
+
+1. Osserva questa struttura:
+
+   ```text
+   progetto/
+   ├── progetto.Rproj
+   ├── data/
+   │   └── partecipanti.csv
+   └── analisi.qmd
+   ```
+
+   Quale percorso relativo deve usare `analisi.qmd` per riferirsi al file CSV?
+
+2. Perché questo comando rende il documento difficile da condividere?
+
+   ```r
+   setwd("C:/Users/Anna/Desktop/progetto")
+   ```
+
+3. Un file originale contiene un codice errato. Spiega perché è preferibile correggerlo attraverso il codice e salvare un nuovo file invece di modificare direttamente l'originale.
+
+4. Un documento usa l'oggetto `dati_puliti`, ma non contiene il codice che lo crea. Perché può funzionare nella sessione corrente e fallire dopo il riavvio?
+
+5. Spiega la differenza tra:
+
+   ```r
+   install.packages("readr")
+   ```
+
+   e:
+
+   ```r
+   readr::read_csv("data/raw/dati.csv")
+   ```
+
+6. `file.exists("data/raw/dati.csv")` restituisce `FALSE`. Formula tre controlli da eseguire prima di modificare il codice di importazione.
+
+7. L'AI propone di salvare i dati puliti nello stesso file da cui sono stati letti. Scrivi una richiesta che corregga questa scelta e preservi l'input.
+
+8. Formula un prompt che chieda all'AI di controllare se un blocco di codice dipende da oggetti, pacchetti o file non dichiarati.
+
+::: {.callout-tip title="Soluzioni" collapse="true"}
+1. Il percorso relativo è `"data/partecipanti.csv"`.
+
+2. Il percorso contiene il nome dell'utente e una posizione specifica del computer di Anna. Su un altro computer o dopo lo spostamento della cartella non sarà valido. Aprendo il progetto è possibile usare percorsi relativi senza `setwd()`.
+
+3. La modifica manuale nasconde che cosa sia stato cambiato e impedisce di ripetere la correzione su una nuova copia dei dati. Il codice documenta la trasformazione e permette di rigenerare il file analitico conservando l'originale.
+
+4. L'oggetto può essere rimasto in memoria da un comando eseguito in precedenza. Dopo il riavvio la memoria è vuota e il documento non possiede più l'input necessario.
+
+5. `install.packages()` scarica e installa il pacchetto sul computer. `readr::read_csv()` usa una funzione del pacchetto durante l'analisi e rende esplicita la provenienza della funzione.
+
+6. Possiamo verificare la radice con `getwd()`, elencare il contenuto con `list.files("data/raw")` e controllare il nome esatto, comprese maiuscole, estensione ed eventuali spazi.
+
+7. Una possibile richiesta è: «Non sovrascrivere il file in `data/raw`. Conserva l'originale e salva la versione trasformata in `data/processed/dati_puliti.csv`. Mostra esplicitamente il percorso di input e quello di output».
+
+8. Una possibile formulazione è: «Individua nel codice tutti gli oggetti che devono già esistere, i pacchetti richiesti e i file esterni. Per ciascuna dipendenza, indica un controllo semplice che posso eseguire dopo avere riavviato R. Non riscrivere l'analisi finché non hai spiegato le dipendenze».
+:::
+
+::: {.callout-note title="Punti chiave" collapse="true"}
+- Il progetto è l'unità minima di un'analisi riproducibile.
+- I percorsi relativi descrivono i file rispetto alla radice del progetto.
+- `setwd()` e i percorsi assoluti introducono dipendenze locali.
+- I dati originali devono rimanere intatti.
+- Le trasformazioni devono essere espresse nel codice.
+- La sessione di R è temporanea e non deve contenere passaggi indispensabili nascosti.
+- Un documento deve funzionare dopo il riavvio di R.
+- Installare un pacchetto e usarne le funzioni sono operazioni differenti.
+- L'AI deve ricevere la struttura reale del progetto e non deve inventare file o cartelle.
+- La diagnosi procede dalla posizione del progetto all'esistenza e al contenuto del file.
+:::
+
+::: {.callout-note title="Ambiente di sviluppo" collapse="true"}
+Il capitolo usa soltanto funzioni incluse in R base. Le informazioni sulla sessione possono essere ottenute con:
+
+```{r}
+#| echo: true
+sessionInfo()
+```
+:::

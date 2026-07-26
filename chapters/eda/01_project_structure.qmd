@@ -1,334 +1,288 @@
-# Organizzare un progetto di analisi dei dati {#sec-eda-proj-structure}
+# Preparare l'analisi esplorativa {#sec-eda-proj-structure}
 
-::: {.callout-note appearance="minimal"}
-L'analisi esplorativa dei dati non inizia con un grafico o con una media. Inizia con una domanda più semplice: "Dove si trovano i dati, cosa rappresentano e quali passaggi li hanno trasformati nel risultato che sto osservando?"
+::: {.callout-note title="In sintesi"}
+**Da sapere**  La Parte su R ha mostrato come organizzare file, dichiarare dipendenze e rendere riproducibile il codice. L'analisi esplorativa richiede ora un passaggio ulteriore: definire con precisione **quale tabella** verrà esplorata e perché essa sia adeguata alla domanda.
 
-In un progetto ben organizzato, un'altra persona dovrebbe poter capire:
-
-- quali sono i dati originali;
-- quali modifiche sono state apportate;
-- quale codice produce ogni tabella o grafico;
-- dove si trovano i risultati;
-- quali decisioni sono state prese lungo il percorso.
-
-Questa non è solo una questione di ordine. È una condizione di trasparenza scientifica. Se non siamo in grado di ricostruire il percorso che ci ha portato a un risultato, quel risultato diventa fragile, anche quando il codice funziona.
+**Da saper fare**  Specificare l'unità di analisi, delimitare il campione analitico, ricostruire la provenienza delle variabili, distinguere dati originali e dataset analitico, pianificare controlli e rappresentazioni prima di produrre risultati.
 :::
 
-## Perché partire dalla struttura del progetto
+## Introduzione {.unnumbered .unlisted}
 
-Quando si lavora con i dati psicologici, è facile concentrarsi subito sulle analisi: importare il file, calcolare una media, produrre un grafico e chiedere all'AI una pipeline `dplyr`. Tuttavia, prima di procedere con l'analisi, è necessario costruire un ambiente in cui le operazioni siano chiare e riproducibili.
+Nei capitoli precedenti abbiamo già discusso cartelle di progetto, percorsi relativi, conservazione dei dati originali, documenti Quarto e render da una sessione pulita. Non ripeteremo qui quelle istruzioni.
 
-Un progetto ben organizzato aiuta a evitare problemi comuni:
+La nuova domanda è scientifica prima ancora che tecnica:
 
-- modificare per errore il file originale;
-- dimenticare quale versione del dataset è stata utilizzata;
-- salvare grafici e tabelle in cartelle casuali;
-- usare percorsi che funzionano solo sul proprio computer;
-- copiare il codice prodotto dall'AI senza sapere quali file legge o modifica;
-- non riuscire più a ricostruire i passaggi dell'analisi.
+> Quale insieme di osservazioni e variabili deve essere esplorato per rispondere alla domanda che ci interessa?
 
-L'obiettivo di questo capitolo è quindi pratico: costruire una struttura minima per un progetto EDA. Non è necessario imparare strumenti avanzati di automazione. Prima di tutto, è necessario rendere visibile il percorso che collega la domanda di ricerca, i dati, il codice e i risultati.
+Un file originale può contenere più popolazioni, più momenti di misura, item singoli, punteggi aggregati, informazioni amministrative e variabili che non appartengono alla stessa analisi. Anche un file già “pulito” può quindi essere troppo ampio o organizzato a un livello diverso da quello richiesto.
 
-## Un esempio ricorrente
+L'EDA non inizia quando scegliamo un istogramma. Inizia quando definiamo il **dataset analitico**: la tabella costruita per una domanda specifica, con un'unità di analisi dichiarata, criteri di inclusione espliciti e variabili il cui significato è documentato.
 
-Useremo come riferimento un piccolo progetto immaginario:
-
-> Vogliamo esplorare la relazione tra lo stress accademico e la qualità del sonno in un gruppo di studenti universitari.
-
-Il dataset contiene, per ciascuno studente:
-
-- un identificativo anonimo;
-- un punteggio di stress accademico;
-- un punteggio sulla qualità del sonno;
-- alcune informazioni descrittive, come l'età, il genere e l'anno di corso.
-
-In questa fase non vogliamo ancora stimare un modello né trarre conclusioni causali. Vogliamo solo creare le condizioni per esplorare i dati in modo ordinato.
-
-## La struttura minima di un progetto
-
-Una struttura semplice può essere questa:
-
-```text
-stress_sonno/
-├── stress_sonno.Rproj
-├── data/
-│   ├── raw/
-│   │   └── studenti_sonno_raw.csv
-│   └── clean/
-│       └── studenti_sonno_clean.csv
-├── scripts/
-│   └── 01_clean_data.R
-├── reports/
-│   └── eda_stress_sonno.qmd
-├── figures/
-├── tables/
-└── README.md
-```
-
-Non è l'unica struttura possibile, ma è sufficiente per iniziare. Il punto essenziale è separare ciò che ha funzioni diverse.
-
-| Cartella o file | Funzione |
-|---|---|
-| `data/raw/` | Contiene i dati originali, da non modificare mai manualmente. |
-| `data/clean/` | Contiene i dati puliti o ricodificati tramite script. |
-| `scripts/` | Contiene il codice che prepara o trasforma i dati. |
-| `reports/` | Contiene i documenti Quarto con analisi, grafici e commenti. |
-| `figures/` | Contiene eventuali figure salvate. |
-| `tables/` | Contiene eventuali tabelle esportate. |
-| `README.md` | Spiega che cosa contiene il progetto e come usarlo. |
-
-Per un progetto didattico, questa struttura è più che sufficiente. Se il progetto dovesse crescere, sarà possibile aggiungere altre cartelle. All'inizio, però, è meglio una struttura semplice, comprensibile e usata con coerenza.
-
-## Dati grezzi e dati puliti
-
-La distinzione più importante è tra dati grezzi e dati puliti.
-
-I **dati grezzi** sono il file così come è stato ricevuto o esportato dallo strumento di raccolta. Per esempio, potrebbero contenere nomi di variabili poco chiari, codifiche non uniformi, valori mancanti indicati in modi diversi o colonne non necessarie.
-
-I **dati puliti** sono il risultato di trasformazioni documentate: rinomina delle variabili, ricodifica delle categorie, gestione dei valori mancanti, controllo dei duplicati e, eventualmente, calcolo dei punteggi compositi.
-
-La regola pratica è semplice:
-
-::: {.callout-important}
-Non modificare mai manualmente il file in `data/raw/`.
-
-Ogni trasformazione deve essere scritta in uno script o in un documento Quarto, in modo da poter essere ripetuta e controllata.
+::: {.callout-tip title="Prerequisiti"}
+Questo capitolo presuppone i principi discussi in @sec-r-environment, @sec-r-programming e @sec-quarto. Per interpretare correttamente unità, variabili e campione sono inoltre rilevanti @sec-key-notions-design e @sec-measurement.
 :::
 
-Per esempio, invece di aprire il file CSV e cambiare manualmente il nome di una colonna, è meglio scrivere una riga di codice.
+## Panoramica del capitolo {.unnumbered .unlisted}
 
-```r
-studenti_clean <- studenti_raw |>
-  dplyr::rename(stress = stress_accademico_totale)
-```
+Il capitolo chiarisce la differenza tra file sorgente, dati preparati e dataset analitico. Mostra poi come definire l'unità di analisi, il campione e la provenienza delle variabili. L'ultima parte trasforma queste decisioni in un piano di esplorazione e in una richiesta controllabile da rivolgere all'AI.
 
-In questo modo, la trasformazione rimane visibile. Chi legge il progetto può capire che la variabile `stress` deriva dalla colonna originale `stress_accademico_totale`.
+::: {.callout-note title="Preparazione del notebook"}
+Apri il documento Quarto destinato all'EDA e inserisci all'inizio una breve descrizione della domanda, dell'unità di analisi e del dataset utilizzato. Non serve creare nuove cartelle o duplicare file se il progetto è già organizzato secondo i criteri della Parte precedente.
+:::
 
-## Percorsi relativi
+## Il dataset analitico non coincide necessariamente con il file
 
-Un errore frequente è usare percorsi assoluti, come:
+È utile distinguere tre oggetti.
 
-```r
-readr::read_csv("/Users/mario/Desktop/stress_sonno/data/raw/studenti_sonno_raw.csv")
-```
+Il **file sorgente** è ciò che è stato ricevuto o esportato dal sistema di raccolta. Deve essere conservato senza modifiche manuali.
 
-Questo codice funziona solo sul computer di Mario. Su un altro computer, o anche sullo stesso computer dopo aver spostato la cartella, probabilmente non funzionerà più.
+I **dati preparati** derivano da operazioni necessarie per rendere coerenti nomi, codici, tipi e valori mancanti. Le trasformazioni devono essere documentate e ripetibili.
 
-In un progetto R è preferibile usare percorsi relativi alla cartella del progetto. Il pacchetto `here` aiuta a farlo:
+Il **dataset analitico** è la tabella effettivamente usata per affrontare una domanda. Può coincidere con i dati preparati, ma può anche contenerne soltanto una parte oppure avere una struttura differente.
 
-```r
-studenti_raw <- readr::read_csv(
-  here::here("data", "raw", "studenti_sonno_raw.csv")
-)
-```
+Supponiamo che il file sullo stress e sul sonno contenga tre rilevazioni per ogni studente. Se la domanda riguarda le differenze individuali alla prima rilevazione, il dataset analitico avrà una riga per studente e userà soltanto quel momento. Se la domanda riguarda il cambiamento nel tempo, le tre righe devono rimanere e l'unità osservata diventa la combinazione di persona e momento.
 
-Questa istruzione dice di partire dalla cartella principale del progetto e di cercare il file all'interno della cartella `data/raw/`. In questo modo il codice diventa più portatile e più facile da condividere.
+Non esiste quindi un dataset “pulito” valido per ogni analisi. Esiste una versione adeguata a uno scopo dichiarato.
 
-## Il flusso minimo di lavoro
+::: {.callout-important title="La preparazione dei dati dipende dalla domanda"}
+La stessa operazione può essere necessaria per un'analisi e inappropriata per un'altra. Aggregare tre rilevazioni in una media può essere utile per descrivere un livello medio individuale, ma distrugge l'informazione temporale necessaria a studiare il cambiamento.
+:::
 
-Un progetto EDA può seguire un flusso molto semplice:
+## L'unità di analisi viene prima delle statistiche
 
-```text
-Domanda di ricerca
-        ↓
-Dati grezzi in data/raw/
-        ↓
-Script di pulizia in scripts/
-        ↓
-Dati puliti in data/clean/
-        ↓
-Report Quarto in reports/
-        ↓
-Grafici, tabelle e interpretazione
-```
+La prima frase del piano di analisi dovrebbe stabilire che cosa rappresenta una riga.
 
-Questa sequenza non serve a complicare il lavoro. È utile per evitare confusione. Se qualcosa va storto, sappiamo dove cercare: nei dati grezzi, nello script di pulizia, nel report o nell'interpretazione.
+Una riga può rappresentare una persona, una prova, una sessione, una coppia, una classe oppure una misurazione effettuata in un determinato momento. Questa scelta determina quali osservazioni siano indipendenti, quali variabili possano essere confrontate e quale significato abbiano numerosità, medie e grafici.
 
-## Un piccolo script di pulizia
+Nel progetto su stress e sonno potremmo scrivere:
 
-Uno script di pulizia iniziale potrebbe avere una struttura come questa:
-
-```r
-library(dplyr)
-library(readr)
-library(here)
-
-studenti_raw <- read_csv(
-  here("data", "raw", "studenti_sonno_raw.csv")
-)
-
-studenti_clean <- studenti_raw |>
-  rename(
-    id = participant_id,
-    stress = stress_accademico_totale,
-    sonno = qualita_sonno_totale
-  ) |>
-  mutate(
-    genere = factor(genere),
-    anno_corso = factor(anno_corso)
-  )
-
-write_csv(
-  studenti_clean,
-  here("data", "clean", "studenti_sonno_clean.csv")
-)
-```
-
-Questo codice non è complesso, ma contiene già tre buone pratiche:
-
-- legge i dati grezzi senza modificarli;
-- rende esplicite le trasformazioni;
-- salva un nuovo file pulito in una cartella separata.
-
-Nel capitolo successivo vedremo più in dettaglio come controllare e pulire i dati. Qui il punto è capire dove collocare ogni passaggio.
-
-## Il ruolo del report Quarto
-
-Il report Quarto è il luogo in cui testo, codice, grafici e interpretazione stanno insieme. Per esempio, nel file `reports/eda_stress_sonno.qmd` possiamo scrivere:
-
-```r
-studenti <- readr::read_csv(
-  here::here("data", "clean", "studenti_sonno_clean.csv")
-)
-
-ggplot2::ggplot(studenti, ggplot2::aes(x = stress)) +
-  ggplot2::geom_histogram(bins = 20)
-```
-
-Subito sotto il grafico, però, dobbiamo anche interpretare ciò che vediamo. Un report riproducibile non è una sequenza di comandi ma una spiegazione documentata dell'analisi.
-
-Una buona regola è chiedersi:
-
-> Una persona che non ha partecipato all'analisi può capire che cosa ho fatto, perché l'ho fatto e quali risultati ho ottenuto?
-
-## Cosa documentare sempre
-
-Durante un progetto EDA, alcune decisioni devono essere documentate con particolare cura.
-
-| Decisione | Perché va documentata |
-|---|---|
-| Rimozione di casi | Cambia il campione analizzato. |
-| Gestione dei valori mancanti | Può modificare medie, grafici e associazioni. |
-| Ricodifica di categorie | Può cambiare il significato di una variabile. |
-| Creazione di punteggi compositi | Collega item osservati a costrutti psicologici. |
-| Esclusione di outlier | Può cambiare in modo sostanziale i risultati. |
-| Scelta di un grafico | Influenza ciò che il lettore vede e interpreta. |
-
-Non è necessario scrivere pagine di spiegazione per ogni scelta. Tuttavia, le decisioni importanti devono lasciare una traccia.
-
-## Usare l'AI con criterio
-
-Gli strumenti di IA possono essere molto utili nella costruzione di un progetto. Per esempio, si può chiedere:
-
-> Crea una struttura di cartelle per un progetto EDA in R su stress accademico e sonno.
+> Nel dataset analitico, ogni riga rappresenta uno studente osservato in un'unica rilevazione.
 
 Oppure:
 
-> Scrivi il codice R per leggere un file CSV da `data/raw/`, rinominare alcune variabili e salvare il risultato in `data/clean/`.
+> Ogni riga rappresenta una misurazione giornaliera; lo stesso studente compare in più righe ed è identificato dalla variabile `id`.
 
-Queste richieste sono legittime. Tuttavia, l'AI non conosce automaticamente il tuo progetto, i tuoi file, il significato delle variabili e le decisioni metodologiche che hai preso. Per questo motivo, devi sempre controllare:
+Le due tabelle possono contenere colonne con gli stessi nomi, ma richiedono analisi differenti.
 
-- il codice legge il file corretto?
-- il codice salva il risultato nella cartella giusta?
-- il file originale resta intatto?
-- le variabili rinominate corrispondono davvero a ciò che significano nel questionario?
-- il codice elimina righe o colonne senza dirlo?
-- Il report spiega le scelte fatte?
+Prima di procedere dovremmo quindi verificare che gli identificatori e il numero di righe siano compatibili con l'unità dichiarata. Se non lo sono, non bisogna correggere automaticamente la tabella: occorre tornare al disegno e ricostruirne la struttura.
 
-L'AI può aiutare a scrivere il codice. Tuttavia, non può assumersi la responsabilità scientifiche dell'analisi.
+## Il campione analitico è il risultato di decisioni
 
-## Una checklist prima di iniziare l'EDA
+Il campione raccolto e il campione effettivamente analizzato possono non coincidere. Alcune persone possono non aver completato la procedura, alcune osservazioni possono essere tecnicamente non valide e alcune variabili possono essere disponibili soltanto per una parte dei partecipanti.
 
-Prima di produrre grafici o statistiche descrittive, verifica che il progetto includa almeno i seguenti elementi:
+Ogni criterio di inclusione o esclusione modifica la popolazione descritta dai risultati. Per questo non basta applicare un filtro; bisogna poter spiegare perché venga applicato e quale effetto produca.
 
-- una cartella principale del progetto;
-- un file `.Rproj`;
-- i dati originali in `data/raw/`;
-- uno script o un documento che descriva le trasformazioni;
-- i dati puliti in `data/clean/`, se sono state apportate delle modifiche;
-- un report Quarto in cui il codice e l'interpretazione sono collegati;
-- percorsi relativi, non percorsi assoluti;
-- nomi di file e variabili comprensibili;
-- una breve descrizione del progetto in `README.md`.
+Nel report è utile conservare una breve sequenza numerica:
 
-::: {.callout-tip}
-Una struttura semplice, se ben utilizzata, è preferibile a una struttura complessa che nessuno riesce a comprendere.
+$$
+\text{osservazioni disponibili}
+\longrightarrow
+\text{osservazioni escluse con motivazione}
+\longrightarrow
+\text{osservazioni usate}.
+$$
+
+Se 150 studenti hanno iniziato lo studio, 138 hanno completato il questionario e 124 possiedono entrambe le misure necessarie per un grafico, i tre numeri rispondono a domande differenti. Non devono essere sostituiti da una generica frase come “sono stati rimossi i dati mancanti”.
+
+L'EDA dovrebbe mostrare anche dove si verificano le perdite. Se i mancanti sono più frequenti tra gli studenti con livelli elevati di stress, il dataset analitico può rappresentare un gruppo diverso da quello inizialmente reclutato.
+
+## Le variabili hanno una provenienza
+
+Ogni variabile usata nell'EDA dovrebbe poter essere ricondotta alla sua origine.
+
+`stress` potrebbe essere un item singolo, la somma di dieci risposte oppure il risultato di un modello psicometrico. `qualita_sonno` potrebbe essere una valutazione soggettiva da 1 a 10 o un punteggio composito. Due colonne con nomi intuitivi possono quindi richiedere interpretazioni molto differenti.
+
+Per ogni variabile centrale dobbiamo sapere:
+
+- da quale osservazione o colonna originale deriva;
+- quali trasformazioni sono state applicate;
+- quale intervallo di valori è possibile;
+- che cosa significa un valore mancante;
+- quale livello di misura è ragionevole attribuirle.
+
+Questa lista rimane utile perché funziona come una scheda minima del significato della variabile, non come un catalogo di operazioni tecniche.
+
+Una trasformazione semplice può essere documentata direttamente nel codice. Una trasformazione concettualmente importante, come la costruzione di un punteggio composito, richiede anche una spiegazione nel testo.
+
+::: {.callout-warning title="Un nome leggibile non sostituisce la documentazione"}
+Rinominare `Q12` come `stress` migliora la leggibilità del codice, ma non dimostra che l'item rappresenti adeguatamente lo stress. La rinomina deve essere coerente con questionario, codebook e definizione del costrutto.
 :::
 
-## Strumenti avanzati: per ora non servono
+## Una scheda minima dell'analisi
 
-Nei progetti più grandi è possibile utilizzare strumenti come `targets`, GNU Make, GitHub Actions o pipeline automatizzate. Questi strumenti sono utili soprattutto quando molte analisi dipendono l'una dall'altra.
+Prima dei primi grafici conviene scrivere una breve scheda. Non è un documento burocratico: è un contratto tra domanda, dati e operazioni.
 
-In questo tutorial, però, il nostro obiettivo è più elementare: imparare a costruire un progetto leggibile, riproducibile e controllabile. Prima di automatizzare un flusso di lavoro, è necessario saperlo descrivere.
+| Elemento | Esempio |
+|---|---|
+| Domanda | Come sono distribuiti stress e qualità del sonno e come variano insieme nel campione? |
+| Unità di analisi | Uno studente per riga |
+| Campione analitico | Studenti con identificatore valido; i mancanti vengono descritti separatamente per ciascuna variabile |
+| Variabili centrali | `stress`, `qualita_sonno`, `anno` |
+| Provenienza | Punteggi costruiti secondo le regole del questionario |
+| Strutture da conservare | Identificatore e anno di corso |
+| Prime verifiche | Numerosità, duplicati, tipi, valori possibili e mancanti |
+| Prime rappresentazioni | Distribuzioni separate, confronto per anno e diagramma di dispersione |
 
-## Cosa portare al capitolo successivo
+La scheda può essere modificata quando emergono problemi o nuove domande. Ogni modifica sostanziale dovrebbe però essere visibile, perché rappresenta un cambiamento nel problema affrontato.
 
-Il capitolo successivo affronta il tema della pulizia dei dati. La struttura del progetto ci permetterà di mantenere separati tre livelli:
+## Pianificare l'EDA senza predeterminare i risultati
 
-1. i dati originali;
-2. le trasformazioni documentate;
-3. il dataset usato per l'esplorazione.
+L'analisi esplorativa è aperta alle caratteristiche inattese dei dati, ma non deve essere priva di struttura.
 
-Questa distinzione è fondamentale. Senza questa distinzione, non potremmo sapere se un pattern osservato nei dati dipende dal fenomeno psicologico che stiamo studiando o da una decisione nascosta presa durante la preparazione del dataset.
+Un piano iniziale può stabilire che osserveremo la completezza delle variabili, le distribuzioni marginali, le differenze tra gruppi definiti dal disegno e le relazioni tra le misure centrali. Non sappiamo in anticipo che cosa emergerà, ma sappiamo perché ciascuna rappresentazione viene prodotta.
+
+Il ciclo può essere descritto così:
+
+$$
+\text{domanda}
+\longrightarrow
+\text{rappresentazione}
+\longrightarrow
+\text{pattern osservato}
+\longrightarrow
+\text{nuova domanda}
+\longrightarrow
+\text{controllo}.
+$$
+
+Se un istogramma suggerisce due gruppi distinti, possiamo chiederci se corrispondano a diverse condizioni o a un errore di codifica. Se un punto appare isolato, possiamo tornare all'osservazione originale e verificarne la provenienza. Se una relazione cambia tra anni di corso, possiamo produrre rappresentazioni separate.
+
+L'esplorazione diventa problematica quando ogni pattern viene trattato come una scoperta confermata. I risultati suggeriti dai dati devono essere distinti dalle domande formulate prima di osservarli.
+
+## Un registro delle decisioni
+
+Durante l'EDA emergono spesso decisioni che non erano previste: una categoria è scritta in due modi, una scala contiene un codice speciale, una rilevazione appare duplicata o un grafico rivela un valore impossibile.
+
+È utile mantenere un breve registro nel documento o in un file associato. Per ogni decisione dovremmo annotare che cosa è stato osservato, quale spiegazione è stata verificata, quale intervento è stato effettuato e come è cambiato il dataset.
+
+Per esempio:
+
+> Tre valori pari a `999` nella variabile `stress` sono stati ricodificati come mancanti perché il codebook identifica `999` come codice di non risposta. Il numero di valori osservati è passato da 138 a 135.
+
+Questa frase documenta evidenza, fonte della decisione, trasformazione ed effetto. È molto più informativa di “sono stati puliti i dati”.
+
+Il registro non deve diventare lungo se le decisioni sono poche. Deve però impedire che trasformazioni importanti rimangano nascoste tra le righe di codice.
+
+## Quando fermarsi e tornare indietro
+
+L'EDA non deve sempre proseguire fino al grafico finale. Alcune discrepanze richiedono di interrompere l'analisi.
+
+Se il numero delle righe non corrisponde al disegno, se un identificatore dovrebbe essere unico ma compare più volte, se una variabile centrale è assente o se i suoi valori non corrispondono alla scala prevista, la priorità è ricostruire il problema.
+
+In questi casi, aggiungere codice per “sistemare” la tabella può rendere il risultato più ordinato ma meno affidabile.
+
+Un buon workflow ammette il ritorno a passaggi precedenti:
+
+$$
+\text{disegno}
+\leftrightarrow
+\text{documentazione}
+\leftrightarrow
+\text{preparazione}
+\leftrightarrow
+\text{EDA}.
+$$
+
+Questa reversibilità distingue un'analisi controllata da una sequenza lineare di comandi applicati fino a ottenere un output.
+
+## Chiedere all'AI un piano, non soltanto codice
+
+In questa fase, una richiesta utile all'AI non dovrebbe cominciare da “scrivi una pipeline”. È preferibile chiedere prima una rappresentazione del problema.
+
+::: {.callout-tip title="Un prompt per preparare l'EDA"}
+> Non scrivere ancora codice. Aiutami a definire il dataset analitico per questa domanda: voglio descrivere stress accademico e qualità del sonno e studiarne l'associazione in un campione di studenti.
+>
+> Il file contiene una riga per studente, un identificatore, dieci item di stress, un punteggio di sonno, anno di corso e alcuni valori mancanti. Elenca le informazioni che devo verificare su unità di analisi, costruzione del punteggio di stress, criteri di inclusione, valori mancanti e intervalli plausibili.
+>
+> Non inventare regole di scoring o soglie. Segnala chiaramente quali informazioni devono provenire dal codebook o dal protocollo dello studio. Proponi infine una sequenza minima di controlli e grafici, spiegando a quale domanda risponde ciascuno.
+:::
+
+Dopo avere verificato il piano, possiamo chiedere il codice per un passaggio alla volta. Questa separazione riduce il rischio che l'assistente introduca decisioni non dichiarate mentre costruisce la sintassi.
+
+## Un percorso minimo per il report
+
+Il report EDA può seguire una struttura semplice.
+
+Dopo la domanda e la descrizione del dataset analitico, documentiamo numerosità, unità e mancanti. Esaminiamo poi separatamente le variabili centrali, confrontiamo eventuali gruppi definiti dal disegno e infine osserviamo le relazioni tra variabili.
+
+Il percorso non deve diventare una successione meccanica di grafici. Ogni risultato dovrebbe condurre a una frase che distingua:
+
+> ciò che è visibile nei dati;
+
+> l'ipotesi che potrebbe spiegarlo;
+
+> il controllo necessario prima di accettare quell'ipotesi.
+
+Questa distinzione prepara il passaggio dall'esplorazione alla modellizzazione senza confondere osservazioni e spiegazioni.
+
+## Riflessioni conclusive {.unnumbered .unlisted}
+
+La struttura tecnica del progetto è già stata definita nella Parte su R. Il compito di questo capitolo è trasformarla in una struttura analitica.
+
+Il dataset da esplorare non è semplicemente il file disponibile. È una tabella costruita per una domanda, con un'unità di analisi, un campione e variabili documentate. Le esclusioni, le aggregazioni e la costruzione dei punteggi determinano ciò che i grafici e le statistiche potranno mostrare.
+
+Prima dell'EDA dobbiamo quindi formulare una scheda minima dell'analisi e rendere visibile la provenienza dei dati. Durante l'esplorazione dobbiamo registrare le decisioni e accettare la possibilità di tornare alla documentazione o alla preparazione quando emerge una discrepanza.
+
+L'AI può aiutare a organizzare il piano e successivamente tradurlo in codice. Non deve inventare l'unità di analisi, le regole di scoring o i criteri di esclusione.
+
+Nel capitolo successivo affronteremo in modo operativo la qualità dei dati e le trasformazioni necessarie prima di descriverne distribuzioni e relazioni.
 
 ## Esercizi {.unnumbered .unlisted}
 
-::: {.callout-tip title="Esercizio 1" collapse="true"}
-Immagina di avere ricevuto un file chiamato `questionario_studenti.csv` con risposte su stress, sonno e benessere.
+1. Un file contiene tre rilevazioni per ciascuno studente. Formula due domande che richiedano dataset analitici differenti e descrivi che cosa rappresenterebbe una riga in ciascun caso.
 
-Progetta una struttura minima di cartelle per analizzarlo in R. Specifica dove metteresti:
+2. Distingui file sorgente, dati preparati e dataset analitico per uno studio che raccoglie dieci item di stress e costruisce un punteggio totale.
 
-- il file originale;
-- il file pulito;
-- lo script di pulizia;
-- il report Quarto;
-- eventuali grafici esportati.
+3. Il campione iniziale comprende 180 persone, ma un grafico ne rappresenta 127. Quali quantità e motivazioni devono essere documentate prima di interpretarlo?
+
+4. Perché rinominare `Q12` come `stress` non è sufficiente a stabilire il significato della variabile?
+
+5. Scrivi una scheda minima per un'EDA della relazione tra ore di sonno e benessere, specificando domanda, unità, campione, variabili, mancanti e prime rappresentazioni.
+
+6. L'AI propone di calcolare la media dei dieci item di stress e di escludere chi possiede almeno un item mancante. Quali informazioni devi recuperare prima di accettare la proposta?
+
+7. Un istogramma mostra due gruppi distinti. Formula due possibili spiegazioni e, per ciascuna, un controllo da eseguire prima di interpretare il pattern.
+
+8. Trasforma la richiesta «fammi l'EDA del dataset» in un prompt che chieda prima un piano e vieti all'AI di inventare soglie, regole di scoring o esclusioni.
+
+::: {.callout-tip title="Soluzioni" collapse="true"}
+1. Una domanda sul livello medio individuale può richiedere una riga per studente, dopo una sintesi delle rilevazioni giustificata. Una domanda sul cambiamento richiede una riga per combinazione di studente e momento, conservando l'identificatore ripetuto.
+
+2. Il file sorgente contiene le risposte come esportate. I dati preparati contengono nomi e codici coerenti e mancanti riconosciuti. Il dataset analitico contiene gli item e il punteggio costruito secondo la regola pertinente alla domanda, insieme alle osservazioni incluse.
+
+3. Devono essere documentati il numero iniziale, le esclusioni applicate, i mancanti nelle variabili rappresentate e il numero finale. Occorre inoltre verificare se le esclusioni cambino la composizione del campione.
+
+4. Il nuovo nome migliora la leggibilità, ma il significato dipende dal contenuto dell'item, dal periodo di riferimento, dalla scala di risposta e dalla validità dell'interpretazione.
+
+5. La scheda deve dichiarare chi o che cosa rappresenta una riga, quali persone entrano, come vengono misurate le due variabili, come saranno descritti i mancanti e quali grafici rispondono alle domande iniziali.
+
+6. Servono la regola ufficiale di scoring, l'eventuale presenza di item invertiti, il numero minimo di risposte richieste, il significato dei mancanti e l'effetto dell'esclusione sulla numerosità e sul campione.
+
+7. I gruppi potrebbero corrispondere a condizioni reali oppure a codifiche differenti della stessa misura. Nel primo caso si controlla una variabile di gruppo; nel secondo si esaminano valori originali, tipi e procedure di importazione.
+
+8. Il prompt deve descrivere domanda, struttura nota del file e variabili centrali; chiedere le informazioni ancora necessarie, una sequenza motivata di controlli e grafici, e vietare trasformazioni non sostenute da protocollo o codebook.
 :::
 
-::: {.callout-tip title="Esercizio 2" collapse="true"}
-Considera questo percorso:
-
-```r
-readr::read_csv("C:/Users/Giulia/Desktop/progetto/data/studenti.csv")
-```
-
-Perché questo percorso può creare problemi di riproducibilità? Riscrivilo usando una logica di progetto con `here::here()`.
+::: {.callout-note title="Punti chiave" collapse="true"}
+- La struttura tecnica del progetto è una premessa già acquisita.
+- Il dataset analitico è definito rispetto a una domanda.
+- L'unità di analisi stabilisce che cosa rappresenta una riga.
+- Il campione analitico deve essere ricostruito attraverso quantità e motivazioni.
+- Ogni variabile centrale deve avere una provenienza documentata.
+- Un piano EDA organizza le domande senza predeterminare i risultati.
+- Le decisioni emerse durante l'esplorazione devono lasciare una traccia.
+- Alcune discrepanze richiedono di interrompere l'analisi e tornare alla documentazione.
+- L'AI dovrebbe aiutare prima a definire il piano e soltanto dopo a scrivere il codice.
+- Grafici e statistiche devono essere collegati alla domanda e al dataset che li ha prodotti.
 :::
 
-::: {.callout-tip title="Esercizio 3" collapse="true"}
-L'AI ti propone questo codice:
+::: {.callout-note title="Ambiente di sviluppo" collapse="true"}
+Il capitolo non richiede pacchetti aggiuntivi. Le informazioni sulla sessione possono essere ottenute con:
 
-```r
-studenti <- readr::read_csv("studenti.csv") |>
-  tidyr::drop_na() |>
-  dplyr::rename(stress = Q12)
+```{r}
+#| echo: true
+#| eval: false
+
+sessionInfo()
 ```
-
-Prima di usarlo, quali controlli dovresti fare? Indica almeno tre possibili problemi.
-:::
-
-::: {.callout-note title="Soluzioni sintetiche" collapse="true"}
-**Esercizio 1.** Una possibile struttura è:
-
-```text
-progetto_studenti/
-├── progetto_studenti.Rproj
-├── data/
-│   ├── raw/
-│   │   └── questionario_studenti.csv
-│   └── clean/
-├── scripts/
-│   └── 01_clean_data.R
-├── reports/
-│   └── eda_studenti.qmd
-└── figures/
-```
-
-**Esercizio 2.** Il percorso dipende dal computer di Giulia. Una versione più riproducibile è:
-
-```r
-readr::read_csv(here::here("data", "raw", "studenti.csv"))
-```
-
-**Esercizio 3.** Bisogna controllare almeno: dove si trova davvero il file, che cosa comporta `drop_na()` e quante righe elimina, se `Q12` corrisponde davvero allo stress, se conviene documentare la rinomina, e se il dataset originale resta intatto.
 :::

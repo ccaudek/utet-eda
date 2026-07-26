@@ -1,55 +1,39 @@
-# Valori inattesi e outlier {#sec-eda-outlier}
+# Osservazioni inattese e outlier {#sec-eda-outlier}
 
-::: {.callout-note appearance="minimal"}
-Nelle analisi reali, capita spesso di incontrare osservazioni che non assomigliano alle altre. Possono trattarsi di errori di inserimento, valori impossibili o casi estremi, ma reali, oppure segnali che il fenomeno è più complesso di quanto pensassimo.
+::: {.callout-note title="In sintesi"}
+**Da sapere**  Un outlier non è automaticamente un errore e non è una proprietà assoluta dell'osservazione. Un valore può essere impossibile per la scala, raro ma plausibile, influente su un riassunto oppure inatteso rispetto alla relazione tra più variabili. I criteri statistici segnalano casi da esaminare; non decidono quali osservazioni eliminare.
 
-In questo capitolo useremo il termine "outlier" in senso prudente: un outlier non è necessariamente un dato "sbagliato". È prima di tutto un dato che richiede attenzione. La domanda non è "come lo elimino?", ma:
-
-> Che cosa rappresenta questo valore e quale decisione è giustificata?
+**Da saper fare**  Distinguere errore, rarità e influenza; usare grafici, IQR e MAD come strumenti diagnostici; verificare la fonte prima di modificare un valore; confrontare i risultati sotto decisioni alternative; documentare ciò che viene corretto, mantenuto o escluso; controllare le proposte dell'AI.
 :::
 
-## Perché chiudere l'EDA con gli outlier?
+## Introduzione {.unnumbered .unlisted}
 
-L'analisi degli outlier è un buon punto di conclusione per la sezione EDA, in quanto costringe a mettere insieme molti temi già affrontati.
+L'analisi esplorativa termina spesso con alcune osservazioni che non assomigliano alle altre. Possono trovarsi lontano dal centro di una distribuzione, non seguire la relazione visibile tra due variabili oppure modificare sensibilmente una media, una deviazione standard o una correlazione.
 
-- la struttura del progetto e la documentazione delle decisioni;
-- la pulizia dei dati;
-- la visualizzazione;
-- la forma delle distribuzioni;
-- le misure di tendenza centrale e variabilità;
-- la correlazione;
-- i limiti delle conclusioni causali.
+È naturale chiamarle *outlier*. Il termine, però, può indurre a pensare che siano elementi estranei da rimuovere. In realtà, un'osservazione inattesa può avere origini molto diverse.
 
-Un valore anomalo può modificare la media, la deviazione standard, la correlazione o la regressione. Tuttavia, può anche rappresentare il caso più interessante del dataset. Per questo motivo, non deve essere trattato con una regola automatica.
+Un punteggio di stress pari a 99 su una scala da 1 a 10 è incompatibile con la misura. Una notte con 1.2 ore di sonno è estrema ma possibile. Una persona con molto stress e molte ore di sonno può non essere estrema in nessuna delle due variabili, ma risultare insolita rispetto alla relazione osservata.
 
-### In questo capitolo imparerai a {.unnumbered .unlisted}
+Questi casi richiedono decisioni differenti. La domanda guida non è:
 
-- distinguere valori impossibili, valori inattesi e outlier statistici;
-- usare grafici semplici per individuare valori anomali;
-- applicare criteri univariati come IQR e MAD;
-- riconoscere quando un valore è anomalo solo rispetto a una relazione tra variabili;
-- decidere se correggere, mantenere, escludere o trattare un valore estremo;
-- documentare le decisioni in modo trasparente.
+> Quale regola posso usare per eliminare gli outlier?
 
-::: {.callout-tip title="Idea guida" collapse="true"}
-Un outlier non è una diagnosi, ma un invito a fare domande.
+È invece:
 
-Prima di rimuovere un dato, chiediti:
+> Perché questa osservazione appare inattesa, quale evidenza ne chiarisce l'origine e come cambia l'analisi se la trattiamo in modi differenti?
 
-1. è un valore impossibile?
-2. è un errore documentabile?
-3. è un caso estremo ma plausibile?
-4. cambia in modo sostanziale il risultato?
-5. la decisione è stata documentata?
+Il capitolo riprende necessariamente alcuni principi della pulizia dei dati. Non li ripeterà come una procedura generale: li applicherà al problema specifico delle osservazioni rare e influenti.
+
+::: {.callout-tip title="Prerequisiti"}
+Il capitolo presuppone @sec-data-cleaning, @sec-central-tendency-variability e @sec-correlation. La distinzione tra dato grezzo, anomalia osservata ed errore confermato rimane valida anche qui.
 :::
 
-## Un piccolo dataset didattico
+## Panoramica del capitolo {.unnumbered .unlisted}
 
-Useremo un dataset simulato su stress accademico e sonno. Alcuni valori sono stati modificati intenzionalmente per mostrare situazioni diverse:
+Distingueremo anzitutto valori impossibili, estremi, influenti e inattesi rispetto a una relazione. Useremo poi grafici e criteri robusti come IQR e MAD per individuare osservazioni da controllare. Il punto centrale sarà il passaggio dalla segnalazione alla decisione: verifica della fonte, mantenimento del caso, correzione documentata o analisi di sensibilità. I dati mancanti verranno richiamati soltanto nel punto in cui una correzione può produrre un valore `NA`; la loro trattazione generale richiederebbe un capitolo autonomo.
 
-- un valore impossibile nella variabile `stress`, perché la scala va da 1 a 10;
-- un valore molto basso di `sonno_ore`;
-- un valore molto alto di `sonno_ore`.
+::: {.callout-note title="Preparazione del notebook"}
+Il dataset simulato contiene una riga per studente. Sono state introdotte quattro situazioni differenti: un valore impossibile, due valori estremi ma plausibili e una coppia insolita rispetto alla relazione tra stress e sonno.
 
 ```{r}
 #| label: outlier-setup
@@ -58,142 +42,227 @@ Useremo un dataset simulato su stress accademico e sonno. Alcuni valori sono sta
 
 library(dplyr)
 library(ggplot2)
-library(tibble)
 
 set.seed(123)
 
 n <- 120
 
-dati_outlier <- tibble(
-  id = sprintf("S%03d", 1:n),
-  stress = round(pmin(pmax(rnorm(n, mean = 6, sd = 1.4), 1), 10), 1),
-  sonno_ore = round(pmin(pmax(8.2 - 0.28 * stress + rnorm(n, 0, 0.7), 3), 10), 1),
-  benessere = round(pmin(pmax(72 - 3.5 * stress + rnorm(n, 0, 8), 20), 95), 0)
-) |>
-  mutate(
-    stress = replace(stress, id == "S102", 99),
-    sonno_ore = replace(sonno_ore, id == "S017", 1.2),
-    sonno_ore = replace(sonno_ore, id == "S083", 13.5)
+dati_outlier <- data.frame(
+  id = sprintf("S%03d", seq_len(n)),
+  stress = round(
+    pmin(
+      pmax(
+        rnorm(n, mean = 6, sd = 1.4),
+        1
+      ),
+      10
+    ),
+    1
   )
+)
 
-dati_outlier
+dati_outlier$sonno_ore <- round(
+  pmin(
+    pmax(
+      8.2 -
+        .28 * dati_outlier$stress +
+        rnorm(n, mean = 0, sd = .7),
+      3
+    ),
+    10
+  ),
+  1
+)
+
+dati_outlier$benessere <- round(
+  pmin(
+    pmax(
+      72 -
+        3.5 * dati_outlier$stress +
+        rnorm(n, mean = 0, sd = 8),
+      20
+    ),
+    95
+  ),
+  0
+)
+
+dati_outlier <- dati_outlier |>
+  mutate(
+    stress = if_else(
+      id == "S102",
+      99,
+      stress
+    ),
+    sonno_ore = case_when(
+      id == "S017" ~ 1.2,
+      id == "S083" ~ 13.5,
+      id == "S055" ~ 9.2,
+      TRUE ~ sonno_ore
+    ),
+    stress = if_else(
+      id == "S055",
+      9.3,
+      stress
+    )
+  )
 ```
+:::
 
-Il dataset è piccolo e artificiale, ma consente di analizzare casi che si riscontrano anche nei dati reali: errori, valori estremi e osservazioni difficili da interpretare.
+## Un outlier è relativo a un'aspettativa
 
-## Prima distinzione: impossibile, inatteso, estremo
+Un valore viene definito inatteso rispetto a qualcosa.
 
-Non tutti i valori anomali sono dello stesso tipo.
+Può essere incompatibile con i valori ammessi dallo strumento. Può trovarsi lontano dalla maggior parte delle osservazioni. Può avere un forte effetto su un riassunto. Può infine risultare inatteso rispetto a una relazione, pur essendo ordinario se considerato separatamente.
 
-| Tipo di valore | Esempio | Cosa fare prima |
-|---|---|---|
-| Valore impossibile | stress = 99 su una scala 1--10 | controllare codicebook, questionario o file originale |
-| Valore inatteso | 13.5 ore di sonno | verificare se è plausibile nel contesto |
-| Valore estremo ma possibile | 1.2 ore di sonno | capire se è un caso reale o un errore |
-| Outlier rispetto a una relazione | molto stress e molto sonno, contro il pattern generale | guardare la relazione tra variabili |
+Queste situazioni non devono essere confuse.
 
-Questa distinzione è importante perché il trattamento non può essere lo stesso. Un valore impossibile può essere corretto o trasformato in mancante se non è recuperabile. Un valore estremo ma plausibile, invece, non dovrebbe essere eliminato solo perché “disturba” l'analisi.
+| Situazione | Domanda appropriata |
+|---|---|
+| Valore impossibile | È compatibile con scala, unità e codebook? |
+| Valore estremo | È raro ma plausibile nella popolazione studiata? |
+| Valore influente | Quanto cambia il risultato quando il caso è incluso? |
+| Valore bivariato inatteso | È incompatibile con una relazione o segnala eterogeneità? |
 
-## Controllare prima i valori impossibili
+La tabella non assegna una decisione. Organizza la diagnosi.
 
-Il primo controllo non è statistico. È un controllo di tipo sostantivo: i valori sono compatibili con il modo in cui la variabile è stata misurata?
+Un caso può appartenere a più categorie. Un valore impossibile può essere anche influente; un caso estremo può non modificare quasi per nulla la mediana; un'osservazione bivariata inattesa può rivelare un sottogruppo reale.
 
-Nel nostro esempio, `stress` è una scala da 1 a 10. Il valore 99 non è un outlier psicologico, ma un valore impossibile per quella variabile.
+## Prima viene la compatibilità con la misura
+
+Il primo controllo non è statistico. Riguarda ciò che la variabile può rappresentare.
+
+Nel dataset, `stress` è definito su una scala da 1 a 10. Il valore 99 non è semplicemente lontano dalla media: è incompatibile con il sistema di misurazione.
 
 ```{r}
 #| label: outlier-impossible-values
 
 dati_outlier |>
-  filter(stress < 1 | stress > 10 | sonno_ore < 0 | sonno_ore > 24)
+  filter(
+    stress < 1 |
+      stress > 10 |
+      sonno_ore < 0 |
+      sonno_ore > 24
+  )
 ```
 
-In un'analisi reale dovremmo controllare il file originale. Se scopriamo che `99` era un codice usato per indicare "risposta mancante", dobbiamo ricodificarlo come `NA`.
+Il codice segnala la discrepanza. Non ne stabilisce la causa.
+
+Se il codebook indica che 99 significa “mancante”, possiamo ricodificarlo:
 
 ```{r}
 #| label: outlier-recode-impossible
 
 dati_controllati <- dati_outlier |>
   mutate(
-    stress = if_else(stress < 1 | stress > 10, NA_real_, stress)
+    stress = if_else(
+      stress < 1 |
+        stress > 10,
+      NA_real_,
+      stress
+    )
   )
-
-dati_controllati |>
-  filter(is.na(stress))
 ```
 
-::: {.callout-important title="Non tutto è un problema statistico" collapse="true"}
-Un valore impossibile deve essere considerato come un problema di qualità del dato, non come un outlier da identificare con IQR, z-score o MAD.
+Se la fonte originale mostra invece che il valore corretto era 9, la decisione appropriata è una correzione documentata. Se non possiamo ricostruire il valore, `NA` esprime che l'informazione non è disponibile.
 
-Prima si devono controllare i vincoli della misurazione. Solo dopo ha senso applicare criteri statistici.
+::: {.callout-important title="Ricodificare come mancante non conclude il problema"}
+Trasformare un valore impossibile in `NA` impedisce che entri nei calcoli come numero reale. Non dimostra che la sua assenza sia irrilevante. In questo modulo ci limitiamo a contarla e a rendere visibile quali analisi escludano quella riga. La teoria e il trattamento generale dei dati mancanti richiedono una trattazione separata.
 :::
 
-## Guardare la distribuzione
+## Guardare la distribuzione prima delle soglie
 
-Dopo i controlli di plausibilità, torniamo all'EDA. Prima di calcolare le soglie, osserviamo la distribuzione.
+Dopo avere risolto i valori incompatibili con la misura, possiamo osservare la distribuzione delle ore di sonno.
 
 ```{r}
-#| label: outlier-distribution-plot
+#| label: fig-outlier-sleep-hist
+#| fig-cap: "Distribuzione delle ore di sonno dopo il controllo dei valori impossibili."
 
-ggplot(dati_controllati, aes(x = sonno_ore)) +
-  geom_histogram(binwidth = 0.5, boundary = 0) +
+ggplot(
+  dati_controllati,
+  aes(x = sonno_ore)
+) +
+  geom_histogram(
+    binwidth = .5,
+    boundary = 0
+  ) +
   labs(
     x = "Ore di sonno",
-    y = "Frequenza",
-    title = "Distribuzione delle ore di sonno"
+    y = "Numero di studenti"
   )
 ```
 
-Un istogramma permette di capire se la distribuzione è simmetrica, asimmetrica, concentrata o dispersa. Consente anche di notare i valori isolati.
-
-Il boxplot offre invece un riassunto più compatto.
+L'istogramma mostra due valori lontani dalla concentrazione centrale. Non ci dice se siano errori.
 
 ```{r}
-#| label: outlier-boxplot
+#| label: fig-outlier-sleep-boxplot
+#| fig-cap: "Il boxplot segnala osservazioni lontane dalla metà centrale della distribuzione."
 
-ggplot(dati_controllati, aes(y = sonno_ore)) +
+ggplot(
+  dati_controllati,
+  aes(y = sonno_ore)
+) +
   geom_boxplot() +
   labs(
     x = NULL,
-    y = "Ore di sonno",
-    title = "Boxplot delle ore di sonno"
+    y = "Ore di sonno"
   )
 ```
 
-I punti mostrati al di fuori dei baffi del boxplot non sono automaticamente valori da eliminare. Meritano un controllo.
+Il boxplot applica una convenzione geometrica. I punti oltre i baffi sono osservazioni da controllare, non “dati cattivi”.
 
-## Il criterio IQR
+La rarità è una proprietà della distribuzione osservata. L'errore è una conclusione sulla provenienza del dato. Non sono la stessa cosa.
 
-Il criterio più comune per individuare gli outlier univariati si basa sull'intervallo interquartile (IQR).
+## Il criterio IQR segnala valori lontani dalla metà centrale
 
-L'intervallo interquartile (IQR) è la distanza tra il terzo e il primo quartile:
-
-$$
-IQR = Q_3 - Q_1.
-$$
-
-Una regola pratica segnala come potenziali outlier i valori inferiori a
+L'intervallo interquartile è:
 
 $$
-Q_1 - 1.5 \times IQR
+IQR = Q_3-Q_1.
 $$
 
-o superiori a
+Una regola convenzionale segnala i valori inferiori a:
 
 $$
-Q_3 + 1.5 \times IQR.
+Q_1-1.5\,IQR
+$$
+
+o superiori a:
+
+$$
+Q_3+1.5\,IQR.
 $$
 
 ```{r}
 #| label: outlier-iqr-limits
 
-q1 <- quantile(dati_controllati$sonno_ore, 0.25, na.rm = TRUE)
-q3 <- quantile(dati_controllati$sonno_ore, 0.75, na.rm = TRUE)
-iqr_sonno <- IQR(dati_controllati$sonno_ore, na.rm = TRUE)
+q1 <-
+  quantile(
+    dati_controllati$sonno_ore,
+    .25,
+    na.rm = TRUE
+  )
 
-limite_basso_iqr <- q1 - 1.5 * iqr_sonno
-limite_alto_iqr <- q3 + 1.5 * iqr_sonno
+q3 <-
+  quantile(
+    dati_controllati$sonno_ore,
+    .75,
+    na.rm = TRUE
+  )
 
-tibble(
+iqr_sonno <-
+  IQR(
+    dati_controllati$sonno_ore,
+    na.rm = TRUE
+  )
+
+limite_basso_iqr <-
+  q1 - 1.5 * iqr_sonno
+
+limite_alto_iqr <-
+  q3 + 1.5 * iqr_sonno
+
+data.frame(
   q1 = q1,
   q3 = q3,
   iqr = iqr_sonno,
@@ -205,266 +274,364 @@ tibble(
 ```{r}
 #| label: outlier-iqr-cases
 
-outlier_iqr <- dati_controllati |>
+casi_iqr <- dati_controllati |>
   filter(
     sonno_ore < limite_basso_iqr |
       sonno_ore > limite_alto_iqr
   )
 
-outlier_iqr
+casi_iqr
 ```
 
-Il criterio IQR è semplice e robusto rispetto alla media e alla deviazione standard. Tuttavia, non si tratta di una verità assoluta. In distribuzioni molto asimmetriche, infatti, può segnalare molti valori in una coda, anche quando questa coda rappresenta una parte reale del fenomeno.
+La regola misura la distanza dalla regione centrale in unità di IQR. Non conosce il significato delle ore di sonno e non distingue una notte reale da un errore di trascrizione.
 
-## Il criterio MAD
+In distribuzioni asimmetriche o con code lunghe può segnalare molte osservazioni perfettamente coerenti con il fenomeno. Per questo il criterio deve essere letto insieme al grafico e alla conoscenza della misura.
 
-Un altro criterio robusto usa la mediana e la deviazione assoluta mediana, o MAD (*Median Absolute Deviation*).
+## Il MAD offre un secondo criterio robusto
 
-L'idea è semplice:
+Nel capitolo su posizione e dispersione abbiamo definito:
 
-1. si calcola la mediana;
-2. si calcola quanto ogni valore si allontana dalla mediana;
-3. si prende la mediana di questi allontanamenti.
+$$
+MAD =
+\operatorname{mediana}
+\left(
+|x_i-\operatorname{mediana}(x)|
+\right).
+$$
+
+Usando il MAD non scalato, possiamo costruire un punteggio robusto:
+
+$$
+z_i^{\mathrm{rob}}
+=
+0.6745
+\frac{x_i-\operatorname{mediana}(x)}
+{MAD}.
+$$
 
 ```{r}
-#| label: outlier-mad-limits
+#| label: outlier-mad-cases
 
-mediana_sonno <- median(dati_controllati$sonno_ore, na.rm = TRUE)
-mad_sonno <- mad(dati_controllati$sonno_ore, constant = 1, na.rm = TRUE)
+mediana_sonno <-
+  median(
+    dati_controllati$sonno_ore,
+    na.rm = TRUE
+  )
+
+mad_sonno <-
+  mad(
+    dati_controllati$sonno_ore,
+    constant = 1,
+    na.rm = TRUE
+  )
 
 dati_mad <- dati_controllati |>
   mutate(
-    z_robusto = 0.6745 * (sonno_ore - mediana_sonno) / mad_sonno
+    z_robusto =
+      .6745 *
+      (sonno_ore - mediana_sonno) /
+      mad_sonno
   )
 
 dati_mad |>
-  filter(abs(z_robusto) > 3.5) |>
-  select(id, sonno_ore, z_robusto)
+  filter(
+    abs(z_robusto) > 3.5
+  ) |>
+  select(
+    id,
+    sonno_ore,
+    z_robusto
+  )
 ```
 
-Il valore `z_robusto` è una versione robusta dello z-score. Una soglia spesso utilizzata è `|z_robusto| > 3.5`, ma anche questa è una regola operativa, non una decisione automatica.
+La soglia 3.5 è una convenzione operativa. Il vantaggio del metodo è la minore dipendenza da media e deviazione standard, che possono essere esse stesse spostate dai valori estremi.
 
-::: {.callout-note title="I criteri non decidono al posto nostro" collapse="true"}
-L'IQR e il MAD aiutano a individuare i valori che meritano attenzione. Non decidono autonomamente se un'osservazione debba essere rimossa.
+IQR e MAD possono segnalare insiemi leggermente differenti. La discrepanza non deve essere risolta scegliendo il criterio che elimina più casi o produce il risultato preferito. Mostra semplicemente che “essere outlier” dipende anche dalla definizione adottata.
 
-La decisione richiede sempre una giustificazione sostanziale e una documentazione adeguata.
-:::
+## Un valore estremo può essere una parte reale della popolazione
 
-## Quanto cambia il riassunto?
+Dormire 1.2 ore è raro, ma possibile. Dormire 13.5 ore è insolito, ma può verificarsi in condizioni particolari.
 
-Un modo utile per capire l'influenza degli outlier è confrontare i riassunti con e senza i valori segnalati.
+Prima di modificare questi valori dovremmo controllare la fonte, l'unità temporale e il contesto. La risposta si riferisce a una notte specifica, a una media settimanale o al sonno nelle ultime ventiquattro ore? È stata digitata direttamente dal partecipante o calcolata da un dispositivo?
+
+Se i valori sono confermati e la popolazione di interesse comprende quelle situazioni, eliminarli rende il dataset meno rappresentativo.
+
+La presenza di osservazioni rare può indicare che il fenomeno è eterogeneo. Può suggerire sottogruppi, code più pesanti di quelle previste dal modello o una misura che funziona diversamente in alcune condizioni.
+
+## Estremo e influente non significano la stessa cosa
+
+Un valore è **estremo** quando si trova lontano dalla maggior parte delle osservazioni. È **influente** quando modifica in modo rilevante un risultato.
+
+L'influenza dipende dalla statistica e dalla domanda. Un valore molto elevato può modificare fortemente la media e la deviazione standard, ma avere un effetto limitato sulla mediana e sull'IQR.
+
+Possiamo confrontare i riassunti mantenendo tutti i valori plausibili e rimuovendo temporaneamente i casi segnalati dall'IQR:
 
 ```{r}
-#| label: outlier-summary-comparison
+#| label: outlier-summary-sensitivity
 
-dati_senza_outlier_iqr <- dati_controllati |>
-  anti_join(outlier_iqr |> select(id), by = "id")
+dati_senza_casi_iqr <- dati_controllati |>
+  anti_join(
+    casi_iqr |>
+      select(id),
+    by = "id"
+  )
 
 bind_rows(
-  "con tutti i valori plausibili" = dati_controllati,
-  "senza outlier IQR" = dati_senza_outlier_iqr,
-  .id = "analisi"
+  "tutti i valori plausibili" =
+    dati_controllati,
+  "senza casi IQR" =
+    dati_senza_casi_iqr,
+  .id = "scenario"
 ) |>
-  group_by(analisi) |>
+  group_by(scenario) |>
   summarise(
-    n = n(),
-    media = mean(sonno_ore, na.rm = TRUE),
-    mediana = median(sonno_ore, na.rm = TRUE),
-    sd = sd(sonno_ore, na.rm = TRUE),
-    iqr = IQR(sonno_ore, na.rm = TRUE),
+    n = sum(!is.na(sonno_ore)),
+    media =
+      mean(
+        sonno_ore,
+        na.rm = TRUE
+      ),
+    mediana =
+      median(
+        sonno_ore,
+        na.rm = TRUE
+      ),
+    deviazione_standard =
+      sd(
+        sonno_ore,
+        na.rm = TRUE
+      ),
+    iqr =
+      IQR(
+        sonno_ore,
+        na.rm = TRUE
+      ),
     .groups = "drop"
   )
 ```
 
-Questo confronto mostra perché gli outlier sono importanti: alcuni riassunti sono sensibili ai valori estremi, altri lo sono meno.
+Questa è un'analisi di sensibilità, non una procedura di pulizia. Mostra quanto i riassunti dipendano dalla decisione.
 
-In generale:
+Se la media cambia molto e la mediana poco, abbiamo appreso qualcosa sulla distribuzione. Non abbiamo ancora dimostrato che la versione senza i casi sia quella corretta.
 
-- la media e la deviazione standard sono sensibili agli outlier;
-- la mediana e l'IQR sono più robusti;
-- il MAD è costruito specificamente per descrivere la dispersione in modo robusto.
+## Un'osservazione può essere inattesa solo nella relazione
 
-## Outlier rispetto a una relazione
-
-Un'osservazione può non essere estrema su una singola variabile, ma risultare inattesa rispetto alla relazione tra due variabili.
-
-Per esempio, se nel dataset chi riporta più stress tende a dormire meno, un partecipante con un livello di stress molto alto e molte ore di sonno può rappresentare un caso interessante, anche se nessuna delle due variabili è estrema di per sé.
+La coppia `S055` possiede valori plausibili di stress e sonno, ma combina stress elevato e molte ore di sonno. Rispetto alla tendenza generale, può apparire inattesa.
 
 ```{r}
-#| label: outlier-bivariate-plot
+#| label: fig-outlier-bivariate
+#| fig-cap: "Un'osservazione può essere ordinaria nelle singole variabili ma inattesa rispetto alla relazione."
 
-ggplot(dati_controllati, aes(x = stress, y = sonno_ore)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE) +
+ggplot(
+  dati_controllati,
+  aes(
+    x = stress,
+    y = sonno_ore
+  )
+) +
+  geom_point(
+    alpha = .65,
+    na.rm = TRUE
+  ) +
+  geom_smooth(
+    method = "lm",
+    se = FALSE,
+    na.rm = TRUE
+  ) +
+  geom_point(
+    data = dati_controllati |>
+      filter(id == "S055"),
+    size = 3
+  ) +
   labs(
-    x = "Stress accademico",
-    y = "Ore di sonno",
-    title = "Relazione tra stress e sonno"
+    x = "Punteggio di stress",
+    y = "Ore di sonno"
   )
 ```
 
-Questo tipo di controllo collega il capitolo sugli outlier a quello sulla correlazione. Un singolo punto può cambiare la direzione o l'intensità di una relazione. Per questo motivo, quando osserviamo una correlazione, dobbiamo sempre considerare anche lo scatterplot.
+Il caso può essere un errore, una persona appartenente a un sottogruppo oppure un'indicazione che la relazione lineare è troppo semplice.
 
-## Cosa fare con un outlier?
+Questa situazione non viene rilevata da una soglia applicata separatamente alle due variabili. Mostra perché gli outlier dipendano anche dal modello o dalla relazione rispetto a cui vengono valutati.
 
-Dopo aver individuato un valore anomalo, ci sono diverse possibilità.
+Un punto lontano dalla linea non è automaticamente da eliminare. Può rivelare che la linea descrive male una parte dei dati.
 
-| Situazione | Decisione possibile | Esempio |
-|---|---|---|
-| Errore documentabile | correggere | un valore `99` indica risposta mancante |
-| Valore impossibile non recuperabile | codificare come `NA` | 30 ore di sonno in un giorno |
-| Valore estremo ma plausibile | mantenere | una notte di sonno quasi assente prima di un esame |
-| Valore plausibile ma molto influente | analisi di sensibilità | risultati con e senza quel caso |
-| Distribuzione con code pesanti | usare metodi robusti | mediana, IQR, MAD, modelli robusti |
-| Valori estremi attesi dal fenomeno | cambiare modello | distribuzione asimmetrica o errore non normale |
+## Dalla segnalazione alla decisione
 
-La rimozione è solo una delle opzioni, e spesso non è la prima.
+Dopo avere individuato un caso, la decisione dovrebbe seguire un ordine riconoscibile.
 
-::: {.callout-warning title="Errore comune" collapse="true"}
-Non rimuovere un valore solo perché rende il risultato meno “pulito”.
+Prima ricostruiamo la provenienza del valore. Poi verifichiamo la compatibilità con misura e disegno. Se esiste un errore documentabile, correggiamo il dato o lo rappresentiamo come mancante. Se il valore è plausibile, lo manteniamo e ne valutiamo l'influenza. Quando più decisioni sono ragionevoli, mostriamo un'analisi di sensibilità.
 
-Una decisione sugli outlier è giustificata se riguarda la qualità del dato, la sua coerenza con la misura o la scelta di un modello più adeguato. Non è giustificata se serve solo a ottenere un risultato più conveniente.
+$$
+\text{segnalazione}
+\longrightarrow
+\text{verifica della fonte}
+\longrightarrow
+\text{decisione motivata}
+\longrightarrow
+\text{confronto dei risultati}.
+$$
+
+La rimozione è quindi una possibilità, non il punto di partenza.
+
+::: {.callout-warning title="Una distribuzione più ordinata non è necessariamente più vera"}
+Eliminare valori perché aumentano la deviazione standard, indeboliscono una correlazione o rendono il grafico meno regolare equivale a modificare i dati in funzione del risultato. Una decisione è difendibile quando deriva dalla qualità del dato, dalla definizione della popolazione o da un criterio metodologico dichiarato.
 :::
 
-## Documentare la decisione
+## Outlier e gradi di libertà del ricercatore
 
-Ogni scelta relativa agli outlier deve essere tracciabile. Una buona documentazione dovrebbe indicare:
+Le decisioni sugli outlier possono diventare una fonte importante di flessibilità analitica.
 
-- quale variabile è stata controllata;
-- il criterio utilizzato;
-- quali soglie sono state applicate;
-- quali osservazioni sono state segnalate;
-- cosa è stato deciso;
-- perché quella decisione è coerente con la domanda di ricerca;
-- se i risultati cambiano con una decisione alternativa.
+Possiamo scegliere il criterio IQR, il MAD, una soglia in deviazioni standard, un controllo visivo oppure una misura di influenza legata a un modello. Possiamo applicare la regola a una variabile, a tutte le variabili o soltanto al risultato principale. Possiamo eliminare il caso, trasformare la variabile o cambiare modello.
 
-Ecco un esempio di tabella di documentazione:
+Molte scelte possono essere ragionevoli. Il problema emerge quando il criterio viene selezionato dopo avere osservato quale versione produce il risultato desiderato.
+
+Per ridurre questa flessibilità, è utile definire in anticipo i controlli possibili, conservare sempre i dati originali, registrare ogni modifica e mostrare quanto le conclusioni dipendano dalle alternative plausibili.
+
+Questa disciplina collega il capitolo alle questioni di trasparenza e replicabilità già discusse in @sec-data-cleaning.
+
+## Documentare il percorso
+
+Una tabella delle decisioni può collegare problema, evidenza, intervento ed effetto.
 
 ```{r}
-#| label: outlier-decision-table
+#| label: outlier-decision-log
 
-decisioni_outlier <- tibble(
-  id = c("S102", "S017", "S083"),
-  variabile = c("stress", "sonno_ore", "sonno_ore"),
+decisioni_outlier <- data.frame(
+  id = c(
+    "S102",
+    "S017",
+    "S083",
+    "S055"
+  ),
   problema = c(
-    "valore impossibile per una scala 1-10",
-    "valore molto basso",
-    "valore molto alto"
+    "valore impossibile nella scala di stress",
+    "ore di sonno molto basse",
+    "ore di sonno molto alte",
+    "coppia inattesa rispetto alla relazione"
+  ),
+  evidenza = c(
+    "scala definita da 1 a 10",
+    "da verificare sulla fonte",
+    "da verificare sulla fonte",
+    "valori plausibili nelle due variabili"
   ),
   decisione = c(
-    "ricodificato come NA",
-    "mantenuto e segnalato",
-    "mantenuto e segnalato"
-  ),
-  motivazione = c(
-    "il valore 99 non è interpretabile come punteggio di stress",
-    "1.2 ore di sonno è raro ma possibile",
-    "13.5 ore di sonno è raro ma possibile"
+    "ricodificato come mancante",
+    "mantenuto in attesa di verifica",
+    "mantenuto in attesa di verifica",
+    "mantenuto e incluso nell'analisi di sensibilità"
   )
 )
 
 decisioni_outlier
 ```
 
-Questa tabella non è un dettaglio burocratico. Fa parte dell'analisi.
+Nel progetto reale dovremmo aggiungere la fonte consultata, la data della verifica e l'effetto quantitativo della decisione.
 
-## Analisi di sensibilità
+Il codice mostra *come* abbiamo modificato il dataset. Il registro spiega *perché*.
 
-Quando non è chiaro se un valore estremo vada mantenuto o escluso, una strategia onesta è mostrare quanto cambino i risultati.
+## Un richiamo essenziale ai dati mancanti
+
+Un capitolo introduttivo sugli outlier non può sviluppare adeguatamente i dati mancanti. Sarebbe necessario distinguere processi diversi di mancata osservazione, discutere le conseguenze sulle stime e introdurre metodi specifici.
+
+Qui manteniamo soltanto tre principi.
+
+Un valore impossibile può essere rappresentato come `NA` quando l'informazione corretta non è recuperabile. Il numero di osservazioni mancanti e il denominatore di ogni analisi devono rimanere visibili. Infine, trasformare un valore in `NA` non autorizza automaticamente a eliminare l'intera riga da tutte le analisi.
+
+Quando la quota di mancanti è consistente o sembra concentrarsi in particolari gruppi, il problema supera lo scopo del capitolo e richiede un'analisi dedicata.
+
+## Usare l'AI per segnalare, non per decidere
+
+Una richiesta come:
+
+> Pulisci gli outlier.
+
+invita l'assistente a trasformare convenzioni statistiche in decisioni metodologiche.
+
+Una richiesta più controllabile separa individuazione e intervento.
+
+::: {.callout-tip title="Un prompt per diagnosticare gli outlier"}
+> Ho un data frame `dati_outlier`, con una riga per studente. `stress` deve variare da 1 a 10; `sonno_ore` rappresenta le ore dormite nelle ultime ventiquattro ore.
+>
+> Non eliminare e non modificare alcuna osservazione. Segnala separatamente:
+>
+> 1. valori incompatibili con i limiti dichiarati;
+> 2. casi individuati dal criterio IQR;
+> 3. casi individuati da un punteggio robusto basato sul MAD;
+> 4. osservazioni inattese nello scatterplot tra stress e sonno.
+>
+> Per ogni caso mostra l'identificatore e i valori originali. Spiega quali decisioni richiedono il codebook o la verifica della fonte. Proponi infine un confronto dei risultati con e senza i casi segnalati, presentandolo come analisi di sensibilità e non come giustificazione automatica dell'esclusione.
+:::
+
+Dopo la diagnosi, una seconda richiesta può implementare soltanto le decisioni che il ricercatore ha già giustificato.
+
+## Riflessioni conclusive {.unnumbered .unlisted}
+
+Un outlier non è un'etichetta che autorizza la cancellazione di una riga. È una relazione tra un'osservazione e un'aspettativa: i limiti della misura, la distribuzione del campione, un riassunto statistico o un modello della relazione.
+
+I valori impossibili appartengono alla qualità del dato e richiedono una verifica della fonte. I valori estremi ma plausibili possono rappresentare regioni rare ma reali della popolazione. I casi influenti segnalano che una conclusione dipende fortemente da poche osservazioni. Gli outlier bivariati o multivariati possono indicare eterogeneità oppure un modello troppo semplice.
+
+IQR e MAD sono strumenti utili perché rendono sistematica la segnalazione, ma non sostituiscono il giudizio metodologico. La decisione deve essere documentata e, quando non è univoca, accompagnata da un'analisi di sensibilità.
+
+I dati mancanti vengono soltanto sfiorati: ricodificare un valore impossibile come `NA` è talvolta necessario, ma la gestione generale della mancata osservazione è un problema più ampio di questo modulo introduttivo.
+
+L'EDA si conclude quindi non con un dataset privo di anomalie, ma con una comprensione più trasparente di quali osservazioni sostengano i risultati e di quanto le conclusioni dipendano dalle decisioni prese.
+
+## Esercizi {.unnumbered .unlisted}
+
+1. Spiega la differenza tra valore impossibile, valore estremo e valore influente usando tre esempi differenti.
+
+2. Applica il criterio IQR alla variabile `benessere`. Quali casi vengono segnalati? La segnalazione dimostra che siano errori?
+
+3. Calcola media, mediana, deviazione standard e IQR di `sonno_ore` con tutti i valori plausibili e senza i casi IQR. Quali riassunti cambiano maggiormente?
+
+4. Verifica sulla base del grafico perché `S055` sia inatteso rispetto alla relazione, pur non essendo necessariamente estremo nelle singole variabili.
+
+5. La correlazione tra stress e sonno cambia molto dopo la rimozione di un caso. Quali domande devi risolvere prima di decidere se escluderlo?
+
+6. Un valore impossibile viene ricodificato come `NA`. Quali informazioni devono comparire nel report anche se il valore non entra più nel calcolo?
+
+7. Scrivi una voce del registro delle decisioni per un valore estremo confermato dalla fonte e mantenuto nel dataset.
+
+8. Formula un prompt che chieda all'AI di individuare casi inattesi senza modificarli e di produrre un'analisi di sensibilità.
+
+::: {.callout-tip title="Soluzioni" collapse="true"}
+1. Un punteggio 99 su una scala 1–10 è impossibile. Una notte con 1.2 ore di sonno è estrema ma possibile. Un punto che modifica fortemente una correlazione è influente rispetto a quel riassunto.
+
+2. Il criterio identifica osservazioni lontane dalla metà centrale. Non ricostruisce la loro origine e non dimostra che siano errori.
+
+3. Media e deviazione standard tendono a cambiare maggiormente perché dipendono dall'ampiezza degli estremi. Mediana e IQR sono generalmente più stabili.
+
+4. Il caso combina stress elevato e molte ore di sonno, mentre la tendenza complessiva è negativa. La sua particolarità appartiene alla coppia di valori.
+
+5. Occorre verificare validità, provenienza, appartenenza alla popolazione e coerenza con il disegno. Il cambiamento del coefficiente dimostra sensibilità, non errore.
+
+6. Devono comparire il motivo della ricodifica, la fonte della decisione, il numero dei mancanti e la numerosità effettivamente usata nelle analisi.
+
+7. La voce deve indicare identificatore, variabile, valore, fonte consultata, motivo del mantenimento ed eventuale effetto sui risultati.
+
+8. Il prompt deve specificare limiti e significato delle variabili, vietare modifiche automatiche, chiedere identificatori e valori originali e separare diagnosi, verifica e confronto dei risultati.
+:::
+
+::: {.callout-note title="Punti chiave" collapse="true"}
+- Un outlier è relativo a una misura, una distribuzione, un riassunto o una relazione.
+- Un valore impossibile non è semplicemente un valore estremo.
+- Rarità e errore sono concetti differenti.
+- IQR e MAD segnalano casi; non decidono esclusioni.
+- Estremo e influente non significano la stessa cosa.
+- Un'osservazione può essere inattesa soltanto rispetto a una relazione.
+- I casi plausibili possono rivelare eterogeneità o limiti del modello.
+- Le decisioni ambigue richiedono analisi di sensibilità.
+- Ricodificare come `NA` non risolve il problema generale dei dati mancanti.
+- L'AI deve assistere diagnosi e codice, non assumere la decisione scientifica.
+:::
+
+::: {.callout-note title="Ambiente di sviluppo" collapse="true"}
+Il capitolo usa `dplyr` e `ggplot2`.
 
 ```{r}
-#| label: outlier-sensitivity-correlation
-
-cor_con_tutti <- cor(
-  dati_controllati$stress,
-  dati_controllati$sonno_ore,
-  use = "complete.obs"
-)
-
-cor_senza_outlier <- cor(
-  dati_senza_outlier_iqr$stress,
-  dati_senza_outlier_iqr$sonno_ore,
-  use = "complete.obs"
-)
-
-tibble(
-  analisi = c("con tutti i valori plausibili", "senza outlier IQR"),
-  correlazione = c(cor_con_tutti, cor_senza_outlier)
-)
-```
-
-Se la conclusione cambia molto, il risultato è fragile. Ciò non significa necessariamente che una versione sia "vera" e l'altra "falsa". Significa che il lettore deve sapere che la conclusione dipende da una scelta analitica.
-
-## Usare l'AI con criterio
-
-L'AI può essere utile per scrivere codice che individua gli outlier, costruisce i boxplot o calcola le soglie IQR e MAD. Tuttavia, tende anche a proporre soluzioni automatiche, come "rimuovi tutti gli outlier", senza considerare il significato di quei valori.
-
-::: {.callout-tip title="Cosa puoi chiedere all'AI" collapse="true"}
-Puoi chiedere all'AI:
-
-- di scrivere il codice R per calcolare IQR o MAD;
-- di spiegare un boxplot;
-- di costruire una tabella dei casi segnalati;
-- di confrontare risultati con e senza outlier;
-- di suggerire una struttura per documentare le decisioni.
-:::
-
-::: {.callout-caution title="Cosa devi controllare tu" collapse="true"}
-Devi controllare personalmente:
-
-- se le soglie sono adeguate alla variabile;
-- se il valore è impossibile o solo raro;
-- quanti casi vengono esclusi;
-- se la decisione modifica i risultati;
-- se l'AI sta trasformando una scelta metodologica in una procedura automatica;
-- se l'interpretazione è coerente con la domanda psicologica.
-:::
-
-Una buona pratica è chiedere all'AI non solo il codice, ma anche i controlli:
-
-> Questo codice rimuove delle osservazioni? Quante? Quali? Come posso confrontare i risultati con e senza questi casi?
-
-## Collegamento con la modellizzazione
-
-Gli outlier non sono solo un problema di pulizia dei dati. A volte, infatti, sono un segnale che il modello che abbiamo in mente è troppo semplice.
-
-Per esempio:
-
-- una distribuzione molto asimmetrica può richiedere una trasformazione o un modello diverso;
-- code pesanti possono suggerire un modello robusto;
-- un singolo caso influente può indicare che la relazione non è uguale per tutti;
-- una popolazione eterogenea può richiedere modelli per gruppi o modelli gerarchici.
-
-Nel manuale bayesiano incontreremo modelli che permettono di rappresentare in modo più esplicito l'incertezza, la variabilità tra gli individui e la presenza di osservazioni influenti. L'EDA non sostituisce questi modelli, ma aiuta a capire quando potrebbero essere utili.
-
-## Cosa ricordare
-
-Gli outlier non sono fastidi da cancellare. Sono un'opportunità per comprendere meglio i dati.
-
-Al termine di questo capitolo, dovresti ricordare che:
-
-- un valore impossibile è un problema di qualità del dato;
-- un valore estremo può essere reale e informativo;
-- i criteri statistici segnalano casi da controllare, non decisioni già prese;
-- la media, la deviazione standard e la correlazione possono essere molto sensibili agli outlier;
-- le decisioni devono essere motivate e documentate;
-- quando una decisione modifica il risultato, bisogna mostrarlo.
-
-::: {.callout-important title="Esercizi" collapse="true"}
-1. Nel dataset didattico, quali valori sono impossibili e quali sono solo estremi?
-2. Usa il criterio IQR sulla variabile `benessere`. Quali casi vengono segnalati?
-3. Confronta media e mediana di `sonno_ore` prima e dopo l'esclusione degli outlier IQR.
-4. Calcola la correlazione tra `stress` e `sonno_ore` con e senza i casi segnalati. Cambia molto?
-5. Scrivi una breve nota metodologica che documenti una decisione sugli outlier.
-6. Chiedi a un sistema AI di individuare gli outlier nel dataset. Quali controlli devi fare prima di fidarti della risposta?
-:::
-
-::: {.callout-note collapse="true" title="Informazioni sull'ambiente di sviluppo"}
-```{r}
-#| label: outlier-session-info
+#| echo: true
 
 sessionInfo()
 ```
 :::
-
-## Bibliografia {.unnumbered .unlisted}

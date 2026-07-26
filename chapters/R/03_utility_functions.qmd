@@ -1,415 +1,525 @@
 # Dal file alla tabella controllata {#sec-r-programming}
 
-## Perché questo capitolo esiste {.unnumbered .unlisted}
+::: {.callout-note title="In sintesi"}
+**Da sapere**  Importare un file significa trasformarlo in un oggetto che R può usare. Non significa ancora avere dati pronti per l'analisi. Prima di procedere dobbiamo confrontare la tabella ottenuta con ciò che sappiamo dello studio: numero e significato delle righe, variabili attese, tipi, categorie, intervalli plausibili e valori mancanti.
 
-Prima di calcolare statistiche, costruire grafici o stimare modelli, è necessario assicurarsi che i dati siano stati caricati correttamente.
-
-Spesso, gli errori nelle analisi derivano da problemi semplici: il file letto non è quello giusto, una variabile numerica è stata importata come testo, i valori mancanti non sono stati riconosciuti o il codice funziona solo sul computer di chi lo ha scritto.
-
-In questo capitolo non costruiremo un catalogo di funzioni R. Impareremo una routine minima:
-
-> importare un file, ispezionare la tabella, controllare che i dati abbiano senso, salvare una versione elaborata quando necessario.
-
-L'AI può suggerire il codice per molti di questi passaggi. Tuttavia, non può sapere da sola se il file importato è quello corretto, se le colonne hanno il significato atteso o se i valori osservati sono plausibili per la domanda di ricerca.
-
-::: {.callout-note title="Idea guida"}
-Un dataset importato non è ancora pronto per l'analisi. Prima di utilizzarlo, dobbiamo controllarlo.
+**Da saper fare**  Descrivere l'importazione come una sequenza di controlli; verificare il percorso prima di leggere il file; ispezionare struttura e contenuto della tabella; riconoscere segnali d'allarme; formulare all'AI una richiesta che includa aspettative e verifiche, non soltanto il comando di importazione.
 :::
 
-## Obiettivi del capitolo
+## Introduzione {.unnumbered .unlisted}
 
-Al termine del capitolo dovresti sapere:
+Nel capitolo precedente abbiamo organizzato il lavoro come un progetto riproducibile. Sappiamo ora dove devono trovarsi i dati originali, perché i percorsi devono essere relativi e perché ogni trasformazione deve poter essere ricostruita.
 
-- importare un file utilizzando percorsi relativi al progetto;
-- distinguere i dati originali da quelli elaborati;
-- controllare le dimensioni, i nomi delle colonne e le prime righe di una tabella;
-- riconoscere il tipo delle variabili principali;
-- individuare i valori mancanti;
-- controllare le categorie e i valori inattesi;
-- esportare un dataset elaborato senza sovrascrivere i dati originali;
-- verificare il codice prodotto con l'intelligenza artificiale.
+Il passo successivo consiste nel portare un file dentro R. L'operazione tecnica è spesso semplice. Il passaggio scientificamente importante viene subito dopo: stabilire se l'oggetto importato corrisponde davvero ai dati che pensiamo di avere.
 
-## Il flusso minimo
+Un file può essere letto senza errori e produrre comunque una tabella sbagliata. Il separatore può non essere riconosciuto; una colonna numerica può diventare testo; codici come `999` possono essere scambiati per valori reali; categorie equivalenti possono comparire con grafie diverse; alcune variabili attese possono mancare.
 
-Quando riceviamo un file di dati, possiamo sempre seguire la stessa sequenza:
+Per questo motivo il capitolo non presenta un catalogo di funzioni di importazione. Introduce una routine generale:
 
-1. **trovare il file** dentro il progetto;
-2. **importarlo** in R;
-3. **guardare la struttura** del dataset;
-4. **controllare le variabili** più importanti;
-5. **identificare problemi evidenti**;
-6. **salvare una versione elaborata**, se abbiamo fatto modifiche.
+$$
+\text{localizzare}
+\longrightarrow
+\text{importare}
+\longrightarrow
+\text{ispezionare}
+\longrightarrow
+\text{confrontare con le attese}
+\longrightarrow
+\text{decidere}.
+$$
 
-In forma schematica:
+L'AI può scrivere la sintassi di ogni passaggio. Le aspettative con cui confrontare il risultato devono però provenire dal ricercatore, dal disegno e dalla documentazione dello studio.
 
-```r
-# Importare
-stress_sonno <- rio::import(
-  here::here("data", "raw", "stress_sonno.csv")
-)
-
-# Controlli iniziali
-head(stress_sonno)
-dim(stress_sonno)
-names(stress_sonno)
-str(stress_sonno)
-
-# Valori mancanti e categorie
-colSums(is.na(stress_sonno))
-table(stress_sonno$genere, useNA = "ifany")
-summary(stress_sonno)
-```
-
-Questo codice non rappresenta ancora un'analisi statistica. Si tratta di una verifica preliminare che ci permette di capire se la tabella che useremo per l'EDA è coerente con quanto pensiamo di avere.
-
-## Dove devono stare i dati
-
-Un progetto dovrebbe distinguere almeno tra dati originali, dati elaborati, codice e risultati:
-
-```text
-progetto_stress_sonno/
-├── progetto_stress_sonno.Rproj
-├── data/
-│   ├── raw/
-│   │   └── stress_sonno_originale.csv
-│   └── processed/
-│       └── stress_sonno_controllato.csv
-├── code/
-│   └── 01_controllo_dati.R
-└── report.qmd
-```
-
-La distinzione più importante è questa:
-
-- `data/raw/`: dati originali, da non modificare;
-- `data/processed/`: dati elaborati o puliti;
-- `code/` o file `.qmd`: codice che documenta le operazioni eseguite.
-
-::: {.callout-important title="Regola pratica"}
-Non modificate mai direttamente i dati originali. Conservate una copia intatta in `data/raw/` e salvate eventuali versioni elaborate in `data/processed/`.
+::: {.callout-tip title="Prerequisiti"}
+È utile avere letto @sec-r e @sec-r-environment. Il primo introduce input, trasformazioni, output e controlli; il secondo stabilisce come organizzare file e percorsi in un progetto riproducibile.
 :::
 
-## Importare dati con `rio::import()`
+## Panoramica del capitolo {.unnumbered .unlisted}
 
-Nella ricerca psicologica i dati possono arrivare in formati diversi: `.csv`, `.xlsx`, `.sav`, `.txt`. Il pacchetto `rio` permette di importarli con un comando uniforme.
+Partiremo da una descrizione esplicita della tabella attesa. Verificheremo poi l'esistenza del file, lo importeremo con un percorso relativo e controlleremo dimensioni, nomi, tipi, valori mancanti e contenuti plausibili. Infine vedremo come trasformare questi controlli in una richiesta efficace all'AI e come distinguere un problema tecnico da un problema metodologico.
 
-```r
-stress_sonno <- rio::import(
-  here::here("data", "raw", "stress_sonno.csv")
-)
-```
+::: {.callout-note title="Preparazione del notebook"}
+Gli esempi usano un file ipotetico chiamato `stress_sonno_originale.csv`, collocato in `data/raw/`. I blocchi di importazione sono mostrati come codice da adattare e non vengono eseguiti durante il rendering del capitolo.
 
-La funzione `here::here()` costruisce il percorso a partire dalla cartella principale del progetto. In questo modo il codice non dipende dal Desktop, dal nome dell'utente o dalla posizione del progetto su un singolo computer.
-
-Lo stesso schema può essere usato con file Excel o SPSS:
-
-```r
-questionario <- rio::import(
-  here::here("data", "raw", "questionario.xlsx")
-)
-
-archivio_spss <- rio::import(
-  here::here("data", "raw", "archivio_studio.sav")
-)
-```
-
-::: {.callout-warning title="Errore comune"}
-Un errore come `file not found` significa quasi sempre che il percorso è sbagliato, il nome del file non corrisponde esattamente oppure il progetto R non è stato aperto dalla cartella corretta.
+Per i file CSV useremo `readr::read_csv()`. Se i dati sono in formato Excel, SPSS o in un altro formato, la logica dei controlli rimane identica; cambierà soltanto la funzione che traduce il file in una tabella.
 :::
 
-## Controllo 1: il file importato è quello giusto?
+## Prima dell'importazione: che cosa ci aspettiamo?
 
-Dopo l'importazione, la prima domanda è:
+Un controllo è possibile soltanto se abbiamo un'aspettativa.
 
-> Questo oggetto contiene davvero i dati che mi aspettavo?
+Supponiamo che lo studio riguardi 120 studenti e che ogni partecipante debba comparire una sola volta. Il file dovrebbe contenere almeno un identificatore, un punteggio di stress, una misura della qualità del sonno e una variabile relativa al gruppo o al genere. Potremmo inoltre sapere che lo stress varia da 0 a 40 e la qualità del sonno da 1 a 10.
 
-Per rispondere, guardiamo le prime righe:
+Queste informazioni costituiscono una descrizione minima della tabella attesa:
 
-```r
-head(stress_sonno)
-```
+| Aspetto | Attesa |
+|---|---|
+| Unità di analisi | Uno studente per riga |
+| Numerosità approssimativa | Circa 120 righe |
+| Variabili indispensabili | `id`, `stress`, `qualita_sonno`, `genere` |
+| Intervallo di `stress` | Da 0 a 40 |
+| Intervallo di `qualita_sonno` | Da 1 a 10 |
+| Codici mancanti nel file originale | Vuoto oppure `999`, secondo il codebook |
 
-Possiamo anche aprire la tabella nel visualizzatore di RStudio/Posit:
+La tabella non deve necessariamente coincidere perfettamente con queste attese. Una differenza indica però qualcosa da comprendere prima dell'analisi.
 
-```r
-View(stress_sonno)
-```
+Senza aspettative, comandi come `str()` e `summary()` producono informazioni ma non consentono di decidere se il risultato sia corretto.
 
-`View()` è utile per dare un'occhiata veloce, ma non sostituisce i controlli scritti nel codice. Un controllo scritto è riproducibile, un'occhiata manuale no.
-
-## Controllo 2: quante righe e quante colonne ci sono?
-
-```r
-dim(stress_sonno)
-nrow(stress_sonno)
-ncol(stress_sonno)
-```
-
-`dim()` restituisce prima il numero di righe e poi il numero di colonne. Se uno studio dovrebbe avere 120 partecipanti e 8 variabili, ci aspettiamo un risultato simile a:
-
-```text
-[1] 120   8
-```
-
-Se troviamo una sola colonna, molte più righe del previsto o un numero inatteso di partecipanti, dobbiamo fermarci e capire che cosa è successo.
-
-## Controllo 3: come si chiamano le variabili?
-
-```r
-names(stress_sonno)
-```
-
-Nomi chiari rendono il codice più leggibile. Nomi come `Q1`, `Q2`, `VAR0003` o `X...4` richiedono attenzione: spesso provengono da esportazioni automatiche e devono essere documentati o rinominati.
-
-Per ora, l'obiettivo non è pulire tutti i nomi, ma controllarli prima di utilizzarli.
-
-## Controllo 4: che tipo di variabili abbiamo?
-
-Una variabile può essere letta da R come numero, testo, fattore, data o valore logico. Se il tipo è sbagliato, anche l'analisi successiva può essere sbagliata.
-
-```r
-str(stress_sonno)
-dplyr::glimpse(stress_sonno)
-```
-
-Possiamo anche controllare una singola variabile:
-
-```r
-class(stress_sonno$stress)
-class(stress_sonno$genere)
-```
-
-Esempi di problemi frequenti:
-
-- `eta` dovrebbe essere numerica, ma è stata importata come testo;
-- `genere` contiene scritture diverse della stessa categoria;
-- `data_compilazione` dovrebbe essere una data, ma è stata importata come testo;
-- una scala Likert è numerica nel file, ma va interpretata come risposta ordinale.
-
-::: {.callout-note title="Collegamento con la misurazione"}
-Il tipo di variabile in R non corrisponde automaticamente al significato psicologico della misura. Una scala Likert può essere codificata con numeri, ma questi numeri rappresentano risposte ordinate. Il controllo tecnico deve sempre essere collegato a quello concettuale.
+::: {.callout-important title="Il controllo è un confronto"}
+Non basta osservare che il dataset contiene 118 righe. Dobbiamo sapere se 118 è il numero previsto, se due partecipanti non hanno completato lo studio oppure se due righe sono andate perdute durante l'importazione.
 :::
 
-## Controllo 5: ci sono valori mancanti?
+## Verificare il percorso prima di leggere
 
-In R i valori mancanti sono rappresentati da `NA`.
+Definiamo il percorso relativo una sola volta:
 
 ```r
-colSums(is.na(stress_sonno))
+percorso_input <-
+  "data/raw/stress_sonno_originale.csv"
+```
+
+Possiamo quindi controllare se il file esiste:
+
+```r
+file.exists(percorso_input)
+```
+
+Se il risultato è `FALSE`, non serve modificare subito la funzione di importazione. Il problema si trova prima: il nome, la cartella o la radice del progetto non corrispondono a ciò che abbiamo indicato.
+
+Possiamo fermare esplicitamente la procedura:
+
+```r
+if (!file.exists(percorso_input)) {
+  stop(
+    "File non trovato: ",
+    percorso_input
+  )
+}
+```
+
+Il significato algoritmico è generale:
+
+> Prima di eseguire un'operazione, verifica che una condizione necessaria sia soddisfatta. Se non lo è, interrompi la procedura con un messaggio comprensibile.
+
+Questo principio è più importante della specifica sintassi di `if` e `stop()`.
+
+## Importare significa creare un oggetto
+
+Per un file CSV possiamo usare:
+
+```r
+dati <- readr::read_csv(
+  percorso_input,
+  show_col_types = FALSE
+)
+```
+
+La procedura si legge:
+
+> Leggi il file indicato da `percorso_input`, trasformalo in una tabella R e salva il risultato nell'oggetto `dati`.
+
+È utile mantenere separati il percorso e l'oggetto. Il primo identifica l'input esterno; il secondo contiene la rappresentazione importata.
+
+`readr::read_csv()` è soltanto una delle possibili funzioni. Per un file Excel potremmo usare `readxl::read_excel()`; per un file SPSS, `haven::read_sav()`. Non occorre memorizzare tutte queste varianti. È sufficiente saper indicare all'AI il formato reale e chiedere una funzione appropriata, senza modificare il resto della procedura di controllo.
+
+::: {.callout-warning title="Il successo dell'importazione non convalida i dati"}
+Se il comando termina senza errori, sappiamo soltanto che R ha prodotto un oggetto. Non sappiamo ancora se le colonne siano state separate correttamente, se i tipi siano appropriati o se i valori abbiano il significato previsto.
+:::
+
+## Primo controllo: forma e identità della tabella
+
+I primi comandi devono rispondere a domande semplici: quante righe e colonne sono state importate, come si chiamano le variabili e che cosa appare nelle prime osservazioni?
+
+```r
+dim(dati)
+names(dati)
+head(dati)
+```
+
+`dim()` restituisce il numero di righe e colonne. `names()` mostra i nomi delle variabili. `head()` presenta le prime righe.
+
+Questi controlli sono complementari. Un dataset con 120 righe e una sola colonna è sospetto se il questionario conteneva venti variabili. I nomi possono rivelare che il file importato appartiene a un'altra fase dello studio. Le prime righe possono mostrare che l'intestazione è stata interpretata come un'osservazione oppure che la prima colonna contiene numeri di riga esportati per errore.
+
+La domanda non è soltanto «che cosa vedo?», ma:
+
+> Ciò che vedo è compatibile con il file e con il disegno che mi aspetto?
+
+`View(dati)` può essere utile per un'ispezione manuale. Non sostituisce però i controlli scritti, perché un'altra persona non può riprodurre ciò che abbiamo notato guardando lo schermo.
+
+## Secondo controllo: struttura e tipi
+
+R assegna un tipo informatico a ogni colonna. Possiamo esaminarlo con:
+
+```r
+str(dati)
+```
+
+Se `stress` deve contenere un punteggio numerico ma compare come testo, dobbiamo individuarne la causa prima di convertirlo. Potrebbero esserci valori come `"non risponde"`, separatori decimali inattesi o annotazioni inserite nel file.
+
+Se `genere` è registrato con i numeri `1`, `2` e `3`, R può considerarlo numerico. Dal punto di vista scientifico, però, quei numeri potrebbero essere codici nominali.
+
+Il tipo assegnato da R e il livello di misura sono quindi due domande differenti:
+
+> Come è stata memorizzata la colonna?
+
+> Che cosa rappresentano i suoi valori?
+
+La prima domanda riguarda il software. La seconda riguarda il codebook e il capitolo sulla misurazione.
+
+## Terzo controllo: le variabili indispensabili esistono?
+
+Possiamo dichiarare i nomi necessari:
+
+```r
+variabili_richieste <- c(
+  "id",
+  "stress",
+  "qualita_sonno",
+  "genere"
+)
+```
+
+Poi possiamo cercare quelle mancanti:
+
+```r
+setdiff(
+  variabili_richieste,
+  names(dati)
+)
+```
+
+Se il risultato è `character(0)`, tutte le variabili richieste sono presenti. Se compaiono uno o più nomi, il dataset non corrisponde alla struttura attesa oppure i nomi differiscono.
+
+Il significato dell'operazione è:
+
+> Confronta l'insieme delle variabili necessarie con l'insieme delle colonne presenti e restituisci ciò che manca.
+
+Questa è un'idea algoritmica molto generale. Prima di eseguire una procedura, si verifica che gli input richiesti siano disponibili.
+
+Possiamo trasformare il controllo in una condizione che interrompe l'analisi:
+
+```r
+variabili_mancanti <- setdiff(
+  variabili_richieste,
+  names(dati)
+)
+
+if (length(variabili_mancanti) > 0) {
+  stop(
+    "Variabili mancanti: ",
+    paste(
+      variabili_mancanti,
+      collapse = ", "
+    )
+  )
+}
+```
+
+Non è necessario memorizzare subito `paste()` o `collapse`. È sufficiente riconoscere che il codice costruisce un messaggio con i nomi mancanti.
+
+## Quarto controllo: valori mancanti e codici speciali
+
+In R un valore mancante riconosciuto è rappresentato da `NA`. Possiamo contare i mancanti in ogni colonna con:
+
+```r
+colSums(is.na(dati))
 ```
 
 Per una singola variabile:
 
 ```r
-sum(is.na(stress_sonno$qualita_sonno))
-mean(is.na(stress_sonno$qualita_sonno))
+sum(is.na(dati$qualita_sonno))
+mean(is.na(dati$qualita_sonno))
 ```
 
-La prima riga conta i valori mancanti. La seconda calcola la proporzione di valori mancanti.
+La prima istruzione conta i mancanti; la seconda ne calcola la proporzione.
 
-I valori mancanti non sono solo un problema tecnico. Possono indicare domande saltate, prove non registrate, risposte sensibili o codifiche speciali come `999` o `-99`.
+Questi risultati non spiegano perché i valori manchino. Inoltre, un file può usare codici come `999`, `-99`, `"missing"` o `"non risponde"`. Finché non vengono dichiarati come mancanti durante l'importazione o trasformati esplicitamente, R li considera valori osservati.
 
-::: {.callout-important title="Prima di usare `na.rm = TRUE`"}
-Quando un codice ignora i valori mancanti, bisogna sapere quanti sono, dove si trovano e perché mancano.
+Prima di ricodificare dobbiamo consultare il codebook o la documentazione dello studio. Un valore `999` potrebbe essere un codice mancante, ma potrebbe anche essere un valore legittimo in un'altra variabile.
+
+::: {.callout-important title="Non indovinare i codici mancanti"}
+L'AI può riconoscere che `999` sembra sospetto, ma non può stabilirne il significato senza documentazione. Chiedile di mostrare dove compare e come ricodificarlo soltanto dopo che ne hai verificato il significato.
 :::
 
-## Controllo 6: i valori sono plausibili?
+## Quinto controllo: categorie e intervalli plausibili
 
-Per variabili numeriche:
-
-```r
-summary(stress_sonno$stress)
-summary(stress_sonno$ore_sonno)
-```
-
-Per variabili categoriali:
+Per una variabile categorica possiamo vedere i valori presenti e le loro frequenze:
 
 ```r
-table(stress_sonno$genere, useNA = "ifany")
-table(stress_sonno$condizione, useNA = "ifany")
-```
-
-Esempi di segnali d'allarme:
-
-- una variabile `eta` contiene il valore `222`;
-- una variabile `ore_sonno` contiene valori negativi;
-- una scala da 1 a 7 contiene il valore 9;
-- la categoria `femmina` compare anche come `F`, `Femmina`, `female`;
-- una condizione sperimentale attesa non compare.
-
-::: {.callout-warning title="Errore comune"}
-Il fatto che il codice funzioni non significa che i dati siano corretti. R può calcolare una media anche su valori impossibili.
-:::
-
-## Esportare dati con `rio::export()`
-
-Dopo aver controllato o modificato un dataset, possiamo salvarlo.
-
-```r
-rio::export(
-  stress_sonno,
-  here::here("data", "processed", "stress_sonno_controllato.csv")
+table(
+  dati$genere,
+  useNA = "ifany"
 )
 ```
 
-La regola è salvare il risultato in una cartella diversa da quella dei dati originali:
+Il risultato può mostrare categorie come `"F"`, `"f"`, `"Femmina"` e `"female"`. R le considera differenti. La loro eventuale unificazione richiede una decisione esplicita.
 
-```text
-data/raw/stress_sonno_originale.csv
-data/processed/stress_sonno_controllato.csv
-```
-
-In questo modo il file originale resta intatto.
-
-## Checklist dopo l'importazione
-
-Ogni volta che importate un dataset, potete usare questa checklist:
+Per una variabile numerica possiamo iniziare con:
 
 ```r
-# Dimensioni
-nrow(dati)
-ncol(dati)
-
-# Prime righe e nomi
-head(dati)
-names(dati)
-
-# Struttura
-str(dati)
-# oppure
-# dplyr::glimpse(dati)
-
-# Valori mancanti
-colSums(is.na(dati))
-
-# Variabili numeriche principali
-summary(dati$variabile_numerica)
-
-# Variabili categoriali principali
-table(dati$variabile_categoriale, useNA = "ifany")
+summary(dati$stress)
+summary(dati$qualita_sonno)
 ```
 
-Sostituite `dati`, `variabile_numerica` e `variabile_categoriale` con i nomi reali del vostro dataset.
+`summary()` mostra minimo, quartili, mediana, media, massimo ed eventuali mancanti. Se `stress` dovrebbe variare tra 0 e 40, un massimo pari a 999 segnala un problema da approfondire.
 
-## Usare l'AI con criterio
-
-L'AI può generare codice utile. Per esempio, possiamo chiedere:
-
-> Ho un file `stress_sonno.csv` nella cartella `data/raw/` di un progetto R. Scrivi codice R per importarlo con `rio`, controllare dimensioni, nomi delle colonne, tipi delle variabili e valori mancanti.
-
-Una risposta utile potrebbe essere:
+Possiamo rendere esplicito il controllo dell'intervallo:
 
 ```r
-stress_sonno <- rio::import(
-  here::here("data", "raw", "stress_sonno.csv")
+dati$stress < 0 |
+  dati$stress > 40
+```
+
+L'espressione produce `TRUE` per i valori fuori dall'intervallo atteso. Per contarli:
+
+```r
+sum(
+  dati$stress < 0 |
+    dati$stress > 40,
+  na.rm = TRUE
 )
-
-dim(stress_sonno)
-names(stress_sonno)
-dplyr::glimpse(stress_sonno)
-colSums(is.na(stress_sonno))
 ```
 
-Dopo aver ricevuto codice dall'AI, dovete verificare:
+Ancora una volta, il codice non decide che cosa fare di questi valori. Li rende visibili. Potrebbero essere errori, codici speciali o osservazioni che richiedono una verifica nel materiale originale.
 
-1. il percorso del file è corretto?
-2. il nome dell'oggetto creato è chiaro?
-3. le funzioni usate richiedono pacchetti?
-4. il codice mostra davvero le informazioni necessarie?
-5. i risultati ottenuti sono plausibili rispetto allo studio?
+## L'identificatore e l'unità di analisi
 
-::: {.callout-important title="Responsabilità dello studente"}
-L'uso dell'AI per generare il codice di importazione e controllo è accettabile. Consegnare i risultati senza sapere quali file sono stati importati, quali variabili sono state lette e quali problemi sono emersi, no.
+Se ogni riga dovrebbe rappresentare una persona, l'identificatore dovrebbe essere presente e normalmente non dovrebbe ripetersi.
+
+```r
+anyDuplicated(dati$id)
+```
+
+Un risultato pari a `0` indica che non sono state trovate duplicazioni. Un valore maggiore di zero segnala la posizione della prima ripetizione.
+
+Una duplicazione non è automaticamente un errore. In uno studio longitudinale o entro partecipanti, la stessa persona deve comparire in più righe. Il controllo serve quindi a collegare la tabella al disegno:
+
+> Una riga rappresenta una persona, una misurazione, una prova oppure una combinazione di persona e momento?
+
+Questo è un esempio importante di limite dell'automazione. L'AI può trovare identificatori ripetuti; soltanto la documentazione dello studio permette di stabilire se siano corretti.
+
+## Dai controlli alla decisione
+
+Al termine dell'ispezione, non dobbiamo avere necessariamente una tabella perfetta. Dobbiamo avere una diagnosi.
+
+Possiamo scoprire che il file è quello giusto ma contiene due categorie scritte in modo incoerente. Possiamo trovare codici mancanti che devono essere ricodificati. Possiamo accorgerci che una variabile attesa non è stata esportata o che il numero di righe non coincide con il registro dei partecipanti.
+
+La decisione successiva dipende dal problema. Alcune trasformazioni possono essere documentate nel codice. Altre richiedono di recuperare il file corretto, consultare il codebook o contattare chi ha raccolto i dati.
+
+L'algoritmo generale è:
+
+$$
+\text{osservare una discrepanza}
+\longrightarrow
+\text{formulare una spiegazione}
+\longrightarrow
+\text{cercare evidenza}
+\longrightarrow
+\text{correggere o documentare}.
+$$
+
+Non bisogna trasformare automaticamente ogni valore insolito in `NA` né uniformare categorie soltanto perché sembrano simili.
+
+## Salvare una versione trasformata
+
+I controlli che non modificano il dataset non richiedono un nuovo file. Se invece ricodifichiamo valori, rinominiamo colonne o costruiamo nuove variabili, possiamo salvare una versione elaborata in una posizione distinta:
+
+```r
+percorso_output <-
+  "data/processed/stress_sonno_controllato.csv"
+
+readr::write_csv(
+  dati_controllati,
+  percorso_output
+)
+```
+
+Il file originale rimane in `data/raw/`. Il codice documenta come viene creato `dati_controllati`, mentre `data/processed/` contiene un output rigenerabile.
+
+Salvare una copia non sostituisce il codice. Senza la procedura che la produce, la versione elaborata è soltanto un secondo file di origine incerta.
+
+## Chiedere all'AI una procedura controllabile
+
+Una richiesta poco informativa è:
+
+> Importa e pulisci questo dataset.
+
+La parola *pulisci* può includere decisioni molto diverse. L'AI potrebbe rinominare colonne, eliminare righe, convertire tipi o sostituire mancanti senza rendere chiare le assunzioni.
+
+Una richiesta migliore separa importazione, controlli e trasformazioni:
+
+::: {.callout-tip title="Un prompt per importare e controllare"}
+> Sto lavorando in un progetto R. Il file CSV si trova in `data/raw/stress_sonno_originale.csv` e ogni riga dovrebbe rappresentare uno studente. Le variabili indispensabili sono `id`, `stress`, `qualita_sonno` e `genere`. `stress` dovrebbe variare da 0 a 40 e `qualita_sonno` da 1 a 10. Il codebook usa `999` come valore mancante soltanto per queste due scale.
+>
+> Scrivi codice R semplice che:
+>
+> 1. verifichi l'esistenza del file;
+> 2. lo importi con `readr::read_csv()` senza modificare l'originale;
+> 3. mostri dimensioni, nomi e struttura;
+> 4. segnali variabili mancanti, identificatori duplicati, valori mancanti e valori fuori intervallo;
+> 5. non corregga o elimini nulla automaticamente.
+>
+> Spiega ogni controllo in linguaggio naturale e separa chiaramente i problemi osservati dalle trasformazioni eventualmente consigliate.
 :::
 
-## Esempio guidato: stress accademico e sonno
+La richiesta fornisce ciò che l'AI non può ricavare dalla sintassi: unità di analisi, variabili attese, intervalli plausibili e significato del codice speciale.
 
-Immaginiamo di voler analizzare uno studio su stress accademico e qualità del sonno. Il file originale si chiama `stress_sonno_originale.csv` e si trova in `data/raw/`.
+Se l'assistente propone di correggere il dataset, possiamo chiedere una seconda fase:
+
+> Ora proponi trasformazioni esplicite soltanto per i problemi confermati. Conserva l'oggetto originale, crea `dati_controllati` e mostra dopo ogni passaggio un controllo che documenti l'effetto.
+
+## Un controllo minimo completo
+
+Il seguente blocco riassume la procedura per il file ipotetico:
 
 ```r
-stress_sonno <- rio::import(
-  here::here("data", "raw", "stress_sonno_originale.csv")
+percorso_input <-
+  "data/raw/stress_sonno_originale.csv"
+
+if (!file.exists(percorso_input)) {
+  stop(
+    "File non trovato: ",
+    percorso_input
+  )
+}
+
+dati <- readr::read_csv(
+  percorso_input,
+  show_col_types = FALSE
 )
 
-dim(stress_sonno)
-names(stress_sonno)
-dplyr::glimpse(stress_sonno)
-colSums(is.na(stress_sonno))
-summary(stress_sonno$stress)
-summary(stress_sonno$qualita_sonno)
-table(stress_sonno$genere, useNA = "ifany")
-```
-
-Dopo questi controlli, dovremmo essere in grado di rispondere a domande semplici:
-
-- il numero di righe corrisponde al numero atteso di partecipanti?
-- le variabili principali sono presenti?
-- i tipi delle variabili sono coerenti?
-- ci sono valori mancanti?
-- i valori minimi e massimi sono plausibili?
-- le categorie sono scritte in modo coerente?
-
-Solo a questo punto ha senso passare a trasformazioni, grafici e statistiche descrittive.
-
-## Errori frequenti
-
-### Il file non viene trovato
-
-Verificate che il progetto `.Rproj` sia aperto, che il file sia nella cartella indicata, che il nome sia scritto nello stesso modo e che l'estensione sia corretta.
-
-### Il dataset ha una sola colonna
-
-Può succedere che i file CSV utilizzino un separatore diverso da quello atteso. Se dopo l'importazione il dataset ha una sola colonna, non procedere con l'analisi.
-
-### Una variabile numerica è stata letta come testo
-
-Possibili cause sono i separatori decimali, i caratteri non numerici o le codifiche dei valori mancanti, come `missing`, `non risponde`, `999` o `-99`.
-
-### I valori mancanti non sono riconosciuti
-
-Solo `NA` è riconosciuto da R come valore mancante. Altre codifiche devono essere trasformate esplicitamente, dopo aver verificato il codebook o la documentazione dello studio.
-
-## Esercizi
-
-::: {.callout-tip title="Esercizio 1: leggere un codice" collapse="true"}
-L'AI ha prodotto questo codice:
-
-```r
-dati <- rio::import(here::here("data", "raw", "questionario.csv"))
 dim(dati)
 names(dati)
-dplyr::glimpse(dati)
+head(dati)
+str(dati)
+
+variabili_richieste <- c(
+  "id",
+  "stress",
+  "qualita_sonno",
+  "genere"
+)
+
+setdiff(
+  variabili_richieste,
+  names(dati)
+)
+
 colSums(is.na(dati))
-summary(dati)
+
+table(
+  dati$genere,
+  useNA = "ifany"
+)
+
+summary(dati$stress)
+summary(dati$qualita_sonno)
+
+anyDuplicated(dati$id)
 ```
 
-Rispondete: quale file viene importato? Dove deve trovarsi? Quale oggetto viene creato? Quali controlli vengono eseguiti? Quale controllo aggiungereste per una variabile categoriale?
+Non è necessario imparare il blocco a memoria. Dobbiamo saperne ricostruire la logica:
+
+> Trova il file. Interrompi se non esiste. Importalo. Controlla forma, nomi e struttura. Confronta le colonne con quelle necessarie. Esamina mancanti, categorie, intervalli e identificatori.
+
+La sequenza può essere adattata a qualunque dataset modificando le aspettative.
+
+## Errori frequenti e diagnosi
+
+Se il dataset contiene una sola colonna, il file potrebbe usare un separatore diverso da quello atteso. La risposta corretta non è procedere con l'analisi, ma esaminare il file e scegliere la funzione o gli argomenti appropriati.
+
+Se una variabile numerica viene letta come testo, occorre cercare valori non numerici, separatori decimali o codici speciali. Convertirla immediatamente può trasformare informazioni problematiche in nuovi mancanti senza spiegazione.
+
+Se una categoria attesa non compare, le possibili spiegazioni includono un filtro precedente, un errore di esportazione o un campione differente da quello previsto. Aggiungere manualmente la categoria non risolve il problema.
+
+Se il numero di righe è inatteso, dobbiamo confrontarlo con il registro dello studio e verificare duplicazioni, mancate importazioni o righe aggiuntive.
+
+In tutti questi casi, il messaggio generale è lo stesso:
+
+> Prima di correggere, identifica quale aspettativa è stata violata e cerca la causa della discrepanza.
+
+## Che cosa non serve ancora
+
+Non è necessario costruire un sistema completo di validazione automatica, imparare espressioni regolari o usare pacchetti specializzati per il controllo dei dati. Questi strumenti diventano utili nei progetti più grandi.
+
+Per questo modulo sono sufficienti pochi controlli leggibili, scelti in base al disegno e al codebook. La semplicità è un vantaggio se rende chiaro che cosa viene verificato.
+
+Nel capitolo successivo useremo `dplyr` per selezionare righe e colonne, creare variabili e produrre riepiloghi. Quelle trasformazioni saranno affidabili soltanto se la tabella iniziale è stata compresa e controllata.
+
+## Riflessioni conclusive {.unnumbered .unlisted}
+
+Importare un file significa tradurlo in un oggetto R. Il passaggio decisivo consiste nel verificare che quella traduzione conservi la struttura e il significato attesi.
+
+I controlli iniziali riguardano forma, nomi, tipi, variabili indispensabili, valori mancanti, categorie, intervalli plausibili e unità di analisi. Nessuno di questi controlli è puramente meccanico: ciascuno richiede un confronto con il disegno, la misurazione e la documentazione dello studio.
+
+L'AI può generare una procedura efficace soltanto se le forniamo queste aspettative. Chiederle di «pulire i dati» senza specificarle significa delegare decisioni che potrebbero modificare il campione e il significato delle variabili. È preferibile chiedere prima una diagnosi, poi autorizzare trasformazioni esplicite e controllate.
+
+La mentalità da conservare è semplice: non fidarsi del fatto che il file sia stato letto; produrre evidenza che la tabella corrisponda a ciò che dovrebbe rappresentare.
+
+## Esercizi {.unnumbered .unlisted}
+
+1. Un file dovrebbe contenere 250 partecipanti e 30 variabili. Dopo l'importazione, `dim(dati)` restituisce `250 1`. Quale aspettativa è stata violata e quale possibile causa controlleresti per prima?
+
+2. Spiega la differenza tra queste due domande: «R ha memorizzato `genere` come numero?» e «I numeri presenti in `genere` rappresentano una quantità?».
+
+3. Il comando seguente restituisce `"qualita_sonno"`:
+
+   ```r
+   setdiff(
+     c("id", "stress", "qualita_sonno"),
+     names(dati)
+   )
+   ```
+
+   Che cosa significa? Perché non dovresti creare automaticamente una colonna vuota con quel nome?
+
+4. Una scala dovrebbe variare da 0 a 40 e contiene il valore `999`. Quali spiegazioni considereresti prima di trasformarlo in `NA`?
+
+5. `anyDuplicated(dati$id)` restituisce un valore maggiore di zero. Perché questo risultato può indicare un errore in uno studio trasversale ma essere previsto in uno studio longitudinale?
+
+6. Formula un prompt per l'AI che chieda di importare un file e diagnosticare i problemi senza modificare o eliminare automaticamente alcuna osservazione.
+
+7. L'AI propone di convertire direttamente una colonna testuale in numerica. Quali controlli dovrebbe mostrare prima della conversione?
+
+8. Descrivi in linguaggio naturale un algoritmo che parta da un percorso e termini con una decisione documentata sulla possibilità di usare la tabella per l'analisi.
+
+::: {.callout-tip title="Soluzioni" collapse="true"}
+1. È stata violata l'aspettativa sul numero di colonne. Una causa probabile è il mancato riconoscimento del separatore del file. Bisogna esaminare il formato e la prima riga prima di proseguire.
+
+2. La prima domanda riguarda il tipo informatico assegnato da R. La seconda riguarda il significato scientifico dei valori. Codici numerici possono rappresentare categorie nominali e non quantità.
+
+3. La variabile richiesta non è presente nella tabella. Potrebbe esserci un errore nel nome, nel file esportato o nella documentazione. Creare una colonna vuota nasconderebbe il problema senza recuperare i dati mancanti.
+
+4. `999` potrebbe essere un codice di mancata risposta, un errore di inserimento, un codice proveniente da un altro sistema oppure un valore appartenente a una colonna importata male. Il codebook e il file originale devono stabilirne il significato.
+
+5. Se ogni riga dovrebbe rappresentare una persona, un identificatore ripetuto è incoerente con l'unità di analisi. Se ogni persona produce più misure, la ripetizione è necessaria e deve essere accompagnata da una variabile che distingua tempi o condizioni.
+
+6. Il prompt dovrebbe specificare percorso, formato, unità di analisi, variabili attese, intervalli e codici mancanti. Dovrebbe chiedere controlli e un rapporto delle discrepanze, vietando trasformazioni automatiche.
+
+7. Dovrebbe mostrare i valori distinti o almeno quelli non convertibili, verificare separatori decimali e codici speciali, contare quanti valori diventerebbero mancanti e confrontare il risultato con il codebook.
+
+8. Verificare l'esistenza del file; importarlo in un nuovo oggetto; controllare dimensioni, nomi e tipi; confrontare le colonne con quelle attese; esaminare mancanti, categorie, intervalli e identificatori; documentare le discrepanze; correggere soltanto problemi confermati oppure interrompere l'analisi.
 :::
 
-::: {.callout-tip title="Esercizio 2: diagnosticare un problema" collapse="true"}
-Uno studente importa un file e ottiene un dataset con 1 colonna e 250 righe. Il questionario, però, dovrebbe avere 30 variabili.
-
-Perché questo risultato è sospetto? Quale controllo ha permesso di accorgersene? Quali possibili cause potreste verificare?
+::: {.callout-note title="Punti chiave" collapse="true"}
+- Un file importato non è automaticamente pronto per l'analisi.
+- Ogni controllo confronta i dati osservati con un'aspettativa dichiarata.
+- Il percorso deve essere verificato prima dell'importazione.
+- Il successo del comando indica soltanto che R ha creato un oggetto.
+- Forma, nomi, tipi e contenuti della tabella devono essere controllati separatamente.
+- I codici numerici non sono necessariamente quantità.
+- I valori mancanti e quelli fuori intervallo richiedono documentazione, non correzioni automatiche.
+- La presenza di identificatori duplicati va interpretata alla luce dell'unità di analisi.
+- L'AI deve ricevere struttura attesa, codebook e vincoli sulle trasformazioni.
+- È preferibile chiedere prima una diagnosi e poi una correzione documentata.
 :::
 
-::: {.callout-tip title="Esercizio 3: usare l'AI con controllo" collapse="true"}
-Chiedete a un sistema di AI di scrivere codice R per importare un file chiamato `swls.csv`, contenuto in `data/raw/`, e per controllare nomi, dimensioni, tipi di variabili e valori mancanti.
+::: {.callout-note title="Ambiente di sviluppo" collapse="true"}
+Gli esempi di importazione usano il pacchetto `readr`. Le informazioni sulla sessione possono essere ottenute con:
 
-Poi valutate la risposta: il codice usa percorsi relativi? Importa il file dalla cartella giusta? Include controlli sufficienti? Sapete spiegare ogni riga?
+```{r}
+#| echo: true
+sessionInfo()
+```
 :::
-
-## Cosa portare al capitolo successivo
-
-Prima di trasformare i dati con `dplyr`, dobbiamo assicurarci che la tabella importata sia affidabile. In particolare, dobbiamo aver controllato:
-
-- il file letto;
-- quante righe e colonne contiene;
-- come si chiamano le variabili;
-- che tipo di variabili sono state importate;
-- quanti valori mancanti ci sono;
-- se i valori osservati sono plausibili;
-- dove viene salvata una eventuale versione elaborata.
-
-Il capitolo successivo utilizzerà questi dati per selezionare le variabili, filtrare le righe, creare nuove colonne e riassumere le informazioni. Tutte queste operazioni hanno senso solo se la tabella di partenza è stata controllata.
-
-## Bibliografia {.unnumbered .unlisted}

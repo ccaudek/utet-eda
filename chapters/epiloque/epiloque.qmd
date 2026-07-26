@@ -1,64 +1,189 @@
 # Considerazioni conclusive {.unnumbered}
 
-Questo sito ha gettato le basi per affrontare l'inferenza statistica bayesiana. Abbiamo percorso tre tappe: *pensare* (i concetti), *fare* (gli strumenti) e *guardare* (l'esplorazione). È il momento di fare un bilancio di quanto abbiamo appreso e di cosa ci aspetta.
+Questo modulo è partito da una domanda semplice soltanto in apparenza:
 
-## Cosa hai imparato
+> Che cosa deve accadere prima che un insieme di osservazioni possa diventare evidenza scientifica?
 
-**Un modo di pensare.** Prima ancora delle tecniche, hai incontrato un approccio, l'idea che l'analisi dei dati non sia una sequenza meccanica di operazioni, ma un dialogo critico tra domande di ricerca, strumenti di misura e osservazioni empiriche. Hai imparato che la misurazione non è mai neutrale, che le scale hanno proprietà diverse e che le conclusioni dipendono dal modo in cui i dati sono stati raccolti.
+La risposta non coincide con l'apprendimento di alcuni comandi R o di una raccolta di statistiche descrittive. Prima dell'inferenza vengono il disegno, la misurazione, la costruzione del dataset analitico, il controllo della qualità dei dati e la comprensione delle distribuzioni osservate.
 
-**Un linguaggio.** R non è solo un software, ma un modo per esprimere operazioni sui dati in modo preciso e riproducibile. La sintassi che hai imparato — oggetti, funzioni e pipeline con dplyr — è il vocabolario minimo per comunicare con il computer e con altri ricercatori. Il codice che scrivi oggi potrà essere riletto, verificato e riutilizzato in futuro.
+Il percorso può essere riassunto così:
 
-**Un'abitudine.** L'analisi esplorativa non è un optional da sbrigare in fretta prima dei "veri" test statistici. È il momento in cui scopri se i tuoi dati hanno senso, se le assunzioni che stai per fare sono plausibili e se ci sono anomalie che richiedono attenzione. Hai imparato a visualizzare le distribuzioni, a identificare gli outlier e a verificare le relazioni: sono competenze che ti saranno utili in ogni progetto di ricerca.
+$$
+\text{fenomeno}
+\longrightarrow
+\text{domanda}
+\longrightarrow
+\text{disegno}
+\longrightarrow
+\text{misurazione}
+\longrightarrow
+\text{dati}
+\longrightarrow
+\text{esplorazione}
+\longrightarrow
+\text{modello}.
+$$
 
-## Cosa non abbiamo trattato
+Ogni passaggio limita ciò che potremo concludere nei passaggi successivi. Un modello sofisticato non può correggere automaticamente una domanda vaga, una misura poco valida o un campione costruito attraverso esclusioni non documentate.
 
-Questo sito è volutamente propedeutico. Non abbiamo discusso:
+## Un modo di lavorare
 
-- **Inferenza statistica**: come trarre conclusioni su una popolazione a partire da un campione, come quantificare l'incertezza, come aggiornare le proprie credenze alla luce dei dati. Questo è il tema centrale del manuale "*Inferenza bayesiana in psicologia: Ragionare con l’incertezza. Fondamenti, workflow e applicazioni*".
+La competenza principale sviluppata nel modulo non è una procedura particolare. È un modo di organizzare il ragionamento.
 
-- **Modelli statistici**: regressione, modelli gerarchici, modelli per dati longitudinali. Questi strumenti ti permetteranno di rispondere a domande di ricerca complesse.
+Prima di eseguire un'operazione abbiamo imparato a specificarne l'input, lo scopo e il risultato atteso. Dopo l'esecuzione abbiamo controllato che la trasformazione avesse prodotto ciò che intendevamo ottenere.
 
-- **Programmazione avanzata**: funzioni personalizzate, simulazioni, ottimizzazione del codice. Queste competenze diventeranno utili man mano che i tuoi progetti cresceranno in complessità.
+Questo schema ha attraversato l'intero percorso:
 
-- **Stan e i metodi computazionali**: il motore probabilistico che rende possibile l'inferenza bayesiana su modelli realistici.
+$$
+\text{domanda}
+\longrightarrow
+\text{operazione}
+\longrightarrow
+\text{risultato}
+\longrightarrow
+\text{controllo}
+\longrightarrow
+\text{interpretazione}.
+$$
 
-Tutti questi argomenti sono trattati nel manuale principale, che presuppone le competenze acquisite qui.
+R rende questa sequenza esplicita e riproducibile. Quarto collega il codice alla spiegazione. L'EDA rende visibile la struttura delle osservazioni prima che venga riassunta da un modello.
 
-## Il passo successivo
+La tecnologia non sostituisce però il giudizio. Il codice può terminare senza errori e usare la variabile sbagliata. Un grafico può essere elegante e nascondere metà del campione. Una media può essere calcolata correttamente su valori che non rappresentano il costrutto dichiarato.
 
-Il manuale "*Inferenza bayesiana in psicologia: Ragionare con l’incertezza. Fondamenti, workflow e applicazioni*" prosegue dove questo sito si conclude. Ecco cosa troverai:
+## La distribuzione come fondamento
 
-| Parte | Contenuto |
-|:------|:----------|
-| **I-II** | La crisi di replicabilità e i limiti del paradigma frequentista |
-| **III** | I fondamenti della probabilità bayesiana come misura di credenza razionale |
-| **IV** | L'inferenza bayesiana operativa: distribuzioni, MCMC, workflow |
-| **V** | Applicazioni: regressione, confronto tra gruppi, modelli multilivello |
-| **VI** | Modelli formali del comportamento e validazione cross-studio |
-| **VII** | Riflessioni epistemologiche e Open Science |
+L'idea statistica più importante del modulo è quella di distribuzione.
 
-Il sito *companion* ([ccaudek.github.io/utet-companion](https://ccaudek.github.io/utet-companion/)) contiene il codice R e Stan per tutti gli esempi del manuale.
+Una distribuzione descrive quali valori compaiono, con quale frequenza, dove si concentrano e quanto siano dispersi. Media, mediana, deviazione standard, intervallo interquartile e correlazione sono riassunti di questa struttura; non la sostituiscono.
 
-## Continuità, non discontinuità
+Comprendere la deviazione standard ha significato comprendere una particolare misura della distanza dei valori dalla media. Confrontare i dati con la distribuzione normale ha poi mostrato che la regola 68–95–99,7 non appartiene alla deviazione standard in generale, ma a uno specifico modello della forma distributiva.
 
-Il passaggio dall'esplorazione all'inferenza non rappresenta una discontinuità, ma un'estensione naturale. L'EDA che hai praticato qui diventerà il *posterior predictive checking*, ovvero il confronto tra le previsioni del modello e i dati effettivi. Le distribuzioni che hai visualizzato diventeranno distribuzioni di probabilità con un'interpretazione ben precisa. Le domande che ti sei posto sui dati diventeranno ipotesi formalizzate in modelli. La correlazione che hai calcolato diventerà un coefficiente di regressione con un intervallo di credibilità.
+Lo stesso principio vale per la correlazione. Un coefficiente riassume una componente della distribuzione congiunta, ma non mostra curvature, sottogruppi, valori influenti o problemi di misurazione. Per questo il grafico deve precedere il numero.
+
+## I dati non arrivano già pronti
+
+Un altro risultato fondamentale riguarda la preparazione dei dati.
+
+I dati grezzi conservano le tracce del processo con cui sono stati raccolti: codici speciali, duplicazioni, errori di registrazione, mancate risposte e differenze di formato. Usarli senza controlli può produrre risultati fortemente distorti.
+
+Non esiste tuttavia una procedura universale e automatica di pulizia. Ogni intervento modifica il dataset e può cambiare la popolazione effettivamente rappresentata.
+
+Abbiamo quindi adottato una regola generale:
+
+$$
+\text{discrepanza}
+\longrightarrow
+\text{verifica}
+\longrightarrow
+\text{decisione motivata}
+\longrightarrow
+\text{controllo dell'effetto}.
+$$
+
+Lo stesso vale per gli outlier. Un valore raro non è automaticamente un errore; un valore estremo non è necessariamente influente; un caso inatteso può segnalare un sottogruppo reale o un modello troppo semplice.
+
+Quando più decisioni sono plausibili, l'analisi di sensibilità è più informativa di un'esclusione nascosta.
+
+## Descrivere senza oltrepassare i dati
+
+L'EDA insegna anche a controllare il linguaggio.
+
+Una relazione osservata può essere descritta con precisione senza trasformarla in un effetto causale. Una differenza tra gruppi non stabilisce automaticamente che il gruppo o il trattamento abbia prodotto la differenza. Una capacità predittiva non identifica necessariamente un meccanismo.
+
+Il modulo ha quindi mantenuto distinto ciò che i dati mostrano direttamente da ciò che richiede un disegno, un modello o un'ipotesi ulteriore.
+
+Questa disciplina interpretativa non indebolisce la ricerca. La rende più chiara. Dire esattamente che cosa sappiamo permette anche di riconoscere che cosa dobbiamo ancora studiare.
+
+## Il ruolo dell'intelligenza artificiale
+
+Gli assistenti AI possono generare codice, spiegare errori, proporre grafici e aiutare a organizzare un documento. Per questo non è necessario trasformare ogni studente o ricercatore in un programmatore professionista.
+
+È però necessario mantenere il controllo del procedimento.
+
+Una richiesta utile all'AI specifica il dataset, l'unità di analisi, il significato delle variabili, l'operazione desiderata, il trattamento dei mancanti e i controlli da produrre. Una richiesta vaga costringe invece l'assistente a inventare filtri, soglie, ricodifiche e criteri di esclusione.
+
+Il principio da conservare è:
+
+> L'AI può tradurre una procedura dichiarata in codice; non deve sostituire il ricercatore nella definizione della procedura.
+
+Chi presenta l'analisi rimane responsabile della qualità dei dati, della correttezza delle trasformazioni e della proporzione tra risultati e conclusioni.
+
+## Che cosa non è stato sviluppato qui
+
+Questo modulo non è un corso completo di probabilità, inferenza o modellizzazione statistica.
+
+La teoria delle variabili casuali, delle distribuzioni di probabilità, della covarianza e della correlazione è sviluppata nel modulo [`utet-prob`](https://ccaudek.github.io/utet-prob/).
+
+Il confronto con l'inferenza frequentista è sviluppato nel modulo [`utet-frequentista`](https://ccaudek.github.io/utet-frequentista/).
+
+Il manuale *Inferenza bayesiana in psicologia: Ragionare con l'incertezza* costituisce il nucleo teorico del percorso. Introduce la probabilità bayesiana, l'aggiornamento delle credenze, la modellizzazione, il workflow e le applicazioni psicologiche.
+
+Il [`Companion`](https://ccaudek.github.io/utet-companion/) è il laboratorio operativo associato al manuale. Sviluppa modelli in R, `brms` e Stan e approfondisce, tra gli altri temi, regressione, modelli gerarchici, controlli predittivi e causalità.
+
+La divisione dei ruoli è intenzionale. Questo sito prepara le domande e i dati; gli altri moduli sviluppano il linguaggio probabilistico e i modelli necessari per affrontare l'incertezza inferenziale.
+
+## Dall'esplorazione alla modellizzazione
+
+Il passaggio successivo non consiste nell'abbandonare l'EDA per iniziare la “vera statistica”.
+
+Un modello è una rappresentazione selettiva del processo che potrebbe avere generato i dati. Per valutarlo dobbiamo continuare a confrontare ciò che il modello produce con ciò che abbiamo osservato.
+
+Nel workflow bayesiano, questa continuità diventa particolarmente evidente nei controlli predittivi. Il modello genera distribuzioni di dati plausibili e il ricercatore le confronta con distribuzioni, grafici e caratteristiche del dataset reale.
+
+L'EDA non si trasforma automaticamente in *posterior predictive checking*, ma prepara lo stesso atteggiamento:
+
+> rendere esplicita un'aspettativa e confrontarla con ciò che i dati mostrano.
+
+Le competenze sviluppate qui rimangono quindi necessarie anche quando i modelli diventano più complessi. Una regressione, un modello multilivello o un modello cognitivo non eliminano la necessità di comprendere unità di analisi, distribuzioni, valori mancanti, osservazioni influenti e limiti della misura.
+
+## Un workflow che rimane aperto
+
+L'analisi dei dati non è una sequenza lineare che procede una volta per tutte dalla pulizia al risultato finale.
+
+Un grafico può rivelare un problema di codifica. Un modello può mostrare che una variabile è stata misurata con una risoluzione insufficiente. Un controllo predittivo può suggerire che la distribuzione scelta non rappresenta le code o la variabilità tra persone. Una nuova domanda può richiedere un diverso dataset analitico.
+
+Il percorso è quindi iterativo:
+
+$$
+\text{domanda}
+\leftrightarrow
+\text{dati}
+\leftrightarrow
+\text{esplorazione}
+\leftrightarrow
+\text{modello}
+\leftrightarrow
+\text{controllo}.
+$$
+
+Tornare indietro non rappresenta un fallimento. È una parte normale del ragionamento scientifico.
 
 ## Un'ultima raccomandazione
 
-La statistica si impara facendola. I capitoli che hai letto, gli esercizi che hai svolto e il codice che hai scritto sono solo l'inizio, non la fine. Ogni dataset che incontrerai nella tua carriera sarà diverso e presenterà problemi nuovi che richiederanno soluzioni creative.
+La statistica non si impara accumulando procedure da applicare meccanicamente. Si impara formulando domande, osservando le conseguenze delle proprie decisioni e cercando spiegazioni quando i risultati non corrispondono alle aspettative.
 
-L'atteggiamento che ti sarà più utile non è quello di chi cerca la "procedura giusta" da applicare meccanicamente, ma quello di chi si chiede: "Cosa mi stanno dicendo questi dati?", "Le mie assunzioni sono ragionevoli?", "Le mie conclusioni sono robuste?".
+Di fronte a un nuovo dataset, le domande più utili rimarranno semplici:
 
-Questo atteggiamento curioso, critico e onesto è ciò che distingue l'analisi dei dati rigorosa dalla semplice produzione di numeri. È anche ciò che rende questo lavoro intellettualmente stimolante.
+> Che cosa rappresenta una riga?
 
-Buon proseguimento.
+> Da dove proviene questa variabile?
 
+> Quali osservazioni entrano nel risultato?
 
-::: {.callout-tip}
-## Risorse per continuare {.unnumbered .unlisted}
+> Che cosa rende visibile questo grafico?
 
-- **Manuale principale**: [ccaudek.github.io/utet-companion](https://ccaudek.github.io/utet-companion/)
-- **Teoria della probabilità**: [ccaudek.github.io/utet-prob](https://ccaudek.github.io/utet-prob/)
-- **Repository GitHub**: [github.com/ccaudek](https://github.com/ccaudek)
+> Quanto dipende la conclusione da una scelta analitica?
+
+> Sto descrivendo un'associazione oppure affermando qualcosa di più?
+
+Queste domande non impediscono di usare strumenti complessi. Permettono di usarli con responsabilità.
+
+Il risultato più importante del modulo non è quindi un insieme di comandi o formule. È l'abitudine a rendere esplicito il percorso che collega una domanda ai dati e i dati a una conclusione.
+
+::: {.callout-tip title="Risorse per continuare"}
+- **Manuale principale:** *Inferenza bayesiana in psicologia: Ragionare con l'incertezza*
+- **Companion operativo:** [ccaudek.github.io/utet-companion](https://ccaudek.github.io/utet-companion/)
+- **Modulo di probabilità:** [ccaudek.github.io/utet-prob](https://ccaudek.github.io/utet-prob/)
+- **Modulo frequentista:** [ccaudek.github.io/utet-frequentista](https://ccaudek.github.io/utet-frequentista/)
+- **Repository:** [github.com/ccaudek](https://github.com/ccaudek)
 :::
-
